@@ -197,9 +197,11 @@ html.js-anim .reveal.in { opacity: 1; transform: none; transition: opacity .9s v
   }
   .main-nav.open { opacity: 1; visibility: visible; }
   .main-nav ul { flex-direction: column; gap: .2rem; width: 100%; padding: 0 2.4rem; }
+  .main-nav ul { align-items: center; text-align: center; }
   .main-nav a {
-    font-family: var(--font-display); font-size: 1.9rem; font-weight: 700;
-    letter-spacing: 0; color: var(--ivory); padding: .4em 0;
+    font-family: var(--font-mono); font-size: 15px; font-weight: 400;
+    letter-spacing: .22em; text-transform: uppercase;
+    color: #fff; padding: 19px 0; display: inline-block;
   }
   .main-nav a::after { display: none; }
   .main-nav a:hover, .main-nav a[aria-current="page"] { color: var(--gold); }
@@ -210,6 +212,8 @@ html.js-anim .reveal.in { opacity: 1; transform: none; transition: opacity .9s v
   .main-nav.open li:nth-child(4) { animation-delay: .2s; }
   .main-nav.open li:nth-child(5) { animation-delay: .25s; }
   .main-nav.open li:nth-child(6) { animation-delay: .3s; }
+  .main-nav.open li:nth-child(7) { animation-delay: .35s; }
+  .main-nav.open li:nth-child(8) { animation-delay: .4s; }
 }
 @media (max-width: 480px) {
   .header-inner { gap: .6rem; padding: 0 14px; min-height: 64px; }
@@ -388,24 +392,26 @@ html.js-anim .hero [data-rise="5"] { animation-delay: .5s; }
 
 /* 서브페이지 포스터 헤더 */
 .page-hero {
-  position: relative; padding: 10rem 0 4.2rem; overflow: hidden;
-  background:
-    radial-gradient(55% 90% at 85% 0%, rgba(243,239,231,.13), transparent 60%),
-    radial-gradient(45% 70% at 0% 100%, rgba(20,19,18,.2), transparent 55%),
-    var(--void);
-  border-bottom: 1px solid var(--line);
+  position: relative; padding: 7.6rem 0 1.9rem; overflow: hidden;
+  background: var(--void); border-bottom: 1px solid var(--line);
 }
-.page-hero h1 { margin: 0 0 .2em; font-size: clamp(2.2rem, 4.2vw, 3.8rem); }
-.page-hero p { color: var(--muted); margin: 0; max-width: 40em; }
+.page-hero h1 {
+  margin: 0 0 .4em; font-family: var(--font-mono); font-weight: 400;
+  font-size: .92rem; letter-spacing: .34em; text-transform: uppercase; color: #fff;
+}
+.page-hero p {
+  font-family: var(--font-mono); font-size: .68rem; letter-spacing: .1em;
+  color: var(--faint); margin: 0; max-width: 52em;
+}
 
 /* ---------- 9. 소식: 헤어라인 레저 ---------- */
 .news-list { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
 .news-item {
   display: grid; grid-template-columns: 7.5rem auto 1fr; gap: 1.6rem; align-items: center;
-  padding: 1.5rem .5rem; border-bottom: 1px solid var(--line);
-  text-decoration: none; color: inherit; transition: background-color .2s ease;
+  padding: 2.4rem .5rem; border-bottom: 1px solid var(--line);
+  text-decoration: none; color: inherit; transition: opacity .22s ease;
 }
-.news-item:hover { background: rgba(243,239,231,.03); }
+.news-list:hover .news-item:not(:hover) { opacity: .45; }
 .news-item time, .news-item .when {
   font-family: var(--font-mono); font-weight: 400; font-size: .82rem;
   color: var(--faint); letter-spacing: .06em;
@@ -792,14 +798,15 @@ html.js-anim .hero [data-rise="5"] { animation-delay: .5s; }
 @media (max-width: 520px) { .footer-cols { grid-template-columns: 1fr; } }
 
 /* ---------- 16. 필터 / 캘린더 ---------- */
-.filter-bar { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 2rem; }
+.filter-bar { display: flex; gap: .4rem 1.9rem; flex-wrap: wrap; margin-bottom: 2.2rem; }
 .filter-bar button {
-  min-height: 46px; padding: .4em 1.3em; border-radius: var(--r-pill);
-  border: 1px solid var(--line-strong); background: transparent;
-  font-weight: 600; color: var(--muted);
+  min-height: 44px; padding: 0 .2em; border: 0; background: transparent;
+  font-family: var(--font-mono); font-size: .72rem; font-weight: 400;
+  letter-spacing: .22em; text-transform: uppercase; color: var(--faint);
+  transition: color .2s ease;
 }
-.filter-bar button:hover { color: var(--ivory); border-color: var(--ivory); }
-.filter-bar button[aria-pressed="true"] { background: var(--ivory); border-color: var(--ivory); color: var(--void); }
+.filter-bar button:hover { color: var(--ivory); }
+.filter-bar button[aria-pressed="true"] { color: #fff; text-decoration: underline; text-underline-offset: 7px; }
 
 .calendar { border: 1px solid var(--line); border-radius: var(--r-panel); background: var(--stage); overflow: hidden; }
 .calendar-head {
@@ -987,20 +994,19 @@ a.card { text-decoration: none; color: inherit; }
 .table-wrap { overflow-x: auto; }
 
 /* ---------- 20b. 시각 아카이브 ---------- */
-.arch-grid { columns: 3 300px; column-gap: 2px; }
+.arch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(228px, 1fr)); gap: 4px 4px; }
 .arch-item {
   position: relative; display: block; width: 100%; margin: 0 0 2px; padding: 0;
   border: 0; background: var(--void); break-inside: avoid; cursor: pointer; overflow: hidden;
 }
-.arch-item img { width: 100%; height: auto; display: block; transition: transform 1.2s var(--ease); }
+.arch-item img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; display: block; transition: transform 1.2s var(--ease); }
 .arch-item:hover img { transform: scale(1.04); }
 .arch-cap {
-  position: absolute; left: 0; right: 0; bottom: 0; padding: 1.6rem 1rem .7rem;
-  font-family: var(--font-mono); font-size: .68rem; letter-spacing: .14em; color: var(--muted);
-  background: linear-gradient(to top, rgba(8,8,8,.8), transparent);
-  opacity: 0; transition: opacity .25s ease; text-align: left;
+  display: block; position: static; opacity: 1;
+  font-family: var(--font-mono); font-size: .67rem; letter-spacing: .08em;
+  color: var(--muted); text-align: left; padding: .55rem .15rem 1.05rem; background: none;
 }
-.arch-item:hover .arch-cap, .arch-item:focus-visible .arch-cap { opacity: 1; }
+.arch-item:hover .arch-cap, .arch-item:focus-visible .arch-cap { color: #fff; }
 .arch-item--ph {
   min-height: 220px; cursor: default; display: flex; align-items: flex-end;
   background:
@@ -1027,7 +1033,7 @@ button.album-row:hover { background: rgba(243,239,231,.03); }
 }
 .album-detail h4 { font-family: var(--font-mono); font-size: .7rem; font-weight: 500; letter-spacing: .18em; color: var(--gold); text-transform: uppercase; margin: 0 0 .5em; }
 .album-detail p { color: var(--faint); font-size: .95rem; margin: 0; }
-@media (max-width: 720px) { .album-detail { grid-template-columns: 1fr; gap: 1rem; } .arch-grid { columns: 2 160px; } }
+@media (max-width: 720px) { .album-detail { grid-template-columns: 1fr; gap: 1rem; } .arch-grid { grid-template-columns: repeat(2, 1fr); } }
 
 /* ---------- 21. 기타 ---------- */
 .link-pending { color: var(--faint); font-size: .95rem; cursor: default; }
@@ -1167,3 +1173,31 @@ button.strip-item:focus-visible { outline: 3px solid var(--ivory); outline-offse
 }
 .strip-pause:hover { border-color: var(--ivory); background: rgba(8,8,8,.75); }
 @media (max-width: 700px) { .strip-pause { bottom: 7.2rem; } }
+
+/* 메뉴 오버레이: 비욘세 실측 보정 (순흑, 하단 메타) */
+@media (max-width: 1080px) {
+  .main-nav { background: #000; }
+  .main-nav.open::after {
+    content: "\00a9 2026 INSOONI"; position: absolute; left: 0; right: 0; bottom: 26px;
+    text-align: center; font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: .3em; color: var(--faint);
+  }
+  .main-nav a:hover, .main-nav a[aria-current="page"] { color: #fff; text-decoration: underline; text-underline-offset: 6px; }
+}
+
+/* 음악: 최신 릴리즈 히어로 (act ii 문법) */
+.release-hero { display: grid; grid-template-columns: minmax(240px, 420px) 1fr; gap: 2.6rem; align-items: center; }
+.release-hero > img { width: 100%; height: auto; border-radius: 2px; }
+.rh-eyebrow { font-family: var(--font-mono); font-size: .67rem; letter-spacing: .3em; text-transform: uppercase; color: var(--faint); margin: 0 0 .8em; }
+.rh-info h2 { font-size: clamp(1.5rem, 2.6vw, 2.2rem); margin: 0 0 .7em; }
+.rh-tracks { margin: 0 0 1.6rem; padding-left: 1.5em; font-family: var(--font-mono); font-size: .92rem; letter-spacing: .06em; color: var(--ivory); line-height: 2.1; }
+.rh-tracks li::marker { color: var(--faint); font-size: .78rem; }
+.rh-mv { border: 0; background: transparent; cursor: pointer; text-transform: uppercase; }
+@media (max-width: 760px) { .release-hero { grid-template-columns: 1fr; } .release-hero > img { max-width: 340px; } }
+
+/* 사랑방: 운영 시스템 3단계 */
+.sys-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.sys-step { border: 1px solid var(--line); border-radius: 2px; padding: 1.5rem 1.3rem; }
+.sys-step span { display: block; font-family: var(--font-mono); font-size: .72rem; letter-spacing: .3em; color: var(--faint); margin-bottom: .8em; }
+.sys-step p { margin: 0; font-family: var(--font-mono); font-size: .8rem; letter-spacing: .04em; color: var(--muted); line-height: 1.8; }
+@media (max-width: 760px) { .sys-strip { grid-template-columns: 1fr; } }
