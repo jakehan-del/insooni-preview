@@ -12,6 +12,17 @@
    ============================================================ */
 window.SITE_DATA = {
 
+  /* ---------- 현재 스포트라이트 (관리자 교체 영역) ---------- */
+  spotlight: {
+    label: "New Release",
+    title: "그래도 꿈은 흐른다",
+    date: "2025.11.28",
+    desc: "겨울에 발표한 신곡. 반세기의 무대를 지나, 여전히 꿈을 노래합니다.",
+    linkText: "뮤직비디오 보기",
+    videoId: "6joBf4xW6Qs",
+    image: "assets/img/story.jpg"
+  },
+
   /* ---------- 소식 (type: 공지 | 공연 | 방송 | 보도) ---------- */
   news: [
     {
@@ -92,15 +103,15 @@ window.SITE_DATA = {
 
   /* ---------- 디스코그래피 (검증된 주요 발표작) ---------- */
   albums: [
-    { year: "1978", title: "희자매 1집", kind: "그룹", note: "타이틀곡 '실버들'로 TBC 가요차트 7주 연속 1위 데뷔." },
+    { featured: true, year: "1978", title: "희자매 1집", kind: "그룹", note: "타이틀곡 '실버들'로 TBC 가요차트 7주 연속 1위 데뷔." },
     { year: "1980", title: "인연 (Fate)", kind: "솔로 1집", note: "솔로 가수 인순이의 첫걸음." },
-    { year: "1983", title: "밤이면 밤마다", kind: "대표곡", note: "디바의 시대를 연 폭발적 히트곡." },
+    { featured: true, year: "1983", title: "밤이면 밤마다", kind: "대표곡", note: "디바의 시대를 연 폭발적 히트곡." },
     { year: "1996", title: "The Queen Of Soul", kind: "정규", note: "'또' 수록. 소울의 여왕이라는 이름을 새긴 앨범." },
     { year: "2004", title: "A to Z", kind: "정규", note: "조PD 피처링 '친구여', 음악캠프 3주 연속 1위." },
-    { year: "2007", title: "거위의 꿈", kind: "대표곡", note: "카니발 원곡(1997) 리메이크. 뮤직뱅크 1위, 위로의 상징이 된 노래." },
+    { featured: true, year: "2007", title: "거위의 꿈", kind: "대표곡", note: "카니발 원곡(1997) 리메이크. 뮤직뱅크 1위, 위로의 상징이 된 노래." },
     { year: "2009", title: "Fantasia", kind: "정규", note: "'아버지' 수록. 2010년 라디오 방송횟수 주간 1위." },
-    { year: "2023", title: "One Last Time", kind: "골든걸스", note: "KBS2 '골든걸스' 프로젝트 그룹 데뷔곡 (박진영 프로듀싱)." },
-    { year: "2025", title: "인순이, 아름다운 우리나라", kind: "앨범", note: "2025년 2월 발매, 9곡 수록." },
+    { featured: true, year: "2023", title: "One Last Time", kind: "골든걸스", note: "KBS2 '골든걸스' 프로젝트 그룹 데뷔곡 (박진영 프로듀싱)." },
+    { featured: true, year: "2025", title: "인순이, 아름다운 우리나라", kind: "앨범", note: "2025년 2월 발매, 9곡 수록." },
     { year: "2025", title: "그래도 꿈은 흐른다", kind: "싱글", note: "2025년 11월 발매. 여전히 꿈을 노래합니다." },
     { year: "예정", title: "전체 디스코그래피", kind: "준비 중", note: "정규 14장 포함 총 19장(영문 위키 기준). 전체 목록은 공식 자료 검수 후 시대별로 정리됩니다. [공식 확인 필요]" }
   ],

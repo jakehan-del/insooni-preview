@@ -83,6 +83,13 @@
         toggle.focus();
       }
     });
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "Tab" || !nav.classList.contains("open")) return;
+      var items = [toggle].concat($all("a", nav));
+      var first = items[0], last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
     document.addEventListener("click", function (e) {
       if (nav.classList.contains("open") && !nav.contains(e.target) && !toggle.contains(e.target)) {
         nav.classList.remove("open");
@@ -152,7 +159,7 @@
   function renderHomeNews() {
     var box = $("#home-news");
     if (!box || !D.news) return;
-    var items4 = sortedNews().slice(0, 4);
+    var items4 = sortedNews().slice(0, 3);
     if (!items4.length) { box.appendChild(el("p", "empty-note", t("dyn.noNews", "새 소식이 곧 게시됩니다."))); return; }
     items4.forEach(function (n) { box.appendChild(newsCard(n, true)); });
   }
@@ -642,6 +649,50 @@
     });
   }
 
+  /* ---------- 스포트라이트 ---------- */
+  function renderSpotlight() {
+    var box = $("#spotlight");
+    if (!box || !D.spotlight) return;
+    var sp = D.spotlight;
+    box.innerHTML =
+      '<div class="spotlight-img"><img src="' + esc(sp.image) + '" alt=""></div>' +
+      '<div class="spotlight-copy">' +
+      '<span class="label">' + esc(sp.label) + "</span>" +
+      "<h2>" + esc(sp.title) + "</h2>" +
+      '<span class="s-date">' + esc(sp.date) + "</span>" +
+      "<p>" + esc(sp.desc) + "</p>" +
+      (sp.videoId
+        ? '<button type="button" class="more" style="background:none;border:0;border-bottom:1px solid var(--line-strong);padding:0 0 .2em;cursor:pointer" data-lightbox-video="' + esc(sp.videoId) + '" data-video-title="' + esc(sp.title) + '" aria-haspopup="dialog">' + esc(sp.linkText) + " →</button>"
+        : "") +
+      "</div>";
+  }
+
+  /* ---------- 뮤직 에라 (대표 릴리즈 가로 갤러리) ---------- */
+  function renderMusicEra() {
+    var sc = $("#era-scroll");
+    if (!sc || !D.albums) return;
+    var feats = D.albums.filter(function (a) { return a.featured; });
+    var art = ["era-c1", "era-c2", "era-c3", "era-c4", "era-c5"];
+    feats.forEach(function (a, i) {
+      var card = el("a", "era-card " + art[i % art.length]);
+      card.href = "archive.html";
+      card.innerHTML =
+        '<span class="e-go">' + esc(a.year) + " · " + esc(a.kind || "") + "</span>" +
+        '<span class="e-word">' + esc(a.title) + "</span>" +
+        '<p class="e-desc">' + esc(a.note || "") + "</p>";
+      sc.appendChild(card);
+    });
+  }
+
+  /* ---------- 라이트박스 범용 바인더 ---------- */
+  function initVideoButtons() {
+    $all("[data-lightbox-video]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        openLightbox(b.getAttribute("data-lightbox-video"), b.getAttribute("data-video-title") || "영상", b);
+      });
+    });
+  }
+
   /* ---------- 입장 인트로 (세션당 1회) ---------- */
   function initIntro() {
     var intro = $("#intro");
@@ -716,6 +767,9 @@
     initLang();
     initIntro();
     initVhero();
+    renderSpotlight();
+    renderMusicEra();
+    initVideoButtons();
     initEraScroll();
     initNav();
     initScrollState();

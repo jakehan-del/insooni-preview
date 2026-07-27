@@ -9,12 +9,17 @@ window.I18N_EN = {
   /* 내비게이션 */
   "nav.home": "Home",
   "nav.news": "News",
-  "nav.schedule": "Shows",
-  "nav.archive": "Archive",
+  "nav.schedule": "Live",
+  "nav.archive": "Music",
   "nav.about": "Story",
   "nav.community": "Fan Room",
 
   /* 홈 히어로 */
+  "hero.tag": "THE VOICE. THE STORY. THE LEGACY.",
+  "sec.spot": "Spotlight",
+  "sec.era": "Music Era",
+  "sec.archivePrev": "Archive",
+  "legacy.link": "Her Story <span aria-hidden=\"true\">→</span>",
   "hero.h1": "48 Years on Stage,<br>Every Moment Together",
   "hero.lead": "The official home for Insooni's music, her life, and the memories she shares with fans.",
   "hero.cta1": "Shows & Tickets",

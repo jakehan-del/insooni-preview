@@ -12,12 +12,13 @@
 <meta property="og:description" content="무대 위 48년, 그 모든 순간을 함께.">
 <meta property="og:image" content="https://jakehan-del.github.io/insooni-preview/assets/img/hero.jpg">
 <meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"인순이","alternateName":["Insooni","김인순"],"jobTitle":"Singer","url":"https://jakehan-del.github.io/insooni-preview/","sameAs":["https://www.youtube.com/@insooni8081","https://www.instagram.com/ins00ni/"]}</script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v11">
+<link rel="stylesheet" href="assets/css/style.css?v12">
 </head>
 <body>
 <a class="skip-link" href="#main" data-i18n="nav.skip">본문 바로가기</a>
@@ -33,10 +34,10 @@
     <nav class="main-nav" id="site-nav" aria-label="주 메뉴">
       <ul>
         <li><a href="index.html" aria-current="page" data-i18n="nav.home">홈</a></li>
+        <li><a href="about.html" data-i18n="nav.about">이야기</a></li>
+        <li><a href="archive.html" data-i18n="nav.archive">음악</a></li>
+        <li><a href="schedule.html" data-i18n="nav.schedule">라이브</a></li>
         <li><a href="news.html" data-i18n="nav.news">소식</a></li>
-        <li><a href="schedule.html" data-i18n="nav.schedule">공연·일정</a></li>
-        <li><a href="archive.html" data-i18n="nav.archive">음악 아카이브</a></li>
-        <li><a href="about.html" data-i18n="nav.about">인순이 이야기</a></li>
         <li><a href="community.html" data-i18n="nav.community">사랑방</a></li>
       </ul>
     </nav>
@@ -66,14 +67,24 @@
       <div class="vhero-side"><img src="assets/img/story.jpg" alt=""></div>
     </div>
     <div class="vhero-scrim" aria-hidden="true"></div>
+    <div class="vhero-copy">
+      <h1 data-i18n="hero.tag">노래로 시대를 잇다</h1>
+    </div>
     <p class="vhero-credit">그래도 꿈은 흐른다 · OFFICIAL MV</p>
+  </section>
+
+  <!-- 현재 스포트라이트 -->
+  <section class="section" aria-labelledby="h-spot">
+    <div class="container reveal">
+      <div class="spotlight-grid" id="spotlight"></div>
+    </div>
   </section>
 
   <!-- 인사 밴드 -->
   <section class="hero scene hero--band" aria-label="인사말">
     <div class="hero-inner">
       <span class="label" data-rise="1">Since 1978 · Korea's Diva</span>
-      <h1 data-rise="2" data-i18n="hero.h1">무대 위 48년,<br>그 모든 순간을 함께</h1>
+      <h2 data-rise="2" data-i18n="hero.h1" style="font-size:clamp(2rem,3.8vw,3.5rem);font-weight:900">무대 위 48년,<br>그 모든 순간을 함께</h2>
       <p class="lead" data-rise="3" data-i18n="hero.lead">인순이의 음악과 삶, 그리고 팬들의 추억이 한곳에 모이는 공식 공간입니다.</p>
       <div class="hero-actions" data-rise="4">
         <a class="btn btn--gold" href="schedule.html" data-i18n="hero.cta1">공연·일정 보기</a>
@@ -83,37 +94,28 @@
     </div>
   </section>
 
+  <!-- 대표 라이브 -->
+  <section class="section section--band" aria-labelledby="h-flive">
+    <div class="container reveal">
+      <div class="section-head"><h2 id="h-flive" data-i18n="sec.stage">다시 보는 무대</h2></div>
+      <button type="button" class="feature-live" data-lightbox-video="6joBf4xW6Qs"
+        data-video-title="그래도 꿈은 흐른다" aria-haspopup="dialog" aria-label="'그래도 꿈은 흐른다' 뮤직비디오 크게 보기">
+        <img src="assets/img/thumbs/mv.jpg" alt="">
+        <span class="fl-play" aria-hidden="true">▶</span>
+        <span class="fl-copy">
+          <span class="fl-meta">Official Music Video · 2025 · 4:38</span>
+          <span class="fl-title">그래도 꿈은 흐른다</span>
+        </span>
+      </button>
+    </div>
+  </section>
+
   <!-- 가로 갤러리: 인순이를 만나는 길 (옆으로 흐르는 방들) -->
   <section class="era-section" aria-labelledby="h-explore">
     <div class="reveal">
-      <h2 id="h-explore" class="sr-only">인순이를 만나는 길</h2>
-      <div class="era-scroll" id="era-scroll" role="region" aria-label="인순이를 만나는 길 가로 갤러리" tabindex="0">
-        <a class="era-card era-c1" href="about.html">
-          <span class="e-word" data-i18n="path1.word">이야기</span>
-          <p class="e-desc" data-i18n="path1.desc">1978년 데뷔부터 오늘까지, 시대별 발자취와 삶의 여정.</p>
-          <span class="e-go" data-i18n="path1.go">인순이 이야기 <span aria-hidden="true">→</span></span>
-        </a>
-        <a class="era-card era-c2" href="archive.html">
-          <span class="e-word" data-i18n="path2.word">음악</span>
-          <p class="e-desc" data-i18n="path2.desc">앨범과 대표곡, 다시 봐도 벅찬 무대의 기록.</p>
-          <span class="e-go" data-i18n="path2.go">음악 아카이브 <span aria-hidden="true">→</span></span>
-        </a>
-        <a class="era-card era-c3" href="schedule.html">
-          <span class="e-word" data-i18n="era4.word">공연</span>
-          <p class="e-desc" data-i18n="era4.desc">다가오는 무대와 방송, 공식 예매 안내.</p>
-          <span class="e-go" data-i18n="era4.go">공연·일정 <span aria-hidden="true">→</span></span>
-        </a>
-        <a class="era-card era-c4" href="community.html">
-          <span class="e-word" data-i18n="era5.word">사랑방</span>
-          <p class="e-desc" data-i18n="era5.desc">팬레터와 안부, 함께 꺼내 보는 추억.</p>
-          <span class="e-go" data-i18n="era5.go">사랑방 <span aria-hidden="true">→</span></span>
-        </a>
-        <a class="era-card era-c5" href="about.html#haemil">
-          <span class="e-word" data-i18n="path3.word">해밀</span>
-          <p class="e-desc" data-i18n="path3.desc">비 온 뒤 맑게 갠 하늘. 무대 밖에서 이어지는 또 하나의 이야기.</p>
-          <span class="e-go" data-i18n="path3.go">함께 걷는 길 <span aria-hidden="true">→</span></span>
-        </a>
-      </div>
+      
+      <div class="container"><div class="section-head" style="margin-bottom:1.6rem"><h2 data-i18n="sec.era">뮤직 에라</h2></div></div>
+      <div class="era-scroll" id="era-scroll" role="region" aria-label="대표 릴리즈 가로 갤러리" tabindex="0"></div>
       <div class="era-nav container">
         <button type="button" class="era-btn" data-dir="-1" aria-label="이전 보기" data-i18n-aria="aria.prev">←</button>
         <div class="era-progress" aria-hidden="true"><span id="era-bar"></span></div>
@@ -122,13 +124,52 @@
     </div>
   </section>
 
+  <!-- 아카이브 프리뷰 -->
+  <section class="section" aria-labelledby="h-aprev">
+    <div class="container reveal">
+      <div class="section-head">
+        <h2 id="h-aprev" data-i18n="sec.archivePrev">아카이브</h2>
+        <a class="more" href="archive.html" data-i18n="more.archive">아카이브</a>
+      </div>
+      <div class="arch-prev">
+        <a href="archive.html"><img src="assets/img/story.jpg" alt="마이크 앞에서 노래하는 인순이, 그래도 꿈은 흐른다 스틸"></a>
+        <a href="archive.html"><img src="assets/img/thumbs/busking.jpg" alt="성수동 버스킹 현장의 인순이"></a>
+        <a href="archive.html"><img src="assets/img/thumbs/bnd.jpg" alt="BOYNEXTDOOR와 함께한 백스테이지"></a>
+        <a href="archive.html"><img src="assets/img/thumbs/callme.jpg" alt="콜미 커버 영상 스틸"></a>
+        <a href="archive.html"><img src="assets/img/hero.jpg" alt="무대 위에서 두 팔을 벌린 인순이"></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 다가오는 일정 -->
+  <section class="section section--band" aria-labelledby="h-schedule">
+    <div class="container reveal">
+      <div class="section-head">
+        <h2 id="h-schedule" data-i18n="sec.schedule">다가오는 일정</h2>
+        <a class="more" href="schedule.html" data-i18n="more.schedule">전체 일정</a>
+      </div>
+      <div id="home-schedule" class="schedule-strip"></div>
+    </div>
+  </section>
+
+  <!-- 최신 소식 -->
+  <section class="section" aria-labelledby="h-news">
+    <div class="container reveal">
+      <div class="section-head">
+        <h2 id="h-news" data-i18n="sec.news">최신 소식</h2>
+        <a class="more" href="news.html" data-i18n="more.news">전체 보기</a>
+      </div>
+      <div id="home-news" class="news-list"></div>
+    </div>
+  </section>
+
 </main>
 
 <footer class="footer-min">
   <nav aria-label="푸터 메뉴">
     <a href="news.html" data-i18n="nav.news">소식</a>
-    <a href="schedule.html" data-i18n="nav.schedule">공연·일정</a>
-    <a href="archive.html" data-i18n="nav.archive">음악 아카이브</a>
+    <a href="schedule.html" data-i18n="nav.schedule">라이브</a>
+    <a href="archive.html" data-i18n="nav.archive">음악</a>
     <a href="community.html" data-i18n="nav.community">사랑방</a>
     <a href="https://www.youtube.com/@insooni8081" target="_blank" rel="noopener">YouTube</a>
     <a href="https://www.instagram.com/ins00ni/" target="_blank" rel="noopener">Instagram</a>
@@ -137,8 +178,8 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동">↑</button>
-<script src="assets/js/i18n.js?v11"></script>
-<script src="assets/js/data.js?v11"></script>
-<script src="assets/js/main.js?v11"></script>
+<script src="assets/js/i18n.js?v12"></script>
+<script src="assets/js/data.js?v12"></script>
+<script src="assets/js/main.js?v12"></script>
 </body>
 </html>
