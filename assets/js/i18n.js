@@ -67,6 +67,8 @@ window.I18N_EN = {
   "nav.skip": "Skip to content",
   "aria.menuOpen": "Open menu",
   "aria.menuClose": "Close menu",
+  "aria.prev": "Previous",
+  "aria.next": "Next",
   "aria.fs1": "Normal text size",
   "aria.fs2": "Large text size",
   "aria.fs3": "Extra large text size",
@@ -96,7 +98,7 @@ window.I18N_EN = {
   "arch.fan1cta": "Share in the Fan Room",
   "arch.fan2t": "This Song, My Story",
   "arch.fan2cta": "Send Your Story",
-  "about.haemilBtn": "About Haemil School [link TBD]",
+  "about.haemilBtn": "Visit Haemil School",
   "footer.legalLocal": "Posts are stored only in this browser.",
 
   /* 서브페이지 컨트롤 */

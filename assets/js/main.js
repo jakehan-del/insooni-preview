@@ -642,11 +642,81 @@
     });
   }
 
+  /* ---------- 입장 인트로 (세션당 1회) ---------- */
+  function initIntro() {
+    var intro = $("#intro");
+    if (!intro) return;
+    var seen = false;
+    try { seen = sessionStorage.getItem("insooni_intro") === "1"; } catch (e) {}
+    if (seen || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) {
+      intro.remove();
+      return;
+    }
+    try { sessionStorage.setItem("insooni_intro", "1"); } catch (e) {}
+    setTimeout(function () { intro.remove(); }, 2600);
+  }
+
+  /* ---------- 가로 갤러리: 드래그 + 화살표 + 진행선 ---------- */
+  function initEraScroll() {
+    var sc = $("#era-scroll");
+    if (!sc) return;
+    var bar = $("#era-bar");
+    var prev = $('.era-btn[data-dir="-1"]'), next = $('.era-btn[data-dir="1"]');
+    function update() {
+      var max = sc.scrollWidth - sc.clientWidth;
+      if (bar) bar.style.width = (max > 0 ? (sc.scrollLeft / max) * 100 : 100) + "%";
+      if (prev) prev.disabled = sc.scrollLeft <= 2;
+      if (next) next.disabled = sc.scrollLeft >= max - 2;
+    }
+    sc.addEventListener("scroll", update, { passive: true });
+    update();
+    function step() {
+      var card = sc.querySelector(".era-card");
+      return card ? card.getBoundingClientRect().width + 2 : 400;
+    }
+    [prev, next].forEach(function (btn) {
+      if (!btn) return;
+      btn.addEventListener("click", function () {
+        sc.scrollBy({ left: step() * parseInt(btn.dataset.dir, 10), behavior: "smooth" });
+      });
+    });
+    /* 드래그로 넘기기 (마우스) */
+    var down = null, moved = 0;
+    sc.addEventListener("pointerdown", function (e) {
+      if (e.pointerType !== "mouse") return;
+      down = { x: e.clientX, left: sc.scrollLeft };
+      moved = 0;
+      sc.classList.add("dragging");
+    });
+    window.addEventListener("pointermove", function (e) {
+      if (!down) return;
+      var dx = e.clientX - down.x;
+      moved = Math.max(moved, Math.abs(dx));
+      sc.scrollLeft = down.left - dx;
+    });
+    window.addEventListener("pointerup", function () {
+      if (!down) return;
+      down = null;
+      sc.classList.remove("dragging");
+    });
+    /* 드래그 후 링크 오클릭 방지 */
+    sc.addEventListener("click", function (e) {
+      if (moved > 6) { e.preventDefault(); e.stopPropagation(); moved = 0; }
+    }, true);
+    /* 키보드 */
+    sc.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowRight") { e.preventDefault(); sc.scrollBy({ left: step(), behavior: "smooth" }); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); sc.scrollBy({ left: -step(), behavior: "smooth" }); }
+    });
+  }
+
   /* ---------- 부팅 ---------- */
   document.addEventListener("DOMContentLoaded", function () {
     initFontSize();
     initLang();
+    initIntro();
     initVhero();
+    initEraScroll();
     initNav();
     initScrollState();
     initReveal();

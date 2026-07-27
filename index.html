@@ -17,10 +17,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v8">
+<link rel="stylesheet" href="assets/css/style.css?v9">
 </head>
 <body>
 <a class="skip-link" href="#main" data-i18n="nav.skip">본문 바로가기</a>
+
+<div class="intro" id="intro" aria-hidden="true"><span class="intro-mark">INSOONI</span></div>
 
 <header class="site-header">
   <div class="header-inner">
@@ -78,36 +80,41 @@
     </div>
   </section>
 
-  <!-- 에라 콜라주: 사이트 전체를 잇는 무간격 그리드 -->
+  <!-- 가로 갤러리: 인순이를 만나는 길 (옆으로 흐르는 방들) -->
   <section class="era-section" aria-labelledby="h-explore">
     <div class="reveal">
       <h2 id="h-explore" class="sr-only">인순이를 만나는 길</h2>
-      <div class="era-grid era-grid--full">
-        <a class="era-tile" href="about.html">
+      <div class="era-scroll" id="era-scroll" role="region" aria-label="인순이를 만나는 길 가로 갤러리" tabindex="0">
+        <a class="era-card era-c1" href="about.html">
           <span class="e-word" data-i18n="path1.word">이야기</span>
           <p class="e-desc" data-i18n="path1.desc">1978년 데뷔부터 오늘까지, 시대별 발자취와 삶의 여정.</p>
           <span class="e-go" data-i18n="path1.go">인순이 이야기 <span aria-hidden="true">→</span></span>
         </a>
-        <a class="era-tile" href="archive.html">
+        <a class="era-card era-c2" href="archive.html">
           <span class="e-word" data-i18n="path2.word">음악</span>
           <p class="e-desc" data-i18n="path2.desc">앨범과 대표곡, 다시 봐도 벅찬 무대의 기록.</p>
           <span class="e-go" data-i18n="path2.go">음악 아카이브 <span aria-hidden="true">→</span></span>
         </a>
-        <a class="era-tile" href="schedule.html">
+        <a class="era-card era-c3" href="schedule.html">
           <span class="e-word" data-i18n="era4.word">공연</span>
           <p class="e-desc" data-i18n="era4.desc">다가오는 무대와 방송, 공식 예매 안내.</p>
           <span class="e-go" data-i18n="era4.go">공연·일정 <span aria-hidden="true">→</span></span>
         </a>
-        <a class="era-tile" href="community.html">
+        <a class="era-card era-c4" href="community.html">
           <span class="e-word" data-i18n="era5.word">사랑방</span>
           <p class="e-desc" data-i18n="era5.desc">팬레터와 안부, 함께 꺼내 보는 추억.</p>
           <span class="e-go" data-i18n="era5.go">사랑방 <span aria-hidden="true">→</span></span>
         </a>
-        <a class="era-tile" href="about.html#haemil">
+        <a class="era-card era-c5" href="about.html#haemil">
           <span class="e-word" data-i18n="path3.word">해밀</span>
           <p class="e-desc" data-i18n="path3.desc">비 온 뒤 맑게 갠 하늘. 무대 밖에서 이어지는 또 하나의 이야기.</p>
           <span class="e-go" data-i18n="path3.go">함께 걷는 길 <span aria-hidden="true">→</span></span>
         </a>
+      </div>
+      <div class="era-nav container">
+        <button type="button" class="era-btn" data-dir="-1" aria-label="이전 보기" data-i18n-aria="aria.prev">←</button>
+        <div class="era-progress" aria-hidden="true"><span id="era-bar"></span></div>
+        <button type="button" class="era-btn" data-dir="1" aria-label="다음 보기" data-i18n-aria="aria.next">→</button>
       </div>
     </div>
   </section>
@@ -155,8 +162,8 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동">↑</button>
-<script src="assets/js/i18n.js?v8"></script>
-<script src="assets/js/data.js?v8"></script>
-<script src="assets/js/main.js?v8"></script>
+<script src="assets/js/i18n.js?v9"></script>
+<script src="assets/js/data.js?v9"></script>
+<script src="assets/js/main.js?v9"></script>
 </body>
 </html>
