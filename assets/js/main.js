@@ -32,11 +32,13 @@
     return d.getFullYear() + ". " + (d.getMonth() + 1) + ". " + d.getDate() + ".";
   }
   function eventCta(ev) {
-    var label = ev.kind === "공연" ? t("dyn.book", "예매 안내") : t("dyn.more", "자세히");
-    if (ev.link && ev.link !== "#") {
-      return '<a class="btn btn--ghost btn--sm" href="' + esc(ev.link) + '">' + label + "</a>";
+    var st = ev.status || ((ev.link && ev.link !== "#") ? "onsale" : "soon");
+    if (st === "onsale" && ev.link && ev.link !== "#") {
+      return '<a class="btn btn--gold btn--sm" href="' + esc(ev.link) + '">' + t("st.onsale", "예매하기") + "</a>";
     }
-    return '<button type="button" class="btn btn--ghost btn--sm" disabled>' + label + " " + t("dyn.prep", "[준비 중]") + "</button>";
+    if (st === "soldout") return '<span class="badge badge--danger">' + t("st.soldout", "매진") + "</span>";
+    if (st === "broadcast") return '<span class="badge badge--gold">' + t("st.broadcast", "방송") + "</span>";
+    return '<button type="button" class="btn btn--ghost btn--sm" disabled>' + t("st.soon", "예매 오픈 예정") + "</button>";
   }
   /* 동적 문자열 이중 언어 헬퍼 */
   function t(key, ko) {
@@ -298,19 +300,30 @@
   function renderDiscography() {
     var box = $("#discography");
     if (!box || !D.albums) return;
-    D.albums.forEach(function (a) {
-      var row = el("article", "album-row");
+    D.albums.forEach(function (a, i) {
+      var row = el("button", "album-row");
+      row.type = "button";
+      row.setAttribute("aria-expanded", "false");
       row.innerHTML =
         '<span class="a-year">' + esc(a.year) + "</span>" +
         '<div><h3 class="a-title">' + esc(a.title) + '</h3><p class="a-note">' + esc(a.note || "") + "</p></div>" +
         '<span class="a-kind">' + esc(a.kind || "앨범") + "</span>";
+      var detail = el("div", "album-detail");
+      detail.hidden = true;
+      detail.innerHTML =
+        "<div><h4>" + t("rel.tracks", "수록곡") + "</h4><p>" + t("rel.tbd", "공식 자료 검수 후 등록됩니다. [자료 필요]") + "</p></div>" +
+        "<div><h4>" + t("rel.credits", "크레딧") + "</h4><p>" + t("rel.tbd", "공식 자료 검수 후 등록됩니다. [자료 필요]") + "</p></div>" +
+        "<div><h4>" + t("rel.listen", "감상") + "</h4><p>" + t("rel.links", "공식 스트리밍 링크는 확인 후 연결됩니다. [링크 확인 필요]") + "</p></div>";
+      row.addEventListener("click", function () {
+        var open = detail.hidden;
+        detail.hidden = !open;
+        row.setAttribute("aria-expanded", String(open));
+      });
       box.appendChild(row);
+      box.appendChild(detail);
     });
   }
-  function renderVideos() {
-    var box = $("#videos") || $("#home-videos");
-    if (!box || !D.videos) return;
-    var items = box.id === "home-videos" ? D.videos.slice(0, 3) : D.videos;
+  function buildVideoTiles(box, items) {
     if (!items.length) { box.appendChild(el("p", "empty-note", t("dyn.noVideos", "공식 영상이 곧 게시됩니다."))); return; }
     items.forEach(function (v) {
       var c;
@@ -337,6 +350,78 @@
       box.appendChild(c);
     });
   }
+  function renderVideos() {
+    var box = $("#videos") || $("#home-videos");
+    if (!box || !D.videos) return;
+    buildVideoTiles(box, box.id === "home-videos" ? D.videos.slice(0, 3) : D.videos);
+  }
+  function renderPastRecaps() {
+    var box = $("#past-recaps");
+    if (!box || !D.videos) return;
+    buildVideoTiles(box, D.videos.filter(function (v) { return v.youtubeId; }).slice(1));
+  }
+
+  /* ---------- 시각 아카이브: 마스너리 + 뷰어 ---------- */
+  var archView = { list: [], idx: 0 };
+  function renderArchive() {
+    var grid = $("#arch-grid"), bar = $("#arch-filter");
+    if (!grid || !D.archive) return;
+    function draw(cat) {
+      grid.innerHTML = "";
+      var items = D.archive.filter(function (a) { return cat === "전체" || a.cat === cat; });
+      var viewables = items.filter(function (a) { return !a.placeholder; });
+      archView.list = viewables;
+      var st = $("#arch-status");
+      if (st) st.textContent = viewables.length + t("dyn.archCount", "장의 기록 표시 중");
+      items.forEach(function (a) {
+        if (a.placeholder) {
+          var ph = el("div", "arch-item arch-item--ph");
+          ph.innerHTML = '<p class="frame-note">' + esc(a.caption) + "</p>";
+          grid.appendChild(ph);
+          return;
+        }
+        var i = viewables.indexOf(a);
+        var b = el("button", "arch-item");
+        b.type = "button";
+        b.setAttribute("aria-haspopup", "dialog");
+        b.setAttribute("aria-label", a.caption + " 크게 보기");
+        b.innerHTML = '<img src="' + esc(a.img) + '" alt="' + esc(a.caption) + '" width="' + a.w + '" height="' + a.h + '" loading="lazy">' +
+          '<span class="arch-cap">' + esc(a.year) + " · " + esc(a.cat) + "</span>";
+        b.addEventListener("click", function () { openImageViewer(i, b); });
+        grid.appendChild(b);
+      });
+    }
+    if (bar) {
+      bar.addEventListener("click", function (e) {
+        var b = e.target.closest("button");
+        if (!b) return;
+        $all("button", bar).forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+        draw(b.dataset.cat);
+      });
+    }
+    draw("전체");
+  }
+  function viewerShow() {
+    var box = ensureLightbox();
+    var a = archView.list[archView.idx];
+    if (!a) return;
+    box.setAttribute("aria-label", a.caption);
+    $(".lightbox-frame", box).innerHTML = '<img class="lb-img" src="' + esc(a.img) + '" alt="' + esc(a.caption) + '">';
+    $(".lightbox-caption", box).textContent = a.caption + " · " + a.year + " · " + a.cat;
+    var multi = archView.list.length > 1;
+    $(".lb-prev", box).hidden = !multi;
+    $(".lb-next", box).hidden = !multi;
+  }
+  function openImageViewer(idx, opener) {
+    var box = ensureLightbox();
+    archView.idx = idx;
+    lightboxOpener = opener || null;
+    box.dataset.mode = "image";
+    viewerShow();
+    box.hidden = false;
+    document.body.style.overflow = "hidden";
+    $(".lightbox-close", box).focus();
+  }
 
   /* ---------- 6b. 영상 라이트박스 (View Recap 오버레이) ---------- */
   var lightboxEl = null, lightboxOpener = null;
@@ -347,9 +432,17 @@
     lightboxEl.setAttribute("aria-modal", "true");
     lightboxEl.hidden = true;
     lightboxEl.innerHTML =
-      '<button type="button" class="lightbox-close" aria-label="영상 닫기">×</button>' +
+      '<button type="button" class="lightbox-close" aria-label="닫기">×</button>' +
+      '<button type="button" class="lb-nav lb-prev" aria-label="이전" hidden>←</button>' +
       '<div class="lightbox-frame"></div>' +
+      '<button type="button" class="lb-nav lb-next" aria-label="다음" hidden>→</button>' +
       '<p class="lightbox-caption"></p>';
+    $(".lb-prev", lightboxEl).addEventListener("click", function () {
+      archView.idx = (archView.idx - 1 + archView.list.length) % archView.list.length; viewerShow();
+    });
+    $(".lb-next", lightboxEl).addEventListener("click", function () {
+      archView.idx = (archView.idx + 1) % archView.list.length; viewerShow();
+    });
     document.body.appendChild(lightboxEl);
     function close() {
       lightboxEl.hidden = true;
@@ -362,6 +455,10 @@
     document.addEventListener("keydown", function (e) {
       if (lightboxEl.hidden) return;
       if (e.key === "Escape") { close(); return; }
+      if (lightboxEl.dataset.mode === "image" && archView.list.length > 1) {
+        if (e.key === "ArrowLeft") { archView.idx = (archView.idx - 1 + archView.list.length) % archView.list.length; viewerShow(); return; }
+        if (e.key === "ArrowRight") { archView.idx = (archView.idx + 1) % archView.list.length; viewerShow(); return; }
+      }
       if (e.key === "Tab") {
         var focusables = lightboxEl.querySelectorAll("button, iframe");
         if (!focusables.length) return;
@@ -374,6 +471,9 @@
   }
   function openLightbox(videoId, title, opener) {
     var box = ensureLightbox();
+    box.dataset.mode = "video";
+    $(".lb-prev", box).hidden = true;
+    $(".lb-next", box).hidden = true;
     lightboxOpener = opener || null;
     box.setAttribute("aria-label", title + " 영상 재생");
     $(".lightbox-caption", box).textContent = title + " · INSOONI OFFICIAL";
@@ -675,7 +775,7 @@
     var art = ["era-c1", "era-c2", "era-c3", "era-c4", "era-c5"];
     feats.forEach(function (a, i) {
       var card = el("a", "era-card " + art[i % art.length]);
-      card.href = "archive.html";
+      card.href = "music.html";
       card.innerHTML =
         '<span class="e-go">' + esc(a.year) + " · " + esc(a.kind || "") + "</span>" +
         '<span class="e-word">' + esc(a.title) + "</span>" +
@@ -769,6 +869,8 @@
     initVhero();
     renderSpotlight();
     renderMusicEra();
+    renderArchive();
+    renderPastRecaps();
     initVideoButtons();
     initEraScroll();
     initNav();

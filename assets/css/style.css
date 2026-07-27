@@ -985,6 +985,49 @@ a.card { text-decoration: none; color: inherit; }
 .data-table td:first-child { color: var(--ivory); }
 .table-wrap { overflow-x: auto; }
 
+/* ---------- 20b. 시각 아카이브 ---------- */
+.arch-grid { columns: 3 300px; column-gap: 2px; }
+.arch-item {
+  position: relative; display: block; width: 100%; margin: 0 0 2px; padding: 0;
+  border: 0; background: var(--void); break-inside: avoid; cursor: pointer; overflow: hidden;
+}
+.arch-item img { width: 100%; height: auto; display: block; transition: transform 1.2s var(--ease); }
+.arch-item:hover img { transform: scale(1.04); }
+.arch-cap {
+  position: absolute; left: 0; right: 0; bottom: 0; padding: 1.6rem 1rem .7rem;
+  font-family: var(--font-mono); font-size: .68rem; letter-spacing: .14em; color: var(--muted);
+  background: linear-gradient(to top, rgba(8,8,8,.8), transparent);
+  opacity: 0; transition: opacity .25s ease; text-align: left;
+}
+.arch-item:hover .arch-cap, .arch-item:focus-visible .arch-cap { opacity: 1; }
+.arch-item--ph {
+  min-height: 220px; cursor: default; display: flex; align-items: flex-end;
+  background:
+    radial-gradient(70% 60% at 60% 20%, rgba(212,165,74,.1), transparent 60%),
+    linear-gradient(165deg, #161210, var(--void) 75%);
+}
+.arch-item--ph::before { content: ""; position: absolute; inset: 12px; border: 1px solid rgba(212,165,74,.22); }
+.lb-img { max-width: 100%; max-height: 82vh; width: auto; height: auto; margin: 0 auto; display: block; }
+.lightbox[data-mode="image"] .lightbox-frame { aspect-ratio: auto; background: transparent; border: 0; display: flex; align-items: center; }
+.lb-nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  min-width: 54px; min-height: 54px; border-radius: 50%;
+  border: 1px solid var(--line-strong); background: rgba(8,8,8,.5); color: var(--ivory); font-size: 1.1rem;
+}
+.lb-prev { left: 18px; } .lb-next { right: 18px; }
+.lb-nav:hover { border-color: var(--gold); color: var(--gold); }
+
+/* 릴리즈 상세 확장 */
+button.album-row { width: 100%; text-align: left; background: transparent; border: 0; border-bottom: 1px solid var(--line); cursor: pointer; }
+button.album-row:hover { background: rgba(243,239,231,.03); }
+.album-detail {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
+  padding: 1.4rem .4rem 2rem; border-bottom: 1px solid var(--line);
+}
+.album-detail h4 { font-family: var(--font-mono); font-size: .7rem; font-weight: 500; letter-spacing: .18em; color: var(--gold); text-transform: uppercase; margin: 0 0 .5em; }
+.album-detail p { color: var(--faint); font-size: .95rem; margin: 0; }
+@media (max-width: 720px) { .album-detail { grid-template-columns: 1fr; gap: 1rem; } .arch-grid { columns: 2 160px; } }
+
 /* ---------- 21. 기타 ---------- */
 .link-pending { color: var(--faint); font-size: .95rem; cursor: default; }
 .site-footer .link-pending { font-size: .95rem; }

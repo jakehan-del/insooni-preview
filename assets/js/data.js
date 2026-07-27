@@ -12,6 +12,17 @@
    ============================================================ */
 window.SITE_DATA = {
 
+  /* ---------- 시각 아카이브 (실사진 확보 시 추가) ---------- */
+  archive: [
+    { img: "assets/img/hero.jpg", w: 1280, h: 720, year: "2025", cat: "무대", caption: "'그래도 꿈은 흐른다' MV, 합창단과 함께" },
+    { img: "assets/img/story.jpg", w: 720, h: 720, year: "2025", cat: "포트레이트", caption: "'그래도 꿈은 흐른다' 세션 스틸" },
+    { img: "assets/img/thumbs/busking.jpg", w: 1280, h: 720, year: "2025", cat: "무대", caption: "성수동 버스킹, 거리의 첫 무대" },
+    { img: "assets/img/thumbs/bnd.jpg", w: 1280, h: 720, year: "2025", cat: "비하인드", caption: "BOYNEXTDOOR와 백스테이지에서" },
+    { img: "assets/img/thumbs/callme.jpg", w: 1280, h: 720, year: "2025", cat: "무대", caption: "'콜미' 커버 세션" },
+    { placeholder: true, cat: "무대", caption: "공연 실사진 [자료 확보 예정]" },
+    { placeholder: true, cat: "포트레이트", caption: "공식 화보 [자료 확보 예정]" }
+  ],
+
   /* ---------- 현재 스포트라이트 (관리자 교체 영역) ---------- */
   spotlight: {
     label: "New Release",
@@ -70,7 +81,7 @@ window.SITE_DATA = {
     {
       date: "2026-08-15",
       kind: "행사",
-      title: "[샘플] 광복절 기념 축하 무대",
+      status: "soon", title: "[샘플] 광복절 기념 축하 무대",
       place: "장소 미정 [확인 필요]",
       link: "#"
     },
@@ -83,7 +94,7 @@ window.SITE_DATA = {
     },
     {
       date: "2026-08-07",
-      kind: "방송",
+      kind: "방송", status: "broadcast",
       title: "TV조선 '조선의 사랑꾼' [방영 요일·시간 확인 필요]",
       place: "TV조선",
       link: "#"
