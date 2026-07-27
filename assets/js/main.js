@@ -265,11 +265,21 @@
     if (!box || !D.videos) return;
     var items = box.id === "home-videos" ? D.videos.slice(0, 3) : D.videos;
     items.forEach(function (v) {
-      var c = el("article", "stage-tile");
+      var c;
       if (v.youtubeId) {
+        c = el("button", "stage-tile stage-tile--video");
+        c.type = "button";
+        c.setAttribute("aria-haspopup", "dialog");
+        c.setAttribute("aria-label", v.title + " 영상 크게 보기");
         c.innerHTML =
-          '<div class="thumb-embed"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/' + esc(v.youtubeId) + '" title="' + esc(v.title) + '" allowfullscreen></iframe></div>';
+          '<span class="t-bg" aria-hidden="true"' + (v.thumb ? ' style="background-image:url(\'' + esc(v.thumb) + '\')"' : "") + "></span>" +
+          '<span class="t-year">' + esc(v.year || "") + "</span>" +
+          '<h3 class="t-title">' + esc(v.title) + "</h3>" +
+          '<p class="t-desc">' + esc(v.desc || "") + "</p>" +
+          '<p class="t-note">무대 보기 →</p>';
+        c.addEventListener("click", function () { openLightbox(v.youtubeId, v.title, c); });
       } else {
+        c = el("article", "stage-tile");
         c.innerHTML =
           '<span class="t-year">' + esc(v.year || "") + "</span>" +
           '<h3 class="t-title">' + esc(v.title) + "</h3>" +
@@ -278,6 +288,44 @@
       }
       box.appendChild(c);
     });
+  }
+
+  /* ---------- 6b. 영상 라이트박스 (View Recap 오버레이) ---------- */
+  var lightboxEl = null, lightboxOpener = null;
+  function ensureLightbox() {
+    if (lightboxEl) return lightboxEl;
+    lightboxEl = el("div", "lightbox");
+    lightboxEl.setAttribute("role", "dialog");
+    lightboxEl.setAttribute("aria-modal", "true");
+    lightboxEl.hidden = true;
+    lightboxEl.innerHTML =
+      '<button type="button" class="lightbox-close" aria-label="영상 닫기">×</button>' +
+      '<div class="lightbox-frame"></div>' +
+      '<p class="lightbox-caption"></p>';
+    document.body.appendChild(lightboxEl);
+    function close() {
+      lightboxEl.hidden = true;
+      $(".lightbox-frame", lightboxEl).innerHTML = "";
+      document.body.style.overflow = "";
+      if (lightboxOpener) { lightboxOpener.focus(); lightboxOpener = null; }
+    }
+    $(".lightbox-close", lightboxEl).addEventListener("click", close);
+    lightboxEl.addEventListener("click", function (e) { if (e.target === lightboxEl) close(); });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !lightboxEl.hidden) close();
+    });
+    return lightboxEl;
+  }
+  function openLightbox(videoId, title, opener) {
+    var box = ensureLightbox();
+    lightboxOpener = opener || null;
+    box.setAttribute("aria-label", title + " 영상 재생");
+    $(".lightbox-caption", box).textContent = title + " · INSOONI OFFICIAL";
+    $(".lightbox-frame", box).innerHTML =
+      '<iframe src="https://www.youtube-nocookie.com/embed/' + esc(videoId) + '?autoplay=1&rel=0&modestbranding=1" title="' + esc(title) + '" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>';
+    box.hidden = false;
+    document.body.style.overflow = "hidden";
+    $(".lightbox-close", box).focus();
   }
 
   /* ---------- 7. 사랑방: 팬레터 ---------- */

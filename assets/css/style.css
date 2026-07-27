@@ -26,6 +26,7 @@
 
   --font-display: "Noto Serif KR", "Nanum Myeongjo", serif;
   --font-latin: "Cormorant Garamond", "Noto Serif KR", serif;
+  --font-mono: "IBM Plex Mono", "SF Mono", monospace;
   --font-body: "Pretendard Variable", Pretendard, "Apple SD Gothic Neo",
                "Noto Sans KR", system-ui, sans-serif;
 
@@ -107,8 +108,8 @@ html.js-anim .reveal.in { opacity: 1; transform: none; transition: opacity .9s v
 
 /* 라벨(절제 사용: 페이지당 1~2회) */
 .label {
-  display: inline-block; font-size: .78rem; font-weight: 600;
-  letter-spacing: .26em; text-transform: uppercase; color: var(--gold);
+  display: inline-block; font-family: var(--font-mono); font-size: .72rem; font-weight: 500;
+  letter-spacing: .22em; text-transform: uppercase; color: var(--gold);
 }
 
 /* ---------- 5. 헤더 ---------- */
@@ -214,8 +215,8 @@ html.js-anim .reveal.in { opacity: 1; transform: none; transition: opacity .9s v
 .btn:disabled:hover { transform: none; }
 
 .badge {
-  display: inline-block; padding: .28em .9em; border-radius: var(--r-pill);
-  font-size: .76rem; font-weight: 700; letter-spacing: .08em;
+  display: inline-block; padding: .3em .85em; border-radius: var(--r-pill);
+  font-family: var(--font-mono); font-size: .7rem; font-weight: 500; letter-spacing: .1em;
   border: 1px solid var(--line-strong); color: var(--muted); background: transparent;
 }
 .badge--gold { border-color: var(--gold-deep); color: var(--gold); }
@@ -293,7 +294,8 @@ html.js-anim .vhero-poster { animation: vhero-fade 1.8s ease both; }
 }
 .vhero-credit {
   position: absolute; left: 24px; bottom: 18px; margin: 0;
-  font-size: .76rem; letter-spacing: .16em; color: rgba(242,236,225,.55);
+  font-family: var(--font-mono); font-size: .72rem; letter-spacing: .14em;
+  text-transform: uppercase; color: rgba(242,236,225,.6);
 }
 
 /* 히어로 밴드(둘째 화면): 사진 없이 워드마크·인사만 */
@@ -408,8 +410,8 @@ html.js-anim .hero [data-rise="5"] { animation-delay: .5s; }
 }
 .news-item:hover { background: rgba(242,236,225,.03); }
 .news-item time, .news-item .when {
-  font-family: var(--font-display); font-weight: 700; font-size: 1.02rem;
-  color: var(--faint); letter-spacing: .02em;
+  font-family: var(--font-mono); font-weight: 400; font-size: .82rem;
+  color: var(--faint); letter-spacing: .06em;
 }
 .news-item h3 { margin: 0 0 .15em; font-size: 1.12rem; transition: color .2s ease; }
 .news-item:hover h3 { color: var(--gold); }
@@ -429,7 +431,7 @@ html.js-anim .hero [data-rise="5"] { animation-delay: .5s; }
   font-family: var(--font-display); font-size: 3.1rem; font-weight: 900;
   color: var(--gold); line-height: 1; letter-spacing: -.02em;
 }
-.event-date .m { font-size: .82rem; color: var(--faint); letter-spacing: .06em; }
+.event-date .m { font-family: var(--font-mono); font-size: .74rem; color: var(--faint); letter-spacing: .08em; }
 .event-info h3 { margin: .35em 0 .1em; font-size: 1.3rem; }
 .event-info .where { color: var(--muted); font-size: .92rem; margin: 0; }
 @media (max-width: 720px) {
@@ -461,7 +463,7 @@ html.js-anim .hero [data-rise="5"] { animation-delay: .5s; }
 }
 .stage-tile:hover { border-color: var(--gold-deep); transform: translateY(-4px); }
 .stage-tile .t-year {
-  font-size: .8rem; color: var(--gold); letter-spacing: .22em; margin-bottom: .5rem; font-weight: 600;
+  font-family: var(--font-mono); font-size: .72rem; color: var(--gold); letter-spacing: .2em; margin-bottom: .5rem; font-weight: 500;
 }
 .stage-tile .t-title {
   font-family: var(--font-display); font-weight: 900; color: var(--ivory);
@@ -476,6 +478,46 @@ html.js-anim .hero [data-rise="5"] { animation-delay: .5s; }
   .stage-grid { grid-template-columns: 1fr; grid-auto-rows: minmax(190px, auto); }
   .stage-grid > :first-child { grid-column: auto; grid-row: auto; min-height: 280px; }
 }
+
+/* 비디오 타일: 실사진 썸네일 + 느린 줌 호버 (beyonce recap 카드) */
+.stage-tile--video { padding: 1.7rem 1.8rem; border: 0; text-align: left; background: var(--void); cursor: pointer; }
+.stage-tile--video .t-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background-size: cover; background-position: center;
+  transition: transform 1.4s var(--ease);
+}
+.stage-tile--video::after {
+  content: ""; position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(to top, rgba(12,10,9,.88) 8%, rgba(12,10,9,.15) 55%, rgba(12,10,9,.25));
+}
+.stage-tile--video:hover .t-bg { transform: scale(1.05); }
+.stage-tile--video > *:not(.t-bg) { position: relative; z-index: 2; }
+.stage-tile--video .t-note { color: var(--gold); }
+
+/* 라이트박스: View Recap 오버레이 */
+.lightbox {
+  position: fixed; inset: 0; z-index: 150;
+  background: rgba(12, 10, 9, .95); backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: center; padding: 4vh 4vw;
+}
+.lightbox[hidden] { display: none; }
+.lightbox-frame {
+  width: min(1100px, 92vw); aspect-ratio: 16 / 9; background: #000;
+  border: 1px solid var(--line-strong);
+}
+.lightbox-frame iframe { width: 100%; height: 100%; border: 0; }
+.lightbox-caption {
+  position: absolute; left: 4vw; bottom: 3.2vh; margin: 0;
+  font-family: var(--font-mono); font-size: .72rem; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--muted);
+}
+.lightbox-close {
+  position: absolute; top: 20px; right: 20px;
+  min-width: 52px; min-height: 52px; border-radius: 50%;
+  border: 1px solid var(--line-strong); background: rgba(12,10,9,.6);
+  color: var(--ivory); font-size: 1.3rem;
+}
+.lightbox-close:hover { border-color: var(--gold); color: var(--gold); }
 
 /* ---------- 12. 메시지 (매니페스토) ---------- */
 .manifesto { text-align: center; max-width: 42em; margin: 0 auto; }
@@ -580,15 +622,15 @@ html.js-anim .hero [data-rise="5"] { animation-delay: .5s; }
 }
 .footer-brand p { color: var(--faint); font-size: .92rem; margin-top: 1rem; }
 .site-footer h3 {
-  font-family: var(--font-body); font-size: .8rem; font-weight: 700;
-  letter-spacing: .2em; color: var(--faint); text-transform: uppercase; margin-bottom: 1.1rem;
+  font-family: var(--font-mono); font-size: .7rem; font-weight: 500;
+  letter-spacing: .22em; color: var(--faint); text-transform: uppercase; margin-bottom: 1.1rem;
 }
 .site-footer ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .65rem; }
 .site-footer ul a { color: var(--muted); text-decoration: none; font-size: .95rem; }
 .site-footer ul a:hover { color: var(--gold); }
 .footer-legal {
   border-top: 1px solid var(--line); padding-top: 1.6rem;
-  font-size: .8rem; color: var(--faint);
+  font-family: var(--font-mono); font-size: .72rem; color: var(--faint);
   display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
 }
 @media (max-width: 880px) { .footer-cols { grid-template-columns: 1fr 1fr; } }
@@ -675,7 +717,7 @@ a.card { text-decoration: none; color: inherit; }
 .card .thumb { aspect-ratio: 16 / 9; }
 .card-body { padding: 1.4rem 1.5rem 1.5rem; display: flex; flex-direction: column; gap: .5rem; flex: 1; }
 .card-body h3 { margin: 0; }
-.card-meta { font-size: .82rem; color: var(--faint); display: flex; gap: .9em; flex-wrap: wrap; margin-top: auto; letter-spacing: .04em; }
+.card-meta { font-family: var(--font-mono); font-size: .72rem; color: var(--faint); display: flex; gap: .9em; flex-wrap: wrap; margin-top: auto; letter-spacing: .08em; }
 .card-desc { color: var(--muted); font-size: .93rem; margin: 0; }
 
 /* 디스코그래피 레코드 행 */
@@ -689,7 +731,7 @@ a.card { text-decoration: none; color: inherit; }
 .album-row .a-year { font-family: var(--font-display); font-size: 1.6rem; font-weight: 900; color: var(--gold); }
 .album-row .a-title { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; color: var(--ivory); margin: 0 0 .15em; }
 .album-row .a-note { color: var(--muted); font-size: .92rem; margin: 0; }
-.album-row .a-kind { font-size: .78rem; color: var(--faint); letter-spacing: .16em; white-space: nowrap; }
+.album-row .a-kind { font-family: var(--font-mono); font-size: .7rem; color: var(--faint); letter-spacing: .14em; white-space: nowrap; }
 @media (max-width: 720px) { .album-row { grid-template-columns: 1fr; gap: .4rem; } }
 
 /* ---------- 19. 커뮤니티 ---------- */

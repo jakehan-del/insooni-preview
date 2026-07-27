@@ -81,10 +81,10 @@ window.SITE_DATA = {
 
   /* ---------- 무대 영상 (공식 유튜브 @insooni8081 실제 영상 — 2026.7 RSS 확인) ---------- */
   videos: [
-    { title: "그래도 꿈은 흐른다", desc: "2025년 겨울에 발표한 신곡 공식 뮤직비디오. 여전히 꿈을 노래합니다.", year: "2025", youtubeId: "6joBf4xW6Qs" },
-    { title: "성수동 버스킹", desc: "첫 성수동 거리 무대. '바보 멍청이 똥개' 최초 공개 현장.", year: "2025", youtubeId: "AHGXsBvkVVI" },
-    { title: "BOYNEXTDOOR와 함께", desc: "'바보 멍청이 똥개' 세대를 넘은 컬래버 무대.", year: "2025", youtubeId: "neUVzSyKCn8" },
-    { title: "콜미 (CALL ME) 커버", desc: "코요태 신곡을 인순이 스타일로. 조회수가 증명한 커버.", year: "2025", youtubeId: "9wwtxL2TLJQ" },
+    { title: "그래도 꿈은 흐른다", desc: "2025년 겨울에 발표한 신곡 공식 뮤직비디오. 여전히 꿈을 노래합니다.", year: "2025", youtubeId: "6joBf4xW6Qs", thumb: "assets/img/thumbs/mv.jpg" },
+    { title: "성수동 버스킹", desc: "첫 성수동 거리 무대. '바보 멍청이 똥개' 최초 공개 현장.", year: "2025", youtubeId: "AHGXsBvkVVI", thumb: "assets/img/thumbs/busking.jpg" },
+    { title: "BOYNEXTDOOR와 함께", desc: "'바보 멍청이 똥개' 세대를 넘은 컬래버 무대.", year: "2025", youtubeId: "neUVzSyKCn8", thumb: "assets/img/thumbs/bnd.jpg" },
+    { title: "콜미 (CALL ME) 커버", desc: "코요태 신곡을 인순이 스타일로. 조회수가 증명한 커버.", year: "2025", youtubeId: "9wwtxL2TLJQ", thumb: "assets/img/thumbs/callme.jpg" },
     { title: "거위의 꿈", desc: "1997년 카니발 원곡을 2007년 리메이크해 세대를 넘어 위로가 된 노래.", year: "2007", youtubeId: null },
     { title: "밤이면 밤마다", desc: "1983년 발표, 인순이표 에너지의 원점이 된 히트곡.", year: "1983", youtubeId: null },
     { title: "아버지", desc: "2009년 발표, 라디오 방송횟수 주간 1위를 기록한 곡.", year: "2009", youtubeId: null }
