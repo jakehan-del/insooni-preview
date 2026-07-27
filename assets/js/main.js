@@ -774,8 +774,13 @@
     var feats = D.albums.filter(function (a) { return a.featured; });
     var art = ["era-c1", "era-c2", "era-c3", "era-c4", "era-c5"];
     feats.forEach(function (a, i) {
-      var card = el("a", "era-card " + art[i % art.length]);
+      var card = el("a", "era-card" + (a.art ? "" : " " + art[i % art.length]));
       card.href = "music.html";
+      if (a.art) {
+        card.style.background =
+          'linear-gradient(to top, rgba(8,8,8,.92) 12%, rgba(8,8,8,.22) 58%, rgba(8,8,8,.15)), ' +
+          'url("' + a.art + '") center 28% / cover no-repeat';
+      }
       card.innerHTML =
         '<span class="e-go">' + esc(a.year) + " · " + esc(a.kind || "") + "</span>" +
         '<span class="e-word">' + esc(a.title) + "</span>" +

@@ -19,6 +19,12 @@ window.SITE_DATA = {
     { img: "assets/img/thumbs/busking.jpg", w: 1280, h: 720, year: "2025", cat: "무대", caption: "성수동 버스킹, 거리의 첫 무대" },
     { img: "assets/img/thumbs/bnd.jpg", w: 1280, h: 720, year: "2025", cat: "비하인드", caption: "BOYNEXTDOOR와 백스테이지에서" },
     { img: "assets/img/thumbs/callme.jpg", w: 1280, h: 720, year: "2025", cat: "무대", caption: "'콜미' 커버 세션" },
+    { img: "assets/img/stills/s6.jpg", w: 1280, h: 720, year: "2025", cat: "포트레이트", caption: "'그래도 꿈은 흐른다' MV, 하늘을 향해" },
+    { img: "assets/img/stills/s5.jpg", w: 1280, h: 720, year: "2025", cat: "무대", caption: "스포트라이트 아래, 두 팔을 펴며" },
+    { img: "assets/img/stills/s2.jpg", w: 1280, h: 720, year: "2025", cat: "포트레이트", caption: "'그래도 꿈은 흐른다' MV 프로필" },
+    { img: "assets/img/stills/s7.jpg", w: 1280, h: 720, year: "2025", cat: "무대", caption: "합창단과 함께한 클라이맥스" },
+    { img: "assets/img/stills/s4.jpg", w: 1280, h: 720, year: "2025", cat: "포트레이트", caption: "노래에 잠긴 순간" },
+    { img: "assets/img/stills/s8.jpg", w: 1280, h: 720, year: "2025", cat: "무대", caption: "어둠 속 한 줄기 빛, 무대 위의 사람" },
     { placeholder: true, cat: "무대", caption: "공연 실사진 [자료 확보 예정]" },
     { placeholder: true, cat: "포트레이트", caption: "공식 화보 [자료 확보 예정]" }
   ],
@@ -31,7 +37,7 @@ window.SITE_DATA = {
     desc: "겨울에 발표한 신곡. 반세기의 무대를 지나, 여전히 꿈을 노래합니다.",
     linkText: "뮤직비디오 보기",
     videoId: "6joBf4xW6Qs",
-    image: "assets/img/story.jpg"
+    image: "assets/img/stills/s6.jpg"
   },
 
   /* ---------- 소식 (type: 공지 | 공연 | 방송 | 보도) ---------- */
@@ -114,15 +120,15 @@ window.SITE_DATA = {
 
   /* ---------- 디스코그래피 (검증된 주요 발표작) ---------- */
   albums: [
-    { featured: true, year: "1978", title: "희자매 1집", kind: "그룹", note: "타이틀곡 '실버들'로 TBC 가요차트 7주 연속 1위 데뷔." },
+    { featured: true, art: "assets/img/stills/s8.jpg", year: "1978", title: "희자매 1집", kind: "그룹", note: "타이틀곡 '실버들'로 TBC 가요차트 7주 연속 1위 데뷔." },
     { year: "1980", title: "인연 (Fate)", kind: "솔로 1집", note: "솔로 가수 인순이의 첫걸음." },
-    { featured: true, year: "1983", title: "밤이면 밤마다", kind: "대표곡", note: "디바의 시대를 연 폭발적 히트곡." },
+    { featured: true, art: "assets/img/stills/s7.jpg", year: "1983", title: "밤이면 밤마다", kind: "대표곡", note: "디바의 시대를 연 폭발적 히트곡." },
     { year: "1996", title: "The Queen Of Soul", kind: "정규", note: "'또' 수록. 소울의 여왕이라는 이름을 새긴 앨범." },
     { year: "2004", title: "A to Z", kind: "정규", note: "조PD 피처링 '친구여', 음악캠프 3주 연속 1위." },
-    { featured: true, year: "2007", title: "거위의 꿈", kind: "대표곡", note: "카니발 원곡(1997) 리메이크. 뮤직뱅크 1위, 위로의 상징이 된 노래." },
+    { featured: true, art: "assets/img/stills/s5.jpg", year: "2007", title: "거위의 꿈", kind: "대표곡", note: "카니발 원곡(1997) 리메이크. 뮤직뱅크 1위, 위로의 상징이 된 노래." },
     { year: "2009", title: "Fantasia", kind: "정규", note: "'아버지' 수록. 2010년 라디오 방송횟수 주간 1위." },
-    { featured: true, year: "2023", title: "One Last Time", kind: "골든걸스", note: "KBS2 '골든걸스' 프로젝트 그룹 데뷔곡 (박진영 프로듀싱)." },
-    { featured: true, year: "2025", title: "인순이, 아름다운 우리나라", kind: "앨범", note: "2025년 2월 발매, 9곡 수록." },
+    { featured: true, art: "assets/img/stills/s4.jpg", year: "2023", title: "One Last Time", kind: "골든걸스", note: "KBS2 '골든걸스' 프로젝트 그룹 데뷔곡 (박진영 프로듀싱)." },
+    { featured: true, art: "assets/img/stills/s6.jpg", year: "2025", title: "인순이, 아름다운 우리나라", kind: "앨범", note: "2025년 2월 발매, 9곡 수록." },
     { year: "2025", title: "그래도 꿈은 흐른다", kind: "싱글", note: "2025년 11월 발매. 여전히 꿈을 노래합니다." },
     { year: "예정", title: "전체 디스코그래피", kind: "준비 중", note: "정규 14장 포함 총 19장(영문 위키 기준). 전체 목록은 공식 자료 검수 후 시대별로 정리됩니다. [공식 확인 필요]" }
   ],
