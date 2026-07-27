@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v4">
+<link rel="stylesheet" href="assets/css/style.css?v5">
 </head>
 <body>
 <a class="skip-link" href="#main">본문 바로가기</a>
@@ -48,11 +48,21 @@
 
 <main id="main">
 
-  <!-- 히어로 -->
-  <section class="hero scene" aria-label="인사말">
-    <div class="hero-bg" aria-hidden="true">
-      <img src="assets/img/hero.jpg" alt="" fetchpriority="high">
+  <!-- 첫 화면: 공식 MV가 화면 그 자체 (음소거 배경 재생) -->
+  <section class="vhero" aria-label="'그래도 꿈은 흐른다' 공식 뮤직비디오 배경 재생">
+    <div class="vhero-media" aria-hidden="true">
+      <img class="vhero-poster" src="assets/img/hero.jpg" alt="" fetchpriority="high">
+      <iframe class="vhero-iframe"
+        src="https://www.youtube-nocookie.com/embed/6joBf4xW6Qs?autoplay=1&amp;mute=1&amp;controls=0&amp;loop=1&amp;playlist=6joBf4xW6Qs&amp;playsinline=1&amp;rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1"
+        title="인순이 '그래도 꿈은 흐른다' 공식 뮤직비디오 배경 재생" tabindex="-1"
+        allow="autoplay; encrypted-media"></iframe>
     </div>
+    <div class="vhero-scrim" aria-hidden="true"></div>
+    <p class="vhero-credit">그래도 꿈은 흐른다 · OFFICIAL MV</p>
+  </section>
+
+  <!-- 인사 밴드 -->
+  <section class="hero scene hero--band" aria-label="인사말">
     <div class="hero-inner">
       <span class="label" data-rise="1">Since 1978 · Korea's Diva</span>
       <h1 data-rise="2" data-i18n="hero.h1">무대 위 48년,<br>그 모든 순간을 함께</h1>
@@ -201,8 +211,8 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동">↑</button>
-<script src="assets/js/i18n.js?v4"></script>
-<script src="assets/js/data.js?v4"></script>
-<script src="assets/js/main.js?v4"></script>
+<script src="assets/js/i18n.js?v5"></script>
+<script src="assets/js/data.js?v5"></script>
+<script src="assets/js/main.js?v5"></script>
 </body>
 </html>

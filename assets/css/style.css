@@ -272,6 +272,34 @@ html.js-anim .scene::after { animation: bokeh-drift 52s ease-in-out infinite alt
   to   { transform: translate3d(-22px, -30px, 0); }
 }
 
+/* ---------- 7c-00. 비디오 히어로: 첫 화면은 영상 그 자체 (텍스트 0) ---------- */
+.vhero { position: relative; height: 100dvh; overflow: hidden; background: var(--void); }
+.vhero-media { position: absolute; inset: 0; }
+.vhero-poster {
+  width: 100%; height: 100%; object-fit: cover; object-position: center 30%;
+}
+html.js-anim .vhero-poster { animation: vhero-fade 1.8s ease both; }
+@keyframes vhero-fade { from { opacity: 0; } }
+.vhero-iframe {
+  position: absolute; top: 50%; left: 50%;
+  width: max(100vw, 177.78dvh); height: max(100dvh, 56.25vw);
+  transform: translate(-50%, -50%);
+  border: 0; pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) { .vhero-iframe { display: none; } }
+.vhero-scrim {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(rgba(12,10,9,.5), transparent 24%, transparent 72%, var(--void));
+}
+.vhero-credit {
+  position: absolute; left: 24px; bottom: 18px; margin: 0;
+  font-size: .76rem; letter-spacing: .16em; color: rgba(242,236,225,.55);
+}
+
+/* 히어로 밴드(둘째 화면): 사진 없이 워드마크·인사만 */
+.hero--band { min-height: auto; }
+.hero--band .hero-inner { min-height: auto; padding: 6.5rem 24px 1.6rem; }
+
 /* ---------- 7c-0. 풀블리드 사진 히어로 (beyonce.com 문법: 사진이 곧 화면) ---------- */
 .hero-bg { position: absolute; inset: 0; z-index: -4; }
 .hero-bg img {
