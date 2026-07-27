@@ -965,7 +965,9 @@ a.card { text-decoration: none; color: inherit; }
 .admin-layout { display: grid; grid-template-columns: 230px 1fr; gap: 2.5rem; align-items: start; }
 .admin-side { position: sticky; top: 100px; border: 1px solid var(--line); border-radius: var(--r-panel); padding: .8rem; background: var(--stage); }
 .admin-side a { display: block; padding: .75em 1em; text-decoration: none; color: var(--muted); font-weight: 600; font-size: .95rem; }
-.admin-side a:hover, .admin-side a.active { color: var(--gold); }
+.admin-side a:hover { color: var(--gold); }
+.admin-side-current { display: block; padding: .75em 1em; color: var(--gold); font-weight: 600; font-size: .95rem; }
+.admin-side .link-pending { display: block; padding: .75em 1em; font-size: .9rem; }
 .stat-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 1rem; }
 .stat-card { border: 1px solid var(--line); border-radius: var(--r-panel); padding: 1.4rem 1.5rem; background: var(--stage); }
 .stat-card .label { font-size: .72rem; color: var(--faint); letter-spacing: .22em; }
