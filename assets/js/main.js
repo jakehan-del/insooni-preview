@@ -310,10 +310,21 @@
         '<span class="a-kind">' + esc(a.kind || "앨범") + "</span>";
       var detail = el("div", "album-detail");
       detail.hidden = true;
+      var tracksHtml = (a.tracks && a.tracks.length)
+        ? '<ol class="a-tracks">' + a.tracks.map(function (tr) { return "<li>" + esc(tr) + "</li>"; }).join("") + "</ol>"
+        : "<p>" + t("rel.tbd", "공식 자료 검수 후 등록됩니다. [자료 필요]") + "</p>";
+      var creditsHtml = a.credits
+        ? '<p class="a-credits">' + esc(a.credits) + "</p>"
+        : "<p>" + t("rel.tbd", "공식 자료 검수 후 등록됩니다. [자료 필요]") + "</p>";
+      var linksHtml = (a.links && a.links.length)
+        ? '<p class="a-links">' + a.links.map(function (l) {
+            return '<a class="a-link" href="' + esc(l.url) + '" target="_blank" rel="noopener">' + esc(l.label) + ' <span aria-hidden="true">↗</span></a>';
+          }).join("") + "</p>"
+        : "<p>" + t("rel.links", "공식 스트리밍 링크는 확인 후 연결됩니다. [링크 확인 필요]") + "</p>";
       detail.innerHTML =
-        "<div><h4>" + t("rel.tracks", "수록곡") + "</h4><p>" + t("rel.tbd", "공식 자료 검수 후 등록됩니다. [자료 필요]") + "</p></div>" +
-        "<div><h4>" + t("rel.credits", "크레딧") + "</h4><p>" + t("rel.tbd", "공식 자료 검수 후 등록됩니다. [자료 필요]") + "</p></div>" +
-        "<div><h4>" + t("rel.listen", "감상") + "</h4><p>" + t("rel.links", "공식 스트리밍 링크는 확인 후 연결됩니다. [링크 확인 필요]") + "</p></div>";
+        "<div><h4>" + t("rel.tracks", "수록곡") + "</h4>" + tracksHtml + "</div>" +
+        "<div><h4>" + t("rel.credits", "크레딧") + "</h4>" + creditsHtml + "</div>" +
+        "<div><h4>" + t("rel.listen", "감상") + "</h4>" + linksHtml + "</div>";
       row.addEventListener("click", function () {
         var open = detail.hidden;
         detail.hidden = !open;

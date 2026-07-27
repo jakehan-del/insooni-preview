@@ -1064,3 +1064,20 @@ button.album-row:hover { background: rgba(243,239,231,.03); }
 
 /* 모노크롬 패스: 장식 조명 제거 */
 .scene::before, .scene::after { content: none; }
+
+/* ---------- 디스코그래피 상세: 수록곡/크레딧/감상 링크 ---------- */
+.album-detail .a-tracks {
+  margin: 0; padding-left: 1.4em; columns: 2 240px; column-gap: 2.5rem;
+  font-size: .95rem; color: var(--muted); line-height: 1.75;
+}
+.album-detail .a-tracks li { break-inside: avoid; padding-left: .2em; }
+.album-detail .a-tracks li::marker { font-family: var(--font-mono); font-size: .78rem; color: var(--faint); }
+.album-detail .a-credits { color: var(--muted); line-height: 1.8; }
+.a-links { display: flex; flex-wrap: wrap; gap: .7rem 1.6rem; margin: 0; }
+.a-link {
+  font-family: var(--font-mono); font-size: .78rem; letter-spacing: .12em;
+  color: var(--ivory); text-decoration: none;
+  border-bottom: 1px solid var(--line-strong); padding-bottom: 3px;
+  transition: border-color .2s ease, color .2s ease;
+}
+.a-link:hover { border-color: var(--ivory); color: var(--gold-hover); }
