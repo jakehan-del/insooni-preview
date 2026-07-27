@@ -312,10 +312,15 @@ html.js-anim .scene::after { animation: bokeh-drift 52s ease-in-out infinite alt
 }
 .vhero-media { position: relative; overflow: hidden; }
 .vhero-side { position: relative; overflow: hidden; }
-.vhero-side img {
-  width: 100%; height: 100%; object-fit: cover; object-position: center 15%;
+.vs-track {
+  display: flex; height: 100%;
+  transition: transform 1.1s var(--ease);
+}
+.vs-track img {
+  flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover;
   filter: brightness(.9) saturate(.95);
 }
+@media (prefers-reduced-motion: reduce) { .vs-track { transition: none; } }
 @media (max-width: 880px) {
   .vhero-grid { grid-template-columns: 1fr; }
   .vhero-side { display: none; }

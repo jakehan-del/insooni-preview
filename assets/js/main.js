@@ -861,12 +861,41 @@
     });
   }
 
+  /* ---------- 히어로 우측 사진 슬라이더 (옆으로 흐르는 무한 루프) ---------- */
+  function initHeroSlider() {
+    var track = $("#vs-track");
+    if (!track) return;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var n = track.children.length; /* 마지막은 첫 장 복제 */
+    var idx = 0, timer = null;
+    function go(i, instant) {
+      if (instant) track.style.transition = "none";
+      track.style.transform = "translateX(-" + (i * 100) + "%)";
+      if (instant) {
+        void track.offsetWidth; /* reflow로 트랜지션 재활성 */
+        track.style.transition = "";
+      }
+    }
+    function tick() {
+      if (idx >= n - 1) { idx = 0; go(0, true); } /* 복제장에 있으면 순간 복귀 후 진행 */
+      idx++;
+      go(idx);
+    }
+    function start() { if (!timer) timer = setInterval(tick, 4500); }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) stop(); else start();
+    });
+    start();
+  }
+
   /* ---------- 부팅 ---------- */
   document.addEventListener("DOMContentLoaded", function () {
     initFontSize();
     initLang();
     initIntro();
     initVhero();
+    initHeroSlider();
     renderSpotlight();
     renderMusicEra();
     renderArchive();
