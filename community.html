@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v7">
+<link rel="stylesheet" href="assets/css/style.css?v8">
 </head>
 <body>
 <a class="skip-link" href="#main" data-i18n="nav.skip">본문 바로가기</a>
@@ -232,6 +232,20 @@
       </div>
     </div>
   </section>
+  <!-- 구독 -->
+  <section class="subscribe" aria-labelledby="h-subscribe">
+    <div class="subscribe-inner reveal">
+      <h2 id="h-subscribe" data-i18n="sub.h2">소식을 가장 먼저</h2>
+      <p data-i18n="sub.p">새 공연과 방송 일정, 인순이의 메시지를 이메일로 보내드립니다.</p>
+      <form aria-label="이메일 구독 신청">
+        <label class="sr-only" for="sub-email">이메일 주소</label>
+        <input id="sub-email" type="email" required placeholder="이메일 주소" data-i18n-ph="sub.ph">
+        <button class="btn btn--gold" type="submit" data-i18n="sub.btn">구독 신청</button>
+      </form>
+      <p class="subscribe-ok" role="status" hidden data-i18n="sub.ok">신청되었습니다. 환영합니다! (데모)</p>
+    </div>
+  </section>
+
 </main>
 
 <footer class="site-footer">
@@ -276,8 +290,8 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동">↑</button>
-<script src="assets/js/i18n.js?v7"></script>
-<script src="assets/js/data.js?v7"></script>
-<script src="assets/js/main.js?v7"></script>
+<script src="assets/js/i18n.js?v8"></script>
+<script src="assets/js/data.js?v8"></script>
+<script src="assets/js/main.js?v8"></script>
 </body>
 </html>

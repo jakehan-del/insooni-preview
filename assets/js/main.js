@@ -620,12 +620,26 @@
     if (store("insooni_lang") === "en") apply("en");
   }
 
-  /* ---------- 비디오 히어로: 모션 허용 시에만 로드 ---------- */
+  /* ---------- 비디오 히어로: 네이티브 루프 (모션 민감 시 제거) ---------- */
   function initVhero() {
-    var f = $(".vhero-iframe");
-    if (!f || !f.getAttribute("data-src")) return;
-    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    f.src = f.getAttribute("data-src");
+    var v = $(".vhero-video");
+    if (!v) return;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      v.remove();
+      return;
+    }
+    function tryPlay() {
+      var p = v.play();
+      if (p && p.catch) p.catch(function () { /* 자동재생 차단 시 포스터 유지 */ });
+    }
+    tryPlay();
+    document.addEventListener("visibilitychange", function () {
+      if (!document.hidden && v.paused) tryPlay();
+    });
+    document.addEventListener("pointerdown", function once() {
+      document.removeEventListener("pointerdown", once);
+      if (v.paused) tryPlay();
+    });
   }
 
   /* ---------- 부팅 ---------- */

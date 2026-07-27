@@ -292,13 +292,11 @@ html.js-anim .scene::after { animation: bokeh-drift 52s ease-in-out infinite alt
 }
 html.js-anim .vhero-poster { animation: vhero-fade 1.8s ease both; }
 @keyframes vhero-fade { from { opacity: 0; } }
-.vhero-iframe {
-  position: absolute; top: 50%; left: 50%;
-  width: max(100vw, 177.78dvh); height: max(100dvh, 56.25vw);
-  transform: translate(-50%, -50%);
-  border: 0; pointer-events: none;
+.vhero-video {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: center 30%; pointer-events: none;
 }
-@media (prefers-reduced-motion: reduce) { .vhero-iframe { display: none; } }
+@media (prefers-reduced-motion: reduce) { .vhero-video { display: none; } }
 .vhero-scrim {
   position: absolute; inset: 0; pointer-events: none;
   background: linear-gradient(rgba(12,10,9,.5), transparent 24%, transparent 72%, var(--void));
@@ -503,9 +501,11 @@ html.js-anim .hero [data-rise="5"] { animation-delay: .5s; }
 .manifesto .from { color: var(--faint); font-size: .9rem; letter-spacing: .14em; }
 
 /* ---------- 13. 에라 콜라주 (전체 사이트를 잇는 무간격 그리드) ---------- */
+.era-section { padding: 2px 0 0; }
+.era-grid--full { width: 100%; }
 .era-grid {
   display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-auto-rows: 215px; gap: 2px;
+  grid-auto-rows: 250px; gap: 2px;
 }
 .era-tile {
   position: relative; overflow: hidden; display: flex; flex-direction: column;
