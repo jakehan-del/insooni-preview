@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v9">
+<link rel="stylesheet" href="assets/css/style.css?v10">
 </head>
 <body>
 <a class="skip-link" href="#main" data-i18n="nav.skip">본문 바로가기</a>
@@ -56,11 +56,14 @@
 
   <!-- 첫 화면: 공식 MV가 화면 그 자체 (음소거 배경 재생) -->
   <section class="vhero" aria-label="'그래도 꿈은 흐른다' 공식 뮤직비디오 배경 재생">
-    <div class="vhero-media" aria-hidden="true">
-      <img class="vhero-poster" src="assets/img/hero.jpg" alt="" fetchpriority="high">
-      <video class="vhero-video" autoplay muted loop playsinline preload="auto" poster="assets/img/hero.jpg">
-        <source src="assets/media/hero-loop.mp4" type="video/mp4">
-      </video>
+    <div class="vhero-grid" aria-hidden="true">
+      <div class="vhero-media">
+        <img class="vhero-poster" src="assets/img/hero.jpg" alt="" fetchpriority="high">
+        <video class="vhero-video" autoplay muted loop playsinline preload="auto" poster="assets/img/hero.jpg">
+          <source src="assets/media/hero-loop.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="vhero-side"><img src="assets/img/story.jpg" alt=""></div>
     </div>
     <div class="vhero-scrim" aria-hidden="true"></div>
     <p class="vhero-credit">그래도 꿈은 흐른다 · OFFICIAL MV</p>
@@ -121,49 +124,21 @@
 
 </main>
 
-<footer class="site-footer">
-  <div class="footer-inner">
-    <div class="footer-cols">
-      <div class="footer-brand">
-        <span class="brand-en">INSOONI</span>
-        <p data-i18n="footer.tagline">인순이의 음악과 삶을 기록하고,<br>팬과 함께 내일을 만들어가는 공식 공간.</p>
-      </div>
-      <div>
-        <h3 data-i18n="footer.menu">바로가기</h3>
-        <ul>
-          <li><a href="news.html" data-i18n="nav.news">소식</a></li>
-          <li><a href="schedule.html" data-i18n="nav.schedule">공연·일정</a></li>
-          <li><a href="archive.html" data-i18n="nav.archive">음악 아카이브</a></li>
-          <li><a href="community.html" data-i18n="nav.community">사랑방</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3 data-i18n="footer.channels">공식 채널</h3>
-        <ul>
-          <li><a href="https://www.youtube.com/@insooni8081" target="_blank" rel="noopener">YouTube · INSOONI 인순이</a></li>
-          <li><a href="https://www.instagram.com/ins00ni/" target="_blank" rel="noopener">Instagram · @ins00ni</a></li>
-          <li><span class="link-pending" data-i18n="footer.agency">소속사 소솝 [링크 확인 필요]</span></li>
-        </ul>
-      </div>
-      <div>
-        <h3 data-i18n="footer.ops">운영</h3>
-        <ul>
-          <li><a href="admin.html" data-i18n="footer.admin">운영자 콘솔 (데모)</a></li>
-          <li><span class="link-pending" data-i18n="footer.privacy">개인정보처리방침 [준비 중]</span></li>
-          <li><span class="link-pending" data-i18n="footer.terms">이용약관 [준비 중]</span></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-legal">
-      <span data-i18n="footer.legal1">© 2026 INSOONI OFFICIAL. 본 페이지는 기획 검증용 프로토타입입니다.</span>
-      <span data-i18n="footer.legal2">사진·영상·음원의 저작권은 각 권리자에게 있습니다.</span>
-    </div>
-  </div>
+<footer class="footer-min">
+  <nav aria-label="푸터 메뉴">
+    <a href="news.html" data-i18n="nav.news">소식</a>
+    <a href="schedule.html" data-i18n="nav.schedule">공연·일정</a>
+    <a href="archive.html" data-i18n="nav.archive">음악 아카이브</a>
+    <a href="community.html" data-i18n="nav.community">사랑방</a>
+    <a href="https://www.youtube.com/@insooni8081" target="_blank" rel="noopener">YouTube</a>
+    <a href="https://www.instagram.com/ins00ni/" target="_blank" rel="noopener">Instagram</a>
+    <span>© 2026 INSOONI</span>
+  </nav>
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동">↑</button>
-<script src="assets/js/i18n.js?v9"></script>
-<script src="assets/js/data.js?v9"></script>
-<script src="assets/js/main.js?v9"></script>
+<script src="assets/js/i18n.js?v10"></script>
+<script src="assets/js/data.js?v10"></script>
+<script src="assets/js/main.js?v10"></script>
 </body>
 </html>
