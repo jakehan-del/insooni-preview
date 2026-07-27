@@ -272,6 +272,20 @@ html.js-anim .scene::after { animation: bokeh-drift 52s ease-in-out infinite alt
   to   { transform: translate3d(-22px, -30px, 0); }
 }
 
+/* ---------- 7c-0. 풀블리드 사진 히어로 (beyonce.com 문법: 사진이 곧 화면) ---------- */
+.hero-bg { position: absolute; inset: 0; z-index: -4; }
+.hero-bg img {
+  width: 100%; height: 100%; object-fit: cover; object-position: center 30%;
+  filter: brightness(.92) saturate(.95);
+}
+.hero-bg::after {
+  /* 텍스트 가독을 위한 하단 스크림 + 가장자리 비네트 */
+  content: ""; position: absolute; inset: 0;
+  background:
+    linear-gradient(to top, var(--void) 6%, rgba(12,10,9,.72) 26%, rgba(12,10,9,.12) 55%, rgba(12,10,9,.28)),
+    radial-gradient(120% 90% at 50% 30%, transparent 55%, rgba(12,10,9,.55));
+}
+
 /* ---------- 7c. 히어로 실사진 레이어 (assets/img/portrait.jpg 존재 시 자동 활성) ---------- */
 .hero-photo {
   position: absolute; top: 0; right: 0; bottom: 0; z-index: -3;
@@ -475,8 +489,8 @@ html.js-anim .hero [data-rise="5"] { animation-delay: .5s; }
 /* 타일별 조명 세팅 (같은 무대, 다른 조명) */
 .era-tile:nth-child(1) {
   background:
-    conic-gradient(from 200deg at 80% -12%, transparent 40%, rgba(212,165,74,.2) 47%, transparent 56%),
-    radial-gradient(70% 55% at 78% 8%, rgba(212,165,74,.2), transparent 60%),
+    linear-gradient(to top, rgba(12,10,9,.92) 12%, rgba(12,10,9,.25) 55%, rgba(12,10,9,.15)),
+    url("../img/story.jpg") center 22% / cover no-repeat,
     linear-gradient(168deg, #1d1712, #0d0a09 78%);
 }
 .era-tile:nth-child(2) {
