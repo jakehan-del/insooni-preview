@@ -71,7 +71,7 @@
     });
     document.addEventListener("keydown", function (e) {
       if (e.key !== "Tab" || !nav.classList.contains("open")) return;
-      var items = [toggle].concat($all("a", nav));
+      var items = [$(".brand")].concat($all("a", nav)).concat([$(".lang-toggle"), toggle]).filter(Boolean);
       var first = items[0], last = items[items.length - 1];
       if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
       else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
@@ -155,6 +155,8 @@
     function draw(type) {
       box.innerHTML = "";
       var items = sortedNews().filter(function (n) { return type === "전체" || n.type === type; });
+      var st = $("#news-status");
+      if (st) st.textContent = items.length + t("dyn.newsCount", "건의 소식 표시 중");
       if (!items.length) { box.appendChild(el("p", "empty-note", t("dyn.noCat", "해당 분류의 소식이 아직 없습니다."))); return; }
       items.forEach(function (n) { box.appendChild(newsCard(n, false)); });
     }
@@ -291,7 +293,7 @@
       row.innerHTML =
         (a.art ? '<img class="a-art" src="' + esc(a.art) + '" alt="" loading="lazy">' : '<span class="a-art a-art--empty" aria-hidden="true"></span>') +
         '<span class="a-year">' + esc(a.year) + "</span>" +
-        '<div><h3 class="a-title">' + esc(a.title) + '</h3><p class="a-note">' + esc(a.note || "") + "</p></div>" +
+        '<div><span class="a-title">' + esc(a.title) + '</span><span class="a-note">' + esc(a.note || "") + "</span></div>" +
         '<span class="a-kind">' + esc(a.kind || "앨범") + "</span>";
       var detail = el("div", "album-detail");
       detail.hidden = true;
@@ -465,6 +467,7 @@
       archView.list = viewables;
       var st = $("#arch-status");
       if (st) st.textContent = viewables.length + t("dyn.archCount", "장의 기록 표시 중");
+      if (!items.length) { grid.appendChild(el("p", "empty-note", t("dyn.noCat", "해당 분류의 기록이 아직 없습니다."))); return; }
       items.forEach(function (a) {
         if (a.placeholder) {
           var ph = el("div", "arch-item arch-item--ph");
@@ -553,7 +556,7 @@
         if (e.key === "ArrowRight") { archView.idx = (archView.idx + 1) % archView.list.length; viewerShow(); return; }
       }
       if (e.key === "Tab") {
-        var focusables = lightboxEl.querySelectorAll("button, iframe");
+        var focusables = lightboxEl.querySelectorAll("button:not([hidden]), iframe");
         if (!focusables.length) return;
         var first = focusables[0], last = focusables[focusables.length - 1];
         if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
@@ -826,6 +829,8 @@
     if (!v) return;
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       v.remove();
+      var pb = $(".strip-pause");
+      if (pb) pb.remove();
       return;
     }
     function tryPlay() {
@@ -834,7 +839,7 @@
     }
     tryPlay();
     document.addEventListener("visibilitychange", function () {
-      if (!document.hidden && v.paused) tryPlay();
+      if (!document.hidden && v.paused && v.dataset.userPaused !== "1") tryPlay();
     });
     document.addEventListener("pointerdown", function once() {
       document.removeEventListener("pointerdown", once);
@@ -992,8 +997,8 @@
       dragging = false; strip.classList.remove("dragging"); glide();
       setTimeout(function () { moved = 0; }, 0);
     }
-    strip.addEventListener("pointerup", release);
-    strip.addEventListener("pointercancel", release);
+    window.addEventListener("pointerup", release);
+    window.addEventListener("pointercancel", release);
     /* 드래그였다면 클릭 취소 */
     track.addEventListener("click", function (e) {
       if (moved > 8 && e.detail > 0) { e.preventDefault(); e.stopPropagation(); }
@@ -1014,7 +1019,7 @@
     if (pauseBtn && bgv) {
       pauseBtn.addEventListener("click", function () {
         var paused = bgv.paused;
-        if (paused) { bgv.play(); } else { bgv.pause(); }
+        if (paused) { delete bgv.dataset.userPaused; bgv.play(); } else { bgv.dataset.userPaused = "1"; bgv.pause(); }
         pauseBtn.setAttribute("aria-pressed", String(!paused));
         pauseBtn.setAttribute("aria-label", !paused ? t("aria.playVideo", "배경 영상 재생") : t("aria.pauseVideo", "배경 영상 일시정지"));
         pauseBtn.querySelector("span").textContent = !paused ? "▶" : "⏸";

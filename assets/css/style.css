@@ -262,7 +262,7 @@ html.js-anim .reveal.in { opacity: 1; transform: none; transition: opacity .9s v
 }
 .frame::before {
   content: ""; position: absolute; inset: 14px; pointer-events: none;
-  border: 1px solid rgba(212, 165, 74, .28);
+  border: 1px solid rgba(243, 239, 231, .26);
 }
 .frame .frame-note {
   position: relative; margin: 0; padding: 1.1rem 1.5rem;
@@ -1248,3 +1248,6 @@ button.strip-item:focus-visible { outline: 3px solid var(--ivory); outline-offse
   .album-row .a-year { display: none; }
   .a-art, .a-art--empty { width: 56px; height: 56px; }
 }
+
+.album-row .a-title { display: block; }
+.album-row .a-note { display: block; }

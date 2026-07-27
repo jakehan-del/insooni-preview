@@ -15,6 +15,7 @@ window.I18N_EN = {
   "comm.s1": "WRITE - leave a letter or cheer",
   "comm.s2": "REVIEW - checked by SOSOB staff",
   "comm.s3": "PUBLISH - approved posts only",
+  "dyn.newsCount": " news items shown",
   "about.origin1": "EARLY DAYS",
   "about.origin2": "SCHOOL YEARS",
   "cat.editorial": "EDITORIAL",
