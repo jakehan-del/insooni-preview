@@ -362,16 +362,33 @@
       buildVideoTiles(box, D.videos.filter(function (v) { return v.youtubeId; }).slice(1));
       return;
     }
-    items.forEach(function (r) {
-      var c = el("button", "recap-row");
-      c.type = "button";
-      c.setAttribute("aria-haspopup", "dialog");
-      c.setAttribute("aria-label", r.title + " " + t("dyn.recapOpen", "리캡 열기"));
+    box.classList.add("shows-grid");
+    /* 자료 있는 리캡 + 기록만 있는 지난 공연을 하나의 문양 그리드로 */
+    var shows = [];
+    items.forEach(function (r) { shows.push({ recap: r, date: r.date || r.year || "", city: r.city || r.place || "", title: r.title }); });
+    function fmtShow(d) {
+      if (!d) return "";
+      var parts = String(d).split("-");
+      if (parts[0] === "1999") return "1999";
+      return parts[0] + ". " + (parts[1] ? parseInt(parts[1], 10) + "." : "") + (parts[2] ? " " + parseInt(parts[2], 10) + "." : "");
+    }
+    (D.pastShows || []).forEach(function (p) { shows.push({ date: fmtShow(p.date), city: p.city || "", venue: p.venue || "", title: p.title }); });
+    shows.forEach(function (sh) {
+      var c;
+      if (sh.recap) {
+        c = el("button", "show-cell");
+        c.type = "button";
+        c.setAttribute("aria-haspopup", "dialog");
+        c.setAttribute("aria-label", sh.title + " " + t("dyn.recapOpen", "리캡 열기"));
+      } else {
+        c = el("div", "show-cell");
+      }
       c.innerHTML =
-        '<span class="rr-year">' + esc(r.year || "") + "</span>" +
-        '<span class="rr-title">' + esc(r.title) + (r.place ? '<span class="rr-place">' + esc(r.place) + "</span>" : "") + "</span>" +
-        '<span class="rr-cta">VIEW RECAP <span aria-hidden="true">→</span></span>';
-      c.addEventListener("click", function () { openRecap(r, c); });
+        '<span class="show-mark" aria-hidden="true">\u2726</span>' +
+        '<span class="show-date">' + esc(sh.date) + "</span>" +
+        '<span class="show-city">' + esc(sh.title) + (sh.city ? " · " + esc(sh.city) : "") + "</span>" +
+        (sh.recap ? '<span class="show-cta">VIEW RECAP</span>' : "");
+      if (sh.recap) c.addEventListener("click", function () { openRecap(sh.recap, c); });
       box.appendChild(c);
     });
   }

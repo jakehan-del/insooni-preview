@@ -36,8 +36,8 @@ window.SITE_DATA = {
     { img: "assets/img/photos/hinkchi3.jpg", w: 1067, h: 1600, year: "", cat: "화보", caption: "가죽 팬츠, 흰 배경의 포즈" },
     { img: "assets/img/photos/hinkchi6.jpg", w: 1067, h: 1600, year: "", cat: "화보", caption: "데님 수트와 긴 브레이드" },
     { img: "assets/img/photos/press-03.jpg", w: 420, h: 396, year: "1970년대(추정)", cat: "화보", caption: "장미와 함께한 젊은 날의 포트레이트" },
-    { img: "assets/img/photos/musical-cats.jpg", w: 900, h: 900, year: "", cat: "뮤지컬", caption: "'캣츠' 그리자벨라" },
-    { img: "assets/img/photos/musical-chicago.jpg", w: 480, h: 649, year: "", cat: "뮤지컬", caption: "'시카고' 흑백 프로필 [공연명 확인 필요]" },
+    { img: "assets/img/photos/musical-cats.jpg", w: 900, h: 900, year: "", cat: "뮤지컬", caption: "뮤지컬 '캣츠' 그리자벨라 (2011)" },
+    { img: "assets/img/photos/musical-chicago.jpg", w: 480, h: 649, year: "", cat: "뮤지컬", caption: "뮤지컬 '시카고' 벨마 켈리 (2012·2013)" },
     { img: "assets/img/photos/press-105959.jpg", w: 610, h: 636, year: "1970년대", cat: "자켓", caption: "희자매 3집 LP" },
     { img: "assets/img/photos/album01.jpg", w: 600, h: 591, year: "1980", cat: "자켓", caption: "《인연》 LP" },
     { img: "assets/img/photos/album04.jpg", w: 597, h: 593, year: "1983", cat: "자켓", caption: "독집 제4집 《욕망》 LP" },
@@ -129,8 +129,8 @@ window.SITE_DATA = {
     {
       year: "",
       title: "시어트리컬 콘서트 실황",
-      place: "공연명·연도 확인 중 [공식 확인 필요]",
-      desc: "오케스트라 협연, 로코코 의상극, 스팽글 재즈 넘버 — 같은 카메라 시리즈로 전해진 대형 무대 기록.",
+      place: "",
+      desc: "공연명·연도 확인 중 [공식 확인 필요]. 오케스트라 협연, 로코코 의상극, 스팽글 재즈 넘버 — 같은 카메라 시리즈로 전해진 대형 무대 기록.",
       bg: "assets/img/photos/dsc0628.jpg",
       photos: [
         { img: "assets/img/photos/dsc0427.jpg", w: 1600, h: 1065, caption: "깃털 장식 흰 의상, 오케스트라와 함께" },
@@ -144,8 +144,8 @@ window.SITE_DATA = {
     {
       year: "",
       title: "네온 시티 무대",
-      place: "공연명·연도 확인 중 [공식 확인 필요]",
-      desc: "도시의 불빛을 닮은 LED 무대 실황 기록.",
+      place: "",
+      desc: "공연명·연도 확인 중 [공식 확인 필요]. 도시의 불빛을 닮은 LED 무대 실황 기록.",
       bg: "assets/img/photos/kakao21.jpg",
       photos: [
         { img: "assets/img/photos/kakao21.jpg", w: 1600, h: 1067, caption: "네온 조명의 대형 무대" },
@@ -153,6 +153,55 @@ window.SITE_DATA = {
       ]
     }
   ],
+
+  /* ---------- 지난 공연 아카이브 (플레이DB·보도 검증, 2026.7 리서치) ---------- */
+  pastShows: [
+    { date: "2025-07-09", city: "서울", venue: "국립극장 하늘극장", title: "여우락 페스티벌 '두 사랑 이야기'" },
+    { date: "2025-02-23", city: "", venue: "KBS", title: "열린음악회 1514회 피날레" },
+    { date: "2025-02-16", city: "서울", venue: "장충체육관", title: "한터뮤직어워즈" },
+    { date: "2024-12-30", city: "서울", venue: "그랜드 인터컨티넨탈 파르나스", title: "2024 인순이 디너쇼" },
+    { date: "2024-05-18", city: "인천", venue: "송도컨벤시아", title: "골든걸스 콘서트" },
+    { date: "2024-04-20", city: "부산", venue: "KBS부산홀", title: "골든걸스 전국투어" },
+    { date: "2024-03-02", city: "성남", venue: "성남아트센터", title: "골든걸스 콘서트" },
+    { date: "2023-12-14", city: "안성", venue: "안성맞춤아트홀", title: "인순이 콘서트" },
+    { date: "2023-02-18", city: "캘리포니아", venue: "페창가 리조트", title: "인순이 단독 라이브" },
+    { date: "2022-12-30", city: "전주", venue: "삼성문화회관", title: "인순이 콘서트" },
+    { date: "2019-12-21", city: "서울", venue: "파르나스 그랜드볼룸", title: "연말 디너쇼" },
+    { date: "2019-01-12", city: "부산", venue: "부산문화회관", title: "인순이 콘서트" },
+    { date: "2018-12-23", city: "서울", venue: "롯데호텔 크리스탈볼룸", title: "인순이 디너쇼" },
+    { date: "2018-03-31", city: "서울", venue: "올림픽홀", title: "데뷔 40주년 해 단독 공연" },
+    { date: "2017-12-29", city: "김해", venue: "김해문화의전당", title: "인순이 콘서트" },
+    { date: "2017-12-22", city: "서울", venue: "롯데호텔 크리스탈볼룸", title: "인순이 디너쇼" },
+    { date: "2017-09-16", city: "부산", venue: "벡스코 오디토리움", title: "인순이 콘서트" },
+    { date: "2016-12-21", city: "서울", venue: "그랜드하얏트 그랜드볼룸", title: "인순이 디너쇼" },
+    { date: "2016-02-16", city: "서울", venue: "세종문화회관 대극장", title: "인순이 콘서트" },
+    { date: "2015-12-22", city: "서울", venue: "그랜드하얏트 그랜드볼룸", title: "인순이 디너쇼" },
+    { date: "2015-01-24", city: "수원", venue: "경기아트센터", title: "인순이 콘서트" },
+    { date: "2014-12-24", city: "서울", venue: "그랜드하얏트 그랜드볼룸", title: "인순이 디너쇼" },
+    { date: "2013-12-28", city: "서울", venue: "그랜드하얏트 그랜드볼룸", title: "인순이 디너쇼" },
+    { date: "2013-07-06", city: "서울", venue: "국립극장 해오름극장", title: "뮤지컬 '시카고' 벨마 켈리" },
+    { date: "2012-12-23", city: "서울", venue: "63빌딩 컨벤션센터", title: "인순이 디너쇼" },
+    { date: "2012-06-09", city: "서울", venue: "디큐브아트센터", title: "뮤지컬 '시카고' 벨마 켈리" },
+    { date: "2012-05-19", city: "성남", venue: "성남아트센터", title: "콘서트 '판타지아'" },
+    { date: "2012-05-09", city: "부산", venue: "롯데호텔 크리스탈볼룸", title: "인순이 디너쇼" },
+    { date: "2011-12-22", city: "서울", venue: "센트럴시티 밀레니엄홀", title: "인순이 디너쇼" },
+    { date: "2011-10-12", city: "멜버른", venue: "시드니 마이어 뮤직 볼", title: "'나는 가수다' 호주 특별공연" },
+    { date: "2011-09-17", city: "서울", venue: "샤롯데씨어터", title: "뮤지컬 '캣츠' 그리자벨라" },
+    { date: "2010-11-20", city: "청주", venue: "청주 실내체육관", title: "콘서트 '판타지아'" },
+    { date: "2010-02-01", city: "뉴욕", venue: "카네기홀 아이작 스턴 홀", title: "두 번째 카네기홀 콘서트" },
+    { date: "2009-12-30", city: "서울", venue: "63빌딩 컨벤션센터", title: "아듀 2009 송년 디너쇼" },
+    { date: "2009-12-27", city: "서울", venue: "올림픽홀", title: "콘서트 'LEGEND & FOREVER'" },
+    { date: "2009-10-24", city: "안산", venue: "안산문화예술의전당", title: "데뷔 30주년 'Legend'" },
+    { date: "2008-12-19", city: "서울", venue: "그랜드하얏트 그랜드볼룸", title: "송년 디너쇼 '뜨거운 만남'" },
+    { date: "2008-04-03", city: "서울", venue: "세종문화회관 대극장", title: "데뷔 30주년 전국투어" },
+    { date: "2007-12-22", city: "서울", venue: "스위스 그랜드 호텔", title: "인순이 콘서트" },
+    { date: "2007-06-02", city: "부산", venue: "부산 KBS홀", title: "콘서트 '드리머'" },
+    { date: "2006-12-22", city: "서울", venue: "63빌딩 국제회의장", title: "송년 디너쇼" },
+    { date: "2005-12-22", city: "서울", venue: "롯데호텔 크리스탈볼룸", title: "송년 디너쇼" },
+    { date: "2004-12-22", city: "서울", venue: "롯데호텔 크리스탈볼룸", title: "송년 디너쇼" },
+    { date: "1999-01-01", city: "뉴욕", venue: "카네기홀", title: "첫 카네기홀 무대" }
+  ],
+
 
   /* ---------- 현재 스포트라이트 (관리자 교체 영역) ---------- */
   spotlight: {
@@ -202,12 +251,13 @@ window.SITE_DATA = {
   /* ---------- 일정 (kind: 공연 | 방송 | 행사) ---------- */
   events: [
     {
-      date: "2026-08-29",
+      date: "2026-05-09",
       kind: "공연",
-      title: "[샘플] 단독 콘서트, 서울",
-      place: "서울 ○○아트홀 [실제 공연장 확인 필요]",
-      note: "예매처: 공식 예매 링크로 연결",
-      link: "#"
+      status: "onsale",
+      title: "어버이날 특별기획 '두 사랑 이야기' — 인순이 & 유지숙",
+      place: "안동문화예술의전당 웅부홀",
+      note: "공식 예매: 티켓링크",
+      link: "https://www.ticketlink.co.kr/product/61356"
     },
     {
       date: "2026-08-15",
@@ -253,16 +303,27 @@ window.SITE_DATA = {
         { label: "Apple Music", url: "https://music.apple.com/kr/album/silvers-arirang-my-love/1699110167" },
         { label: "Spotify", url: "https://open.spotify.com/track/6TufjMtsLO7W8tilip8BMr" }
       ] },
+    { year: "1979", title: "Disco", kind: "희자매 2집", note: "현대음향 발매." },
+    { art: "assets/img/photos/press-105959.jpg", year: "1979", title: "희자매 3집", kind: "희자매 3집", note: "현대음향 발매." },
     { art: "assets/img/photos/album01.jpg", year: "1980", title: "인연 (Fate)", kind: "솔로 1집", note: "솔로 가수 인순이의 첫걸음.",
       tracks: ["인연", "웃어주세요", "재수생", "풍문으로 들었어", "정말로 모르시나", "조용한 이별", "차표한장 (One Way Ticket)", "춤을 춰요 (I Was Made For Dancing)", "꿈이였나봐", "복돌이", "내마음 흔들려", "빨간 마후라"],
       credits: "1980년 10월 현대음향 발매. 곡별 작사·작곡 크레딧은 공식 자료 확인 후 추가됩니다. [자료 필요]",
       links: [] },
+    { year: "1981", title: "떠나야 할 그 사람 / 누가", kind: "정규 2집", note: "대표곡 '떠나야 할 그 사람'. 지구레코드. [연도 표기 자료별 상이]" },
+    { year: "1982", title: "슬픔만 남아 있어요 / 울지도 못합니다", kind: "정규 3집", note: "대표곡 '슬픔만 남아 있어요'. 지구레코드." },
     { featured: true, art: "assets/img/photos/album04.jpg", year: "1983", title: "밤이면 밤마다", kind: "대표곡", note: "디바의 시대를 연 폭발적 히트곡. 독집 제4집 수록.",
       tracks: ["밤이면 밤마다", "슬픈 아침", "한밤중", "내 고향집", "왜 나를 떠나셨나요", "손모아 마음모아", "욕망", "하늘 날고파라", "그리운 내사랑아", "다른 사람 말처럼 들리네", "고독", "고독 (경음악)"],
       credits: "'밤이면 밤마다' — 작사·작곡·편곡 김정택 · 1983 독집 제4집. 이 곡의 히트로 1984 KBS 7대가수상 수상.",
       links: [
         { label: "멜론(곡)", url: "https://www.melon.com/song/detail.htm?songId=60847" }
       ] },
+    { year: "1984", title: "아름다운 우리나라 / 여기가 어디냐", kind: "정규 5집", note: "원곡 '아름다운 우리나라' 수록 (2025년 신보와 별개). HKR." },
+    { year: "1985", title: "눈물의 편지 / 잊지 못하고", kind: "정규 6집", note: "대표곡 '눈물의 편지'. HKR." },
+    { art: "assets/img/photos/album07.jpg", year: "1987", title: "에레나라 불리운 여인", kind: "정규 7집", note: "대표곡 '에레나라 불리운 여인'. 지구레코드." },
+    { year: "1988", title: "그 어느 거리로", kind: "정규 8집", note: "대표곡 '그 어느 거리로'. HKR." },
+    { art: "assets/img/photos/album09.jpg", year: "1989", title: "Turning Point", kind: "정규 9집", note: "대표곡 '갈망'. 현대음향." },
+    { art: "assets/img/photos/album10.jpg", year: "1991", title: "여자 (女子)", kind: "정규 10집", note: "대표곡 '하늘을 바라보소'. 가야음반." },
+    { year: "1992", title: "인순이 골든 앨범", kind: "컴필레이션", note: "Oasis 발매." },
     { art: "assets/img/photos/album11.jpg", year: "1996", title: "The Queen Of Soul", kind: "정규 11집", note: "'또' 수록. 소울의 여왕이라는 이름을 새긴 앨범.",
       tracks: ["또", "이별연습", "밀애", "너의 곁에 나", "이별을 준비할꺼야", "그대가 말하는 사랑", "혼자가 아닌 나", "White Christmas For You"],
       credits: "'또'·'밀애'·'그대가 말하는 사랑' — 작사·작곡 박진영 · '이별연습'·'이별을 준비할꺼야' — 작사·작곡 김형석 · '너의 곁에 나' — 작사 노영심, 작곡 김형석 · 1996년 5월 세원음반",
@@ -271,6 +332,11 @@ window.SITE_DATA = {
         { label: "Apple Music", url: "https://music.apple.com/kr/album/the-queen-of-soul/1538223938" },
         { label: "Spotify", url: "https://open.spotify.com/album/7odz1LsIS2ltX2tQZe41Q7" }
       ] },
+    { year: "1997", title: "가스펠 1 (내 영혼의 그윽히 깊은 데서)", kind: "정규 12집", note: "CCM 앨범. CREAM/국제음반." },
+    { art: "assets/img/photos/album13.jpg", year: "1997", title: "Future & Memories", kind: "정규 13집", note: "CREAM 발매." },
+    { year: "2000", title: "인순이 복음성가 I·II", kind: "컴필레이션", note: "가스펠 모음." },
+    { art: "assets/img/photos/album15.jpg", year: "2001", title: "My Turn", kind: "정규 14집", note: "CREAM 발매." },
+    { art: "assets/img/photos/jazz-album.jpg", year: "2003", title: "Jazz", kind: "정규 15집", note: "재즈 앨범. C&C Media." },
     { art: "assets/img/photos/album16.jpg", year: "2004", title: "A To Z", kind: "정규 16집", note: "'친구여'(feat. 조PD) 수록. 2004년 9월 9일 발매.",
       tracks: ["Tonight", "Higher", "웃고 있지만", "My Life", "연가", "여정", "Swing My Baby", "연인", "여자이니까", "잠깐", "첫사랑", "비에 스친 날들", "친구여 (feat. 조PD)", "비상"],
       credits: "'친구여' — 작사 조PD, 작곡·편곡 박근태 · 타이틀곡 'Tonight' — 작사 김민지, 작곡 박해운, 편곡 한태수 · 프로듀서 김도형",
@@ -280,6 +346,9 @@ window.SITE_DATA = {
         { label: "Spotify", url: "https://open.spotify.com/album/7hdxullH6yeBjneaZ9rRDD" },
         { label: "멜론", url: "https://www.melon.com/album/detail.htm?albumId=35502" }
       ] },
+    { year: "2004", title: "올림픽 응원가 - 비상", kind: "싱글", note: "BES기획." },
+    { art: "assets/img/photos/press-149006.jpg", year: "2006", title: "열정 (Can You Feel It)", kind: "싱글", note: "서커스엔터테인먼트." },
+    { year: "2006", title: "Amazing Grace", kind: "라이브", note: "라이브 콘서트 앨범. C&C Media." },
     { featured: true, art: "assets/img/covers/cover2007.jpg", year: "2007", title: "거위의 꿈", kind: "대표곡", note: "카니발 원곡(1997) 리메이크. 위로의 상징이 된 노래.",
       tracks: ["거위의 꿈 (Original)", "거위의 꿈 (Inst.)", "거위의 꿈 (Radio Edit)", "거위의 꿈 (Director's Edit)", "하늘이여...제발 (주몽 OST)"],
       credits: "작사 이적 · 작곡 김동률 (원곡 카니발, 1997) · 2007. 1. 22. 디지털 싱글, 2007. 2. 1. 디지털 음반 《거위의 꿈, 꿈을 꾸는 모든 이들에게》",
@@ -289,6 +358,7 @@ window.SITE_DATA = {
         { label: "Spotify", url: "https://open.spotify.com/album/7t69eXfrQb8fY51q8EvMQe" },
         { label: "멜론", url: "https://www.melon.com/album/detail.htm?albumId=342766" }
       ] },
+    { year: "2008", title: "Anthology 97-08", kind: "컴필레이션", note: "Vitamin Entertainment." },
     { art: "assets/img/covers/cover2009.jpg", year: "2009", title: "인순이 (17집)", kind: "정규", note: "타이틀곡 'Fantasia', '아버지' 수록. 데뷔 31주년 기념작.",
       tracks: ["Fantasia", "Cry", "향수", "아버지", "기회", "일어나", "뿌리 (Prologue)", "나무", "딸에게", "사랑가", "Merry Merry", "Fantasia (Inst.)"],
       credits: "'아버지' — 작사·작곡·편곡 이현승 · 'Fantasia' — 작사 나비, 작곡·편곡 이현승 · '향수' — 시 정지용, 작곡 김희갑 · 총괄 프로듀서 이현승 · 2009. 5. 8. 발매",
@@ -298,6 +368,21 @@ window.SITE_DATA = {
         { label: "Spotify", url: "https://open.spotify.com/album/2fdeLt66Qis4rWCYxWI8ro" },
         { label: "멜론", url: "https://www.melon.com/album/detail.htm?albumId=557957" }
       ] },
+    { year: "2010", title: "꿈, 날개를 달다", kind: "싱글", note: "임태경 듀엣." },
+    { art: "assets/img/photos/press-35024303.jpg", year: "2011", title: "어퍼컷", kind: "싱글", note: "지앤지프로덕션/KT뮤직." },
+    { year: "2011", title: "Legend (30주년 기념 콘서트 실황)", kind: "라이브", note: "2CD 실황. 소솝/Vitamin Entertainment." },
+    { year: "2011", title: "디스코 걸스: 안타 레코드 이어스 앤쏠로지 1978-1980", kind: "희자매 컴필", note: "2011 리마스터. Beatball." },
+    { year: "2013", title: "Umbrella", kind: "정규 18집", note: "Sony 발매." },
+    { year: "2013", title: "나무", kind: "EP", note: "소솝/Sony." },
+    { year: "2015", title: "피노키오", kind: "디지털 싱글", note: "소솝/휴맵컨텐츠." },
+    { year: "2015", title: "이토록 아름다웠음을 (엄마 OST)", kind: "OST 싱글", note: "Warner Music Korea." },
+    { year: "2016", title: "선물 (기억 OST Part 2)", kind: "OST 싱글", note: "CJ E&M." },
+    { year: "2016", title: "하나의 꿈 (One K 콘서트 테마곡)", kind: "싱글", note: "코리안드림." },
+    { year: "2017", title: "2018 평창 동계올림픽 성화봉송 주제가", kind: "디지털 싱글", note: "평창 동계올림픽 조직위원회." },
+    { year: "2019", title: "행복", kind: "디지털 싱글", note: "휴맵컨텐츠/지니뮤직." },
+    { year: "2021", title: "드림오더", kind: "디지털 싱글", note: "글로벌오더/다날." },
+    { year: "2022", title: "내일이 빛날 테니까 (You will shine)", kind: "디지털 싱글", note: "박보람 듀엣. 제나두엔터테인먼트." },
+    { year: "2022", title: "긴 편지", kind: "디지털 싱글", note: "휴맵컨텐츠/YG PLUS." },
     { featured: true, art: "assets/img/covers/cover2023.jpg", year: "2023", title: "One Last Time", kind: "골든걸스", note: "KBS2 '골든걸스' 프로젝트 그룹 데뷔곡 (박진영 프로듀싱).",
       tracks: ["One Last Time"],
       credits: "작사 박진영 'The Asiansoul' · 작곡 박진영, Deza · 편곡 박진영, 이해솔 · 제작 ZEMMIX C&B · 유통 워너뮤직코리아 · 2023. 12. 1. 디지털 싱글 (인순이·박미경·신효범·이은미)",
@@ -307,6 +392,9 @@ window.SITE_DATA = {
         { label: "Spotify", url: "https://open.spotify.com/track/0OYq4lcsCvC3aVWVt3lFTK" },
         { label: "멜론", url: "https://www.melon.com/album/detail.htm?albumId=11376398" }
       ] },
+    { year: "2023", title: "처음 이야기 (어쩌다 사장3 OST)", kind: "OST 싱글", note: "류민희와 함께." },
+    { year: "2024", title: "토닥토닥", kind: "디지털 싱글", note: "리코브/NHN벅스." },
+    { year: "2024", title: "너의 이름을 세상이 부를 때", kind: "디지털 싱글", note: "리코브/NHN벅스." },
     { featured: true, art: "assets/img/covers/cover2025.jpg", year: "2025", title: "인순이, 아름다운 우리나라", kind: "앨범", note: "2025년 2월 발매, 9곡 수록.",
       tracks: ["광주 광주", "밤이면 밤마다", "아름다운 우리나라", "야속한 내 님", "흔들리는 갈대", "너와 나", "욕망", "이별의 눈동자", "길섶에 핀 꽃"],
       credits: "정규 9곡 · 2025. 2. 19. 발매 · 기획 탑뮤직 · 유통 RIAK · 타이틀곡 '아름다운 우리나라'(원곡 1984년 발표). 곡별 세부 크레딧은 공식 자료 확인 후 추가됩니다.",
@@ -325,7 +413,7 @@ window.SITE_DATA = {
         { label: "멜론", url: "https://www.melon.com/album/detail.htm?albumId=12411745" },
         { label: "공식 MV", url: "https://www.youtube.com/watch?v=6joBf4xW6Qs" }
       ] },
-    { year: "예정", title: "전체 디스코그래피", kind: "준비 중", note: "정규 14장 포함 총 19장(영문 위키 기준). 전체 목록은 공식 자료 검수 후 시대별로 정리됩니다. [공식 확인 필요]" }
+    { year: "2025", title: "바보 멍청이 똥개", kind: "디지털 싱글", note: "주식회사 소솝/NHN벅스. 성수동 버스킹으로 알려진 곡." }
   ],
 
   /* ---------- 연혁 타임라인 (milestone: 굵은 표시 / 검증 완료 항목 중심) ---------- */

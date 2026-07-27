@@ -10,6 +10,7 @@ window.I18N_EN = {
   "strip.new": "NEW SINGLE",
   "strip.discog": "DISCOGRAPHY",
   "strip.mv": "PLAY OFFICIAL MV",
+  "live.past": "PAST SHOWS",
   "nav.haemil": "HAEMIL SCHOOL",
   "music.new": "NEW SINGLE · NOV 28, 2025",
   "comm.s1": "WRITE - leave a letter or cheer",

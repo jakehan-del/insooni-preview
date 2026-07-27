@@ -911,7 +911,8 @@ html.js-anim .hero [data-rise="5"] { animation-delay: .5s; }
 }
 a.card { text-decoration: none; color: inherit; }
 .grid--3:hover .card:not(:hover) { opacity: .5; }
-.card .thumb { aspect-ratio: 16 / 9; }
+.card .thumb { aspect-ratio: 4 / 5; overflow: hidden; position: relative; border-radius: 2px; }
+.card .thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .card-body { padding: .9rem .1rem 1.2rem; display: flex; flex-direction: column; gap: .45rem; flex: 1; }
 .card-body h3 { margin: 0; font-family: var(--font-mono); font-weight: 400; font-size: .85rem; letter-spacing: .14em; }
 .card-meta { font-family: var(--font-mono); font-size: .72rem; color: var(--faint); display: flex; gap: .9em; flex-wrap: wrap; margin-top: auto; letter-spacing: .08em; }
@@ -1273,5 +1274,24 @@ button.strip-item:focus-visible { outline: 3px solid var(--ivory); outline-offse
 .rr-place { display: block; font-size: .66rem; letter-spacing: .16em; text-transform: uppercase; color: var(--faint); margin-top: .45em; }
 .rr-cta { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .26em; color: var(--faint); white-space: nowrap; }
 .recap-row:hover .rr-cta, .recap-row:focus-visible .rr-cta { color: #fff; }
-#past-recaps { display: block; }
 @media (max-width: 640px) { .recap-row { grid-template-columns: 1fr auto; } .rr-year { display: none; } }
+
+/* 지난 공연: 비욘세 투어 문양 그리드 (✦ + 날짜 + 도시 + VIEW RECAP) */
+.shows-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 3.4rem 1rem; text-align: center; padding: 1rem 0 2rem;
+}
+.show-cell {
+  border: 0; background: transparent; color: var(--ivory); cursor: default;
+  display: flex; flex-direction: column; align-items: center; gap: .55rem;
+  font-family: var(--font-mono); transition: opacity .22s ease; padding: .4rem 0;
+}
+button.show-cell { cursor: pointer; }
+.shows-grid:hover .show-cell:not(:hover) { opacity: .45; }
+.show-mark { font-size: 2rem; line-height: 1; color: #fff; }
+.show-date { font-size: .78rem; letter-spacing: .14em; }
+.show-city { font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); max-width: 15em; }
+.show-cta { font-size: .62rem; letter-spacing: .24em; color: var(--faint); }
+button.show-cell:hover .show-cta, button.show-cell:focus-visible .show-cta { color: #fff; text-decoration: underline; text-underline-offset: 5px; }
+.show-cell { min-width: 0; width: 100%; }
+.show-city { overflow-wrap: anywhere; }
