@@ -163,14 +163,6 @@ html.js-anim .reveal.in { opacity: 1; transform: none; transition: opacity .9s v
 .main-nav a[aria-current="page"] { color: var(--gold); }
 .main-nav a[aria-current="page"]::after { right: .3em; }
 .header-tools { display: flex; align-items: center; gap: .6rem; }
-.fs-toggle { display: flex; gap: .1rem; }
-.fs-toggle button {
-  border: 0; background: transparent; padding: .4em .5em;
-  color: var(--faint); font-weight: 600; font-size: .82rem; min-height: 44px;
-  border-radius: 8px; text-shadow: 0 1px 12px rgba(8,8,8,.65);
-}
-.fs-toggle button:hover { color: var(--ivory); }
-.fs-toggle button[aria-pressed="true"] { background: transparent; color: var(--gold); }
 .lang-toggle {
   min-height: 44px; padding: .4em .5em; border: 0; background: transparent;
   font-family: var(--font-mono); color: var(--faint); font-weight: 500;
@@ -222,7 +214,6 @@ html.js-anim .reveal.in { opacity: 1; transform: none; transition: opacity .9s v
 @media (max-width: 480px) {
   .header-inner { gap: .6rem; padding: 0 14px; min-height: 64px; }
   .brand .brand-en { font-size: 16px; }
-  .fs-toggle button { padding: 7px 6px; font-size: 13px; }
   .lang-toggle { min-height: 44px; padding: 6px 6px; font-size: 11px; }
   .nav-toggle { width: 44px; height: 44px; }
   .main-nav { inset: 64px 0 auto 0; }
@@ -430,12 +421,15 @@ html.js-anim .hero [data-rise="5"] { animation-delay: .5s; }
 .schedule-strip { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
 .event-row {
   display: grid; grid-template-columns: 8.5rem 1fr auto; gap: 2rem; align-items: center;
-  padding: 1.9rem .5rem; border-bottom: 1px solid var(--line);
+  padding: 2.6rem .5rem; border-bottom: 1px solid var(--line);
+  transition: opacity .22s ease;
 }
+/* 비욘세 투어 문법: 호버한 행만 남기고 나머지는 흐리게 */
+.schedule-strip:hover .event-row:not(:hover) { opacity: .4; }
 .event-date { display: flex; align-items: baseline; gap: .55rem; }
 .event-date .d {
-  font-family: var(--font-display); font-size: 3.1rem; font-weight: 900;
-  color: var(--gold); line-height: 1; letter-spacing: -.02em;
+  font-family: var(--font-mono); font-size: 2.1rem; font-weight: 400;
+  color: var(--ivory); line-height: 1; letter-spacing: .04em;
 }
 .event-date .m { font-family: var(--font-mono); font-size: .72rem; color: var(--faint); letter-spacing: .12em; }
 .event-info h3 { margin: .35em 0 .1em; font-size: 1.3rem; }
@@ -1081,3 +1075,95 @@ button.album-row:hover { background: rgba(243,239,231,.03); }
   transition: border-color .2s ease, color .2s ease;
 }
 .a-link:hover { border-color: var(--ivory); color: var(--gold-hover); }
+
+/* ---------- 홈 v17: 비욘세 문법 — 입장 로더 + 무한 가로 필름스트립 ---------- */
+body.home { overflow: hidden; height: 100dvh; }
+body.home .footer-min { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; border-top: 0; }
+body.home .footer-min nav { justify-content: center; padding-bottom: .6rem; padding-top: 2.2rem; background: linear-gradient(to top, rgba(8,8,8,.9) 55%, transparent); }
+body.home .footer-min a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 .3em; color: var(--muted); }
+
+.loader { position: fixed; inset: 0; z-index: 300; background: var(--void); pointer-events: none; animation: loader-safety 3.8s ease forwards; }
+.loader img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .26s ease; }
+.loader img:nth-child(1) { z-index: 5; }
+.loader img:nth-child(2) { z-index: 4; }
+.loader img:nth-child(3) { z-index: 3; }
+.loader img:nth-child(4) { z-index: 2; }
+.loader img:nth-child(5) { z-index: 1; }
+.loader img.gone { opacity: 0; }
+.loader-mark {
+  position: absolute; inset: 0; z-index: 6; display: grid; place-items: center;
+  font-family: var(--font-latin); font-weight: 600;
+  font-size: clamp(1.9rem, 4.6vw, 3.2rem); letter-spacing: .34em; text-indent: .34em;
+  color: var(--ivory); text-shadow: 0 2px 34px rgba(8,8,8,.85);
+}
+.loader.done { animation: none; opacity: 0; transition: opacity .55s ease; }
+@keyframes loader-safety { 0%, 86% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) { .loader { display: none; } }
+
+.strip { position: relative; height: 100dvh; overflow: hidden; background: var(--void); cursor: grab; touch-action: none; }
+.strip:focus-visible { outline: 2px solid var(--ivory); outline-offset: -4px; }
+.strip.dragging { cursor: grabbing; }
+.strip-track { display: flex; height: 100%; width: max-content; align-items: stretch; }
+.strip-item { flex: 0 0 auto; height: 100%; display: block; position: relative; background: #0d0d0d; }
+.strip-item img { height: 100%; width: auto; display: block; object-fit: cover; -webkit-user-drag: none; user-select: none; }
+.strip-item--tall { width: calc(100dvh * .7); }
+.strip-item--tall img { width: 100%; }
+.strip-item--wide { width: calc(100dvh * 1.5); }
+.strip-item--wide img { width: 100%; }
+.strip-item--video { width: calc(100dvh * 1.7778); }
+.strip-item--video .vhero-poster,
+.strip-item--video .vhero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+.strip-caption {
+  position: absolute; inset: 0; z-index: 4; pointer-events: none;
+  display: grid; place-content: center; justify-items: center; gap: .55rem; text-align: center;
+}
+.strip-caption::before {
+  content: ""; position: absolute; left: 50%; top: 50%; width: min(46rem, 86vw); height: 15rem;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, rgba(8,8,8,.66), transparent 78%);
+}
+.strip-caption > * { position: relative; }
+.sc-eyebrow { margin: 0; font-family: var(--font-mono); font-size: .67rem; letter-spacing: .3em; text-transform: uppercase; color: rgba(243,239,231,.78); text-shadow: 0 1px 14px rgba(8,8,8,.95); }
+.sc-title {
+  pointer-events: auto; border: 0; background: transparent; padding: .35em .6em; cursor: pointer;
+  font-family: var(--font-mono); font-size: 1rem; letter-spacing: .18em;
+  color: #fff; text-decoration: none; text-shadow: 0 1px 20px rgba(8,8,8,.95);
+}
+.sc-title:hover, .sc-title:focus-visible { text-decoration: underline; text-underline-offset: 7px; }
+.sc-sub {
+  pointer-events: auto; display: inline-flex; align-items: center; min-height: 44px;
+  border: 0; background: transparent; cursor: pointer;
+  font-family: var(--font-mono); font-size: .72rem; letter-spacing: .26em;
+  text-transform: uppercase; color: rgba(243,239,231,.85); text-decoration: none;
+  box-shadow: inset 0 -1px 0 rgba(243,239,231,.5);
+  text-shadow: 0 1px 12px rgba(8,8,8,.9);
+}
+.sc-sub:hover { color: #fff; border-color: #fff; }
+
+@media (max-width: 700px) {
+  .strip-item, .strip-item--tall, .strip-item--wide, .strip-item--video { width: 100vw; }
+  .strip-item img { width: 100%; object-fit: contain; }
+  .strip-item--wide img { object-fit: cover; }
+  body.home .footer-min nav { gap: .9rem 1.1rem; }
+}
+
+/* 스트립 상단 스크림: 밝은 커버 위 헤더 가독성 */
+.strip::after {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 170px; z-index: 2;
+  background: linear-gradient(to bottom, rgba(8,8,8,.88), rgba(8,8,8,.35) 60%, transparent); pointer-events: none;
+}
+
+/* 스트립 비디오 타일(버튼) 초기화 + 배경 영상 일시정지 토글 (WCAG 2.2.2) */
+button.strip-item { border: 0; padding: 0; background: #0d0d0d; cursor: pointer; text-align: inherit; }
+button.strip-item:focus-visible { outline: 3px solid var(--ivory); outline-offset: -4px; }
+.strip-pause {
+  position: absolute; right: 1.1rem; bottom: 4.6rem; z-index: 5;
+  min-width: 44px; min-height: 44px; border-radius: 2px;
+  border: 1px solid rgba(243,239,231,.5); background: rgba(8,8,8,.55);
+  color: var(--ivory); font-size: 1rem; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: border-color .2s ease, background .2s ease;
+}
+.strip-pause:hover { border-color: var(--ivory); background: rgba(8,8,8,.75); }
+@media (max-width: 700px) { .strip-pause { bottom: 7.2rem; } }

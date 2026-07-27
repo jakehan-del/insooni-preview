@@ -52,22 +52,6 @@
     } catch (e) { return null; }
   }
 
-  /* ---------- 1. 글자 크기 조절 (시니어 접근성) ---------- */
-  function initFontSize() {
-    var saved = store("insooni_fs") || "1";
-    document.documentElement.setAttribute("data-fs", saved);
-    $all(".fs-toggle button").forEach(function (btn) {
-      btn.setAttribute("aria-pressed", String(btn.dataset.fs === saved));
-      btn.addEventListener("click", function () {
-        document.documentElement.setAttribute("data-fs", btn.dataset.fs);
-        store("insooni_fs", btn.dataset.fs);
-        $all(".fs-toggle button").forEach(function (b) {
-          b.setAttribute("aria-pressed", String(b === btn));
-        });
-      });
-    });
-  }
-
   /* ---------- 2. 모바일 내비게이션 ---------- */
   function initNav() {
     var toggle = $(".nav-toggle"), nav = $(".main-nav");
@@ -809,6 +793,140 @@
     });
   }
 
+  /* ---------- 홈 입장 로더: 사진이 층층이 벗겨지는 액션 (세션당 1회) ---------- */
+  function initLoader() {
+    var box = $("#loader");
+    if (!box) return;
+    var seen = false;
+    try { seen = sessionStorage.getItem("insooni_loader") === "1"; } catch (e) {}
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (seen || reduce) { box.remove(); return; }
+    try { sessionStorage.setItem("insooni_loader", "1"); } catch (e) {}
+    var frames = $all("img", box);
+    var i = 0;
+    var started = false;
+    function start() {
+      if (started) return;
+      started = true;
+      run();
+    }
+    var cap = setTimeout(start, 900);
+    Promise.all(frames.map(function (im) {
+      return im.decode ? im.decode().catch(function () {}) : Promise.resolve();
+    })).then(function () { clearTimeout(cap); start(); });
+    function run() {
+    var iv = setInterval(function () {
+      if (i < frames.length - 1) {
+        frames[i].classList.add("gone"); i++;
+      } else {
+        clearInterval(iv);
+        box.classList.add("done");
+        setTimeout(function () { if (box.parentNode) box.remove(); }, 650);
+      }
+    }, 330);
+    }
+  }
+
+  /* ---------- 홈 무한 가로 필름스트립 (드래그·휠·키보드, 이음매 없는 루프) ---------- */
+  function initStrip() {
+    var strip = $("#strip"), track = $("#strip-track");
+    if (!strip || !track) return;
+    /* 복제분으로 무한 루프 구성 (복제는 보조기기에서 숨김) */
+    var originals = $all(".strip-item", track);
+    originals.forEach(function (item) {
+      var c = item.cloneNode(true);
+      c.setAttribute("aria-hidden", "true");
+      c.setAttribute("tabindex", "-1");
+      if (c.tagName === "A") c.removeAttribute("href");
+      var v = c.querySelector("video");
+      if (v) v.remove(); /* 복제 영상은 정지 이미지(포스터)로 대체 */
+      track.appendChild(c);
+    });
+    var pos = 0, vel = 0, dragging = false, lastX = 0, moved = 0, half = 0, raf = null;
+    function measure() { half = track.scrollWidth / 2; }
+    function apply() {
+      if (half > 1) pos = ((pos % half) + half) % half;
+      track.style.transform = "translate3d(" + (-pos) + "px,0,0)";
+    }
+    function tick() {
+      raf = null;
+      if (!dragging && Math.abs(vel) > 0.08) {
+        pos += vel; vel *= 0.94; apply();
+        raf = requestAnimationFrame(tick);
+      }
+    }
+    function glide() { if (!raf) raf = requestAnimationFrame(tick); }
+    function remeasure() { measure(); apply(); }
+    measure();
+    window.addEventListener("resize", remeasure);
+    $all("img", track).forEach(function (im) {
+      if (!im.complete) im.addEventListener("load", remeasure, { once: true });
+    });
+    /* 포커스 자동 스크롤 흡수: overflow hidden 컨테이너의 scrollLeft를 transform pos로 이관 */
+    strip.addEventListener("scroll", function () {
+      if (strip.scrollLeft) { pos += strip.scrollLeft; strip.scrollLeft = 0; apply(); }
+    });
+    /* 키보드 포커스 항목을 화면 중앙으로 */
+    track.addEventListener("focusin", function (e) {
+      var item = e.target.closest(".strip-item");
+      if (!item) return;
+      var target = item.offsetLeft - (strip.clientWidth - item.offsetWidth) / 2;
+      pos = target; vel = 0; apply();
+    });
+    strip.addEventListener("pointerdown", function (e) {
+      if (e.button !== 0) return;
+      dragging = true; moved = 0; lastX = e.clientX; vel = 0;
+      strip.classList.add("dragging");
+    });
+    strip.addEventListener("pointermove", function (e) {
+      if (!dragging) return;
+      var dx = e.clientX - lastX; lastX = e.clientX;
+      moved += Math.abs(dx);
+      /* 실제 드래그로 판정된 순간에만 캡처 — 단순 클릭은 자식 링크에 정상 전달 */
+      if (moved > 8 && !strip.hasPointerCapture(e.pointerId)) {
+        try { strip.setPointerCapture(e.pointerId); } catch (err) {}
+      }
+      pos -= dx; vel = -dx;
+      apply();
+    });
+    function release() {
+      if (!dragging) return;
+      dragging = false; strip.classList.remove("dragging"); glide();
+      setTimeout(function () { moved = 0; }, 0);
+    }
+    strip.addEventListener("pointerup", release);
+    strip.addEventListener("pointercancel", release);
+    /* 드래그였다면 클릭 취소 */
+    track.addEventListener("click", function (e) {
+      if (moved > 8 && e.detail > 0) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
+    strip.addEventListener("wheel", function (e) {
+      e.preventDefault();
+      pos += Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      vel = 0; apply();
+    }, { passive: false });
+    strip.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowRight") { e.preventDefault(); vel = 34; glide(); }
+      else if (e.key === "ArrowLeft") { e.preventDefault(); vel = -34; glide(); }
+    });
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) { vel = 0; }
+    });
+    var pauseBtn = $(".strip-pause"), bgv = $(".vhero-video", track);
+    if (pauseBtn && bgv) {
+      pauseBtn.addEventListener("click", function () {
+        var paused = bgv.paused;
+        if (paused) { bgv.play(); } else { bgv.pause(); }
+        pauseBtn.setAttribute("aria-pressed", String(!paused));
+        pauseBtn.setAttribute("aria-label", !paused ? t("aria.playVideo", "배경 영상 재생") : t("aria.pauseVideo", "배경 영상 일시정지"));
+        pauseBtn.querySelector("span").textContent = !paused ? "▶" : "⏸";
+      });
+    } else if (pauseBtn) {
+      pauseBtn.remove();
+    }
+    apply();
+  }
+
   /* ---------- 입장 인트로 (세션당 1회) ---------- */
   function initIntro() {
     var intro = $("#intro");
@@ -907,9 +1025,10 @@
 
   /* ---------- 부팅 ---------- */
   document.addEventListener("DOMContentLoaded", function () {
-    initFontSize();
     initLang();
     initIntro();
+    initLoader();
+    initStrip();
     initVhero();
     initHeroSlider();
     renderSpotlight();

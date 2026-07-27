@@ -6,6 +6,10 @@
 <meta name="theme-color" content="#080808">
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
 <link rel="preload" as="image" href="assets/img/hero.jpg">
+<link rel="preload" as="image" href="assets/img/stills/s8.jpg">
+<link rel="preload" as="image" href="assets/img/stills/s4.jpg">
+<link rel="preload" as="image" href="assets/img/stills/s5.jpg">
+<link rel="preload" as="image" href="assets/img/stills/s6.jpg">
 <title>인순이 INSOONI | 공식 팬 플랫폼</title>
 <meta name="description" content="대한민국 디바 인순이의 공식 팬 플랫폼. 최신 소식, 공연 일정, 음악 아카이브, 그리고 팬들의 사랑방.">
 <meta property="og:title" content="인순이 INSOONI | 공식 팬 플랫폼">
@@ -18,12 +22,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v16">
+<link rel="stylesheet" href="assets/css/style.css?v17">
 </head>
-<body>
+<body class="home">
 <a class="skip-link" href="#main" data-i18n="nav.skip">본문 바로가기</a>
 
-<div class="intro" id="intro" aria-hidden="true"><span class="intro-mark">INSOONI</span></div>
+<!-- 입장 로더: 시대별 사진이 층층이 벗겨지는 액션 (세션당 1회) -->
+<div class="loader" id="loader" aria-hidden="true">
+  <img src="assets/img/stills/s8.jpg" alt="" style="object-position:center 45%">
+  <img src="assets/img/stills/s4.jpg" alt="" style="object-position:center 25%">
+  <img src="assets/img/stills/s5.jpg" alt="" style="object-position:center 40%">
+  <img src="assets/img/hero.jpg" alt="">
+  <img src="assets/img/stills/s6.jpg" alt="" style="object-position:center 22%">
+  <span class="loader-mark" aria-hidden="true">INSOONI</span>
+</div>
 
 <header class="site-header">
   <div class="header-inner">
@@ -42,11 +54,6 @@
       </ul>
     </nav>
     <div class="header-tools">
-      <div class="fs-toggle" role="group" aria-label="글자 크기 조절">
-        <button type="button" data-fs="1" aria-pressed="true" aria-label="글자 크기 보통" data-i18n-aria="aria.fs1">가</button>
-        <button type="button" data-fs="2" aria-pressed="false" aria-label="글자 크기 크게" data-i18n-aria="aria.fs2">가</button>
-        <button type="button" data-fs="3" aria-pressed="false" aria-label="글자 크기 아주 크게" data-i18n-aria="aria.fs3">가</button>
-      </div>
       <button class="lang-toggle" type="button" aria-label="Switch to English">EN</button>
       <button class="nav-toggle" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="메뉴 열기"><span class="bars"></span></button>
     </div>
@@ -54,135 +61,50 @@
 </header>
 
 <main id="main">
+  <h1 class="sr-only" data-i18n="hero.tag">인순이 — 노래로 시대를 잇다</h1>
 
-  <!-- 첫 화면: 공식 MV가 화면 그 자체 (음소거 배경 재생) -->
-  <section class="vhero" aria-label="'그래도 꿈은 흐른다' 공식 뮤직비디오 배경 재생">
-    <div class="vhero-grid" aria-hidden="true">
-      <div class="vhero-media">
+  <!-- 홈 = 무한 가로 필름스트립 한 화면. 각 노래·시대의 고유 아트가 옆으로 흐른다 -->
+  <section class="strip" id="strip" tabindex="0" role="region"
+    aria-roledescription="캐러셀" aria-label="시대별 갤러리 — 드래그하거나 좌우 화살표 키로 넘겨 보세요" data-i18n-aria="aria.strip">
+    <div class="strip-track" id="strip-track">
+      <button type="button" class="strip-item strip-item--video" data-lightbox-video="6joBf4xW6Qs" data-video-title="그래도 꿈은 흐른다" aria-haspopup="dialog" aria-label="'그래도 꿈은 흐른다' 뮤직비디오 크게 보기" data-i18n-aria="aria.heroVideo">
         <img class="vhero-poster" src="assets/img/hero.jpg" alt="" fetchpriority="high">
-        <video class="vhero-video" autoplay muted loop playsinline preload="auto" poster="assets/img/hero.jpg">
+        <video class="vhero-video" autoplay muted loop playsinline preload="auto" poster="assets/img/hero.jpg" aria-hidden="true">
           <source src="assets/media/hero-loop.mp4" type="video/mp4">
         </video>
-      </div>
-      <div class="vhero-side">
-        <div class="vs-track" id="vs-track">
-          <img src="assets/img/stills/s6.jpg" alt="" style="object-position:center 22%">
-          <img src="assets/img/stills/s5.jpg" alt="" style="object-position:center 40%">
-          <img src="assets/img/stills/s2.jpg" alt="" style="object-position:center 25%">
-          <img src="assets/img/stills/s7.jpg" alt="" style="object-position:center 35%">
-          <img src="assets/img/stills/s4.jpg" alt="" style="object-position:center 25%">
-          <img src="assets/img/stills/s8.jpg" alt="" style="object-position:center 45%">
-          <img src="assets/img/stills/s6.jpg" alt="" style="object-position:center 22%" aria-hidden="true">
-        </div>
-      </div>
-    </div>
-    <div class="vhero-scrim" aria-hidden="true"></div>
-    <div class="vhero-copy">
-      <h1 data-i18n="hero.tag">노래로 시대를 잇다</h1>
-    </div>
-    <p class="vhero-credit">그래도 꿈은 흐른다 · OFFICIAL MV</p>
-  </section>
-
-  <!-- 현재 스포트라이트 -->
-  <section class="section" aria-labelledby="h-spot">
-    <div class="container reveal">
-      <div class="spotlight-grid" id="spotlight"></div>
-    </div>
-  </section>
-
-  <!-- 인사 밴드 -->
-  <section class="hero scene hero--band" aria-label="인사말">
-    <div class="hero-inner">
-      <span class="label" data-rise="1">Since 1978 · Korea's Diva</span>
-      <h2 data-rise="2" data-i18n="hero.h1" style="font-size:clamp(2rem,3.8vw,3.5rem);font-weight:900">무대 위 48년,<br>그 모든 순간을 함께</h2>
-      <p class="lead" data-rise="3" data-i18n="hero.lead">인순이의 음악과 삶, 그리고 팬들의 추억이 한곳에 모이는 공식 공간입니다.</p>
-      <div class="hero-actions" data-rise="4">
-        <a class="btn btn--gold" href="schedule.html" data-i18n="hero.cta1">공연·일정 보기</a>
-        <a class="btn btn--ghost" href="community.html#letter" data-i18n="hero.cta2">팬레터 쓰기</a>
-      </div>
-      <div class="hero-wordmark" aria-hidden="true" data-rise="5">INSOONI</div>
-    </div>
-  </section>
-
-  <!-- 대표 라이브 -->
-  <section class="section section--band" aria-labelledby="h-flive">
-    <div class="container reveal">
-      <div class="section-head"><h2 id="h-flive" data-i18n="sec.stage">다시 보는 무대</h2></div>
-      <button type="button" class="feature-live" data-lightbox-video="6joBf4xW6Qs"
-        data-video-title="그래도 꿈은 흐른다" aria-haspopup="dialog" aria-label="'그래도 꿈은 흐른다' 뮤직비디오 크게 보기">
-        <img src="assets/img/thumbs/mv.jpg" alt="">
-        <span class="fl-play" aria-hidden="true">▶</span>
-        <span class="fl-copy">
-          <span class="fl-meta">Official Music Video · 2025 · 4:38</span>
-          <span class="fl-title">그래도 꿈은 흐른다</span>
-        </span>
       </button>
+      <a class="strip-item" href="music.html"><img src="assets/img/covers/cover2025.jpg" alt="《인순이, 아름다운 우리나라》 앨범 커버 (2025)"></a>
+      <a class="strip-item strip-item--tall" href="archive.html"><img src="assets/img/stills/p2.jpg" alt="하늘을 올려다보며 노래하는 인순이 (세로 컷)" loading="lazy"></a>
+      <a class="strip-item strip-item--wide" href="archive.html"><img src="assets/img/stills/s5.jpg" alt="스포트라이트 아래 두 팔을 펴는 인순이" style="object-position:center 40%"></a>
+      <a class="strip-item" href="music.html"><img src="assets/img/covers/cover1978.jpg" alt="희자매 1집 '실버들' 커버 (1978)"></a>
+      <a class="strip-item strip-item--wide" href="archive.html"><img src="assets/img/stills/s7.jpg" alt="합창단과 함께 절정을 노래하는 인순이" style="object-position:center 35%" loading="lazy"></a>
+      <a class="strip-item" href="music.html"><img src="assets/img/covers/cover2007.jpg" alt="'거위의 꿈' 커버 (2007)" loading="lazy"></a>
+      <a class="strip-item strip-item--wide" href="archive.html"><img src="assets/img/stills/s2.jpg" alt="'그래도 꿈은 흐른다' MV 속 인순이 프로필" style="object-position:center 25%" loading="lazy"></a>
+      <a class="strip-item" href="music.html"><img src="assets/img/covers/cover2009.jpg" alt="정규 17집 《인순이》 커버 (2009)" loading="lazy"></a>
+      <a class="strip-item strip-item--tall" href="archive.html"><img src="assets/img/stills/p1.jpg" alt="눈을 감고 노래하는 인순이 프로필 (세로 컷)" loading="lazy"></a>
+      <a class="strip-item strip-item--wide" href="archive.html"><img src="assets/img/stills/s4.jpg" alt="눈을 감고 노래에 잠긴 인순이" style="object-position:center 25%" loading="lazy"></a>
+      <a class="strip-item" href="music.html"><img src="assets/img/covers/cover1996.jpg" alt="《The Queen Of Soul》 앨범 커버 (1996)" loading="lazy"></a>
+      <a class="strip-item strip-item--wide" href="archive.html"><img src="assets/img/stills/s8.jpg" alt="어둠 속 한 줄기 빛 아래 선 인순이" style="object-position:center 45%" loading="lazy"></a>
+      <a class="strip-item" href="music.html"><img src="assets/img/covers/cover2023.jpg" alt="골든걸스 'One Last Time' 커버 (2023)" loading="lazy"></a>
+      <a class="strip-item strip-item--wide" href="archive.html"><img src="assets/img/stills/s6.jpg" alt="빛을 올려다보는 인순이 클로즈업" style="object-position:center 22%" loading="lazy"></a>
+      <a class="strip-item" href="music.html"><img src="assets/img/covers/cover2004.jpg" alt="정규 16집 《A To Z》 커버 (2004)" loading="lazy"></a>
+      <a class="strip-item strip-item--tall" href="archive.html"><img src="assets/img/stills/p3.jpg" alt="마이크 앞 인순이와 합창단 (세로 컷)" loading="lazy"></a>
+      <a class="strip-item strip-item--wide" href="archive.html"><img src="assets/img/hero.jpg" alt="무대 위에서 노래하는 인순이" loading="lazy"></a>
+      <a class="strip-item" href="music.html"><img src="assets/img/covers/coverDream.jpg" alt="'그래도 꿈은 흐른다' 싱글 커버 (2025)" loading="lazy"></a>
     </div>
-  </section>
-
-  <!-- 가로 갤러리: 인순이를 만나는 길 (옆으로 흐르는 방들) -->
-  <section class="era-section" aria-labelledby="h-explore">
-    <div class="reveal">
-      
-      <div class="container"><div class="section-head" style="margin-bottom:1.6rem"><h2 data-i18n="sec.era">뮤직 에라</h2></div></div>
-      <div class="era-scroll" id="era-scroll" role="region" aria-label="대표 릴리즈 가로 갤러리" tabindex="0"></div>
-      <div class="era-nav container">
-        <button type="button" class="era-btn" data-dir="-1" aria-label="이전 보기" data-i18n-aria="aria.prev">←</button>
-        <div class="era-progress" aria-hidden="true"><span id="era-bar"></span></div>
-        <button type="button" class="era-btn" data-dir="1" aria-label="다음 보기" data-i18n-aria="aria.next">→</button>
-      </div>
+    <div class="strip-caption">
+      <a class="sc-title" href="music.html">그래도 꿈은 흐른다</a>
+      <button type="button" class="sc-sub" data-lightbox-video="6joBf4xW6Qs" data-video-title="그래도 꿈은 흐른다" aria-haspopup="dialog" data-i18n="strip.mv">Official MV 재생</button>
     </div>
+    <button type="button" class="strip-pause" aria-pressed="false" aria-label="배경 영상 일시정지" data-i18n-aria="aria.pauseVideo"><span aria-hidden="true">⏸</span></button>
   </section>
-
-  <!-- 아카이브 프리뷰 -->
-  <section class="section" aria-labelledby="h-aprev">
-    <div class="container reveal">
-      <div class="section-head">
-        <h2 id="h-aprev" data-i18n="sec.archivePrev">아카이브</h2>
-        <a class="more" href="archive.html" data-i18n="more.archive">아카이브</a>
-      </div>
-      <div class="arch-prev">
-        <a href="archive.html" class="ap"><img src="assets/img/story.jpg" alt="마이크 앞에서 노래하는 인순이, 그래도 꿈은 흐른다 스틸"></a>
-        <a href="archive.html" class="ap"><img src="assets/img/thumbs/busking.jpg" alt="성수동 버스킹 현장의 인순이"></a>
-        <a href="archive.html" class="ap"><img src="assets/img/thumbs/bnd.jpg" alt="BOYNEXTDOOR와 함께한 백스테이지"></a>
-        <a href="archive.html" class="ap"><img src="assets/img/thumbs/callme.jpg" alt="콜미 커버 영상 스틸"></a>
-        <a href="archive.html" class="ap"><img src="assets/img/hero.jpg" alt="무대 위에서 두 팔을 벌린 인순이"></a>
-        <a href="archive.html" class="ap"><img src="assets/img/stills/s5.jpg" alt="스포트라이트 아래 두 팔을 펴는 인순이"></a>
-        <a href="archive.html" class="ap"><img src="assets/img/stills/s2.jpg" alt="'그래도 꿈은 흐른다' MV 속 인순이 프로필"></a>
-        <a href="archive.html" class="ap"><img src="assets/img/stills/s8.jpg" alt="어둠 속 한 줄기 빛 아래 선 인순이"></a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 다가오는 일정 -->
-  <section class="section section--band" aria-labelledby="h-schedule">
-    <div class="container reveal">
-      <div class="section-head">
-        <h2 id="h-schedule" data-i18n="sec.schedule">다가오는 일정</h2>
-        <a class="more" href="schedule.html" data-i18n="more.schedule">전체 일정</a>
-      </div>
-      <div id="home-schedule" class="schedule-strip"></div>
-    </div>
-  </section>
-
-  <!-- 최신 소식 -->
-  <section class="section" aria-labelledby="h-news">
-    <div class="container reveal">
-      <div class="section-head">
-        <h2 id="h-news" data-i18n="sec.news">최신 소식</h2>
-        <a class="more" href="news.html" data-i18n="more.news">전체 보기</a>
-      </div>
-      <div id="home-news" class="news-list"></div>
-    </div>
-  </section>
-
 </main>
 
 <footer class="footer-min">
   <nav aria-label="푸터 메뉴">
     <a href="news.html" data-i18n="nav.news">소식</a>
     <a href="schedule.html" data-i18n="nav.schedule">라이브</a>
-    <a href="archive.html" data-i18n="nav.archive">음악</a>
+    <a href="music.html" data-i18n="nav.music">음악</a>
     <a href="archive.html" data-i18n="nav.archive">아카이브</a>
     <a href="community.html" data-i18n="nav.community">사랑방</a>
     <a href="https://www.youtube.com/@insooni8081" target="_blank" rel="noopener">YouTube</a>
@@ -191,9 +113,8 @@
   </nav>
 </footer>
 
-<button class="back-to-top" aria-label="맨 위로 이동">↑</button>
-<script src="assets/js/i18n.js?v16"></script>
-<script src="assets/js/data.js?v16"></script>
-<script src="assets/js/main.js?v16"></script>
+<script src="assets/js/i18n.js?v17"></script>
+<script src="assets/js/data.js?v17"></script>
+<script src="assets/js/main.js?v17"></script>
 </body>
 </html>

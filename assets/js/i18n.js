@@ -7,6 +7,13 @@
    ============================================================ */
 window.I18N_EN = {
   /* 내비게이션 */
+  "strip.new": "NEW SINGLE",
+  "strip.discog": "DISCOGRAPHY",
+  "strip.mv": "PLAY OFFICIAL MV",
+  "aria.strip": "Gallery by era - drag or use left and right arrow keys",
+  "aria.heroVideo": "Watch the official music video for Dream Still Flows",
+  "aria.pauseVideo": "Pause background video",
+  "aria.playVideo": "Play background video",
   "nav.home": "Home",
   "nav.news": "News",
   "nav.schedule": "Live",
