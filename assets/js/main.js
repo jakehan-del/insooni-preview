@@ -32,11 +32,16 @@
     return d.getFullYear() + ". " + (d.getMonth() + 1) + ". " + d.getDate() + ".";
   }
   function eventCta(ev) {
-    var label = ev.kind === "공연" ? "예매 안내" : "자세히";
+    var label = ev.kind === "공연" ? t("dyn.book", "예매 안내") : t("dyn.more", "자세히");
     if (ev.link && ev.link !== "#") {
       return '<a class="btn btn--ghost btn--sm" href="' + esc(ev.link) + '">' + label + "</a>";
     }
-    return '<button type="button" class="btn btn--ghost btn--sm" disabled>' + label + " [준비 중]</button>";
+    return '<button type="button" class="btn btn--ghost btn--sm" disabled>' + label + " " + t("dyn.prep", "[준비 중]") + "</button>";
+  }
+  /* 동적 문자열 이중 언어 헬퍼 */
+  function t(key, ko) {
+    var d = window.I18N_EN || {};
+    return document.documentElement.getAttribute("lang") === "en" && d[key] ? d[key] : ko;
   }
   function store(key, val) {
     try {
@@ -68,14 +73,21 @@
     toggle.addEventListener("click", function () {
       var open = nav.classList.toggle("open");
       toggle.setAttribute("aria-expanded", String(open));
-      toggle.setAttribute("aria-label", open ? "메뉴 닫기" : "메뉴 열기");
+      toggle.setAttribute("aria-label", open ? t("aria.menuClose", "메뉴 닫기") : t("aria.menuOpen", "메뉴 열기"));
     });
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape" && nav.classList.contains("open")) {
         nav.classList.remove("open");
         toggle.setAttribute("aria-expanded", "false");
-        toggle.setAttribute("aria-label", "메뉴 열기");
+        toggle.setAttribute("aria-label", t("aria.menuOpen", "메뉴 열기"));
         toggle.focus();
+      }
+    });
+    document.addEventListener("click", function (e) {
+      if (nav.classList.contains("open") && !nav.contains(e.target) && !toggle.contains(e.target)) {
+        nav.classList.remove("open");
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.setAttribute("aria-label", t("aria.menuOpen", "메뉴 열기"));
       }
     });
   }
@@ -125,9 +137,9 @@
   }
 
   /* ---------- 4. 뉴스 렌더링 ---------- */
-  function newsCard(item) {
-    var a = el("a", "news-item");
-    a.href = "news.html";
+  function newsCard(item, asLink) {
+    var a = el(asLink ? "a" : "article", "news-item");
+    if (asLink) a.href = "news.html";
     a.innerHTML =
       "<time datetime=\"" + esc(item.date) + '">' + fmtDate(item.date) + "</time>" +
       '<span class="badge badge--' + (item.type === "공지" ? "gold" : "wine") + '">' + esc(item.type) + "</span>" +
@@ -140,7 +152,9 @@
   function renderHomeNews() {
     var box = $("#home-news");
     if (!box || !D.news) return;
-    sortedNews().slice(0, 4).forEach(function (n) { box.appendChild(newsCard(n)); });
+    var items4 = sortedNews().slice(0, 4);
+    if (!items4.length) { box.appendChild(el("p", "empty-note", t("dyn.noNews", "새 소식이 곧 게시됩니다."))); return; }
+    items4.forEach(function (n) { box.appendChild(newsCard(n, true)); });
   }
   function renderNewsPage() {
     var box = $("#news-list"), bar = $("#news-filter");
@@ -148,8 +162,8 @@
     function draw(type) {
       box.innerHTML = "";
       var items = sortedNews().filter(function (n) { return type === "전체" || n.type === type; });
-      if (!items.length) { box.appendChild(el("p", "empty-note", "해당 분류의 소식이 아직 없습니다.")); return; }
-      items.forEach(function (n) { box.appendChild(newsCard(n)); });
+      if (!items.length) { box.appendChild(el("p", "empty-note", t("dyn.noCat", "해당 분류의 소식이 아직 없습니다."))); return; }
+      items.forEach(function (n) { box.appendChild(newsCard(n, false)); });
     }
     if (bar) {
       bar.addEventListener("click", function (e) {
@@ -170,13 +184,13 @@
     var todayISO = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
     var upcoming = D.events.filter(function (e) { return e.date >= todayISO; })
       .sort(function (a, b) { return a.date < b.date ? -1 : 1; }).slice(0, 3);
-    if (!upcoming.length) { box.appendChild(el("p", "empty-note", "예정된 일정이 곧 공지됩니다.")); return; }
+    if (!upcoming.length) { box.appendChild(el("p", "empty-note", t("dyn.noEvents", "예정된 일정이 곧 공지됩니다."))); return; }
     upcoming.forEach(function (ev) {
       var d = new Date(ev.date + "T00:00:00");
       var row = el("div", "event-row");
       row.innerHTML =
         '<div class="event-date"><span class="d">' + d.getDate() + '</span><span class="m">' + d.getFullYear() + "년 " + (d.getMonth() + 1) + '월</span></div>' +
-        '<div class="event-info"><span class="badge badge--' + (ev.kind === "공연" ? "wine" : "gold") + '">' + esc(ev.kind) + "</span> <h3>" + esc(ev.title) + '</h3><p class="where">' + esc(ev.place) + "</p></div>" +
+        '<div class="event-info"><span class="badge badge--' + (ev.kind === "공연" ? "gold" : "wine") + '">' + esc(ev.kind) + "</span> <h3>" + esc(ev.title) + '</h3><p class="where">' + esc(ev.place) + "</p></div>" +
         eventCta(ev);
       box.appendChild(row);
     });
@@ -185,39 +199,65 @@
   /* 월간 캘린더 (schedule.html) */
   function renderCalendar() {
     var grid = $("#cal-grid"), title = $("#cal-title");
-    if (!grid || !D.events) return;
-    var cur = { y: 2026, m: 8 }; // 데모 기준: 2026년 8월 (일정 데이터가 있는 달)
+    if (!grid || !title) return;
+    var events = (D.events || []).slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; });
+    var cur = { y: 2026, m: 8 };
+    var minM = cur.y * 12 + cur.m - 1 - 12, maxM = cur.y * 12 + cur.m - 1 + 12;
+    if (events.length) {
+      var f = events[0].date.split("-"), l = events[events.length - 1].date.split("-");
+      minM = (+f[0]) * 12 + (+f[1]) - 1 - 12;
+      maxM = (+l[0]) * 12 + (+l[1]) - 1 + 12;
+    }
+    function monthTitle(y, m) {
+      if (document.documentElement.getAttribute("lang") === "en") {
+        var names = (window.I18N_EN && window.I18N_EN["dyn.months"] || "").split(",");
+        if (names.length === 12) return names[m - 1] + " " + y;
+      }
+      return y + "년 " + m + "월";
+    }
     function draw() {
       grid.innerHTML = "";
-      ["일", "월", "화", "수", "목", "금", "토"].forEach(function (d) {
-        grid.appendChild(el("div", "dow", d));
-      });
-      title.textContent = cur.y + "년 " + cur.m + "월";
+      var dows = t("dyn.dow", "일,월,화,수,목,금,토").split(",");
+      dows.forEach(function (d) { grid.appendChild(el("div", "dow", d)); });
+      title.textContent = monthTitle(cur.y, cur.m);
       var first = new Date(cur.y, cur.m - 1, 1);
-      var start = first.getDay();
+      var startDow = first.getDay();
       var days = new Date(cur.y, cur.m, 0).getDate();
       var prevDays = new Date(cur.y, cur.m - 1, 0).getDate();
+      var monthHasEvent = false;
       for (var i = 0; i < 42; i++) {
         var cell = el("div", "cal-cell"), num, iso = null;
-        if (i < start) { cell.classList.add("other"); num = prevDays - start + 1 + i; }
-        else if (i - start + 1 > days) { cell.classList.add("other"); num = i - start + 1 - days; }
+        if (i < startDow) { cell.classList.add("other"); num = prevDays - startDow + 1 + i; }
+        else if (i - startDow + 1 > days) { cell.classList.add("other"); num = i - startDow + 1 - days; }
         else {
-          num = i - start + 1;
+          num = i - startDow + 1;
           iso = cur.y + "-" + String(cur.m).padStart(2, "0") + "-" + String(num).padStart(2, "0");
           if (i % 7 === 0) cell.classList.add("sun");
         }
         cell.appendChild(el("span", "num", String(num)));
         if (iso) {
-          D.events.filter(function (e) { return e.date === iso; }).forEach(function (e) {
+          events.filter(function (e) { return e.date === iso; }).forEach(function (e) {
+            monthHasEvent = true;
             var real = e.link && e.link !== "#";
             var tag = el(real ? "a" : "span", "cal-event" + (e.kind !== "공연" ? " cal-event--gold" : ""), esc(e.title));
             if (real) tag.href = e.link;
             tag.title = e.title + " · " + e.place;
+            tag.setAttribute("aria-label", e.title + ", " + e.place);
             cell.appendChild(tag);
           });
         }
         grid.appendChild(cell);
       }
+      var note = $("#cal-empty");
+      if (!note) {
+        note = el("p", "empty-note", "");
+        note.id = "cal-empty";
+        grid.parentNode.appendChild(note);
+      }
+      note.textContent = monthHasEvent ? "" : t("dyn.noMonth", "이 달에는 등록된 일정이 없습니다.");
+      var idx = cur.y * 12 + cur.m - 1;
+      $("#cal-prev").disabled = idx <= minM;
+      $("#cal-next").disabled = idx >= maxM;
     }
     $("#cal-prev").addEventListener("click", function () { cur.m--; if (cur.m < 1) { cur.m = 12; cur.y--; } draw(); });
     $("#cal-next").addEventListener("click", function () { cur.m++; if (cur.m > 12) { cur.m = 1; cur.y++; } draw(); });
@@ -225,12 +265,12 @@
 
     var list = $("#event-list");
     if (list) {
-      D.events.slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; }).forEach(function (ev) {
+      events.forEach(function (ev) {
         var d = new Date(ev.date + "T00:00:00");
         var row = el("div", "event-row");
         row.innerHTML =
           '<div class="event-date"><span class="d">' + d.getDate() + '</span><span class="m">' + d.getFullYear() + "년 " + (d.getMonth() + 1) + '월</span></div>' +
-          '<div class="event-info"><span class="badge badge--' + (ev.kind === "공연" ? "wine" : "gold") + '">' + esc(ev.kind) + "</span> <h3>" + esc(ev.title) + '</h3><p class="where">' + esc(ev.place) + (ev.note ? " · " + esc(ev.note) : "") + "</p></div>" +
+          '<div class="event-info"><span class="badge badge--' + (ev.kind === "공연" ? "gold" : "wine") + '">' + esc(ev.kind) + "</span> <h3>" + esc(ev.title) + '</h3><p class="where">' + esc(ev.place) + (ev.note ? " · " + esc(ev.note) : "") + "</p></div>" +
           eventCta(ev);
         list.appendChild(row);
       });
@@ -264,6 +304,7 @@
     var box = $("#videos") || $("#home-videos");
     if (!box || !D.videos) return;
     var items = box.id === "home-videos" ? D.videos.slice(0, 3) : D.videos;
+    if (!items.length) { box.appendChild(el("p", "empty-note", t("dyn.noVideos", "공식 영상이 곧 게시됩니다."))); return; }
     items.forEach(function (v) {
       var c;
       if (v.youtubeId) {
@@ -276,7 +317,7 @@
           '<span class="t-year">' + esc(v.year || "") + "</span>" +
           '<h3 class="t-title">' + esc(v.title) + "</h3>" +
           '<p class="t-desc">' + esc(v.desc || "") + "</p>" +
-          '<p class="t-note">무대 보기 →</p>';
+          '<p class="t-note">' + t("dyn.watch", "무대 보기") + ' <span aria-hidden="true">→</span></p>';
         c.addEventListener("click", function () { openLightbox(v.youtubeId, v.title, c); });
       } else {
         c = el("article", "stage-tile");
@@ -284,7 +325,7 @@
           '<span class="t-year">' + esc(v.year || "") + "</span>" +
           '<h3 class="t-title">' + esc(v.title) + "</h3>" +
           '<p class="t-desc">' + esc(v.desc || "") + "</p>" +
-          '<p class="t-note">공식 영상 게재 예정</p>';
+          '<p class="t-note">' + t("dyn.pending", "공식 영상 게재 예정") + '</p>';
       }
       box.appendChild(c);
     });
@@ -312,7 +353,15 @@
     $(".lightbox-close", lightboxEl).addEventListener("click", close);
     lightboxEl.addEventListener("click", function (e) { if (e.target === lightboxEl) close(); });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && !lightboxEl.hidden) close();
+      if (lightboxEl.hidden) return;
+      if (e.key === "Escape") { close(); return; }
+      if (e.key === "Tab") {
+        var focusables = lightboxEl.querySelectorAll("button, iframe");
+        if (!focusables.length) return;
+        var first = focusables[0], last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
     });
     return lightboxEl;
   }
@@ -347,18 +396,26 @@
         listBox.appendChild(p);
       });
     }
+    var okTimer = null;
     form.addEventListener("submit", function (e) {
       e.preventDefault();
+      var btn = form.querySelector("[type=submit]");
+      if (btn && btn.disabled) return;
       var name = $("#letter-name").value.trim() || "익명 팬";
       var body = $("#letter-body").value.trim();
       if (!body) { $("#letter-body").focus(); return; }
+      if (btn) { btn.disabled = true; setTimeout(function () { btn.disabled = false; }, 800); }
       var letters = store(KEY) || [];
       var now = new Date();
       letters.unshift({ name: name, body: body, date: now.getFullYear() + ". " + (now.getMonth() + 1) + ". " + now.getDate() + "." });
       store(KEY, letters);
       form.reset();
       var okMsg = $("#letter-ok");
-      if (okMsg) { okMsg.hidden = false; setTimeout(function () { okMsg.hidden = true; }, 4000); }
+      if (okMsg) {
+        okMsg.hidden = false;
+        if (okTimer) clearTimeout(okTimer);
+        okTimer = setTimeout(function () { okMsg.hidden = true; }, 4000);
+      }
       draw();
     });
     draw();
@@ -386,7 +443,7 @@
           '<p class="post-body">' + esc(P.body) + "</p>" +
           '<div class="post-actions">' +
           '<button type="button" data-like="' + esc(id) + '" aria-pressed="' + liked + '">응원 ' + likes + "</button>" +
-          '<button type="button" data-report="' + esc(id) + '">신고</button></div>';
+          '<button type="button" data-report="' + esc(id) + '"' + (store("insooni_report_" + id) ? ' disabled>' + t("dyn.reportedBtn", "신고 접수됨") : ">" + t("dyn.report", "신고")) + "</button></div>";
         listBox.appendChild(article);
       });
     }
@@ -400,15 +457,27 @@
         draw();
       }
       if (reportBtn) {
-        alert("신고가 접수되었습니다. 운영진 검토 후 처리됩니다.\n(프로토타입 데모: 실제 서비스에서는 신고 사유 선택 후 관리자 큐로 전송됩니다)");
+        var rid = reportBtn.getAttribute("data-report");
+        if (store("insooni_report_" + rid)) return;
+        store("insooni_report_" + rid, true);
+        reportBtn.disabled = true;
+        reportBtn.textContent = t("dyn.reportedBtn", "신고 접수됨");
+        var post = reportBtn.closest(".post");
+        var msg = el("p", "form-hint", t("dyn.reported", "신고가 접수되었습니다. 운영진이 검토합니다."));
+        msg.setAttribute("role", "status");
+        post.appendChild(msg);
+        setTimeout(function () { msg.remove(); }, 4000);
       }
     });
     if (form) {
       form.addEventListener("submit", function (e) {
         e.preventDefault();
+        var btn = form.querySelector("[type=submit]");
+        if (btn && btn.disabled) return;
         var name = $("#post-name").value.trim() || "익명 팬";
         var body = $("#post-body").value.trim();
         if (!body) { $("#post-body").focus(); return; }
+        if (btn) { btn.disabled = true; setTimeout(function () { btn.disabled = false; }, 800); }
         var posts = store(KEY) || [];
         var now = new Date();
         posts.unshift({ id: "p" + Date.now(), name: name, body: body, likes: 0, date: now.getFullYear() + ". " + (now.getMonth() + 1) + ". " + now.getDate() + "." });
@@ -462,7 +531,7 @@
         e.preventDefault();
         var input = form.querySelector("input[type=email]");
         var msg = form.parentElement.querySelector(".subscribe-ok");
-        if (msg) { msg.hidden = false; }
+        if (msg) { msg.hidden = false; setTimeout(function () { msg.hidden = true; }, 4000); }
         form.reset();
         if (input) input.blur();
       });
@@ -477,19 +546,26 @@
     var elLetters = $("#stat-letters"), elPosts = $("#stat-posts");
     if (elLetters) elLetters.textContent = String(1284 + letters);
     if (elPosts) elPosts.textContent = String(3492 + posts);
+    function decPending() {
+      var b = $("#pending-badge");
+      if (!b) return;
+      var n = Math.max(0, (parseInt(b.textContent, 10) || 0) - 1);
+      b.textContent = n + "건";
+      if (n === 0) { b.className = "badge badge--ok"; b.textContent = "완료"; }
+    }
+    function resolveRow(btn, cls, rowLabel, doneLabel) {
+      var row = btn.closest("tr");
+      row.querySelector(".badge").outerHTML = '<span class="badge ' + cls + '">' + rowLabel + "</span>";
+      var td = btn.closest("td");
+      td.innerHTML = '<span class="badge ' + cls + '" tabindex="-1">' + doneLabel + "</span>";
+      td.firstChild.focus();
+      decPending();
+    }
     $all("[data-approve]").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var row = btn.closest("tr");
-        row.querySelector(".badge").outerHTML = '<span class="badge badge--ok">게시 승인</span>';
-        btn.closest("td").innerHTML = '<span class="badge badge--ok">처리 완료</span>';
-      });
+      btn.addEventListener("click", function () { resolveRow(btn, "badge--ok", "게시 승인", "처리 완료"); });
     });
     $all("[data-reject]").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var row = btn.closest("tr");
-        row.querySelector(".badge").outerHTML = '<span class="badge badge--danger">숨김 처리</span>';
-        btn.closest("td").innerHTML = '<span class="badge badge--danger">처리 완료</span>';
-      });
+      btn.addEventListener("click", function () { resolveRow(btn, "badge--danger", "숨김 처리", "처리 완료"); });
     });
   }
 
@@ -511,6 +587,22 @@
           n.innerHTML = n.dataset.ko;
         }
       });
+      $all("[data-i18n-aria]").forEach(function (n) {
+        var key = n.getAttribute("data-i18n-aria");
+        if (lang === "en") {
+          if (n.dataset.koAria === undefined) n.dataset.koAria = n.getAttribute("aria-label") || "";
+          if (dict[key]) n.setAttribute("aria-label", dict[key]);
+        } else if (n.dataset.koAria !== undefined) {
+          n.setAttribute("aria-label", n.dataset.koAria);
+        }
+      });
+      var koIds = ["home-news", "home-schedule", "home-videos", "news-list", "event-list", "cal-grid", "timeline", "discography", "videos", "letter-list", "board-list", "poll"];
+      koIds.forEach(function (id) {
+        var n = document.getElementById(id);
+        if (!n) return;
+        if (lang === "en") n.setAttribute("lang", "ko");
+        else n.removeAttribute("lang");
+      });
       $all("[data-i18n-ph]").forEach(function (n) {
         var key = n.getAttribute("data-i18n-ph");
         if (lang === "en") {
@@ -528,10 +620,19 @@
     if (store("insooni_lang") === "en") apply("en");
   }
 
+  /* ---------- 비디오 히어로: 모션 허용 시에만 로드 ---------- */
+  function initVhero() {
+    var f = $(".vhero-iframe");
+    if (!f || !f.getAttribute("data-src")) return;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    f.src = f.getAttribute("data-src");
+  }
+
   /* ---------- 부팅 ---------- */
   document.addEventListener("DOMContentLoaded", function () {
     initFontSize();
     initLang();
+    initVhero();
     initNav();
     initScrollState();
     initReveal();

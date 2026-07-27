@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0c0a09">
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
 <title>운영자 콘솔 (데모) | 인순이 INSOONI</title>
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -10,10 +12,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v6">
+<link rel="stylesheet" href="assets/css/style.css?v7">
 </head>
 <body>
-<a class="skip-link" href="#main">본문 바로가기</a>
+<a class="skip-link" href="#main" data-i18n="nav.skip">본문 바로가기</a>
 
 <header class="site-header">
   <div class="header-inner">
@@ -29,7 +31,7 @@
 
 <main id="main" class="section">
   <div class="container" id="admin-root">
-    <div class="notice-box" style="margin-bottom:2rem">
+    <div class="notice-box mb-2">
       이 페이지는 <strong>운영팀이 개발자 없이 사이트를 관리하는 모습</strong>을 보여주기 위한 화면 데모입니다.
       실제 서비스에서는 로그인(2단계 인증)을 거친 운영자만 접근할 수 있습니다.
     </div>
@@ -45,7 +47,8 @@
       </nav>
 
       <div>
-        <h1 style="font-size:1.7rem">운영자 콘솔</h1>
+        <span class="label">Admin Console</span>
+        <h1 class="admin-title">운영자 콘솔</h1>
 
         <div class="stat-cards">
           <div class="stat-card">
@@ -69,9 +72,9 @@
             <span class="delta up">▲ 이번 달 +214</span>
           </div>
         </div>
-        <p class="form-hint" style="margin-top:-1rem">※ 수치는 데모 샘플입니다. 팬레터·게시판 수치는 이 브라우저에서 작성한 글만큼 실제로 늘어납니다.</p>
+        <p class="form-hint">※ 수치는 데모 샘플입니다. 팬레터·게시판 수치는 이 브라우저에서 작성한 글만큼 실제로 늘어납니다.</p>
 
-        <h2 id="q-posts" style="margin-top:2.5rem">게시물 승인 대기 <span class="badge badge--warn">3건</span></h2>
+        <h2 id="q-posts" class="mt-2">게시물 승인 대기 <span class="badge badge--warn" id="pending-badge">3건</span></h2>
         <div class="table-wrap">
           <table class="data-table">
             <caption class="sr-only">승인 대기 게시물 목록</caption>
@@ -98,7 +101,7 @@
           </table>
         </div>
 
-        <h2 id="q-content" style="margin-top:2.5rem">콘텐츠 관리</h2>
+        <h2 id="q-content" class="mt-2">콘텐츠 관리</h2>
         <div class="table-wrap">
           <table class="data-table">
             <caption class="sr-only">등록된 콘텐츠 목록</caption>
@@ -132,8 +135,8 @@
   </div>
 </footer>
 
-<script src="assets/js/i18n.js?v6"></script>
-<script src="assets/js/data.js?v6"></script>
-<script src="assets/js/main.js?v6"></script>
+<script src="assets/js/i18n.js?v7"></script>
+<script src="assets/js/data.js?v7"></script>
+<script src="assets/js/main.js?v7"></script>
 </body>
 </html>
