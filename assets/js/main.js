@@ -289,6 +289,7 @@
       row.type = "button";
       row.setAttribute("aria-expanded", "false");
       row.innerHTML =
+        (a.art ? '<img class="a-art" src="' + esc(a.art) + '" alt="" loading="lazy">' : '<span class="a-art a-art--empty" aria-hidden="true"></span>') +
         '<span class="a-year">' + esc(a.year) + "</span>" +
         '<div><h3 class="a-title">' + esc(a.title) + '</h3><p class="a-note">' + esc(a.note || "") + "</p></div>" +
         '<span class="a-kind">' + esc(a.kind || "앨범") + "</span>";
@@ -350,10 +351,106 @@
     if (!box || !D.videos) return;
     buildVideoTiles(box, box.id === "home-videos" ? D.videos.slice(0, 3) : D.videos);
   }
+  /* 지난 무대 리캡: 타일 → VIEW RECAP 패널 (사진 갤러리 + 영상) */
   function renderPastRecaps() {
     var box = $("#past-recaps");
-    if (!box || !D.videos) return;
-    buildVideoTiles(box, D.videos.filter(function (v) { return v.youtubeId; }).slice(1));
+    if (!box) return;
+    var items = D.recaps || [];
+    if (!items.length && D.videos) {
+      buildVideoTiles(box, D.videos.filter(function (v) { return v.youtubeId; }).slice(1));
+      return;
+    }
+    items.forEach(function (r) {
+      var c = el("button", "stage-tile stage-tile--video stage-tile--recap");
+      c.type = "button";
+      c.setAttribute("aria-haspopup", "dialog");
+      c.setAttribute("aria-label", r.title + " " + t("dyn.recapOpen", "리캡 열기"));
+      c.innerHTML =
+        '<span class="t-bg" aria-hidden="true"' + (r.bg ? ' style="background-image:url(\'' + esc(r.bg) + '\')"' : "") + "></span>" +
+        '<span class="t-year">' + esc(r.year || "") + "</span>" +
+        '<h3 class="t-title">' + esc(r.title) + "</h3>" +
+        '<p class="t-desc">' + esc(r.desc || "") + "</p>" +
+        '<p class="t-note">VIEW RECAP <span aria-hidden="true">→</span></p>';
+      c.addEventListener("click", function () { openRecap(r, c); });
+      box.appendChild(c);
+    });
+  }
+
+  /* ---------- 리캡 패널 (beyonce.com/tour VIEW RECAP 문법) ---------- */
+  var recapEl = null, recapOpener = null;
+  function ensureRecapPanel() {
+    if (recapEl) return recapEl;
+    recapEl = el("div", "recap-panel");
+    recapEl.setAttribute("role", "dialog");
+    recapEl.setAttribute("aria-modal", "true");
+    recapEl.hidden = true;
+    recapEl.innerHTML =
+      '<button type="button" class="lightbox-close recap-close" aria-label="닫기">×</button>' +
+      '<div class="recap-inner"></div>';
+    document.body.appendChild(recapEl);
+    $(".recap-close", recapEl).addEventListener("click", closeRecap);
+    recapEl.addEventListener("click", function (e) { if (e.target === recapEl) closeRecap(); });
+    document.addEventListener("keydown", function (e) {
+      if (recapEl.hidden) return;
+      if (lightboxEl && !lightboxEl.hidden) return; /* 이미지 뷰어가 위에 열려 있으면 그쪽 우선 */
+      if (e.key === "Escape") { closeRecap(); return; }
+      if (e.key === "Tab") {
+        var f = recapEl.querySelectorAll("button, iframe, video, a[href]");
+        if (!f.length) return;
+        var first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    });
+    return recapEl;
+  }
+  function closeRecap() {
+    if (!recapEl || recapEl.hidden) return;
+    recapEl.hidden = true;
+    $(".recap-inner", recapEl).innerHTML = ""; /* 영상·iframe 정지 겸 정리 */
+    document.body.style.overflow = "";
+    if (recapOpener) { recapOpener.focus(); recapOpener = null; }
+  }
+  function openRecap(r, opener) {
+    var box = ensureRecapPanel();
+    recapOpener = opener || null;
+    box.setAttribute("aria-label", r.title + " 리캡");
+    var inner = $(".recap-inner", box);
+    var metaLine = [r.year, r.place].filter(Boolean).join(" · ");
+    var html =
+      '<header class="recap-head">' +
+      '<span class="recap-kicker">RECAP</span>' +
+      "<h2>" + esc(r.title) + "</h2>" +
+      (metaLine ? '<p class="recap-meta">' + esc(metaLine) + "</p>" : "") +
+      (r.desc ? '<p class="recap-desc">' + esc(r.desc) + "</p>" : "") +
+      "</header>";
+    if (r.youtubeId) {
+      html += '<div class="recap-video recap-video--embed"><iframe src="https://www.youtube-nocookie.com/embed/' + esc(r.youtubeId) + '?rel=0&modestbranding=1" title="' + esc(r.title) + '" allow="encrypted-media; fullscreen" allowfullscreen loading="lazy"></iframe></div>';
+    } else if (r.video) {
+      html += '<div class="recap-video"><video src="' + esc(r.video) + '"' + (r.poster ? ' poster="' + esc(r.poster) + '"' : "") + " controls playsinline preload=\"metadata\"></video></div>";
+    }
+    inner.innerHTML = html;
+    var photos = (r.photos || []).slice();
+    if (photos.length) {
+      inner.appendChild(el("h3", "recap-sub", t("recap.gallery", "현장 기록")));
+      var grid = el("div", "recap-grid");
+      photos.forEach(function (p, i) {
+        var b = el("button", "arch-item recap-item");
+        b.type = "button";
+        b.setAttribute("aria-haspopup", "dialog");
+        b.setAttribute("aria-label", (p.caption || r.title) + " 크게 보기");
+        b.innerHTML = '<img src="' + esc(p.img) + '" alt="' + esc(p.caption || "") + '" width="' + p.w + '" height="' + p.h + '" loading="lazy">';
+        b.addEventListener("click", function () {
+          archView.list = photos;
+          openImageViewer(i, b);
+        });
+        grid.appendChild(b);
+      });
+      inner.appendChild(grid);
+    }
+    box.hidden = false;
+    document.body.style.overflow = "hidden";
+    $(".recap-close", box).focus();
   }
 
   /* ---------- 시각 아카이브: 마스너리 + 뷰어 ---------- */
@@ -402,7 +499,7 @@
     if (!a) return;
     box.setAttribute("aria-label", a.caption);
     $(".lightbox-frame", box).innerHTML = '<img class="lb-img" src="' + esc(a.img) + '" alt="' + esc(a.caption) + '">';
-    $(".lightbox-caption", box).textContent = a.caption + " · " + a.year + " · " + a.cat;
+    $(".lightbox-caption", box).textContent = [a.caption, a.year, a.cat].filter(Boolean).join(" · ");
     var multi = archView.list.length > 1;
     $(".lb-prev", box).hidden = !multi;
     $(".lb-next", box).hidden = !multi;
@@ -442,7 +539,8 @@
     function close() {
       lightboxEl.hidden = true;
       $(".lightbox-frame", lightboxEl).innerHTML = "";
-      document.body.style.overflow = "";
+      /* 리캡 패널이 아래에 열려 있으면 배경 스크롤 잠금 유지 */
+      document.body.style.overflow = (recapEl && !recapEl.hidden) ? "hidden" : "";
       if (lightboxOpener) { lightboxOpener.focus(); lightboxOpener = null; }
     }
     $(".lightbox-close", lightboxEl).addEventListener("click", close);

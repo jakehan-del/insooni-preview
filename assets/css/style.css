@@ -31,7 +31,7 @@
 
   --font-display: "Pretendard Variable", Pretendard, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
   --font-latin: "Cormorant Garamond", "Noto Serif KR", serif;
-  --font-mono: "IBM Plex Mono", "SF Mono", monospace;
+  --font-mono: "Space Mono", "IBM Plex Mono", "SF Mono", monospace;
   --font-body: "Pretendard Variable", Pretendard, "Apple SD Gothic Neo",
                "Noto Sans KR", system-ui, sans-serif;
 
@@ -227,7 +227,7 @@ html.js-anim .reveal.in { opacity: 1; transform: none; transition: opacity .9s v
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: .5em;
   min-height: 48px; padding: .9em 2em; border-radius: 2px;
-  font-family: var(--font-mono); font-weight: 500; font-size: .8rem;
+  font-family: var(--font-mono); font-weight: 400; font-size: .8rem;
   letter-spacing: .16em; text-transform: uppercase;
   text-decoration: none; border: 1px solid transparent;
   transition: transform .2s var(--ease), background .2s ease, border-color .2s ease, color .2s ease;
@@ -525,6 +525,38 @@ html.js-anim .hero [data-rise="5"] { animation-delay: .5s; }
   color: var(--ivory); font-size: 1.3rem;
 }
 .lightbox-close:hover { border-color: var(--gold); color: var(--gold); }
+
+/* 리캡 패널: 지난 무대 리캡 상세 (사진 갤러리 + 영상) — 라이트박스(150)보다 아래 */
+.recap-panel {
+  position: fixed; inset: 0; z-index: 140;
+  background: rgba(8, 8, 8, .96); backdrop-filter: blur(12px);
+  overflow-y: auto; padding: 10vh 4vw 9vh;
+}
+.recap-panel[hidden] { display: none; }
+.recap-close { position: fixed; z-index: 2; }
+.recap-inner { max-width: 980px; margin: 0 auto; }
+.recap-head { margin-bottom: 2.2rem; padding-right: 64px; }
+.recap-kicker {
+  font-family: var(--font-mono); font-size: .72rem; letter-spacing: .32em;
+  color: var(--gold); text-transform: uppercase;
+}
+.recap-head h2 { font-size: clamp(1.7rem, 4vw, 2.7rem); margin: .35em 0 .4em; }
+.recap-meta {
+  font-family: var(--font-mono); font-size: .74rem; letter-spacing: .12em;
+  color: var(--faint); margin: 0 0 1em;
+}
+.recap-desc { color: var(--muted); max-width: 46em; margin: 0; }
+.recap-video { margin: 0 0 2.4rem; border: 1px solid var(--line-strong); background: var(--void); }
+.recap-video--embed { aspect-ratio: 16 / 9; }
+.recap-video iframe { display: block; width: 100%; height: 100%; border: 0; }
+.recap-video video { display: block; width: 100%; max-height: 74vh; background: var(--void); }
+.recap-sub { font-size: 1.02rem; letter-spacing: .05em; margin: 0 0 1rem; }
+.recap-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 4px; }
+.recap-item { margin: 0; }
+@media (max-width: 640px) {
+  .recap-panel { padding: 11vh 4vw 8vh; }
+  .recap-grid { grid-template-columns: repeat(2, 1fr); }
+}
 
 /* ---------- 12. 메시지 (매니페스토) ---------- */
 .manifesto { text-align: center; max-width: 42em; margin: 0 auto; }
@@ -885,10 +917,13 @@ a.card { text-decoration: none; color: inherit; }
 /* 디스코그래피 레코드 행 */
 .album-list { border-top: 1px solid var(--line); }
 .album-row {
-  display: grid; grid-template-columns: 7rem 1fr auto; gap: 2rem; align-items: baseline;
-  padding: 1.6rem .4rem; border-bottom: 1px solid var(--line);
-  transition: background-color .2s ease;
+  display: grid; grid-template-columns: 76px 5.2rem 1fr auto; gap: 1.6rem; align-items: center;
+  width: 100%; text-align: left; padding: 1.4rem .4rem; border: 0; background: transparent;
+  border-bottom: 1px solid var(--line); cursor: pointer; transition: opacity .22s ease;
 }
+#discography:hover .album-row:not(:hover) { opacity: .45; }
+.a-art { width: 76px; height: 76px; object-fit: cover; border-radius: 2px; display: block; }
+.a-art--empty { display: block; width: 76px; height: 76px; border: 1px solid var(--line); border-radius: 2px; }
 .album-row:hover { background: rgba(243,239,231,.03); }
 .album-row .a-year { font-family: var(--font-display); font-size: 1.6rem; font-weight: 900; color: var(--gold); }
 .album-row .a-title { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; color: var(--ivory); margin: 0 0 .15em; }
@@ -1201,3 +1236,15 @@ button.strip-item:focus-visible { outline: 3px solid var(--ivory); outline-offse
 .sys-step span { display: block; font-family: var(--font-mono); font-size: .72rem; letter-spacing: .3em; color: var(--faint); margin-bottom: .8em; }
 .sys-step p { margin: 0; font-family: var(--font-mono); font-size: .8rem; letter-spacing: .04em; color: var(--muted); line-height: 1.8; }
 @media (max-width: 760px) { .sys-strip { grid-template-columns: 1fr; } }
+
+/* 이야기: 성장 기록 한 쌍 */
+.origin-pair { display: grid; grid-template-columns: repeat(2, minmax(140px, 260px)); gap: 4px; margin-bottom: 3rem; }
+.origin-pair figure { margin: 0; }
+.origin-pair img { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 2px; filter: grayscale(12%); }
+.origin-pair figcaption { font-family: var(--font-mono); font-size: .67rem; letter-spacing: .12em; color: var(--faint); padding-top: .5rem; }
+
+@media (max-width: 640px) {
+  .album-row { grid-template-columns: 56px 1fr auto; }
+  .album-row .a-year { display: none; }
+  .a-art, .a-art--empty { width: 56px; height: 56px; }
+}

@@ -53,6 +53,21 @@ window.SITE_DATA = {
     { img: "assets/img/photos/jazz-album.jpg", w: 620, h: 626, year: "", cat: "자켓", caption: "《Insooni Jazz》" },
     { img: "assets/img/photos/press-35024303.jpg", w: 510, h: 510, year: "", cat: "자켓", caption: "디지털 싱글 '어퍼컷' 커버" },
     { img: "assets/img/photos/press-149006.jpg", w: 708, h: 698, year: "", cat: "자켓", caption: "스페셜 싱글 'Can You Feel It' 커버" },
+    { img: "assets/img/photos/woi-award.jpg", w: 1074, h: 1542, year: "2025", cat: "기록", caption: "펄벅 인터내셔널 '올해의 여성상' 시상 순간 (2025. 8. 21.)" },
+    { img: "assets/img/photos/woi-flag.jpg", w: 900, h: 1600, year: "2025", cat: "기록", caption: "Woman of Influence 시상식, 기념 성조기 전달" },
+    { img: "assets/img/photos/woi-speech.jpg", w: 900, h: 1600, year: "2025", cat: "기록", caption: "Woman of Influence 2025 수상 연설" },
+    { img: "assets/img/photos/woi-song.jpg", w: 900, h: 1600, year: "2025", cat: "기록", caption: "시상식 객석 사이에서 부른 축하 무대" },
+    { img: "assets/img/photos/haemill-2013.jpg", w: 1024, h: 681, year: "2013", cat: "기록", caption: "해밀학교 교사 앞, 학생들과 하트" },
+    { img: "assets/img/photos/haemill-hanbok.jpg", w: 600, h: 458, year: "", cat: "기록", caption: "해밀학교, 한복 입은 졸업생들과" },
+    { img: "assets/img/photos/haemill-class.jpg", w: 600, h: 400, year: "", cat: "기록", caption: "해밀학교 교실에서 학생들과" },
+    { img: "assets/img/photos/haemill-halloween.jpg", w: 600, h: 400, year: "", cat: "기록", caption: "해밀학교 한옥 교정의 핼러윈 파티" },
+    { img: "assets/img/photos/haemill-wall.jpg", w: 450, h: 658, year: "", cat: "기록", caption: "건축 후원자의 이름이 새겨진 해밀학교 나무 벽 앞에서" },
+    { img: "assets/img/photos/haemill-library.jpg", w: 650, h: 364, year: "", cat: "기록", caption: "해밀학교 서가 계단에서 학생들과" },
+    { img: "assets/img/photos/haemill-choir.jpg", w: 960, h: 542, year: "", cat: "기록", caption: "해밀학교 야외 무대, 학생 합창단과 함께" },
+    { img: "assets/img/photos/haemill-2019.jpg", w: 1024, h: 660, year: "2019", cat: "기록", caption: "'건강한 다문화 가정' 행사 연설 (2019. 11. 27.)" },
+    { img: "assets/img/photos/haemill-10th.jpg", w: 961, h: 609, year: "2023", cat: "기록", caption: "해밀학교 10주년 개교 기념식 축사" },
+    { img: "assets/img/photos/haemill-group.jpg", w: 1280, h: 824, year: "", cat: "기록", caption: "해밀학교 현판 아래, 학생들과 단체 사진" },
+    { img: "assets/img/photos/haemill-award.jpg", w: 600, h: 399, year: "", cat: "기록", caption: "감사장 전달식에서" },
     { img: "assets/img/photos/img3910.jpg", w: 1200, h: 1600, year: "", cat: "기록", caption: "어린 날의 기록" },
     { img: "assets/img/photos/img-plain.jpg", w: 498, h: 473, year: "", cat: "기록", caption: "학생 시절의 증명사진" },
     { img: "assets/img/stills/s6.jpg", w: 1280, h: 720, year: "2025", cat: "포트레이트", caption: "'그래도 꿈은 흐른다' MV, 하늘을 향해" },
@@ -63,6 +78,80 @@ window.SITE_DATA = {
     { img: "assets/img/stills/s8.jpg", w: 1280, h: 720, year: "2025", cat: "무대", caption: "어둠 속 한 줄기 빛, 무대 위의 사람" },
     { placeholder: true, cat: "무대", caption: "공연 실사진 [자료 확보 예정]" },
     { placeholder: true, cat: "포트레이트", caption: "공식 화보 [자료 확보 예정]" }
+  ],
+
+  /* ---------- 지난 무대 리캡 (VIEW RECAP: 사진 갤러리 + 영상) ----------
+     · 공연명은 사진·영상 안에서 검증된 것만 표기 (로고·현수막 등)
+     · 미확인 무대는 중립적 제목 + "확인 중" 표기로만 묶는다 */
+  recaps: [
+    {
+      year: "2025",
+      title: "Woman of Influence 2025",
+      place: "Pearl S. Buck International 시상식 · 미국 (2025. 8. 21.)",
+      desc: "펄벅 인터내셔널 '올해의 여성상' 수상 현장. 시상과 성조기 전달, 수상 연설, 객석 사이에서 부른 축하 무대까지 — 가족의 카메라로 남긴 실황.",
+      video: "assets/media/woi2025.mp4",
+      poster: "assets/img/photos/woi-award.jpg",
+      bg: "assets/img/photos/woi-award.jpg",
+      photos: [
+        { img: "assets/img/photos/woi-award.jpg", w: 1074, h: 1542, caption: "'올해의 여성상' 시상 순간" },
+        { img: "assets/img/photos/woi-flag.jpg", w: 900, h: 1600, caption: "기념 성조기 전달" },
+        { img: "assets/img/photos/woi-speech.jpg", w: 900, h: 1600, caption: "수상 연설, 연단에서" },
+        { img: "assets/img/photos/woi-podium.jpg", w: 900, h: 1600, caption: "Woman of Influence 2025 로고 앞에서" },
+        { img: "assets/img/photos/woi-song.jpg", w: 900, h: 1600, caption: "객석 사이에서 부른 축하 무대" },
+        { img: "assets/img/photos/woi-audience.jpg", w: 900, h: 1600, caption: "객석에서, 박수와 함께" }
+      ]
+    },
+    {
+      year: "2025",
+      title: "성수동 버스킹",
+      place: "서울 성수동",
+      desc: "첫 성수동 거리 무대. '바보 멍청이 똥개'가 처음 공개된 현장.",
+      youtubeId: "AHGXsBvkVVI",
+      bg: "assets/img/thumbs/busking.jpg",
+      photos: []
+    },
+    {
+      year: "2025",
+      title: "BOYNEXTDOOR와 함께",
+      desc: "'바보 멍청이 똥개' 세대를 넘은 컬래버 무대.",
+      youtubeId: "neUVzSyKCn8",
+      bg: "assets/img/thumbs/bnd.jpg",
+      photos: []
+    },
+    {
+      year: "2025",
+      title: "콜미 (CALL ME) 커버",
+      desc: "코요태 신곡을 인순이 스타일로. 조회수가 증명한 커버.",
+      youtubeId: "9wwtxL2TLJQ",
+      bg: "assets/img/thumbs/callme.jpg",
+      photos: []
+    },
+    {
+      year: "",
+      title: "시어트리컬 콘서트 실황",
+      place: "공연명·연도 확인 중 [공식 확인 필요]",
+      desc: "오케스트라 협연, 로코코 의상극, 스팽글 재즈 넘버 — 같은 카메라 시리즈로 전해진 대형 무대 기록.",
+      bg: "assets/img/photos/dsc0628.jpg",
+      photos: [
+        { img: "assets/img/photos/dsc0427.jpg", w: 1600, h: 1065, caption: "깃털 장식 흰 의상, 오케스트라와 함께" },
+        { img: "assets/img/photos/dsc0628.jpg", w: 1600, h: 1063, caption: "댄서들과 함께한 스팽글 무대" },
+        { img: "assets/img/photos/dsc0284.jpg", w: 1600, h: 1063, caption: "순백의 무대 세트" },
+        { img: "assets/img/photos/dsc0369.jpg", w: 1600, h: 1063, caption: "흰 의상의 군무와 함께" },
+        { img: "assets/img/photos/dsc0081.jpg", w: 1063, h: 1600, caption: "쏟아지는 조명 아래, 스팽글 드레스" },
+        { img: "assets/img/photos/dsc9427.jpg", w: 1600, h: 1063, caption: "원색의 무대, 폭발하는 에너지" }
+      ]
+    },
+    {
+      year: "",
+      title: "네온 시티 무대",
+      place: "공연명·연도 확인 중 [공식 확인 필요]",
+      desc: "도시의 불빛을 닮은 LED 무대 실황 기록.",
+      bg: "assets/img/photos/kakao21.jpg",
+      photos: [
+        { img: "assets/img/photos/kakao21.jpg", w: 1600, h: 1067, caption: "네온 조명의 대형 무대" },
+        { img: "assets/img/photos/kakao22.jpg", w: 1600, h: 1067, caption: "도시의 불빛을 닮은 무대 세트" }
+      ]
+    }
   ],
 
   /* ---------- 현재 스포트라이트 (관리자 교체 영역) ---------- */
@@ -156,32 +245,32 @@ window.SITE_DATA = {
 
   /* ---------- 디스코그래피 (검증된 주요 발표작) ---------- */
   albums: [
-    { featured: true, art: "assets/img/stills/s8.jpg", year: "1978", title: "희자매 1집", kind: "그룹", note: "타이틀곡 '실버들'로 TBC 가요차트 7주 연속 1위 데뷔.",
+    { featured: true, art: "assets/img/covers/cover1978.jpg", year: "1978", title: "희자매 1집", kind: "그룹", note: "타이틀곡 '실버들'로 TBC 가요차트 7주 연속 1위 데뷔.",
       tracks: ["실버들", "우리는 사랑해요", "이제는 모두 잊어요", "앵두", "말도 안돼", "아리랑 내님아", "어찌합니까", "달무리", "사랑만은 않겠어요", "오동잎"],
       credits: "'실버들' — 작사 김소월(시) · 작곡·편곡 안치행 · 1978 힛트레코드 (희자매: 김인순·김재희·이영숙)",
       links: [
         { label: "벅스", url: "https://music.bugs.co.kr/album/119626" },
         { label: "Spotify('실버들')", url: "https://open.spotify.com/track/6TufjMtsLO7W8tilip8BMr" }
       ] },
-    { year: "1980", title: "인연 (Fate)", kind: "솔로 1집", note: "솔로 가수 인순이의 첫걸음.",
+    { art: "assets/img/photos/album01.jpg", year: "1980", title: "인연 (Fate)", kind: "솔로 1집", note: "솔로 가수 인순이의 첫걸음.",
       tracks: ["인연", "웃어주세요", "재수생", "풍문으로 들었어", "정말로 모르시나", "조용한 이별", "차표한장 (One Way Ticket)", "춤을 춰요 (I Was Made For Dancing)", "꿈이였나봐", "복돌이", "내마음 흔들려", "빨간 마후라"],
       credits: "1980년 10월 현대음향 발매. 곡별 작사·작곡 크레딧은 공식 자료 확인 후 추가됩니다. [자료 필요]",
       links: [] },
-    { featured: true, art: "assets/img/stills/s7.jpg", year: "1983", title: "밤이면 밤마다", kind: "대표곡", note: "디바의 시대를 연 폭발적 히트곡. 독집 제4집 수록.",
+    { featured: true, art: "assets/img/photos/album04.jpg", year: "1983", title: "밤이면 밤마다", kind: "대표곡", note: "디바의 시대를 연 폭발적 히트곡. 독집 제4집 수록.",
       tracks: ["밤이면 밤마다", "슬픈 아침", "한밤중", "내 고향집", "왜 나를 떠나셨나요", "손모아 마음모아", "욕망", "하늘 날고파라", "그리운 내사랑아", "다른 사람 말처럼 들리네", "고독", "고독 (경음악)"],
       credits: "'밤이면 밤마다' — 작사·작곡·편곡 김정택 · 1983 독집 제4집. 이 곡의 히트로 1984 KBS 7대가수상 수상.",
       links: [
         { label: "멜론(곡)", url: "https://www.melon.com/song/detail.htm?songId=60847" },
         { label: "벅스(곡)", url: "https://music.bugs.co.kr/track/1005869" }
       ] },
-    { year: "1996", title: "The Queen Of Soul", kind: "정규 11집", note: "'또' 수록. 소울의 여왕이라는 이름을 새긴 앨범.",
+    { art: "assets/img/photos/album11.jpg", year: "1996", title: "The Queen Of Soul", kind: "정규 11집", note: "'또' 수록. 소울의 여왕이라는 이름을 새긴 앨범.",
       tracks: ["또", "이별연습", "밀애", "너의 곁에 나", "이별을 준비할꺼야", "그대가 말하는 사랑", "혼자가 아닌 나", "White Christmas For You"],
       credits: "'또'·'밀애'·'그대가 말하는 사랑' — 작사·작곡 박진영 · '이별연습'·'이별을 준비할꺼야' — 작사·작곡 김형석 · '너의 곁에 나' — 작사 노영심, 작곡 김형석 · 1996년 5월 세원음반",
       links: [
         { label: "벅스", url: "https://music.bugs.co.kr/album/4690" },
         { label: "Spotify", url: "https://open.spotify.com/album/7odz1LsIS2ltX2tQZe41Q7" }
       ] },
-    { year: "2004", title: "A To Z", kind: "정규 16집", note: "'친구여'(feat. 조PD) 수록. 2004년 9월 9일 발매.",
+    { art: "assets/img/photos/album16.jpg", year: "2004", title: "A To Z", kind: "정규 16집", note: "'친구여'(feat. 조PD) 수록. 2004년 9월 9일 발매.",
       tracks: ["Tonight", "Higher", "웃고 있지만", "My Life", "연가", "여정", "Swing My Baby", "연인", "여자이니까", "잠깐", "첫사랑", "비에 스친 날들", "친구여 (feat. 조PD)", "비상"],
       credits: "'친구여' — 작사 조PD, 작곡·편곡 박근태 · 타이틀곡 'Tonight' — 작사 김민지, 작곡 박해운, 편곡 한태수 · 프로듀서 김도형",
       links: [
@@ -190,7 +279,7 @@ window.SITE_DATA = {
         { label: "Spotify", url: "https://open.spotify.com/album/7hdxullH6yeBjneaZ9rRDD" },
         { label: "Apple Music", url: "https://music.apple.com/kr/album/16th-a-to-z/1269489854" }
       ] },
-    { featured: true, art: "assets/img/stills/s5.jpg", year: "2007", title: "거위의 꿈", kind: "대표곡", note: "카니발 원곡(1997) 리메이크. 위로의 상징이 된 노래.",
+    { featured: true, art: "assets/img/covers/cover2007.jpg", year: "2007", title: "거위의 꿈", kind: "대표곡", note: "카니발 원곡(1997) 리메이크. 위로의 상징이 된 노래.",
       tracks: ["거위의 꿈 (Original)", "거위의 꿈 (Inst.)", "거위의 꿈 (Radio Edit)", "거위의 꿈 (Director's Edit)", "하늘이여...제발 (주몽 OST)"],
       credits: "작사 이적 · 작곡 김동률 (원곡 카니발, 1997) · 2007. 1. 22. 디지털 싱글, 2007. 2. 1. 디지털 음반 《거위의 꿈, 꿈을 꾸는 모든 이들에게》",
       links: [
@@ -199,7 +288,7 @@ window.SITE_DATA = {
         { label: "Spotify", url: "https://open.spotify.com/album/7t69eXfrQb8fY51q8EvMQe" },
         { label: "Apple Music", url: "https://music.apple.com/kr/album/gooses-dream-to-all-dreamers-ep/1423480473" }
       ] },
-    { year: "2009", title: "인순이 (17집)", kind: "정규", note: "타이틀곡 'Fantasia', '아버지' 수록. 데뷔 31주년 기념작.",
+    { art: "assets/img/covers/cover2009.jpg", year: "2009", title: "인순이 (17집)", kind: "정규", note: "타이틀곡 'Fantasia', '아버지' 수록. 데뷔 31주년 기념작.",
       tracks: ["Fantasia", "Cry", "향수", "아버지", "기회", "일어나", "뿌리 (Prologue)", "나무", "딸에게", "사랑가", "Merry Merry", "Fantasia (Inst.)"],
       credits: "'아버지' — 작사·작곡·편곡 이현승 · 'Fantasia' — 작사 나비, 작곡·편곡 이현승 · '향수' — 시 정지용, 작곡 김희갑 · 총괄 프로듀서 이현승 · 2009. 5. 8. 발매",
       links: [
@@ -209,7 +298,7 @@ window.SITE_DATA = {
         { label: "Spotify", url: "https://open.spotify.com/album/2fdeLt66Qis4rWCYxWI8ro" },
         { label: "Apple Music", url: "https://music.apple.com/kr/album/insooni/1641834078" }
       ] },
-    { featured: true, art: "assets/img/stills/s4.jpg", year: "2023", title: "One Last Time", kind: "골든걸스", note: "KBS2 '골든걸스' 프로젝트 그룹 데뷔곡 (박진영 프로듀싱).",
+    { featured: true, art: "assets/img/covers/cover2023.jpg", year: "2023", title: "One Last Time", kind: "골든걸스", note: "KBS2 '골든걸스' 프로젝트 그룹 데뷔곡 (박진영 프로듀싱).",
       tracks: ["One Last Time"],
       credits: "작사 박진영 'The Asiansoul' · 작곡 박진영, Deza · 편곡 박진영, 이해솔 · 제작 ZEMMIX C&B · 유통 워너뮤직코리아 · 2023. 12. 1. 디지털 싱글 (인순이·박미경·신효범·이은미)",
       links: [
@@ -219,7 +308,7 @@ window.SITE_DATA = {
         { label: "Apple Music", url: "https://music.apple.com/kr/album/one-last-time-single/1719039298" },
         { label: "Spotify", url: "https://open.spotify.com/track/0OYq4lcsCvC3aVWVt3lFTK" }
       ] },
-    { featured: true, art: "assets/img/stills/s6.jpg", year: "2025", title: "인순이, 아름다운 우리나라", kind: "앨범", note: "2025년 2월 발매, 9곡 수록.",
+    { featured: true, art: "assets/img/covers/cover2025.jpg", year: "2025", title: "인순이, 아름다운 우리나라", kind: "앨범", note: "2025년 2월 발매, 9곡 수록.",
       tracks: ["광주 광주", "밤이면 밤마다", "아름다운 우리나라", "야속한 내 님", "흔들리는 갈대", "너와 나", "욕망", "이별의 눈동자", "길섶에 핀 꽃"],
       credits: "정규 9곡 · 2025. 2. 19. 발매 · 기획 탑뮤직 · 유통 RIAK · 타이틀곡 '아름다운 우리나라'(원곡 1984, 작사·작곡 박인호). 곡별 세부 크레딧은 공식 자료 확인 후 추가됩니다.",
       links: [
@@ -228,7 +317,7 @@ window.SITE_DATA = {
         { label: "Apple Music", url: "https://music.apple.com/kr/album/%EC%9D%B8%EC%88%9C%EC%9D%B4-%EC%95%84%EB%A6%84%EB%8B%A4%EC%9A%B4-%EC%9A%B0%EB%A6%AC%EB%82%98%EB%9D%BC/1797462838" },
         { label: "Spotify", url: "https://open.spotify.com/album/5ErPwrIgz4dd8y6wEhXnwU" }
       ] },
-    { year: "2025", title: "그래도 꿈은 흐른다", kind: "싱글", note: "2025년 11월 발매. 여전히 꿈을 노래합니다.",
+    { art: "assets/img/covers/coverDream.jpg", year: "2025", title: "그래도 꿈은 흐른다", kind: "싱글", note: "2025년 11월 발매. 여전히 꿈을 노래합니다.",
       tracks: ["그래도 꿈은 흐른다"],
       credits: "작사 Ashbun, 인순이 · 작곡 Ashbun · 편곡·프로듀싱 Ethan · 코프로듀싱 박세인 · 보컬 디렉팅 이현승 · 믹싱·마스터링 김석민 · 기획 주식회사 소솝 · 유통 NHN벅스 · 2025. 11. 28. 싱글",
       links: [
