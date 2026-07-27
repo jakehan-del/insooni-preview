@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko" data-fs="1">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>운영자 콘솔 (데모) | 인순이 INSOONI</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">본문 바로가기</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-en">INSOONI</span>
+      <span class="brand-ko">운영자 콘솔 (데모)</span>
+    </a>
+    <div class="header-tools" style="margin-left:auto">
+      <a class="btn btn--ghost btn--sm" href="index.html">사이트로 돌아가기</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="section">
+  <div class="container" id="admin-root">
+    <div class="notice-box" style="margin-bottom:2rem">
+      이 페이지는 <strong>운영팀이 개발자 없이 사이트를 관리하는 모습</strong>을 보여주기 위한 화면 데모입니다.
+      실제 서비스에서는 로그인(2단계 인증)을 거친 운영자만 접근할 수 있습니다.
+    </div>
+
+    <div class="admin-layout">
+      <nav class="admin-side" aria-label="관리 메뉴">
+        <a href="#" class="active">대시보드</a>
+        <a href="#q-posts">게시물 승인</a>
+        <a href="#q-content">콘텐츠 관리</a>
+        <a href="#">일정 등록 (데모)</a>
+        <a href="#">회원 관리 (데모)</a>
+        <a href="#">홈 화면 구성 (데모)</a>
+      </nav>
+
+      <div>
+        <h1 style="font-size:1.7rem">운영자 콘솔</h1>
+
+        <div class="stat-cards">
+          <div class="stat-card">
+            <span class="label">오늘 방문</span>
+            <span class="value">2,418</span>
+            <span class="delta up">▲ 12% (전주 대비)</span>
+          </div>
+          <div class="stat-card">
+            <span class="label">누적 팬레터</span>
+            <span class="value" id="stat-letters">1,284</span>
+            <span class="delta up">▲ 이번 주 +37</span>
+          </div>
+          <div class="stat-card">
+            <span class="label">게시판 글</span>
+            <span class="value" id="stat-posts">3,492</span>
+            <span class="delta up">▲ 이번 주 +112</span>
+          </div>
+          <div class="stat-card">
+            <span class="label">구독자</span>
+            <span class="value">8,930</span>
+            <span class="delta up">▲ 이번 달 +214</span>
+          </div>
+        </div>
+        <p class="form-hint" style="margin-top:-1rem">※ 수치는 데모 샘플입니다. 팬레터·게시판 수치는 이 브라우저에서 작성한 글만큼 실제로 늘어납니다.</p>
+
+        <h2 id="q-posts" style="margin-top:2.5rem">게시물 승인 대기 <span class="badge badge--warn">3건</span></h2>
+        <div class="table-wrap">
+          <table class="data-table">
+            <caption class="sr-only">승인 대기 게시물 목록</caption>
+            <thead>
+              <tr><th scope="col">유형</th><th scope="col">작성자</th><th scope="col">내용 미리보기</th><th scope="col">상태</th><th scope="col">처리</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>사진 공유</td><td>순이바라기</td><td>1999년 콘서트 티켓을 아직 간직하고 있어요…</td>
+                <td><span class="badge badge--warn">대기</span></td>
+                <td><button class="btn btn--sm btn--gold" data-approve>승인</button> <button class="btn btn--sm btn--ghost" data-reject>숨김</button></td>
+              </tr>
+              <tr>
+                <td>팬레터</td><td>익명 팬</td><td>거위의 꿈 듣고 힘내서 시험 붙었습니다…</td>
+                <td><span class="badge badge--warn">대기</span></td>
+                <td><button class="btn btn--sm btn--gold" data-approve>승인</button> <button class="btn btn--sm btn--ghost" data-reject>숨김</button></td>
+              </tr>
+              <tr>
+                <td>게시글 신고</td><td>신고 2건 접수</td><td>외부 링크 홍보성 게시글로 신고됨</td>
+                <td><span class="badge badge--danger">신고</span></td>
+                <td><button class="btn btn--sm btn--gold" data-approve>문제없음</button> <button class="btn btn--sm btn--ghost" data-reject>숨김</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="q-content" style="margin-top:2.5rem">콘텐츠 관리</h2>
+        <div class="table-wrap">
+          <table class="data-table">
+            <caption class="sr-only">등록된 콘텐츠 목록</caption>
+            <thead>
+              <tr><th scope="col">유형</th><th scope="col">제목</th><th scope="col">게시일</th><th scope="col">상태</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>공지</td><td>공식 팬 플랫폼 오픈 안내</td><td>2026. 8. 1.</td><td><span class="badge badge--ok">게시 중</span></td></tr>
+              <tr><td>일정</td><td>단독 콘서트 (서울) [샘플]</td><td>2026. 8. 29.</td><td><span class="badge badge--ok">게시 중</span></td></tr>
+              <tr><td>영상</td><td>대표 무대 모음 재생목록</td><td>미정</td><td><span class="badge badge--warn">자료 대기</span></td></tr>
+              <tr><td>메시지</td><td>인순이의 첫 인사</td><td>미정</td><td><span class="badge badge--warn">게시 예정</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="notice-box mt-2">
+          실제 운영 화면에서는 여기서 <strong>뉴스·일정·사진·영상 등록과 수정, 홈 화면 배너 순서 변경, 회원 등급 관리</strong>까지
+          모두 클릭만으로 처리합니다. 자세한 기능 명세는 기획 문서(08. 커뮤니티·관리자 설계)를 참고하세요.
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-legal">
+      <span>© 2026 INSOONI OFFICIAL. 관리자 화면 데모</span>
+      <span><a href="index.html">사이트로 돌아가기</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
