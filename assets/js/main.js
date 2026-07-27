@@ -363,16 +363,14 @@
       return;
     }
     items.forEach(function (r) {
-      var c = el("button", "stage-tile stage-tile--video stage-tile--recap");
+      var c = el("button", "recap-row");
       c.type = "button";
       c.setAttribute("aria-haspopup", "dialog");
       c.setAttribute("aria-label", r.title + " " + t("dyn.recapOpen", "리캡 열기"));
       c.innerHTML =
-        '<span class="t-bg" aria-hidden="true"' + (r.bg ? ' style="background-image:url(\'' + esc(r.bg) + '\')"' : "") + "></span>" +
-        '<span class="t-year">' + esc(r.year || "") + "</span>" +
-        '<h3 class="t-title">' + esc(r.title) + "</h3>" +
-        '<p class="t-desc">' + esc(r.desc || "") + "</p>" +
-        '<p class="t-note">VIEW RECAP <span aria-hidden="true">→</span></p>';
+        '<span class="rr-year">' + esc(r.year || "") + "</span>" +
+        '<span class="rr-title">' + esc(r.title) + (r.place ? '<span class="rr-place">' + esc(r.place) + "</span>" : "") + "</span>" +
+        '<span class="rr-cta">VIEW RECAP <span aria-hidden="true">→</span></span>';
       c.addEventListener("click", function () { openRecap(r, c); });
       box.appendChild(c);
     });

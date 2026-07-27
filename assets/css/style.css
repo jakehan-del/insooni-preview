@@ -110,10 +110,14 @@ html.js-anim .reveal.in { opacity: 1; transform: none; transition: opacity .9s v
   display: flex; align-items: baseline; justify-content: space-between;
   gap: 1rem; flex-wrap: wrap; margin-bottom: 2.6rem;
 }
-.section-head h2 { margin: 0; }
+.section-head h2 {
+  margin: 0; font-family: var(--font-mono); font-weight: 400;
+  font-size: .92rem; letter-spacing: .34em; text-transform: uppercase; color: #fff;
+}
 .section-head .more {
-  font-size: .92rem; font-weight: 600; color: var(--muted); text-decoration: none;
-  border-bottom: 1px solid var(--line-strong); padding-bottom: .2em; white-space: nowrap;
+  font-family: var(--font-mono); font-size: .68rem; font-weight: 400; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--faint); text-decoration: none;
+  border-bottom: 1px solid var(--line-strong); padding-bottom: .25em; white-space: nowrap;
 }
 .section-head .more:hover { color: var(--gold); border-color: var(--gold); }
 
@@ -233,8 +237,8 @@ html.js-anim .reveal.in { opacity: 1; transform: none; transition: opacity .9s v
   transition: transform .2s var(--ease), background .2s ease, border-color .2s ease, color .2s ease;
 }
 .btn:active { transform: translateY(1px) scale(.99); }
-.btn--gold { background: var(--gold); color: var(--on-gold); }
-.btn--gold:hover { background: var(--gold-hover); color: var(--on-gold); }
+.btn--gold { background: transparent; border-color: var(--line-strong); color: var(--ivory); }
+.btn--gold:hover { background: transparent; border-color: #fff; color: #fff; }
 .btn--ghost { background: transparent; border-color: var(--line-strong); color: var(--ivory); }
 .btn--ghost:hover { border-color: var(--ivory); color: var(--ivory); }
 .btn--sm { min-height: 44px; padding: .45em 1.3em; font-size: .9rem; }
@@ -883,12 +887,11 @@ html.js-anim .hero [data-rise="5"] { animation-delay: .5s; }
   padding: 1.9rem .3rem; border-bottom: 1px solid var(--line);
 }
 .timeline .year {
-  font-family: var(--font-display); font-weight: 900; font-size: 2rem;
-  color: var(--faint); line-height: 1.1;
+  font-family: var(--font-mono); font-weight: 400; font-size: 1rem; letter-spacing: .18em; color: var(--faint);
 }
-.timeline li.milestone .year { color: var(--gold); }
+.timeline li.milestone .year { color: #fff; }
 .timeline .evt { color: var(--ivory); font-size: 1.08rem; font-weight: 600; }
-.timeline li.milestone .evt { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; }
+.timeline li.milestone .evt { font-weight: 700; }
 .timeline .note { display: block; color: var(--muted); font-size: .9rem; font-weight: 400; margin-top: .3em; }
 @media (max-width: 640px) {
   .timeline li { grid-template-columns: 1fr; gap: .4rem; padding: 1.4rem .2rem; }
@@ -902,15 +905,15 @@ html.js-anim .hero [data-rise="5"] { animation-delay: .5s; }
 @media (max-width: 640px) { .grid--3, .grid--2 { grid-template-columns: 1fr; } }
 
 .card {
-  background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-panel);
+  background: transparent; border: 0; border-radius: 2px;
   overflow: hidden; display: flex; flex-direction: column;
-  transition: border-color .3s ease, background .3s ease, transform .3s var(--ease);
+  transition: opacity .25s ease;
 }
 a.card { text-decoration: none; color: inherit; }
-.card:hover { border-color: var(--gold-deep); background: var(--panel-lift); transform: translateY(-3px); }
+.grid--3:hover .card:not(:hover) { opacity: .5; }
 .card .thumb { aspect-ratio: 16 / 9; }
-.card-body { padding: 1.4rem 1.5rem 1.5rem; display: flex; flex-direction: column; gap: .5rem; flex: 1; }
-.card-body h3 { margin: 0; }
+.card-body { padding: .9rem .1rem 1.2rem; display: flex; flex-direction: column; gap: .45rem; flex: 1; }
+.card-body h3 { margin: 0; font-family: var(--font-mono); font-weight: 400; font-size: .85rem; letter-spacing: .14em; }
 .card-meta { font-family: var(--font-mono); font-size: .72rem; color: var(--faint); display: flex; gap: .9em; flex-wrap: wrap; margin-top: auto; letter-spacing: .08em; }
 .card-desc { color: var(--muted); font-size: 1rem; margin: 0; }
 
@@ -1251,3 +1254,24 @@ button.strip-item:focus-visible { outline: 3px solid var(--ivory); outline-offse
 
 .album-row .a-title { display: block; }
 .album-row .a-note { display: block; }
+
+/* 투어 레저 타이포 마감 (bbMono 문법) */
+.event-info h3 { font-family: var(--font-mono); font-weight: 400; font-size: .98rem; letter-spacing: .12em; margin: .3em 0 .15em; }
+.event-info .where { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .16em; text-transform: uppercase; color: var(--faint); }
+.stage-tile--recap .t-note { font-family: var(--font-mono); letter-spacing: .22em; }
+
+/* 리캡 = 투어식 텍스트 레저 (이미지 없음, 패널 안에서 사진·영상) */
+.recap-row {
+  display: grid; grid-template-columns: 5.2rem 1fr auto; gap: 1.6rem; align-items: center;
+  width: 100%; text-align: left; padding: 2.2rem .4rem; border: 0; background: transparent;
+  border-bottom: 1px solid var(--line); cursor: pointer; color: var(--ivory);
+  transition: opacity .22s ease;
+}
+#past-recaps:hover .recap-row:not(:hover) { opacity: .4; }
+.rr-year { font-family: var(--font-mono); font-size: .78rem; letter-spacing: .18em; color: var(--faint); }
+.rr-title { font-family: var(--font-mono); font-size: .98rem; letter-spacing: .12em; }
+.rr-place { display: block; font-size: .66rem; letter-spacing: .16em; text-transform: uppercase; color: var(--faint); margin-top: .45em; }
+.rr-cta { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .26em; color: var(--faint); white-space: nowrap; }
+.recap-row:hover .rr-cta, .recap-row:focus-visible .rr-cta { color: #fff; }
+#past-recaps { display: block; }
+@media (max-width: 640px) { .recap-row { grid-template-columns: 1fr auto; } .rr-year { display: none; } }

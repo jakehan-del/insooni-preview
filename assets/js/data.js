@@ -76,8 +76,8 @@ window.SITE_DATA = {
     { img: "assets/img/stills/s7.jpg", w: 1280, h: 720, year: "2025", cat: "무대", caption: "합창단과 함께한 클라이맥스" },
     { img: "assets/img/stills/s4.jpg", w: 1280, h: 720, year: "2025", cat: "포트레이트", caption: "노래에 잠긴 순간" },
     { img: "assets/img/stills/s8.jpg", w: 1280, h: 720, year: "2025", cat: "무대", caption: "어둠 속 한 줄기 빛, 무대 위의 사람" },
-    { placeholder: true, cat: "무대", caption: "공연 실사진 [자료 확보 예정]" },
-    { placeholder: true, cat: "포트레이트", caption: "공식 화보 [자료 확보 예정]" }
+    { img: "assets/img/photos/portrait-bw.jpg", w: 1067, h: 1600, year: "", cat: "화보", caption: "흑백 터틀넥 화보" },
+    { img: "assets/img/photos/portrait-camel.jpg", w: 1044, h: 1600, year: "", cat: "화보", caption: "카멜 터틀넥 프로필 화보" }
   ],
 
   /* ---------- 지난 무대 리캡 (VIEW RECAP: 사진 갤러리 + 영상) ----------
