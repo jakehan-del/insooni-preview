@@ -40,6 +40,11 @@
     if (st === "broadcast") return '<span class="badge badge--gold">' + t("st.broadcast", "방송") + "</span>";
     return '<button type="button" class="btn btn--ghost btn--sm" disabled>' + t("st.soon", "예매 오픈 예정") + "</button>";
   }
+  /* 데이터 필드 이중 언어: obj.en[field]가 있으면 EN 모드에서 사용 */
+  function tr(o, f) {
+    if (document.documentElement.getAttribute("lang") === "en" && o && o.en && o.en[f]) return o.en[f];
+    return o ? o[f] : "";
+  }
   /* 동적 문자열 이중 언어 헬퍼 */
   function t(key, ko) {
     var d = window.I18N_EN || {};
@@ -136,7 +141,7 @@
     a.innerHTML =
       "<time datetime=\"" + esc(item.date) + '">' + fmtDate(item.date) + "</time>" +
       '<span class="badge badge--' + (item.type === "공지" ? "gold" : "wine") + '">' + esc(item.type) + "</span>" +
-      "<div><h3>" + esc(item.title) + '</h3><p class="excerpt">' + esc(item.excerpt) + "</p></div>";
+      "<div><h3>" + esc(tr(item, "title")) + '</h3><p class="excerpt">' + esc(tr(item, "excerpt")) + "</p></div>";
     return a;
   }
   function sortedNews() {
@@ -185,7 +190,7 @@
       var row = el("div", "event-row");
       row.innerHTML =
         '<div class="event-date"><span class="d">' + d.getDate() + '</span><span class="m">' + d.getFullYear() + "년 " + (d.getMonth() + 1) + '월</span></div>' +
-        '<div class="event-info"><span class="badge badge--' + (ev.kind === "공연" ? "gold" : "wine") + '">' + esc(ev.kind) + "</span> <h3>" + esc(ev.title) + '</h3><p class="where">' + esc(ev.place) + "</p></div>" +
+        '<div class="event-info"><span class="badge badge--' + (ev.kind === "공연" ? "gold" : "wine") + '">' + esc(ev.kind) + "</span> <h3>" + esc(tr(ev, "title")) + '</h3><p class="where">' + esc(tr(ev, "place")) + "</p></div>" +
         eventCta(ev);
       box.appendChild(row);
     });
@@ -265,7 +270,7 @@
         var row = el("div", "event-row");
         row.innerHTML =
           '<div class="event-date"><span class="d">' + d.getDate() + '</span><span class="m">' + d.getFullYear() + "년 " + (d.getMonth() + 1) + '월</span></div>' +
-          '<div class="event-info"><span class="badge badge--' + (ev.kind === "공연" ? "gold" : "wine") + '">' + esc(ev.kind) + "</span> <h3>" + esc(ev.title) + '</h3><p class="where">' + esc(ev.place) + (ev.note ? " · " + esc(ev.note) : "") + "</p></div>" +
+          '<div class="event-info"><span class="badge badge--' + (ev.kind === "공연" ? "gold" : "wine") + '">' + esc(ev.kind) + "</span> <h3>" + esc(tr(ev, "title")) + '</h3><p class="where">' + esc(tr(ev, "place")) + (ev.note ? " · " + esc(ev.note) : "") + "</p></div>" +
           eventCta(ev);
         list.appendChild(row);
       });
@@ -382,14 +387,14 @@
     box.classList.add("shows-grid");
     /* 자료 있는 리캡 + 기록만 있는 지난 공연을 하나의 문양 그리드로 */
     var shows = [];
-    items.forEach(function (r) { shows.push({ recap: r, date: r.date || r.year || "", city: r.city || r.place || "", title: r.title }); });
+    items.forEach(function (r) { shows.push({ recap: r, date: r.date || r.year || "", city: tr(r, "city") || tr(r, "place"), title: tr(r, "title") }); });
     function fmtShow(d) {
       if (!d) return "";
       var parts = String(d).split("-");
       if (parts[0] === "1999") return "1999";
       return parts[0] + ". " + (parts[1] ? parseInt(parts[1], 10) + "." : "") + (parts[2] ? " " + parseInt(parts[2], 10) + "." : "");
     }
-    (D.pastShows || []).forEach(function (p) { shows.push({ date: fmtShow(p.date), city: p.city || "", venue: p.venue || "", title: p.title }); });
+    (D.pastShows || []).forEach(function (p) { shows.push({ date: fmtShow(p.date), city: tr(p, "city"), venue: tr(p, "venue"), title: tr(p, "title") }); });
     shows.forEach(function (sh) {
       var c;
       if (sh.recap) {
@@ -448,15 +453,15 @@
   function openRecap(r, opener) {
     var box = ensureRecapPanel();
     recapOpener = opener || null;
-    box.setAttribute("aria-label", r.title + " 리캡");
+    box.setAttribute("aria-label", tr(r, "title") + " " + t("recap.label", "리캡"));
     var inner = $(".recap-inner", box);
-    var metaLine = [r.year, r.place].filter(Boolean).join(" · ");
+    var metaLine = [r.year, tr(r, "place")].filter(Boolean).join(" · ");
     var html =
       '<header class="recap-head">' +
       '<span class="recap-kicker">RECAP</span>' +
-      "<h2>" + esc(r.title) + "</h2>" +
+      "<h2>" + esc(tr(r, "title")) + "</h2>" +
       (metaLine ? '<p class="recap-meta">' + esc(metaLine) + "</p>" : "") +
-      (r.desc ? '<p class="recap-desc">' + esc(r.desc) + "</p>" : "") +
+      (r.desc ? '<p class="recap-desc">' + esc(tr(r, "desc")) + "</p>" : "") +
       "</header>";
     if (r.youtubeId) {
       html += '<div class="recap-video recap-video--embed"><iframe src="https://www.youtube-nocookie.com/embed/' + esc(r.youtubeId) + '?rel=0&modestbranding=1" title="' + esc(r.title) + '" allow="encrypted-media; fullscreen" allowfullscreen loading="lazy"></iframe></div>';
@@ -851,6 +856,8 @@
     }
     btn.addEventListener("click", function () {
       apply(document.documentElement.getAttribute("lang") === "ko" ? "en" : "ko");
+      /* 데이터 렌더 콘텐츠까지 완전 전환: 저장 후 재로드 */
+      location.reload();
     });
     if (store("insooni_lang") === "en") apply("en");
   }
