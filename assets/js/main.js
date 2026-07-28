@@ -45,6 +45,15 @@
     if (document.documentElement.getAttribute("lang") === "en" && o && o.en && o.en[f]) return o.en[f];
     return o ? o[f] : "";
   }
+  /* 유형 배지 이중 언어 */
+  function kindCat(c) {
+    var map = { "무대": "STAGE", "포트레이트": "PORTRAIT", "화보": "EDITORIAL", "자켓": "ALBUM ART", "뮤지컬": "MUSICAL", "기록": "MEMORIES", "비하인드": "BEHIND" };
+    return document.documentElement.getAttribute("lang") === "en" && map[c] ? map[c] : c;
+  }
+  function kindLabel(k) {
+    var map = { "공지": "Notice", "공연": "Show", "방송": "Broadcast", "발매": "Release", "수상": "Award", "행사": "Event", "보도": "Press" };
+    return document.documentElement.getAttribute("lang") === "en" && map[k] ? map[k] : k;
+  }
   /* 동적 문자열 이중 언어 헬퍼 */
   function t(key, ko) {
     var d = window.I18N_EN || {};
@@ -140,7 +149,7 @@
     if (asLink) a.href = "news.html";
     a.innerHTML =
       "<time datetime=\"" + esc(item.date) + '">' + fmtDate(item.date) + "</time>" +
-      '<span class="badge badge--' + (item.type === "공지" ? "gold" : "wine") + '">' + esc(item.type) + "</span>" +
+      '<span class="badge badge--' + (item.type === "공지" ? "gold" : "wine") + '">' + esc(kindLabel(item.type)) + "</span>" +
       "<div><h3>" + esc(tr(item, "title")) + '</h3><p class="excerpt">' + esc(tr(item, "excerpt")) + "</p></div>";
     return a;
   }
@@ -190,7 +199,7 @@
       var row = el("div", "event-row");
       row.innerHTML =
         '<div class="event-date"><span class="d">' + d.getDate() + '</span><span class="m">' + d.getFullYear() + "년 " + (d.getMonth() + 1) + '월</span></div>' +
-        '<div class="event-info"><span class="badge badge--' + (ev.kind === "공연" ? "gold" : "wine") + '">' + esc(ev.kind) + "</span> <h3>" + esc(tr(ev, "title")) + '</h3><p class="where">' + esc(tr(ev, "place")) + "</p></div>" +
+        '<div class="event-info"><span class="badge badge--' + (ev.kind === "공연" ? "gold" : "wine") + '">' + esc(kindLabel(ev.kind)) + "</span> <h3>" + esc(tr(ev, "title")) + '</h3><p class="where">' + esc(tr(ev, "place")) + "</p></div>" +
         eventCta(ev);
       box.appendChild(row);
     });
@@ -263,18 +272,24 @@
     $("#cal-next").addEventListener("click", function () { cur.m++; if (cur.m > 12) { cur.m = 1; cur.y++; } draw(); });
     draw();
 
+  }
+
+  /* 전체 일정 레저 — 달력과 독립 (달력 없어도 렌더) */
+  function renderEventList() {
     var list = $("#event-list");
-    if (list) {
-      events.forEach(function (ev) {
-        var d = new Date(ev.date + "T00:00:00");
-        var row = el("div", "event-row");
-        row.innerHTML =
-          '<div class="event-date"><span class="d">' + d.getDate() + '</span><span class="m">' + d.getFullYear() + "년 " + (d.getMonth() + 1) + '월</span></div>' +
-          '<div class="event-info"><span class="badge badge--' + (ev.kind === "공연" ? "gold" : "wine") + '">' + esc(ev.kind) + "</span> <h3>" + esc(tr(ev, "title")) + '</h3><p class="where">' + esc(tr(ev, "place")) + (ev.note ? " · " + esc(ev.note) : "") + "</p></div>" +
-          eventCta(ev);
-        list.appendChild(row);
-      });
-    }
+    if (!list || !D.events) return;
+    var events = D.events.slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; });
+    var en = document.documentElement.getAttribute("lang") === "en";
+    events.forEach(function (ev) {
+      var d = new Date(ev.date + "T00:00:00");
+      var mono = en ? (d.toLocaleString("en", { month: "short" }) + " " + d.getFullYear()) : (d.getFullYear() + "년 " + (d.getMonth() + 1) + "월");
+      var row = el("div", "event-row");
+      row.innerHTML =
+        '<div class="event-date"><span class="d">' + d.getDate() + '</span><span class="m">' + mono + '</span></div>' +
+        '<div class="event-info"><span class="badge badge--' + (ev.kind === "공연" ? "gold" : "wine") + '">' + esc(kindLabel(ev.kind)) + "</span> <h3>" + esc(tr(ev, "title")) + '</h3><p class="where">' + esc(tr(ev, "place")) + (ev.note ? " · " + esc(ev.note) : "") + "</p></div>" +
+        eventCta(ev);
+      list.appendChild(row);
+    });
   }
 
   /* ---------- 6. 아카이브: 타임라인 / 디스코그래피 / 영상 ---------- */
@@ -435,7 +450,7 @@
     recapEl.setAttribute("aria-modal", "true");
     recapEl.hidden = true;
     recapEl.innerHTML =
-      '<button type="button" class="lightbox-close recap-close" aria-label="닫기">×</button>' +
+      '<button type="button" class="lightbox-close recap-close" aria-label="닫기" data-i18n-aria="aria.close">×</button>' +
       '<div class="recap-inner"></div>';
     document.body.appendChild(recapEl);
     $(".recap-close", recapEl).addEventListener("click", closeRecap);
@@ -527,9 +542,9 @@
         var b = el("button", "arch-item");
         b.type = "button";
         b.setAttribute("aria-haspopup", "dialog");
-        b.setAttribute("aria-label", a.caption + " 크게 보기");
+        b.setAttribute("aria-label", a.caption + " " + t("aria.zoom", "크게 보기"));
         b.innerHTML = '<img src="' + esc(a.img) + '" alt="' + esc(a.caption) + '" width="' + a.w + '" height="' + a.h + '" loading="lazy">' +
-          '<span class="arch-cap">' + esc(a.year) + " · " + esc(a.cat) + "</span>";
+          '<span class="arch-cap">' + esc(a.year) + " · " + esc(kindCat(a.cat)) + "</span>";
         b.addEventListener("click", function () { openImageViewer(i, b); });
         grid.appendChild(b);
       });
@@ -575,7 +590,7 @@
     lightboxEl.setAttribute("aria-modal", "true");
     lightboxEl.hidden = true;
     lightboxEl.innerHTML =
-      '<button type="button" class="lightbox-close" aria-label="닫기">×</button>' +
+      '<button type="button" class="lightbox-close" aria-label="닫기" data-i18n-aria="aria.close">×</button>' +
       '<button type="button" class="lb-nav lb-prev" aria-label="이전" hidden>←</button>' +
       '<div class="lightbox-frame"></div>' +
       '<button type="button" class="lb-nav lb-next" aria-label="다음" hidden>→</button>' +
@@ -637,12 +652,12 @@
       if (!listBox) return;
       listBox.innerHTML = "";
       var letters = (store(KEY) || []).concat(D.sampleLetters || []);
-      if (!letters.length) { listBox.appendChild(el("p", "empty-note", "첫 번째 편지의 주인공이 되어 주세요.")); return; }
+      if (!letters.length) { listBox.appendChild(el("p", "empty-note", t("dyn.firstLetter", "첫 번째 편지의 주인공이 되어 주세요."))); return; }
       letters.slice(0, 6).forEach(function (L) {
         var p = el("article", "post");
         p.innerHTML =
           '<div class="post-head"><span class="avatar" aria-hidden="true">' + esc(firstChar(L.name)) + '</span>' +
-          '<span class="who">' + esc(L.name || "익명 팬") + '</span><span class="when">' + esc(L.date || "") + "</span></div>" +
+          '<span class="who">' + esc(L.name || t("dyn.anon", "익명 팬")) + '</span><span class="when">' + esc(L.date || "") + "</span></div>" +
           '<p class="post-body">' + esc(L.body) + "</p>";
         listBox.appendChild(p);
       });
@@ -652,7 +667,7 @@
       e.preventDefault();
       var btn = form.querySelector("[type=submit]");
       if (btn && btn.disabled) return;
-      var name = $("#letter-name").value.trim() || "익명 팬";
+      var name = $("#letter-name").value.trim() || t("dyn.anon", "익명 팬");
       var body = $("#letter-body").value.trim();
       if (!body) { $("#letter-body").focus(); return; }
       if (btn) { btn.disabled = true; setTimeout(function () { btn.disabled = false; }, 800); }
@@ -725,7 +740,7 @@
         e.preventDefault();
         var btn = form.querySelector("[type=submit]");
         if (btn && btn.disabled) return;
-        var name = $("#post-name").value.trim() || "익명 팬";
+        var name = $("#post-name").value.trim() || t("dyn.anon", "익명 팬");
         var body = $("#post-body").value.trim();
         if (!body) { $("#post-body").focus(); return; }
         if (btn) { btn.disabled = true; setTimeout(function () { btn.disabled = false; }, 800); }
@@ -769,8 +784,8 @@
       });
       var note = $("#poll-note");
       if (note) note.textContent = (votedIdx === null || votedIdx === undefined)
-        ? "보기를 누르면 바로 투표됩니다. (1인 1표)"
-        : "투표해 주셔서 감사합니다! 총 " + total + "명 참여 (데모 수치)";
+        ? t("dyn.pollHint", "보기를 누르면 바로 투표됩니다. (1인 1표)")
+        : t("dyn.pollThanks", "투표해 주셔서 감사합니다! 총 ") + total + "명 참여 (데모 수치)";
     }
     draw();
   }
@@ -847,7 +862,7 @@
           n.setAttribute("aria-label", n.dataset.koAria);
         }
       });
-      var koIds = ["home-news", "home-schedule", "home-videos", "news-list", "event-list", "cal-grid", "timeline", "discography", "videos", "letter-list", "board-list", "poll"];
+      var koIds = ["home-news", "home-schedule", "home-videos", "news-list", "event-list", "cal-grid", "timeline", "disco-index", "discography", "videos", "letter-list", "board-list", "poll"];
       koIds.forEach(function (id) {
         var n = document.getElementById(id);
         if (!n) return;
@@ -1179,6 +1194,7 @@
   /* ---------- 부팅 ---------- */
   document.addEventListener("DOMContentLoaded", function () {
     initLang();
+    renderEventList();
     initIntro();
     initLoader();
     initStrip();

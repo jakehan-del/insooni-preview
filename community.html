@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Cormorant+Garamond:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v30">
+<link rel="stylesheet" href="assets/css/style.css?v31">
 </head>
 <body>
 <a class="skip-link" href="#main" data-i18n="nav.skip">본문 바로가기</a>
@@ -40,7 +40,7 @@
     </nav>
     <div class="header-tools">
       <button class="lang-toggle" type="button" aria-label="Switch to English">EN</button>
-      <button class="nav-toggle" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="메뉴 열기"><span class="bars"></span></button>
+      <button class="nav-toggle" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="메뉴 열기" data-i18n-aria="aria.menuOpen"><span class="bars"></span></button>
     </div>
   </div>
 </header>
@@ -62,25 +62,6 @@
         <div class="sys-step"><span aria-hidden="true">02</span><p data-i18n="comm.s2">검수 — 소솝 운영진이 확인합니다</p></div>
         <div class="sys-step"><span aria-hidden="true">03</span><p data-i18n="comm.s3">게재 — 승인된 글만 공개됩니다</p></div>
       </div>
-    </div>
-  </section>
-
-  <!-- 인순이의 메시지 -->
-  <section class="section" aria-labelledby="h-artist">
-    <div class="container">
-      <div class="section-head">
-        <h2 id="h-artist" data-i18n="comm.msg">인순이의 메시지</h2>
-      </div>
-      <article class="post post--artist">
-        <div class="post-head">
-          <span class="avatar" aria-hidden="true">仁</span>
-          <span class="who">인순이</span>
-          <span class="badge badge--gold">공식</span>
-          <span class="when">[게시 예정]</span>
-        </div>
-        <p class="post-body">인순이 님이 직접 남기는 인사와 근황이 이곳에 게시됩니다.
-바쁜 일정 중에도 짧은 안부, 공연 후기, 사진 한 장으로 팬들과 만나는 자리입니다. [공식 콘텐츠 필요]</p>
-      </article>
     </div>
   </section>
 
@@ -158,7 +139,7 @@
             <h3 data-i18n="comm.event">진행 중인 이벤트</h3>
             <p class="card-desc">공연 관람 인증, 기념일 축하 메시지 모음, 우수 팬 콘텐츠 선정 등
             시즌별 이벤트가 이 자리에 열립니다.</p>
-            <p class="card-desc"><strong>지금:</strong> 데뷔 기념 '나의 첫 인순이' 사연 공모 [이벤트 기획안 · 확정 시 오픈]</p>
+            <p class="card-desc"><strong>지금:</strong> 데뷔 기념 '나의 첫 인순이' 사연 공모</p>
             <div class="card-meta"><span>당첨자 발표는 소식 페이지에 게시</span></div>
           </div>
         </div>
@@ -167,38 +148,6 @@
   </section>
 
   <!-- 기존 커뮤니티 연결 -->
-  <section class="section section--band" aria-labelledby="h-bridge">
-    <div class="container">
-      <div class="section-head">
-        <h2 id="h-bridge" data-i18n="comm.bridge">이웃 팬 공간과 함께</h2>
-      </div>
-      <p style="max-width:46em">오랫동안 팬들이 가꿔온 네이버 밴드·카페, 다음 카페는 소중한 우리의 이웃입니다.
-      이 사이트는 그 공간들을 대체하는 곳이 아니라, 공식 소식의 출발점이 되어 각 커뮤니티로 이어주는 다리입니다.</p>
-      <div class="grid grid--3">
-        <div class="card card--pending">
-          <div class="card-body">
-            <h3>네이버 밴드</h3>
-            <p class="card-desc">팬들의 일상 소통 공간 [밴드 주소 확인 필요]</p>
-            <div class="card-meta"><span class="link-pending">[주소 확인 필요]</span></div>
-          </div>
-        </div>
-        <div class="card card--pending">
-          <div class="card-body">
-            <h3>네이버 카페</h3>
-            <p class="card-desc">자료와 후기가 쌓인 공간 [카페 주소 확인 필요]</p>
-            <div class="card-meta"><span class="link-pending">[주소 확인 필요]</span></div>
-          </div>
-        </div>
-        <div class="card card--pending">
-          <div class="card-body">
-            <h3>다음 카페</h3>
-            <p class="card-desc">오랜 역사의 팬 커뮤니티 [카페 주소 확인 필요]</p>
-            <div class="card-meta"><span class="link-pending">[주소 확인 필요]</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
   <!-- 구독 -->
   <section class="subscribe" aria-labelledby="h-subscribe">
     <div class="subscribe-inner reveal">
@@ -230,8 +179,8 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동">↑</button>
-<script src="assets/js/i18n.js?v30"></script>
-<script src="assets/js/data.js?v30"></script>
-<script src="assets/js/main.js?v30"></script>
+<script src="assets/js/i18n.js?v31"></script>
+<script src="assets/js/data.js?v31"></script>
+<script src="assets/js/main.js?v31"></script>
 </body>
 </html>

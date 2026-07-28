@@ -186,7 +186,7 @@ window.SITE_DATA = {
 
   /* ---------- 지난 공연 아카이브 (플레이DB·보도 검증, 2026.7 리서치) ---------- */
   pastShows: [
-    { date: "2025-07-09", city: "서울", venue: "국립극장 하늘극장", title: "여우락 페스티벌 '두 사랑 이야기'", en: { title: "Yeowoorak Festival 'Two Love Stories'", city: "Seoul", en: { title: "Yeowoorak Festival 'Two Love Stories'", excerpt: "Two nights with Yoo Ji-sook at the National Theater of Korea." } }, poster: "assets/img/posters/p217362.jpg", pw: 300, phh: 400 },
+    { date: "2025-07-09", city: "서울", venue: "국립극장 하늘극장", title: "여우락 페스티벌 '두 사랑 이야기'", en: { title: "Yeowoorak Festival 'Two Love Stories'", city: "Seoul" }, poster: "assets/img/posters/p217362.jpg", pw: 300, phh: 400 },
     { date: "2024-05-18", city: "인천", venue: "송도컨벤시아", title: "골든걸스 콘서트", en: { title: "Golden Girls Concert", city: "Incheon" }, poster: "assets/img/posters/p201859.jpg", pw: 300, phh: 400 },
     { date: "2024-04-20", city: "부산", venue: "KBS부산홀", title: "골든걸스 전국투어", en: { title: "Golden Girls National Tour", city: "Busan" }, poster: "assets/img/posters/p200936.jpg", pw: 300, phh: 400 },
     { date: "2024-03-02", city: "성남", venue: "성남아트센터", title: "골든걸스 콘서트", en: { title: "Golden Girls Concert", city: "Seongnam" }, poster: "assets/img/posters/p198416.jpg", pw: 230, phh: 280 },
@@ -246,7 +246,7 @@ window.SITE_DATA = {
     { date: "2026-03-10", type: "공연", title: "5월 9일 안동 '두 사랑 이야기' 예매 오픈", excerpt: "어버이날 특별기획 — 인순이 & 유지숙. 안동문화예술의전당 웅부홀, 티켓링크에서 예매할 수 있습니다.", en: { title: "Andong 'Two Love Stories' on sale for May 9", excerpt: "A Parents' Day special with Yoo Ji-sook at Andong Culture & Arts Center. Tickets on Ticketlink." } },
     { date: "2025-11-28", type: "발매", title: "새 싱글 '그래도 꿈은 흐른다' 발매", excerpt: "실패 속에서도 계속되는 꿈. 공식 뮤직비디오가 유튜브에 공개되었습니다.", en: { title: "New single 'Still, the Dream Flows' released", excerpt: "A dream that keeps flowing through failure. The official music video is on YouTube." } },
     { date: "2025-08-21", type: "수상", title: "펄벅 인터내셔널 '올해의 여성상' 수상", excerpt: "Woman of Influence 2025. 노래와 나눔이 함께 만든 자리 — 시상식 리캡을 라이브에서 볼 수 있습니다.", en: { title: "Woman of Influence 2025, Pearl S. Buck International", excerpt: "An award where song and giving met. See the ceremony recap on the Tour page." } },
-    { date: "2025-07-09", type: "공연", title: "여우락 페스티벌 '두 사랑 이야기'", excerpt: "국립극장 하늘극장, 인순이 x 유지숙. 이틀간의 무대." },
+    { date: "2025-07-09", type: "공연", title: "여우락 페스티벌 '두 사랑 이야기'", excerpt: "국립극장 하늘극장, 인순이 x 유지숙. 이틀간의 무대.", en: { title: "Yeowoorak Festival 'Two Love Stories'", excerpt: "Two nights with Yoo Ji-sook at the National Theater of Korea." } },
     { date: "2025-02-23", type: "방송", title: "열린음악회 1514회 피날레 무대", excerpt: "1월 21일 녹화 — 백스테이지 기록은 라이브 페이지 리캡에.", en: { title: "Open Concert Ep.1514 finale", excerpt: "Taped January 21 - backstage records in the Tour page recap." } },
     { date: "2025-02-19", type: "발매", title: "《인순이, 아름다운 우리나라》 발매", excerpt: "1984년 원곡 앨범을 다시 부른 아홉 곡.", en: { title: "'Insooni, Beautiful Korea' released", excerpt: "Nine songs revisiting the 1984 original album." } },
     { date: "2024-12-30", type: "공연", title: "5년 만의 연말 디너쇼", excerpt: "그랜드 인터컨티넨탈 서울 파르나스, 이틀간의 밤.", en: { title: "First year-end dinner show in five years", excerpt: "Two nights at Grand InterContinental Seoul Parnas." } }
@@ -447,11 +447,6 @@ window.SITE_DATA = {
     { name: "막내팬", date: "2026. 8. 2.", body: "골든걸스 보고 팬이 됐어요. 엄마와 함께 다음 콘서트 꼭 갈게요!" }
   ],
   samplePosts: [
-    {
-      id: "s1", artist: true, name: "인순이",
-      date: "[게시 예정]", likes: 0,
-      body: "이 자리는 인순이 님이 직접 남기는 글이 표시되는 예시입니다. [공식 콘텐츠 필요]"
-    },
     {
       id: "s2", name: "순이바라기", date: "2026. 8. 3.", likes: 41,
       body: "1999년 카네기홀 공연 기사를 아직 스크랩해 두고 있어요. 아카이브에 올리는 날을 기다립니다!"

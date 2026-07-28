@@ -1349,3 +1349,15 @@ button.show-cell:hover .show-cta, button.show-cell:focus-visible .show-cta { col
   .main-nav ul { gap: clamp(1.6rem, 3.2vw, 3.4rem); align-items: center; }
   .header-tools { grid-column: 3; justify-self: end; }
 }
+
+/* 콰이어트 크롬 잔당 정리 (최종 리뷰 반영) */
+#h-profile, #h-subscribe, #h-artist {
+  font-family: var(--font-mono); font-weight: 400; font-size: .9rem;
+  letter-spacing: .3em; text-transform: uppercase; color: #fff;
+}
+main h3 { font-family: var(--font-mono); font-weight: 400; font-size: .85rem; letter-spacing: .14em; }
+.news-item h3 { font-family: var(--font-mono); font-weight: 400; font-size: .88rem; letter-spacing: .1em; }
+.album-row .a-year { font-family: var(--font-mono); font-size: .78rem; font-weight: 400; letter-spacing: .16em; color: var(--faint); }
+.album-row .a-title { font-family: var(--font-mono); font-size: .92rem; font-weight: 400; letter-spacing: .06em; }
+.page-hero h1, .section-head h2 { font-size: .82rem; }
+.recap-head h2 { font-family: var(--font-mono); font-weight: 400; font-size: 1.05rem; letter-spacing: .2em; }
