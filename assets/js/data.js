@@ -15,6 +15,8 @@ window.SITE_DATA = {
   /* ---------- 시각 아카이브 (실사진 확보 시 추가) ---------- */
   archive: [
     { img: "assets/img/photos/kakao26.jpg", w: 1600, h: 1067, year: "2024", cat: "화보", caption: "블랙 크롭 수트, 무대 뒤 안개 속에서" },
+    { img: "assets/img/photos/seasons-1.jpg", w: 1281, h: 1600, year: "2024", cat: "화보", caption: "은빛 페인팅 재킷 — '더 시즌즈' 대기실에서 (2024. 12.)" },
+    { img: "assets/img/photos/seasons-2.jpg", w: 1277, h: 1600, year: "2024", cat: "화보", caption: "무대 직전의 프로필 — '더 시즌즈' 대기실에서 (2024. 12.)" },
     { img: "assets/img/photos/hinkchi5.jpg", w: 1067, h: 1600, year: "2025", cat: "화보", caption: "데님 수트, 스텝을 밟으며" },
     { img: "assets/img/photos/hm-3.jpg", w: 1280, h: 824, year: "", cat: "기록", caption: "해밀학교 건축 후원자 벽 앞에서" },
     { img: "assets/img/hero.jpg", w: 1280, h: 720, year: "2025", cat: "무대", caption: "'그래도 꿈은 흐른다' MV, 합창단과 함께" },
