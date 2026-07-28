@@ -186,22 +186,69 @@ window.SITE_DATA = {
 
   /* ---------- 지난 공연 아카이브 (플레이DB·보도 검증, 2026.7 리서치) ---------- */
   pastShows: [
-    { date: "2026-07-26", city: "서울", venue: "고척스카이돔", title: "불꽃야구 생중계 애국가 열창", en: { title: "National anthem at Gocheok Sky Dome", city: "Seoul" } },
+    { date: "2026-07-26", city: "서울", venue: "고척스카이돔", title: "불꽃야구 생중계 애국가 열창", en: { title: "National anthem at Gocheok Sky Dome", city: "Seoul" },
+      recap: { desc: "돔을 가득 채운 애국가. 현장 관객의 기록으로 남은 그날의 목소리.", en: { desc: "The national anthem filling the dome - captured by a fan in the stands." },
+        clips: [{ id: "0dz08JtS3MQ", title: "애국가 열창 (현장 기록)", en: { title: "National anthem (fan video)" } }] } },
     { date: "2026-07-22", city: "서울", venue: "하나금융 명동사옥", title: "하나다문화가정대상 축하공연", en: { title: "Hana Multicultural Awards performance", city: "Seoul" } },
-    { date: "2026-07-12", city: "서울", venue: "KBS홀", title: "열린음악회 1581회 피날레", en: { title: "Open Concert Ep.1581 finale", city: "Seoul" } },
-    { date: "2026-06-21", city: "", venue: "KBS", title: "열린음악회 김구 탄생 150주년 특집", en: { title: "Open Concert, Kim Koo 150th special" } },
-    { date: "2026-06-05", city: "경주", venue: "봉황대 광장 특설무대", title: "봉황대 뮤직스퀘어 개막공연", en: { title: "Bonghwangdae Music Square opening", city: "Gyeongju" } },
-    { date: "2026-04-07", city: "양산", venue: "웅상체육공원", title: "열린음악회 양산 특집 녹화", en: { title: "Open Concert Yangsan special taping", city: "Yangsan" } },
-    { date: "2026-03-16", city: "", venue: "TV조선", title: "'조선의 사랑꾼' 고정 합류 첫 방송", en: { title: "Joined TV Chosun 'Love Interventions'" } },
-    { date: "2026-02-22", city: "인천", venue: "", title: "열린음악회 1562회 피날레", en: { title: "Open Concert Ep.1562 finale", city: "Incheon" } },
+    { date: "2026-07-12", city: "서울", venue: "KBS홀", title: "열린음악회 1581회 피날레", en: { title: "Open Concert Ep.1581 finale", city: "Seoul" },
+      recap: { desc: "1581회 피날레 무대. KBS 공식 클립.", en: { desc: "Finale stages from Ep.1581 - official KBS clips." },
+        clips: [
+          { id: "9uP_XhjG5z8", title: "Higher (with Rap.D.Y)" },
+          { id: "lfIUDMKHBPM", title: "Let Everyone Shine" }
+        ] } },
+    { date: "2026-06-21", city: "", venue: "KBS", title: "열린음악회 김구 탄생 150주년 특집", en: { title: "Open Concert, Kim Koo 150th special" },
+      recap: { desc: "김구 탄생 150주년 특집 무대. KBS 공식 클립.", en: { desc: "Kim Koo 150th anniversary special - official KBS clip." },
+        clips: [{ id: "Djq4n3j6Vv0", title: "친구여 (with Rap.D.Y)", en: { title: "Chinguyeo (with Rap.D.Y)" } }] } },
+    { date: "2026-06-05", city: "경주", venue: "봉황대 광장 특설무대", title: "봉황대 뮤직스퀘어 개막공연", en: { title: "Bonghwangdae Music Square opening", city: "Gyeongju" },
+      recap: { desc: "경주 봉황대 아래에서 열린 개막 무대. 현장 관객의 기록 영상.", en: { desc: "Opening night beneath Gyeongju's Bonghwangdae mound - fan videos from the crowd." },
+        clips: [
+          { id: "MB_yMYiURN4", title: "거위의 꿈", en: { title: "A Goose's Dream" } },
+          { id: "7pTvvV8YhIk", title: "밤이면 밤마다", en: { title: "Night After Night" } },
+          { id: "A5nEuLnfPy0", title: "행복", en: { title: "Happiness" } },
+          { id: "8FBdAqvFFxI", title: "풀 영상", en: { title: "Full set" } }
+        ] } },
+    { date: "2026-04-07", city: "양산", venue: "웅상체육공원", title: "열린음악회 양산 특집 녹화", en: { title: "Open Concert Yangsan special taping", city: "Yangsan" },
+      recap: { desc: "양산 특집 무대 (4월 26일 방송). KBS 공식 클립.", en: { desc: "Yangsan special, aired April 26 - official KBS clip." },
+        clips: [{ id: "LLHR9WWBIAg", title: "밤이면 밤마다", en: { title: "Night After Night" } }] } },
+    { date: "2026-03-16", city: "", venue: "TV조선", title: "'조선의 사랑꾼' 고정 합류 첫 방송", en: { title: "Joined TV Chosun 'Love Interventions'" },
+      recap: { desc: "일상을 처음 공개한 고정 합류 첫 방송. TV조선 공식 클립.", en: { desc: "Her first episode as a regular cast member - official TV Chosun clips." },
+        clips: [
+          { id: "OIKqhdBojRo", title: "라디오 생방송 공개 고백", en: { title: "A surprise on-air confession" } },
+          { id: "FGrEZTiozxI", title: "인순이 부부의 이야기 (풀버전)", en: { title: "The couple's story (full)" } }
+        ] } },
+    { date: "2026-02-22", city: "인천", venue: "", title: "열린음악회 1562회 피날레", en: { title: "Open Concert Ep.1562 finale", city: "Incheon" },
+      recap: { desc: "1562회 피날레 무대. KBS 공식 클립.", en: { desc: "Finale stage from Ep.1562 - official KBS clip." },
+        clips: [{ id: "g0ChQ6VTYaI", title: "열정 (with Rap.D.Y)", en: { title: "Passion (with Rap.D.Y)" } }] } },
     { date: "2025-12-27", city: "밀양", venue: "밀양아리랑아트센터", title: "인순이 스페셜 송년 콘서트", en: { title: "Insooni Special Year-End Concert", city: "Miryang" } },
     { date: "2025-12-01", city: "", venue: "", title: "뷰티플 비전콘서트 — 신곡 첫 무대", en: { title: "Beautiful Vision Concert - new single debut" } },
-    { date: "2025-11-05", city: "", venue: "MBN", title: "'언포게터블 듀엣' 출연", en: { title: "MBN 'Unforgettable Duet'" } },
-    { date: "2025-10-25", city: "양산", venue: "황산공원", title: "낙동강 시월愛 콘서트", en: { title: "Nakdong River October Concert", city: "Yangsan" } },
+    { date: "2025-11-05", city: "", venue: "MBN", title: "'언포게터블 듀엣' 출연", en: { title: "MBN 'Unforgettable Duet'" },
+      recap: { desc: "1회 무대. MBN MUSIC 공식 클립.", en: { desc: "From the premiere episode - official MBN MUSIC clip." },
+        clips: [{ id: "Eexbh5AeSIs", title: "선물", en: { title: "The Gift" } }] } },
+    { date: "2025-10-25", city: "양산", venue: "황산공원", title: "낙동강 시월愛 콘서트", en: { title: "Nakdong River October Concert", city: "Yangsan" },
+      recap: { desc: "황산공원을 채운 1만 관중. KNN 공식 스케치와 현장 기록.", en: { desc: "Ten thousand by the Nakdong river - official KNN coverage and fan videos." },
+        clips: [
+          { id: "_W71GxdH5AY", title: "KNN 현장 스케치", en: { title: "KNN highlights" } },
+          { id: "k-0SzKmfWRk", title: "거위의 꿈 (현장 기록)", en: { title: "A Goose's Dream (fan video)" } },
+          { id: "X2N-AIxwCnI", title: "친구여 (현장 기록)", en: { title: "Chinguyeo (fan video)" } }
+        ] } },
     { date: "2025-09-27", city: "경산", venue: "DYC 특설무대", title: "DYC 음악회 — 교향악단 협연", en: { title: "DYC Concert with symphony orchestra", city: "Gyeongsan" } },
-    { date: "2025-09-26", city: "울주", venue: "영남알프스 웰컴센터", title: "울주세계산악영화제 개막 축하공연", en: { title: "Ulju Mountain Film Festival opening", city: "Ulju" } },
-    { date: "2025-09-21", city: "서울", venue: "마루공원", title: "국악한마당 — 인순이×유지숙 '지음'", en: { title: "KBS Gugak Hanmadang with Yoo Ji-sook", city: "Seoul" } },
-    { date: "2025-09-14", city: "인천", venue: "송도 트라이보울", title: "송도 재즈 페스티벌 피날레", en: { title: "Songdo Jazz Festival finale", city: "Incheon" } },
+    { date: "2025-09-26", city: "울주", venue: "영남알프스 웰컴센터", title: "울주세계산악영화제 개막 축하공연", en: { title: "Ulju Mountain Film Festival opening", city: "Ulju" },
+      recap: { desc: "영남알프스 아래 개막 축하 무대. 현장 관객의 기록 영상.", en: { desc: "Opening celebration beneath the Yeongnam Alps - fan video." },
+        clips: [{ id: "mxRGpqyy-yE", title: "개막 축하 무대 (현장 기록)", en: { title: "Opening stage (fan video)" } }] } },
+    { date: "2025-09-21", city: "서울", venue: "마루공원", title: "국악한마당 — 인순이×유지숙 '지음'", en: { title: "KBS Gugak Hanmadang with Yoo Ji-sook", city: "Seoul" },
+      recap: { desc: "서도민요 명창 유지숙과의 '지음' 무대 (10월 25일 방송). KBS 공식 클립.", en: { desc: "With master singer Yoo Ji-sook, aired October 25 - official KBS clips." },
+        clips: [
+          { id: "mZahvsE3mtk", title: "긴 편지", en: { title: "A Long Letter" } },
+          { id: "id_fzJtGWvI", title: "사설난봉가–친구여 (듀엣)", en: { title: "Saseol-nanbongga / Chinguyeo (duet)" } },
+          { id: "9ZwwSPiwCNw", title: "싸름타령", en: { title: "Ssareum-taryeong" } }
+        ] } },
+    { date: "2025-09-14", city: "인천", venue: "송도 트라이보울", title: "송도 재즈 페스티벌 피날레", en: { title: "Songdo Jazz Festival finale", city: "Incheon" },
+      recap: { desc: "재즈 쿼텟과 함께한 피날레. 현장 관객의 기록 영상.", en: { desc: "Festival finale with a jazz quartet - fan videos." },
+        clips: [
+          { id: "IgIIVNg8sP8", title: "Mr. Saturday Night" },
+          { id: "kAk1C7MoVWk", title: "Besame Mucho" },
+          { id: "GumUiPNx6Hw", title: "거위의 꿈", en: { title: "A Goose's Dream" } }
+        ] } },
     { date: "2026-07", city: "", venue: "SBS러브FM", title: "'인생은 오디션' 특별 심사", en: { title: "Radio 'Life is Audition' guest judge" } },
     { date: "2025-07-09", city: "서울", venue: "국립극장 하늘극장", title: "여우락 페스티벌 '두 사랑 이야기'", en: { title: "Yeowoorak Festival 'Two Love Stories'", city: "Seoul" }, poster: "assets/img/posters/p217362.jpg", pw: 300, phh: 400 },
     { date: "2024-05-18", city: "인천", venue: "송도컨벤시아", title: "골든걸스 콘서트", en: { title: "Golden Girls Concert", city: "Incheon" }, poster: "assets/img/posters/p201859.jpg", pw: 300, phh: 400 },
@@ -466,18 +513,41 @@ window.SITE_DATA = {
 
   /* ---------- 사랑방 샘플 콘텐츠 ---------- */
   sampleLetters: [
-    { name: "30년 팬 순이언니", date: "2026. 8. 3.", body: "힘들 때마다 거위의 꿈을 들으며 버텼어요. 늘 건강하게 오래오래 노래해 주세요." },
-    { name: "막내팬", date: "2026. 8. 2.", body: "골든걸스 보고 팬이 됐어요. 엄마와 함께 다음 콘서트 꼭 갈게요!" }
+    { name: "30년 팬 순이언니", date: "2026. 7. 26.", body: "힘들 때마다 거위의 꿈을 들으며 버텼어요. 늘 건강하게 오래오래 노래해 주세요." },
+    { name: "막내팬", date: "2026. 7. 24.", body: "골든걸스 보고 팬이 됐어요. 엄마와 함께 다음 콘서트 꼭 갈게요!" }
   ],
   samplePosts: [
     {
-      id: "s2", name: "순이바라기", date: "2026. 8. 3.", likes: 41,
+      id: "s2", name: "순이바라기", date: "2026. 7. 26.", likes: 41,
       body: "1999년 카네기홀 공연 기사를 아직 스크랩해 두고 있어요. 아카이브에 올리는 날을 기다립니다!"
     },
     {
-      id: "s3", name: "홍천 주민", date: "2026. 8. 1.", likes: 27,
+      id: "s3", name: "홍천 주민", date: "2026. 7. 23.", likes: 27,
       body: "해밀학교 근처에 살아요. 아이들 웃음소리가 참 좋습니다. 이사장 선생님 응원합니다."
     }
+  ],
+
+  /* ---------- 사랑방: 인순이의 편지 (운영 예시 — 실제 운영 시 본인 작성분이 게재됩니다) ---------- */
+  artistLetter: {
+    date: "2026. 7.",
+    body: "사랑방에 들러 주셔서 고맙습니다.\n무대 위에서 받은 마음들을, 이 방에서는 제가 하나하나 읽어 보겠습니다.\n짧은 인사 한 줄이어도 좋습니다. 여러분이 계셔서 노래가 계속됩니다.",
+    sign: "인순이 드림",
+    flowers: 214,
+    en: {
+      body: "Thank you for stopping by the Sarangbang.\nAll the love I receive on stage - here, I get to read it back, one note at a time.\nEven a single line of hello is enough. You are the reason the songs go on.",
+      sign: "With love, Insooni"
+    }
+  },
+  cheerPresets: [
+    { ko: "오늘도 응원합니다", en: "Cheering for you today" },
+    { ko: "거위의 꿈 듣고 갑니다", en: "Listened to A Goose's Dream today" },
+    { ko: "늘 건강하세요", en: "Stay healthy always" },
+    { ko: "다음 공연 기다릴게요", en: "Waiting for the next show" }
+  ],
+  sampleCheers: [
+    { name: "익명 팬", text: "오늘도 응원합니다", date: "2026. 7. 28." },
+    { name: "부산 팬", text: "다음 공연 기다릴게요", date: "2026. 7. 27." },
+    { name: "익명 팬", text: "거위의 꿈 듣고 갑니다", date: "2026. 7. 27." }
   ],
 
   /* ---------- 이달의 투표 ---------- */

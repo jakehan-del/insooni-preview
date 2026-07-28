@@ -914,6 +914,7 @@ a.card { text-decoration: none; color: inherit; }
 .card .thumb { aspect-ratio: 4 / 5; overflow: hidden; position: relative; border-radius: 2px; }
 .card .thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .card-body { padding: .9rem .1rem 1.2rem; display: flex; flex-direction: column; gap: .45rem; flex: 1; }
+.card-body > .btn { margin-top: auto; }
 .card-body h3 { margin: 0; font-family: var(--font-mono); font-weight: 400; font-size: .85rem; letter-spacing: .14em; }
 .card-meta { font-family: var(--font-mono); font-size: .72rem; color: var(--faint); display: flex; gap: .9em; flex-wrap: wrap; margin-top: auto; letter-spacing: .08em; }
 .card-desc { color: var(--muted); font-size: 1rem; margin: 0; }
@@ -1235,6 +1236,45 @@ button.strip-item:focus-visible { outline: 3px solid var(--ivory); outline-offse
 @media (max-width: 760px) { .release-hero { grid-template-columns: 1fr; } .release-hero > img { max-width: 340px; } }
 
 /* 사랑방: 운영 시스템 3단계 */
+/* 사랑방: 인순이의 편지 · 오늘의 문안 인사 (시니어 퍼스트 — 큰 타깃, 라벨 있는 버튼, 선택형 참여) */
+.grid--start { align-items: start; }
+.letter-corner { border: 1px solid var(--line); border-radius: var(--r-panel); background: var(--panel); overflow: hidden; }
+.letter-paper { padding: 3rem clamp(1.4rem, 5vw, 4rem) 2.2rem; text-align: center; }
+.letter-goose { width: 54px; height: auto; color: var(--gold); margin-bottom: 1.4rem; }
+.letter-body {
+  font-family: "Nanum Pen Script", cursive; font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+  line-height: 1.7; color: var(--ivory); white-space: pre-line; max-width: 34em; margin: 0 auto;
+}
+.letter-sign { font-family: var(--font-mono); font-size: .78rem; letter-spacing: .18em; color: var(--faint); margin-top: 1.8rem; }
+.letter-foot {
+  border-top: 1px solid var(--line); padding: 1.2rem clamp(1.4rem, 5vw, 4rem);
+  display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between;
+}
+.flower-btn {
+  min-height: 48px; padding: .7em 1.4em; font-family: var(--font-mono); font-size: .8rem; letter-spacing: .12em;
+  background: transparent; border: 1px solid var(--line-strong); border-radius: 2px; color: var(--ivory);
+  cursor: pointer; transition: border-color .2s ease, color .2s ease, transform .15s ease;
+}
+.flower-btn:hover { border-color: var(--gold); color: var(--gold); }
+.flower-btn:active { transform: scale(.97); }
+.flower-btn[aria-pressed="true"] { border-color: var(--gold-deep); color: var(--gold); }
+.greet-panel .greet-lead { font-size: 1.05rem; color: var(--muted); margin-bottom: 1.4rem; }
+.greet-stamp { min-height: 56px; width: 100%; font-size: 1.02rem; }
+.greet-state { font-weight: 700; color: var(--gold); min-height: 1.4em; margin: .9rem 0 1.3rem; }
+.cheer-chips { display: flex; flex-wrap: wrap; gap: .6rem; }
+.cheer-chips button {
+  min-height: 48px; padding: .6em 1.15em; font-size: .95rem; font-family: inherit;
+  background: var(--void); border: 1px solid var(--line-strong); border-radius: 999px; color: var(--ivory);
+  cursor: pointer; transition: border-color .2s ease, color .2s ease, transform .15s ease;
+}
+.cheer-chips button:hover { border-color: var(--gold); color: var(--gold); }
+.cheer-chips button:active { transform: scale(.96); }
+.cheer-wall-t { font-family: var(--font-mono); font-weight: 400; font-size: .85rem; letter-spacing: .14em; margin-bottom: 1rem; }
+.cheer-wall { border-top: 1px solid var(--line); }
+.cheer-item { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 1.05rem .3rem; border-bottom: 1px solid var(--line); font-size: 1rem; }
+.cheer-item .cw-who { color: var(--faint); font-size: .85rem; white-space: nowrap; }
+@media (max-width: 640px) { .letter-paper { text-align: left; } }
+
 .sys-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
 .sys-step { border: 1px solid var(--line); border-radius: 2px; padding: 1.5rem 1.3rem; }
 .sys-step span { display: block; font-family: var(--font-mono); font-size: .72rem; letter-spacing: .3em; color: var(--faint); margin-bottom: .8em; }
@@ -1392,9 +1432,31 @@ main h3 { font-family: var(--font-mono); font-weight: 400; font-size: .85rem; le
   justify-items: center; gap: 1.1rem; color: #fff;
   transition: transform .8s cubic-bezier(.6, 0, .3, 1), opacity .7s ease;
 }
-.loader-goose { width: clamp(84px, 10vw, 140px); height: auto; }
+.loader-goose {
+  width: clamp(84px, 10vw, 140px); height: auto;
+  animation: goose-bob 1.05s ease-in-out infinite;
+  transition: transform .9s cubic-bezier(.5, 0, .2, 1), opacity .8s ease;
+}
+.loader-goose .goose-wing {
+  transform-box: fill-box; transform-origin: 62% 94%;
+  animation: goose-flap .5s ease-in-out infinite;
+}
+@keyframes goose-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@keyframes goose-flap { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-26deg); } }
 .loader-finale .loader-mark { position: static; display: block; font-size: clamp(1rem, 1.6vw, 1.35rem); text-shadow: none; }
-.loader.split .loader-finale { transform: scale(1.6) translateY(-4vh); opacity: 0; }
+/* 갈라짐과 함께 거위가 날아오르며 화면 밖으로 이륙 */
+.loader.split .loader-goose { animation: none; transform: translate(16vw, -24vh) rotate(-8deg) scale(1.18); opacity: 0; }
+.loader.split .loader-finale { transform: scale(1.25); opacity: 0; }
+
+/* 리캡: 무대별 클립 선택 */
+.recap-clips { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .8rem; }
+.recap-clip {
+  font-family: var(--font-mono); font-size: .72rem; letter-spacing: .12em;
+  padding: .6em 1.05em; background: transparent; border: 1px solid var(--line-strong);
+  border-radius: 2px; color: var(--muted); cursor: pointer;
+  transition: color .2s ease, border-color .2s ease;
+}
+.recap-clip:hover, .recap-clip.is-on { border-color: var(--gold); color: var(--gold); }
 
 /* 리걸 페이지 */
 .legal-body { max-width: 46em; }

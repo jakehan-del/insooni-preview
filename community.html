@@ -15,8 +15,8 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v41">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Space+Mono:wght@400;700&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css?v42">
 </head>
 <body>
 <a class="skip-link" href="#main" data-i18n="nav.skip">본문 바로가기</a>
@@ -50,6 +50,50 @@
     <div class="container">
       <h1 data-i18n="ph.community.t">사랑방</h1>
       <p data-i18n="ph.community.d">편지를 쓰고, 안부를 나누고, 추억을 함께 꺼내 보는 곳. 인순이와 팬들의 마당입니다.</p>
+    </div>
+  </section>
+
+  <!-- 인순이의 편지: 아티스트 → 팬 방향 소통 (위버스 모먼트·손편지 문법) -->
+  <section class="section" id="artist-letter" aria-labelledby="h-artist-letter">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="h-artist-letter" data-i18n="comm.alT">인순이의 편지</h2>
+      </div>
+      <article class="letter-corner">
+        <div class="letter-paper">
+          <svg class="letter-goose" viewBox="0 0 120 72" aria-hidden="true" focusable="false"><g fill="currentColor"><ellipse cx="48" cy="46" rx="27" ry="11.5" transform="rotate(-7 48 46)"/><path d="M66 41 C78 36 87 30 94 23" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><circle cx="96" cy="21" r="5.4"/><path d="M100 18.5 L111 21 L100 24.5 Z"/><path d="M45 38 C36 24 34 13 41 6 C48 12 55 27 57 37 C53 38.5 49 38.7 45 38 Z"/><path d="M24 42 L10 37 L22 50 Z"/></g></svg>
+          <p class="letter-body" id="al-body"></p>
+          <p class="letter-sign"><span id="al-date"></span> · <span id="al-sign"></span></p>
+        </div>
+        <div class="letter-foot">
+          <button type="button" class="flower-btn" id="al-flower" aria-pressed="false">
+            <span aria-hidden="true">✿</span> <span data-i18n="comm.flower">꽃 한 송이 드리기</span> · <strong id="al-flower-n">0</strong>
+          </button>
+          <p class="form-hint" data-i18n="comm.alNote">운영 예시 화면입니다. 실제 운영 시 인순이 님이 직접 쓴 편지와 음성 메시지가 이 자리에 게재됩니다.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- 오늘의 문안 인사: 출석 도장 + 선택형 한 줄 응원 (팬카페 출석 문화 + 저부담 참여) -->
+  <section class="section section--band" id="greet" aria-labelledby="h-greet">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="h-greet" data-i18n="comm.greetT">오늘의 문안 인사</h2>
+      </div>
+      <div class="grid grid--2 grid--start">
+        <div class="form-panel greet-panel">
+          <p class="greet-lead" data-i18n="comm.greetLead">하루 한 번, 버튼 한 번이면 충분합니다. 긴 글은 쓰지 않으셔도 돼요.</p>
+          <button type="button" class="btn btn--gold greet-stamp" id="stamp-btn" data-i18n="comm.stampBtn">오늘 도장 찍기</button>
+          <p class="greet-state" id="stamp-state" role="status"></p>
+          <div class="cheer-chips" id="cheer-chips" aria-label="한 줄 응원 고르기"></div>
+          <p class="form-hint" data-i18n="comm.greetHint">응원 문구를 누르면 바로 남겨집니다. 더 긴 이야기는 아래 팬레터로 보내주세요.</p>
+        </div>
+        <div>
+          <h3 class="cheer-wall-t" data-i18n="comm.cheerWall">오늘의 응원</h3>
+          <div id="cheer-wall" class="cheer-wall"></div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -126,21 +170,19 @@
       <div class="section-head">
         <h2 id="h-poll" data-i18n="comm.poll">이달의 팬 투표</h2>
       </div>
-      <div class="grid grid--2">
+      <div class="grid grid--2 grid--start">
         <div class="form-panel">
           <h3 data-i18n="comm.pollQ">다음 콘서트에서 꼭 듣고 싶은 노래는?</h3>
           <p class="form-hint" style="margin-bottom:1.2rem">투표 결과는 공연 준비에 참고자료로 전달됩니다.</p>
           <div id="poll"></div>
           <p id="poll-note" class="form-hint" role="status"></p>
         </div>
-        <div class="card">
-          <div class="card-body">
-            <h3 data-i18n="comm.event">진행 중인 이벤트</h3>
-            <p class="card-desc">공연 관람 인증, 기념일 축하 메시지 모음, 우수 팬 콘텐츠 선정 등
-            시즌별 이벤트가 이 자리에 열립니다.</p>
-            <p class="card-desc"><strong>지금:</strong> 데뷔 기념 '나의 첫 인순이' 사연 공모</p>
-            <div class="card-meta"><span>당첨자 발표는 소식 페이지에 게시</span></div>
-          </div>
+        <div class="form-panel">
+          <h3 data-i18n="comm.event">진행 중인 이벤트</h3>
+          <p class="card-desc" style="margin-top:.8rem">공연 관람 인증, 기념일 축하 메시지 모음, 우수 팬 콘텐츠 선정 등
+          시즌별 이벤트가 이 자리에 열립니다.</p>
+          <p class="card-desc" style="margin-top:.8rem"><strong>지금:</strong> 데뷔 기념 '나의 첫 인순이' 사연 공모</p>
+          <div class="card-meta" style="margin-top:1.4rem"><span>당첨자 발표는 소식 페이지에 게시</span></div>
         </div>
       </div>
     </div>
@@ -180,8 +222,8 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동">↑</button>
-<script src="assets/js/i18n.js?v41"></script>
-<script src="assets/js/data.js?v41"></script>
-<script src="assets/js/main.js?v41"></script>
+<script src="assets/js/i18n.js?v42"></script>
+<script src="assets/js/data.js?v42"></script>
+<script src="assets/js/main.js?v42"></script>
 </body>
 </html>

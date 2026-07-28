@@ -363,13 +363,17 @@
     }
     (D.pastShows || []).forEach(function (p) {
       var cell = { date: fmtShow(p.date), city: tr(p, "city"), venue: tr(p, "venue"), title: tr(p, "title") };
-      if (p.poster) {
-        cell.recap = {
-          title: tr(p, "title"),
-          year: String(p.date || "").slice(0, 4),
-          place: [tr(p, "venue"), tr(p, "city")].filter(Boolean).join(" · "),
-          photos: [{ img: p.poster, w: p.pw || 700, h: p.phh || 1000, caption: t("recap.poster", "공연 포스터") }]
-        };
+      if (p.recap || p.poster) {
+        /* 공연 항목이 자체 리캡(클립·사진)을 갖거나, 포스터만 있어도 열람 가능 */
+        var rc = p.recap ? Object.assign({}, p.recap) : {};
+        if (!rc.title) rc.title = tr(p, "title");
+        if (!rc.year) rc.year = String(p.date || "").slice(0, 4);
+        if (!rc.place) rc.place = [tr(p, "venue"), tr(p, "city")].filter(Boolean).join(" · ");
+        if (p.recap && p.recap.en) rc.en = p.recap.en;
+        if (p.poster) {
+          rc.photos = (rc.photos || []).concat([{ img: p.poster, w: p.pw || 700, h: p.phh || 1000, caption: t("recap.poster", "공연 포스터") }]);
+        }
+        cell.recap = rc;
       }
       shows.push(cell);
     });
@@ -449,12 +453,35 @@
       (metaLine ? '<p class="recap-meta">' + esc(metaLine) + "</p>" : "") +
       (r.desc ? '<p class="recap-desc">' + esc(tr(r, "desc")) + "</p>" : "") +
       "</header>";
-    if (r.youtubeId) {
+    if (r.clips && r.clips.length) {
+      /* 무대별 유튜브 클립 여러 개: 첫 클립 재생 + 곡 선택 버튼 */
+      html += '<div class="recap-video recap-video--embed"><iframe id="recap-clip-frame" src="https://www.youtube-nocookie.com/embed/' + esc(r.clips[0].id) + '?rel=0&modestbranding=1" title="' + esc(tr(r.clips[0], "title") || r.title) + '" allow="autoplay; encrypted-media; fullscreen" allowfullscreen loading="lazy"></iframe></div>';
+      if (r.clips.length > 1) {
+        html += '<div class="recap-clips" role="group" aria-label="' + t("recap.clips", "무대 클립 선택") + '">';
+        r.clips.forEach(function (cl, ci) {
+          html += '<button type="button" class="recap-clip' + (ci === 0 ? " is-on" : "") + '" data-cid="' + esc(cl.id) + '" data-ct="' + esc(tr(cl, "title")) + '">' + esc(tr(cl, "title")) + "</button>";
+        });
+        html += "</div>";
+      }
+    } else if (r.youtubeId) {
       html += '<div class="recap-video recap-video--embed"><iframe src="https://www.youtube-nocookie.com/embed/' + esc(r.youtubeId) + '?rel=0&modestbranding=1" title="' + esc(r.title) + '" allow="encrypted-media; fullscreen" allowfullscreen loading="lazy"></iframe></div>';
     } else if (r.video) {
       html += '<div class="recap-video"><video src="' + esc(r.video) + '"' + (r.poster ? ' poster="' + esc(r.poster) + '"' : "") + " controls playsinline preload=\"metadata\"></video></div>";
     }
     inner.innerHTML = html;
+    /* 클립 선택 → 임베드 교체 */
+    var clipBtns = inner.querySelectorAll(".recap-clip");
+    if (clipBtns.length) {
+      var clipFrame = inner.querySelector("#recap-clip-frame");
+      clipBtns.forEach(function (b) {
+        b.addEventListener("click", function () {
+          inner.querySelectorAll(".recap-clip.is-on").forEach(function (x) { x.classList.remove("is-on"); });
+          b.classList.add("is-on");
+          clipFrame.src = "https://www.youtube-nocookie.com/embed/" + b.getAttribute("data-cid") + "?rel=0&modestbranding=1&autoplay=1";
+          clipFrame.title = b.getAttribute("data-ct");
+        });
+      });
+    }
     var photos = (r.photos || []).slice();
     if (photos.length) {
       inner.appendChild(el("h3", "recap-sub", t("recap.gallery", "현장 기록")));
@@ -653,6 +680,7 @@
   }
 
   /* ---------- 8. 사랑방: 게시판 ---------- */
+  var GOOSE_AVATAR = '<svg viewBox="0 0 120 72" aria-hidden="true" focusable="false" style="width:20px;height:auto"><g fill="currentColor"><ellipse cx="48" cy="46" rx="27" ry="11.5" transform="rotate(-7 48 46)"/><path d="M66 41 C78 36 87 30 94 23" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><circle cx="96" cy="21" r="5.4"/><path d="M100 18.5 L111 21 L100 24.5 Z"/><path d="M45 38 C36 24 34 13 41 6 C48 12 55 27 57 37 C53 38.5 49 38.7 45 38 Z"/><path d="M24 42 L10 37 L22 50 Z"/></g></svg>';
   function initBoard() {
     var listBox = $("#board-list"), form = $("#board-form");
     if (!listBox) return;
@@ -667,7 +695,7 @@
         var likes = (P.likes || 0) + (liked ? 1 : 0);
         var article = el("article", "post" + (P.artist ? " post--artist" : ""));
         article.innerHTML =
-          '<div class="post-head"><span class="avatar" aria-hidden="true">' + esc(P.artist ? "仁" : firstChar(P.name)) + "</span>" +
+          '<div class="post-head"><span class="avatar" aria-hidden="true">' + (P.artist ? GOOSE_AVATAR : esc(firstChar(P.name))) + "</span>" +
           '<span class="who">' + esc(P.name) + "</span>" +
           (P.artist ? '<span class="badge badge--gold">공식</span>' : "") +
           '<span class="when">' + esc(P.date || "") + "</span></div>" +
@@ -753,6 +781,105 @@
         : t("dyn.pollThanks", "투표해 주셔서 감사합니다! 총 ") + total + "명 참여 (데모 수치)";
     }
     draw();
+  }
+
+  /* ---------- 9.5 사랑방: 인순이의 편지 + 오늘의 문안 인사 ----------
+     리서치 근거: 위버스 모먼트(편지 UI)·팬카페 출석 문화·버블의 짧은 답장 구조·토스 시니어 UT
+     (타이핑 대신 선택, 라벨 있는 큰 버튼, 행동마다 명확한 완료 피드백) */
+  function initSarangbang() {
+    /* 인순이의 편지 */
+    var alBody = $("#al-body");
+    if (alBody && D.artistLetter) {
+      var AL = D.artistLetter;
+      alBody.textContent = tr(AL, "body");
+      $("#al-date").textContent = AL.date;
+      $("#al-sign").textContent = tr(AL, "sign");
+      var fBtn = $("#al-flower"), fN = $("#al-flower-n");
+      var FKEY = "insooni_flower_letter";
+      function drawFlower() {
+        var mine = !!store(FKEY);
+        fN.textContent = String((AL.flowers || 0) + (mine ? 1 : 0));
+        fBtn.setAttribute("aria-pressed", String(mine));
+      }
+      fBtn.addEventListener("click", function () {
+        if (store(FKEY)) { localStorage.removeItem(FKEY); } else { store(FKEY, true); }
+        drawFlower();
+      });
+      drawFlower();
+    }
+
+    /* 오늘의 문안 인사: 출석 도장 */
+    var stampBtn = $("#stamp-btn"), stampState = $("#stamp-state");
+    if (stampBtn) {
+      var SKEY = "insooni_stamp";
+      function today() {
+        var n = new Date();
+        return n.getFullYear() + "-" + (n.getMonth() + 1) + "-" + n.getDate();
+      }
+      function yesterday() {
+        var n = new Date(); n.setDate(n.getDate() - 1);
+        return n.getFullYear() + "-" + (n.getMonth() + 1) + "-" + n.getDate();
+      }
+      function drawStamp() {
+        var s = store(SKEY);
+        if (s && s.last === today()) {
+          stampBtn.disabled = true;
+          stampBtn.textContent = t("comm.stampDone", "오늘 문안 인사를 드렸습니다");
+          stampState.textContent = t("dyn.streakA", "연속 ") + s.streak + t("dyn.streakB", "일째 · 지금까지 ") + s.total + t("dyn.streakC", "번 다녀가셨어요");
+        } else {
+          stampBtn.disabled = false;
+          stampBtn.textContent = t("comm.stampBtn", "오늘 도장 찍기");
+          stampState.textContent = s ? t("dyn.stampBack", "다시 오셨네요. 도장 한 번이면 인사 완료!") : "";
+        }
+      }
+      stampBtn.addEventListener("click", function () {
+        var s = store(SKEY) || { last: "", streak: 0, total: 0 };
+        if (s.last === today()) return;
+        s.streak = (s.last === yesterday()) ? s.streak + 1 : 1;
+        s.total += 1; s.last = today();
+        store(SKEY, s);
+        drawStamp();
+      });
+      drawStamp();
+    }
+
+    /* 한 줄 응원: 선택형 문구 + 응원 벽 */
+    var chipsBox = $("#cheer-chips"), wall = $("#cheer-wall");
+    if (chipsBox && wall && D.cheerPresets) {
+      var CKEY = "insooni_cheers";
+      var isEN = document.documentElement.getAttribute("lang") === "en";
+      var presetEN = {};
+      D.cheerPresets.forEach(function (p) { if (p.en) presetEN[p.ko] = p.en; });
+      function drawWall() {
+        wall.innerHTML = "";
+        var mine = store(CKEY) || [];
+        var all = mine.concat(D.sampleCheers || []).slice(0, 7);
+        all.forEach(function (c) {
+          var row = el("div", "cheer-item");
+          var text = isEN && presetEN[c.text] ? presetEN[c.text] : c.text;
+          var who = c.name === "익명 팬" ? t("dyn.anon", "익명 팬") : c.name;
+          row.innerHTML = "<span>" + esc(text) + '</span><span class="cw-who">' + esc(who) + " · " + esc(c.date) + "</span>";
+          wall.appendChild(row);
+        });
+      }
+      D.cheerPresets.forEach(function (p) {
+        var b = el("button", "", isEN && p.en ? p.en : p.ko);
+        b.type = "button";
+        b.addEventListener("click", function () {
+          var mine = store(CKEY) || [];
+          var n = new Date();
+          mine.unshift({ name: t("dyn.anon", "익명 팬"), text: isEN && p.en ? p.en : p.ko, date: n.getFullYear() + ". " + (n.getMonth() + 1) + ". " + n.getDate() + "." });
+          store(CKEY, mine.slice(0, 20));
+          drawWall();
+          var prev = b.textContent;
+          b.disabled = true;
+          b.textContent = t("dyn.cheerOk", "남겨졌습니다!");
+          setTimeout(function () { b.disabled = false; b.textContent = prev; }, 1600);
+        });
+        chipsBox.appendChild(b);
+      });
+      drawWall();
+    }
   }
 
   /* ---------- 10. 구독 폼 (데모) ---------- */
@@ -911,15 +1038,16 @@
     })).then(function () { clearTimeout(cap); start(); });
     function run() {
     var iv = setInterval(function () {
-      if (i < frames.length - 1) {
+      if (i < frames.length) {
+        /* 마지막 장까지 전부 벗겨 검은 화면과 거위를 드러낸다 */
         frames[i].classList.add("gone"); i++;
       } else {
         clearInterval(iv);
-        /* 피날레: 거위가 잠시 머문 뒤 화면이 사방으로 갈라지며 열린다 */
-        setTimeout(function () { box.classList.add("split"); }, 380);
-        setTimeout(function () { if (box.parentNode) box.remove(); }, 1350);
+        /* 피날레: 거위가 날갯짓하며 잠시 머문 뒤 화면이 사방으로 갈라지며 열린다 */
+        setTimeout(function () { box.classList.add("split"); }, 620);
+        setTimeout(function () { if (box.parentNode) box.remove(); }, 1650);
       }
-    }, 330);
+    }, 300);
     }
   }
 
@@ -1064,6 +1192,7 @@
     initLetters();
     initBoard();
     initPoll();
+    initSarangbang();
     initSubscribe();
     initAdmin();
   });
