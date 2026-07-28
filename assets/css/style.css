@@ -1361,3 +1361,17 @@ main h3 { font-family: var(--font-mono); font-weight: 400; font-size: .85rem; le
 .album-row .a-title { font-family: var(--font-mono); font-size: .92rem; font-weight: 400; letter-spacing: .06em; }
 .page-hero h1, .section-head h2 { font-size: .82rem; }
 .recap-head h2 { font-family: var(--font-mono); font-weight: 400; font-size: 1.05rem; letter-spacing: .2em; }
+
+/* 수록곡 = 재생 가능한 행 (act ii 문법) */
+.a-tracks .tr-link {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+  color: var(--muted); text-decoration: none; padding: .12em 0;
+  transition: color .18s ease;
+}
+.a-tracks .tr-link:hover, .a-tracks .tr-link:focus-visible { color: #fff; }
+.tr-play {
+  font-family: var(--font-mono); font-size: .6rem; letter-spacing: .22em;
+  color: var(--faint); opacity: 0; white-space: nowrap; transition: opacity .18s ease;
+}
+.tr-link:hover .tr-play, .tr-link:focus-visible .tr-play { opacity: 1; color: #fff; }
+@media (hover: none) { .tr-play { opacity: .6; } }

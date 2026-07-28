@@ -313,8 +313,12 @@
         '<span class="a-kind">' + esc(a.kind || "앨범") + "</span>";
       var detail = el("div", "album-detail");
       detail.hidden = true;
+      var artistQ = ((a.kind || "") + (a.title || "")).indexOf("희자매") >= 0 || a.kind === "그룹" ? "희자매" : (a.kind === "골든걸스" ? "골든걸스" : "인순이");
       var tracksHtml = (a.tracks && a.tracks.length)
-        ? '<ol class="a-tracks">' + a.tracks.map(function (tr) { return "<li>" + esc(tr) + "</li>"; }).join("") + "</ol>"
+        ? '<ol class="a-tracks">' + a.tracks.map(function (trk) {
+            var q = "https://music.youtube.com/search?q=" + encodeURIComponent(artistQ + " " + trk.replace(/\s*\((Inst\.|경음악|MR)\)$/, ""));
+            return '<li><a class="tr-link" href="' + esc(q) + '" target="_blank" rel="noopener"><span class="tr-name">' + esc(trk) + '</span><span class="tr-play" aria-hidden="true">듣기 ▶</span></a></li>';
+          }).join("") + "</ol>"
         : "<p>" + t("rel.tbd", "공식 자료 확인 중입니다.") + "</p>";
       var creditsHtml = a.credits
         ? '<p class="a-credits">' + esc(a.credits) + "</p>"
