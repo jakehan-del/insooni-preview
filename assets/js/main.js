@@ -293,9 +293,12 @@
     if (idx) {
       plain.forEach(function (a) {
         var r = el("p", "di-row");
+        var lk = (a.links || []).map(function (l) {
+          return '<a class="di-link" href="' + esc(l.url) + '" target="_blank" rel="noopener">' + esc(l.label) + "</a>";
+        }).join("");
         r.innerHTML = '<span class="di-year">' + esc(a.year) + "</span>" +
           '<span class="di-title">' + esc(a.title) + "</span>" +
-          '<span class="di-kind">' + esc(a.kind || "") + "</span>";
+          (lk ? '<span class="di-links">' + lk + "</span>" : '<span class="di-kind">' + esc(a.kind || "") + "</span>");
         idx.appendChild(r);
       });
     }
@@ -398,7 +401,7 @@
         c = el("div", "show-cell");
       }
       c.innerHTML =
-        '<span class="show-mark" aria-hidden="true">\u2726</span>' +
+        '<span class="show-mark" aria-hidden="true"><svg viewBox="0 0 120 90" focusable="false"><path fill="currentColor" d="M96 27 C101 27 106 30 105 33 C104.5 34.5 101 35 98 34.5 C93 34 88 38 82 44 C76 50 66 55 55 57 C45 58.7 34 60 26 57 C24.5 56.2 24.8 54.5 27 53.5 C33 51 40 49.5 46 48 C51 46.7 55 45.5 58 44 C54 34 46 24 40 17 C38 14.5 40 12.5 43 14 C52 19 61 30 65 40 C70 37 75 33 80 30 C85 27 90 27 96 27 Z"/></svg></span>' +
         '<span class="show-date">' + esc(sh.date) + "</span>" +
         '<span class="show-city">' + esc(sh.title) + (sh.city ? " · " + esc(sh.city) : "") + "</span>" +
         (sh.recap ? '<span class="show-cta">VIEW RECAP</span>' : "");

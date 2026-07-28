@@ -1316,3 +1316,27 @@ button.show-cell:hover .show-cta, button.show-cell:focus-visible .show-cta { col
 .haemil-photos figure { margin: 0; }
 .haemil-photos img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 2px; display: block; }
 .haemil-photos figcaption { font-family: var(--font-mono); font-size: .67rem; letter-spacing: .08em; color: var(--faint); padding: .55rem .15rem 1rem; }
+
+.di-links { display: inline-flex; gap: .9em; white-space: nowrap; }
+.di-link { font-size: .6rem; letter-spacing: .16em; color: var(--faint); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 2px; }
+.di-link:hover { color: #fff; border-color: #fff; }
+
+/* 시그니처 마크: 仁 인장 (비욘세 ★ 슬롯 대응) */
+.nav-mark a { color: #fff !important; padding: 0 .4em !important; display: inline-flex; align-items: center; }
+.mark-goose { width: 30px; height: auto; display: block; }
+.nav-mark a::after { display: none !important; }
+.nav-mark a:hover { opacity: .75; }
+.show-mark svg { width: 40px; height: auto; display: block; margin: 0 auto; }
+@media (max-width: 1080px) {
+  .main-nav .nav-mark a { padding: 12px 0 !important; } .main-nav .mark-goose { width: 40px; }
+}
+
+/* 해밀학교: 가로 갤러리 (원본 비율, 전신) */
+.haemil-strip { overflow: hidden; }
+.hstrip {
+  display: flex; gap: 4px; overflow-x: auto; scroll-snap-type: x proximity;
+  padding: 0 0 .9rem; cursor: grab; -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin; scrollbar-color: #2a2a2a transparent;
+}
+.hstrip img { height: 62vh; min-height: 320px; width: auto; flex: none; scroll-snap-align: center; border-radius: 2px; display: block; }
+@media (max-width: 700px) { .hstrip img { height: 44vh; } }
