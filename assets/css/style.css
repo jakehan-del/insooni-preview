@@ -1340,3 +1340,12 @@ button.show-cell:hover .show-cta, button.show-cell:focus-visible .show-cta { col
 }
 .hstrip img { height: 62vh; min-height: 320px; width: auto; flex: none; scroll-snap-align: center; border-radius: 2px; display: block; }
 @media (max-width: 700px) { .hstrip img { height: 44vh; } }
+
+/* 헤더: 비욘세 정렬 (데스크톱 내비 정중앙, 거위 중심, EN 우측) */
+@media (min-width: 1081px) {
+  .header-inner { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; }
+  .brand { display: none; }
+  .main-nav { grid-column: 2; }
+  .main-nav ul { gap: clamp(1.6rem, 3.2vw, 3.4rem); align-items: center; }
+  .header-tools { grid-column: 3; justify-self: end; }
+}

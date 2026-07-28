@@ -394,7 +394,18 @@
       if (parts[0] === "1999") return "1999";
       return parts[0] + ". " + (parts[1] ? parseInt(parts[1], 10) + "." : "") + (parts[2] ? " " + parseInt(parts[2], 10) + "." : "");
     }
-    (D.pastShows || []).forEach(function (p) { shows.push({ date: fmtShow(p.date), city: tr(p, "city"), venue: tr(p, "venue"), title: tr(p, "title") }); });
+    (D.pastShows || []).forEach(function (p) {
+      var cell = { date: fmtShow(p.date), city: tr(p, "city"), venue: tr(p, "venue"), title: tr(p, "title") };
+      if (p.poster) {
+        cell.recap = {
+          title: tr(p, "title"),
+          year: String(p.date || "").slice(0, 4),
+          place: [tr(p, "venue"), tr(p, "city")].filter(Boolean).join(" · "),
+          photos: [{ img: p.poster, w: p.pw || 700, h: p.phh || 1000, caption: t("recap.poster", "공연 포스터") }]
+        };
+      }
+      shows.push(cell);
+    });
     shows.forEach(function (sh) {
       var c;
       if (sh.recap) {

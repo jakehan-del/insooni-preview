@@ -11,6 +11,7 @@ window.I18N_EN = {
   "strip.discog": "DISCOGRAPHY",
   "strip.mv": "PLAY OFFICIAL MV",
   "live.past": "PAST SHOWS",
+  "recap.poster": "Show poster",
   "ph.haemil.t": "HAEMIL SCHOOL",
   "ph.haemil.d": "Clear sky after rain - another road beyond the stage.",
   "haemil.moments": "SCHOOL MOMENTS",
