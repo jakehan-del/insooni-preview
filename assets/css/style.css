@@ -1127,13 +1127,13 @@ body.home .footer-min { position: fixed; left: 0; right: 0; bottom: 0; z-index: 
 body.home .footer-min nav { justify-content: center; padding-bottom: .6rem; padding-top: 2.2rem; background: linear-gradient(to top, rgba(8,8,8,.9) 55%, transparent); }
 body.home .footer-min a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 .3em; color: var(--muted); }
 
-.loader { position: fixed; inset: 0; z-index: 300; background: var(--void); pointer-events: none; animation: loader-safety 3.8s ease forwards; }
+.loader { position: fixed; inset: 0; z-index: 300; background: transparent; pointer-events: none; animation: loader-safety 4.6s ease forwards; }
 .loader img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .26s ease; }
-.loader img:nth-child(1) { z-index: 5; }
-.loader img:nth-child(2) { z-index: 4; }
-.loader img:nth-child(3) { z-index: 3; }
-.loader img:nth-child(4) { z-index: 2; }
-.loader img:nth-child(5) { z-index: 1; }
+.loader img:nth-child(1) { z-index: 15; }
+.loader img:nth-child(2) { z-index: 14; }
+.loader img:nth-child(3) { z-index: 13; }
+.loader img:nth-child(4) { z-index: 12; }
+.loader img:nth-child(5) { z-index: 11; }
 .loader img.gone { opacity: 0; }
 .loader-mark {
   position: absolute; inset: 0; z-index: 6; display: grid; place-items: center;
@@ -1142,7 +1142,7 @@ body.home .footer-min a { display: inline-flex; align-items: center; min-height:
   color: var(--ivory); text-shadow: 0 2px 34px rgba(8,8,8,.85);
 }
 .loader.done { animation: none; opacity: 0; transition: opacity .55s ease; }
-@keyframes loader-safety { 0%, 86% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; } }
+@keyframes loader-safety { 0%, 90% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; } }
 @media (prefers-reduced-motion: reduce) { .loader { display: none; } }
 
 .strip { position: relative; height: 100dvh; overflow: hidden; background: var(--void); cursor: grab; touch-action: none; }
@@ -1375,3 +1375,35 @@ main h3 { font-family: var(--font-mono); font-weight: 400; font-size: .85rem; le
 }
 .tr-link:hover .tr-play, .tr-link:focus-visible .tr-play { opacity: 1; color: #fff; }
 @media (hover: none) { .tr-play { opacity: .6; } }
+
+/* 로더 피날레: 거위가 머물다 화면이 사방으로 갈라지며 열림 */
+.lq { position: absolute; width: 50.35%; height: 50.35%; background: var(--void); z-index: 7;
+  transition: transform .85s cubic-bezier(.72, 0, .28, 1); }
+.lq-tl { top: 0; left: 0; }
+.lq-tr { top: 0; right: 0; }
+.lq-bl { bottom: 0; left: 0; }
+.lq-br { bottom: 0; right: 0; }
+.loader.split .lq-tl { transform: translate(-102%, -102%); }
+.loader.split .lq-tr { transform: translate(102%, -102%); }
+.loader.split .lq-bl { transform: translate(-102%, 102%); }
+.loader.split .lq-br { transform: translate(102%, 102%); }
+.loader-finale {
+  position: absolute; inset: 0; z-index: 8; display: grid; place-content: center;
+  justify-items: center; gap: 1.1rem; color: #fff;
+  transition: transform .8s cubic-bezier(.6, 0, .3, 1), opacity .7s ease;
+}
+.loader-goose { width: clamp(84px, 10vw, 140px); height: auto; }
+.loader-finale .loader-mark { position: static; display: block; font-size: clamp(1rem, 1.6vw, 1.35rem); text-shadow: none; }
+.loader.split .loader-finale { transform: scale(1.6) translateY(-4vh); opacity: 0; }
+
+/* 리걸 페이지 */
+.legal-body { max-width: 46em; }
+.legal-body h2 { font-family: var(--font-mono); font-weight: 400; font-size: .78rem; letter-spacing: .24em; text-transform: uppercase; color: #fff; margin: 2.2em 0 .7em; }
+.legal-body p { color: var(--muted); line-height: 1.9; }
+/* 홈 푸터 = 비욘세 우측 하단 한 줄 */
+body.home .footer-min nav {
+  justify-content: flex-end; padding: 0 22px 16px; gap: 1.5rem;
+  font-size: .6rem; background: none;
+}
+body.home .footer-min a { min-height: 32px; color: var(--faint); }
+body.home .footer-min a:hover { color: #fff; }

@@ -22,6 +22,8 @@ window.I18N_EN = {
   "dyn.video": "video",
   "rel.search": "Find on YouTube Music",
   "rel.find": "LISTEN",
+  "nav.privacy": "PRIVACY",
+  "nav.terms": "TERMS",
   "rel.tbd": "Being verified against official records.",
   "opt.letter": "Fan letter",
   "opt.cheer": "A word of cheer",

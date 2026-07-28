@@ -907,8 +907,9 @@
         frames[i].classList.add("gone"); i++;
       } else {
         clearInterval(iv);
-        box.classList.add("done");
-        setTimeout(function () { if (box.parentNode) box.remove(); }, 650);
+        /* 피날레: 거위가 잠시 머문 뒤 화면이 사방으로 갈라지며 열린다 */
+        setTimeout(function () { box.classList.add("split"); }, 380);
+        setTimeout(function () { if (box.parentNode) box.remove(); }, 1350);
       }
     }, 330);
     }
