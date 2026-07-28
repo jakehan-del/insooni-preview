@@ -1407,3 +1407,6 @@ body.home .footer-min nav {
 }
 body.home .footer-min a { min-height: 32px; color: var(--faint); }
 body.home .footer-min a:hover { color: #fff; }
+
+.strip-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+a.strip-item--video { position: relative; display: block; background: #0d0d0d; }

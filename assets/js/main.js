@@ -1001,10 +1001,12 @@
       if (document.hidden) { vel = 0; }
     });
     var pauseBtn = $(".strip-pause"), bgv = $(".vhero-video", track);
+    var allVids = $all(".strip-item video", track);
     if (pauseBtn && bgv) {
       pauseBtn.addEventListener("click", function () {
         var paused = bgv.paused;
-        if (paused) { delete bgv.dataset.userPaused; bgv.play(); } else { bgv.dataset.userPaused = "1"; bgv.pause(); }
+        if (paused) { delete bgv.dataset.userPaused; allVids.forEach(function (v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }); }
+        else { bgv.dataset.userPaused = "1"; allVids.forEach(function (v) { v.pause(); }); }
         pauseBtn.setAttribute("aria-pressed", String(!paused));
         pauseBtn.setAttribute("aria-label", !paused ? t("aria.playVideo", "배경 영상 재생") : t("aria.pauseVideo", "배경 영상 일시정지"));
         pauseBtn.querySelector("span").textContent = !paused ? "▶" : "⏸";
