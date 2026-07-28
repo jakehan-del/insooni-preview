@@ -286,7 +286,21 @@
   function renderDiscography() {
     var box = $("#discography");
     if (!box || !D.albums) return;
-    D.albums.forEach(function (a, i) {
+    /* 전체 인덱스: 상세 자료 없는 릴리즈는 타이포 한 줄로 */
+    var idx = $("#disco-index");
+    var rich = [], plain = [];
+    D.albums.forEach(function (a) { (a.tracks && a.tracks.length ? rich : plain).push(a); });
+    if (idx) {
+      plain.forEach(function (a) {
+        var r = el("p", "di-row");
+        r.innerHTML = '<span class="di-year">' + esc(a.year) + "</span>" +
+          '<span class="di-title">' + esc(a.title) + "</span>" +
+          '<span class="di-kind">' + esc(a.kind || "") + "</span>";
+        idx.appendChild(r);
+      });
+    }
+    var list = idx ? rich : D.albums;
+    list.forEach(function (a, i) {
       var row = el("button", "album-row");
       row.type = "button";
       row.setAttribute("aria-expanded", "false");

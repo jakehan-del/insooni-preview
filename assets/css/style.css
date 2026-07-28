@@ -1295,3 +1295,14 @@ button.show-cell { cursor: pointer; }
 button.show-cell:hover .show-cta, button.show-cell:focus-visible .show-cta { color: #fff; text-decoration: underline; text-underline-offset: 5px; }
 .show-cell { min-width: 0; width: 100%; }
 .show-city { overflow-wrap: anywhere; }
+
+/* 전체 디스코그래피: 타이포그래피 인덱스 */
+.disco-index { columns: 2 340px; column-gap: 4rem; }
+.di-row {
+  display: flex; gap: 1.1rem; align-items: baseline; margin: 0;
+  padding: .78rem .1rem; border-bottom: 1px solid var(--line);
+  font-family: var(--font-mono); break-inside: avoid;
+}
+.di-year { font-size: .72rem; letter-spacing: .12em; color: var(--faint); flex: 0 0 3.2em; }
+.di-title { font-size: .82rem; letter-spacing: .05em; color: var(--ivory); flex: 1; }
+.di-kind { font-size: .62rem; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); white-space: nowrap; }

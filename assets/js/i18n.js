@@ -11,6 +11,7 @@ window.I18N_EN = {
   "strip.discog": "DISCOGRAPHY",
   "strip.mv": "PLAY OFFICIAL MV",
   "live.past": "PAST SHOWS",
+  "music.index": "FULL DISCOGRAPHY 1978-2025",
   "nav.haemil": "HAEMIL SCHOOL",
   "music.new": "NEW SINGLE · NOV 28, 2025",
   "comm.s1": "WRITE - leave a letter or cheer",
