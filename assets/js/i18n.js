@@ -8,6 +8,7 @@
 window.I18N_EN = {
   /* 내비게이션 */
   "strip.new": "NEW SINGLE",
+  "strip.title": "STILL, THE DREAM FLOWS",
   "strip.discog": "DISCOGRAPHY",
   "strip.mv": "PLAY OFFICIAL MV",
   "live.past": "PAST SHOWS",

@@ -545,7 +545,7 @@
       items.forEach(function (a) {
         if (a.placeholder) {
           var ph = el("div", "arch-item arch-item--ph");
-          ph.innerHTML = '<p class="frame-note">' + esc(a.caption) + "</p>";
+          ph.innerHTML = '<p class="frame-note">' + esc(tr(a, "caption")) + "</p>";
           grid.appendChild(ph);
           return;
         }
@@ -553,8 +553,8 @@
         var b = el("button", "arch-item");
         b.type = "button";
         b.setAttribute("aria-haspopup", "dialog");
-        b.setAttribute("aria-label", a.caption + " " + t("aria.zoom", "크게 보기"));
-        b.innerHTML = '<img src="' + esc(a.img) + '" alt="' + esc(a.caption) + '" width="' + a.w + '" height="' + a.h + '" loading="lazy">' +
+        b.setAttribute("aria-label", tr(a, "caption") + " " + t("aria.zoom", "크게 보기"));
+        b.innerHTML = '<img src="' + esc(a.img) + '" alt="' + esc(tr(a, "caption")) + '" width="' + a.w + '" height="' + a.h + '" loading="lazy">' +
           '<span class="arch-cap">' + esc(a.year) + " · " + esc(kindCat(a.cat)) + "</span>";
         b.addEventListener("click", function () { openImageViewer(i, b); });
         grid.appendChild(b);
@@ -574,9 +574,9 @@
     var box = ensureLightbox();
     var a = archView.list[archView.idx];
     if (!a) return;
-    box.setAttribute("aria-label", a.caption);
-    $(".lightbox-frame", box).innerHTML = '<img class="lb-img" src="' + esc(a.img) + '" alt="' + esc(a.caption) + '">';
-    $(".lightbox-caption", box).textContent = [a.caption, a.year, a.cat].filter(Boolean).join(" · ");
+    box.setAttribute("aria-label", tr(a, "caption"));
+    $(".lightbox-frame", box).innerHTML = '<img class="lb-img" src="' + esc(a.img) + '" alt="' + esc(tr(a, "caption")) + '">';
+    $(".lightbox-caption", box).textContent = [tr(a, "caption"), a.year, kindCat(a.cat)].filter(Boolean).join(" · ");
     var multi = archView.list.length > 1;
     $(".lb-prev", box).hidden = !multi;
     $(".lb-next", box).hidden = !multi;
