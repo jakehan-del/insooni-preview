@@ -927,7 +927,8 @@ a.card { text-decoration: none; color: inherit; }
   border-bottom: 1px solid var(--line); cursor: pointer; transition: opacity .22s ease;
 }
 #discography:hover .album-row:not(:hover) { opacity: .45; }
-.a-art { width: 76px; height: 76px; object-fit: cover; border-radius: 2px; display: block; }
+/* 앨범 자켓은 아트웍 — 절대 잘리지 않게 contain */
+.a-art { width: 76px; height: 76px; object-fit: contain; background: var(--void); border: 1px solid var(--line); border-radius: 2px; display: block; }
 .a-art--empty { display: block; width: 76px; height: 76px; border: 1px solid var(--line); border-radius: 2px; }
 .album-row:hover { background: rgba(243,239,231,.03); }
 .album-row .a-year { font-family: var(--font-display); font-size: 1.6rem; font-weight: 900; color: var(--gold); }
@@ -1282,10 +1283,6 @@ button.strip-item:focus-visible { outline: 3px solid var(--ivory); outline-offse
 @media (max-width: 760px) { .sys-strip { grid-template-columns: 1fr; } }
 
 /* 이야기: 성장 기록 한 쌍 */
-.origin-pair { display: grid; grid-template-columns: repeat(2, minmax(140px, 260px)); gap: 4px; margin-bottom: 3rem; }
-.origin-pair figure { margin: 0; }
-.origin-pair img { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 2px; filter: grayscale(12%); }
-.origin-pair figcaption { font-family: var(--font-mono); font-size: .67rem; letter-spacing: .12em; color: var(--faint); padding-top: .5rem; }
 
 @media (max-width: 640px) {
   .album-row { grid-template-columns: 56px 1fr auto; }

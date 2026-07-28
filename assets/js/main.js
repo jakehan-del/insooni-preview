@@ -253,14 +253,33 @@
   function renderEventList() {
     var list = $("#event-list");
     if (!list || !D.events) return;
-    var events = D.events.slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; });
+    /* 진행 중인 것만: 지난 날짜는 숨기고(지난 공연 그리드가 담당), 상시 방송은 유지 */
+    var now = new Date();
+    var todayStr = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
+    var events = D.events.slice()
+      .filter(function (ev) { return ev.recurring || (ev.date && ev.date >= todayStr); })
+      .sort(function (a, b) {
+        if (a.recurring) return 1;
+        if (b.recurring) return -1;
+        return a.date < b.date ? -1 : 1;
+      });
     var en = document.documentElement.getAttribute("lang") === "en";
+    if (!events.length) {
+      list.appendChild(el("p", "empty-note", t("dyn.noEvents", "확정된 예정 일정이 없습니다. 새 공연이 공지되는 대로 이곳에 게재됩니다.")));
+      return;
+    }
     events.forEach(function (ev) {
-      var d = new Date(ev.date + "T00:00:00");
-      var mono = en ? (d.toLocaleString("en", { month: "short" }) + " " + d.getFullYear()) : (d.getFullYear() + "년 " + (d.getMonth() + 1) + "월");
+      var dateHtml;
+      if (ev.recurring) {
+        dateHtml = '<div class="event-date"><span class="d">TV</span><span class="m">' + esc(tr(ev, "rlabel")) + "</span></div>";
+      } else {
+        var d = new Date(ev.date + "T00:00:00");
+        var mono = en ? (d.toLocaleString("en", { month: "short" }) + " " + d.getFullYear()) : (d.getFullYear() + "년 " + (d.getMonth() + 1) + "월");
+        dateHtml = '<div class="event-date"><span class="d">' + d.getDate() + '</span><span class="m">' + mono + "</span></div>";
+      }
       var row = el("div", "event-row");
       row.innerHTML =
-        '<div class="event-date"><span class="d">' + d.getDate() + '</span><span class="m">' + mono + '</span></div>' +
+        dateHtml +
         '<div class="event-info"><span class="badge badge--' + (ev.kind === "공연" ? "gold" : "wine") + '">' + esc(kindLabel(ev.kind)) + "</span> <h3>" + esc(tr(ev, "title")) + '</h3><p class="where">' + esc(tr(ev, "place")) + (ev.note ? " · " + esc(ev.note) : "") + "</p></div>" +
         eventCta(ev);
       list.appendChild(row);

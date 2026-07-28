@@ -209,6 +209,9 @@ window.SITE_DATA = {
           { id: "A5nEuLnfPy0", title: "행복", en: { title: "Happiness" } },
           { id: "8FBdAqvFFxI", title: "풀 영상", en: { title: "Full set" } }
         ] } },
+    { date: "2026-05-09", city: "안동", venue: "안동문화예술의전당 웅부홀", title: "어버이날 특별기획 '두 사랑 이야기'", en: { title: "Parents' Day Special 'Two Love Stories'", city: "Andong" },
+      poster: "assets/img/posters/andong2026.jpg", pw: 721, phh: 1000,
+      recap: { desc: "명창 유지숙과 함께한 어버이날 특별기획 — 2025 국립극장 여우락 초연작의 안동 무대. 한웅원·박범태 참여.", en: { desc: "A Parents' Day special with master singer Yoo Ji-sook - the Yeowoorak premiere brought to Andong, with Han Woong-won and Park Beom-tae." } } },
     { date: "2026-04-07", city: "양산", venue: "웅상체육공원", title: "열린음악회 양산 특집 녹화", en: { title: "Open Concert Yangsan special taping", city: "Yangsan" },
       recap: { desc: "양산 특집 무대 (4월 26일 방송). KBS 공식 클립.", en: { desc: "Yangsan special, aired April 26 - official KBS clip." },
         clips: [{ id: "LLHR9WWBIAg", title: "밤이면 밤마다", en: { title: "Night After Night" } }] } },
@@ -324,35 +327,13 @@ window.SITE_DATA = {
   /* ---------- 일정 (kind: 공연 | 방송 | 행사) ---------- */
   events: [
     {
-      date: "2026-05-09",
-      kind: "공연",
-      status: "onsale",
-      title: "어버이날 특별기획 '두 사랑 이야기' — 인순이 & 유지숙",
-      en: { title: "Parents' Day Special 'Two Love Stories' - Insooni & Yoo Ji-sook", place: "Andong Culture & Arts Center, Woongbu Hall" },
-      place: "안동문화예술의전당 웅부홀",
-      note: "공식 예매: 티켓링크",
-      link: "https://www.ticketlink.co.kr/product/61356"
-    },
-    {
-      date: "2026-08-15",
-      kind: "행사",
-      status: "soon", title: "[샘플] 광복절 기념 축하 무대",
-      place: "장소 미정 [확인 필요]",
-      link: "#"
-    },
-    {
-      date: "2026-09-12",
-      kind: "공연",
-      title: "[샘플] 지역 초청 공연, 부산",
-      place: "부산 ○○문화회관 [확인 필요]",
-      link: "#"
-    },
-    {
-      date: "2026-08-07",
+      recurring: true,
       kind: "방송", status: "broadcast",
-      title: "TV조선 '조선의 사랑꾼' [방영 요일·시간 확인 필요]",
+      title: "'조선의 사랑꾼' 고정 출연 중",
+      en: { title: "Weekly on TV Chosun 'Love Interventions'", place: "TV Chosun", rlabel: "Mondays" },
+      rlabel: "매주 월요일",
       place: "TV조선",
-      link: "#"
+      link: "https://www.youtube.com/watch?v=OIKqhdBojRo"
     }
   ],
 
@@ -472,9 +453,9 @@ window.SITE_DATA = {
     { year: "2023", title: "처음 이야기 (어쩌다 사장3 OST)", kind: "OST 싱글", note: "류민희와 함께." },
     { year: "2024", title: "토닥토닥", kind: "디지털 싱글", note: "리코브/NHN벅스.", links: [{ label: "YT", url: "https://music.youtube.com/browse/MPREb_NLJbxXX6J3X" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1787119633" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/61AP6USxC0sDcxr3ktVbTK" }] },
     { year: "2024", title: "너의 이름을 세상이 부를 때", kind: "디지털 싱글", note: "리코브/NHN벅스.", links: [{ label: "YT", url: "https://music.youtube.com/browse/MPREb_SUq773Q9j40" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1771373716" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/3pDNQzz4RtG7LVOatoPreJ" }] },
-    { featured: true, art: "assets/img/covers/cover2025.jpg", year: "2025", title: "인순이, 아름다운 우리나라", kind: "앨범", note: "2025년 2월 발매, 9곡 수록.",
+    { featured: true, art: "assets/img/covers/cover2025.jpg", year: "2025", title: "인순이, 아름다운 우리나라", kind: "정규 앨범", note: "2025년 2월 발매, 9곡 수록.",
       tracks: ["광주 광주", "밤이면 밤마다", "아름다운 우리나라", "야속한 내 님", "흔들리는 갈대", "너와 나", "욕망", "이별의 눈동자", "길섶에 핀 꽃"],
-      credits: "정규 9곡 · 2025. 2. 19. 발매 · 기획 탑뮤직 · 유통 RIAK · 타이틀곡 '아름다운 우리나라'(원곡 1984년 발표). 곡별 세부 크레딧은 공식 자료 확인 후 추가됩니다.",
+      credits: "정규 9곡 · 2025. 2. 19. 발매 (Apple Music·iTunes 확인) · ℗ RIAK · 타이틀곡 '아름다운 우리나라'는 1984년 정규 5집 수록곡을 다시 불렀습니다. 곡별 세부 크레딧은 공식 자료 확인 후 추가됩니다.",
       links: [
         { label: "YouTube Music", url: "https://music.youtube.com/playlist?list=OLAK5uy_lg_F0ktj5nBUzEGoHZfANShrTMmUkL9xg" },
         { label: "Apple Music", url: "https://music.apple.com/kr/album/%EC%9D%B8%EC%88%9C%EC%9D%B4-%EC%95%84%EB%A6%84%EB%8B%A4%EC%9A%B4-%EC%9A%B0%EB%A6%AC%EB%82%98%EB%9D%BC/1797462838" },
