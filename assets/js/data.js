@@ -186,6 +186,23 @@ window.SITE_DATA = {
 
   /* ---------- 지난 공연 아카이브 (플레이DB·보도 검증, 2026.7 리서치) ---------- */
   pastShows: [
+    { date: "2026-07-26", city: "서울", venue: "고척스카이돔", title: "불꽃야구 생중계 애국가 열창", en: { title: "National anthem at Gocheok Sky Dome", city: "Seoul" } },
+    { date: "2026-07-22", city: "서울", venue: "하나금융 명동사옥", title: "하나다문화가정대상 축하공연", en: { title: "Hana Multicultural Awards performance", city: "Seoul" } },
+    { date: "2026-07-12", city: "서울", venue: "KBS홀", title: "열린음악회 1581회 피날레", en: { title: "Open Concert Ep.1581 finale", city: "Seoul" } },
+    { date: "2026-06-21", city: "", venue: "KBS", title: "열린음악회 김구 탄생 150주년 특집", en: { title: "Open Concert, Kim Koo 150th special" } },
+    { date: "2026-06-05", city: "경주", venue: "봉황대 광장 특설무대", title: "봉황대 뮤직스퀘어 개막공연", en: { title: "Bonghwangdae Music Square opening", city: "Gyeongju" } },
+    { date: "2026-04-07", city: "양산", venue: "웅상체육공원", title: "열린음악회 양산 특집 녹화", en: { title: "Open Concert Yangsan special taping", city: "Yangsan" } },
+    { date: "2026-03-16", city: "", venue: "TV조선", title: "'조선의 사랑꾼' 고정 합류 첫 방송", en: { title: "Joined TV Chosun 'Love Interventions'" } },
+    { date: "2026-02-22", city: "인천", venue: "", title: "열린음악회 1562회 피날레", en: { title: "Open Concert Ep.1562 finale", city: "Incheon" } },
+    { date: "2025-12-27", city: "밀양", venue: "밀양아리랑아트센터", title: "인순이 스페셜 송년 콘서트", en: { title: "Insooni Special Year-End Concert", city: "Miryang" } },
+    { date: "2025-12-01", city: "", venue: "", title: "뷰티플 비전콘서트 — 신곡 첫 무대", en: { title: "Beautiful Vision Concert - new single debut" } },
+    { date: "2025-11-05", city: "", venue: "MBN", title: "'언포게터블 듀엣' 출연", en: { title: "MBN 'Unforgettable Duet'" } },
+    { date: "2025-10-25", city: "양산", venue: "황산공원", title: "낙동강 시월愛 콘서트", en: { title: "Nakdong River October Concert", city: "Yangsan" } },
+    { date: "2025-09-27", city: "경산", venue: "DYC 특설무대", title: "DYC 음악회 — 교향악단 협연", en: { title: "DYC Concert with symphony orchestra", city: "Gyeongsan" } },
+    { date: "2025-09-26", city: "울주", venue: "영남알프스 웰컴센터", title: "울주세계산악영화제 개막 축하공연", en: { title: "Ulju Mountain Film Festival opening", city: "Ulju" } },
+    { date: "2025-09-21", city: "서울", venue: "마루공원", title: "국악한마당 — 인순이×유지숙 '지음'", en: { title: "KBS Gugak Hanmadang with Yoo Ji-sook", city: "Seoul" } },
+    { date: "2025-09-14", city: "인천", venue: "송도 트라이보울", title: "송도 재즈 페스티벌 피날레", en: { title: "Songdo Jazz Festival finale", city: "Incheon" } },
+    { date: "2026-07", city: "", venue: "SBS러브FM", title: "'인생은 오디션' 특별 심사", en: { title: "Radio 'Life is Audition' guest judge" } },
     { date: "2025-07-09", city: "서울", venue: "국립극장 하늘극장", title: "여우락 페스티벌 '두 사랑 이야기'", en: { title: "Yeowoorak Festival 'Two Love Stories'", city: "Seoul" }, poster: "assets/img/posters/p217362.jpg", pw: 300, phh: 400 },
     { date: "2024-05-18", city: "인천", venue: "송도컨벤시아", title: "골든걸스 콘서트", en: { title: "Golden Girls Concert", city: "Incheon" }, poster: "assets/img/posters/p201859.jpg", pw: 300, phh: 400 },
     { date: "2024-04-20", city: "부산", venue: "KBS부산홀", title: "골든걸스 전국투어", en: { title: "Golden Girls National Tour", city: "Busan" }, poster: "assets/img/posters/p200936.jpg", pw: 300, phh: 400 },
@@ -243,6 +260,9 @@ window.SITE_DATA = {
 
   /* ---------- 소식 (type: 공지 | 공연 | 방송 | 보도) ---------- */
   news: [
+    { date: "2026-07-26", type: "방송", title: "고척스카이돔에서 애국가 열창", excerpt: "특집 불꽃야구 생중계 무대. 돔을 채운 목소리.", en: { title: "National anthem at Gocheok Sky Dome", excerpt: "A live broadcast moment that filled the dome." } },
+    { date: "2026-06-05", type: "공연", title: "경주 봉황대 뮤직스퀘어 개막", excerpt: "봉황대 광장 특설무대, 2026 시즌의 문을 열다.", en: { title: "Opening Bonghwangdae Music Square, Gyeongju", excerpt: "Opening the 2026 season on the open-air stage." } },
+    { date: "2026-03-16", type: "방송", title: "TV조선 '조선의 사랑꾼' 고정 합류", excerpt: "113회부터 새 멤버로 합류해 고정 출연 중입니다.", en: { title: "Joined TV Chosun 'Love Interventions'", excerpt: "A regular cast member since episode 113." } },
     { date: "2026-03-10", type: "공연", title: "5월 9일 안동 '두 사랑 이야기' 예매 오픈", excerpt: "어버이날 특별기획 — 인순이 & 유지숙. 안동문화예술의전당 웅부홀, 티켓링크에서 예매할 수 있습니다.", en: { title: "Andong 'Two Love Stories' on sale for May 9", excerpt: "A Parents' Day special with Yoo Ji-sook at Andong Culture & Arts Center. Tickets on Ticketlink." } },
     { date: "2025-11-28", type: "발매", title: "새 싱글 '그래도 꿈은 흐른다' 발매", excerpt: "실패 속에서도 계속되는 꿈. 공식 뮤직비디오가 유튜브에 공개되었습니다.", en: { title: "New single 'Still, the Dream Flows' released", excerpt: "A dream that keeps flowing through failure. The official music video is on YouTube." } },
     { date: "2025-08-21", type: "수상", title: "펄벅 인터내셔널 '올해의 여성상' 수상", excerpt: "Woman of Influence 2025. 노래와 나눔이 함께 만든 자리 — 시상식 리캡을 라이브에서 볼 수 있습니다.", en: { title: "Woman of Influence 2025, Pearl S. Buck International", excerpt: "An award where song and giving met. See the ceremony recap on the Tour page." } },

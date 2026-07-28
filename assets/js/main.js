@@ -373,6 +373,14 @@
       }
       shows.push(cell);
     });
+    /* 최신순 통합 정렬 (리캡+공연) */
+    function sk(v) {
+      var m = String(v || "").match(/(\d{4})\D*(\d{1,2})?\D*(\d{1,2})?/);
+      if (!m) return 0;
+      return (+m[1]) * 10000 + (+(m[2] || 0)) * 100 + (+(m[3] || 0));
+    }
+    shows.forEach(function (sh) { sh._k = sk(sh.recap && sh.recap.date ? sh.recap.date : sh.date); });
+    shows.sort(function (a, b) { return b._k - a._k; });
     shows.forEach(function (sh) {
       var c;
       if (sh.recap) {
