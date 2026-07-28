@@ -291,6 +291,10 @@
         var lk = (a.links || []).map(function (l) {
           return '<a class="di-link" href="' + esc(l.url) + '" target="_blank" rel="noopener">' + esc(l.label) + "</a>";
         }).join("");
+        if (!lk) {
+          var su = "https://music.youtube.com/search?q=" + encodeURIComponent("인순이 " + a.title.replace(/\s*\(.*\)$/, ""));
+          lk = '<a class="di-link" href="' + esc(su) + '" target="_blank" rel="noopener">' + t("rel.find", "듣기") + "</a>";
+        }
         r.innerHTML = '<span class="di-year">' + esc(a.year) + "</span>" +
           '<span class="di-title">' + esc(a.title) + "</span>" +
           (lk ? '<span class="di-links">' + lk + "</span>" : '<span class="di-kind">' + esc(a.kind || "") + "</span>");
@@ -311,15 +315,16 @@
       detail.hidden = true;
       var tracksHtml = (a.tracks && a.tracks.length)
         ? '<ol class="a-tracks">' + a.tracks.map(function (tr) { return "<li>" + esc(tr) + "</li>"; }).join("") + "</ol>"
-        : "<p>" + t("rel.tbd", "공식 자료 검수 후 등록됩니다. [자료 필요]") + "</p>";
+        : "<p>" + t("rel.tbd", "공식 자료 확인 중입니다.") + "</p>";
       var creditsHtml = a.credits
         ? '<p class="a-credits">' + esc(a.credits) + "</p>"
-        : "<p>" + t("rel.tbd", "공식 자료 검수 후 등록됩니다. [자료 필요]") + "</p>";
+        : "<p>" + t("rel.tbd", "공식 자료 확인 중입니다.") + "</p>";
+      var searchUrl = "https://music.youtube.com/search?q=" + encodeURIComponent("인순이 " + a.title.replace(/\s*\(.*\)$/, ""));
       var linksHtml = (a.links && a.links.length)
         ? '<p class="a-links">' + a.links.map(function (l) {
             return '<a class="a-link" href="' + esc(l.url) + '" target="_blank" rel="noopener">' + esc(l.label) + ' <span aria-hidden="true">↗</span></a>';
           }).join("") + "</p>"
-        : "<p>" + t("rel.links", "공식 스트리밍 링크는 확인 후 연결됩니다. [링크 확인 필요]") + "</p>";
+        : '<p class="a-links"><a class="a-link" href="' + esc(searchUrl) + '" target="_blank" rel="noopener">' + t("rel.search", "YouTube Music에서 찾기") + ' <span aria-hidden="true">↗</span></a></p>';
       detail.innerHTML =
         "<div><h4>" + t("rel.tracks", "수록곡") + "</h4>" + tracksHtml + "</div>" +
         "<div><h4>" + t("rel.credits", "크레딧") + "</h4>" + creditsHtml + "</div>" +

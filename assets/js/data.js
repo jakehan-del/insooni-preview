@@ -39,10 +39,6 @@ window.SITE_DATA = {
     { img: "assets/img/photos/haemill-wall.jpg", w: 450, h: 658, year: "", cat: "기록", caption: "건축 후원자의 이름이 새겨진 해밀학교 나무 벽 앞에서" },
     { img: "assets/img/photos/haemill-library.jpg", w: 650, h: 364, year: "", cat: "기록", caption: "해밀학교 서가 계단에서 학생들과" },
     { img: "assets/img/stills/s5.jpg", w: 1280, h: 720, year: "2025", cat: "무대", caption: "스포트라이트 아래, 두 팔을 펴며" },
-    { img: "assets/img/stills/s2.jpg", w: 1280, h: 720, year: "2025", cat: "포트레이트", caption: "'그래도 꿈은 흐른다' MV 프로필" },
-    { img: "assets/img/stills/s7.jpg", w: 1280, h: 720, year: "2025", cat: "무대", caption: "합창단과 함께한 클라이맥스" },
-    { img: "assets/img/stills/s4.jpg", w: 1280, h: 720, year: "2025", cat: "포트레이트", caption: "노래에 잠긴 순간" },
-    { img: "assets/img/stills/s8.jpg", w: 1280, h: 720, year: "2025", cat: "무대", caption: "어둠 속 한 줄기 빛, 무대 위의 사람" },
   ],
 
   /* ---------- 지난 무대 리캡 (VIEW RECAP: 사진 갤러리 + 영상) ----------
@@ -314,7 +310,7 @@ window.SITE_DATA = {
     { art: "assets/img/photos/press-105959.jpg", year: "1979", title: "희자매 3집", kind: "희자매 3집", note: "현대음향 발매." },
     { art: "assets/img/photos/album01.jpg", year: "1980", title: "인연 (Fate)", kind: "솔로 1집", note: "솔로 가수 인순이의 첫걸음.",
       tracks: ["인연", "웃어주세요", "재수생", "풍문으로 들었어", "정말로 모르시나", "조용한 이별", "차표한장 (One Way Ticket)", "춤을 춰요 (I Was Made For Dancing)", "꿈이였나봐", "복돌이", "내마음 흔들려", "빨간 마후라"],
-      credits: "1980년 10월 현대음향 발매. 곡별 작사·작곡 크레딧은 공식 자료 확인 후 추가됩니다. [자료 필요]",
+      credits: "1980년 10월 현대음향 발매. 곡별 크레딧은 공식 자료 확인 중입니다.",
       links: [] },
     { year: "1981", title: "떠나야 할 그 사람 / 누가", kind: "정규 2집", note: "대표곡 '떠나야 할 그 사람'. 지구레코드. [연도 표기 자료별 상이]" },
     { year: "1982", title: "슬픔만 남아 있어요 / 울지도 못합니다", kind: "정규 3집", note: "대표곡 '슬픔만 남아 있어요'. 지구레코드." },
