@@ -882,11 +882,9 @@
   function initLoader() {
     var box = $("#loader");
     if (!box) return;
-    var seen = false;
-    try { seen = sessionStorage.getItem("insooni_loader") === "1"; } catch (e) {}
+    /* 비욘세 문법: 입장 액션은 매 진입마다 재생 (모션 민감 시에만 스킵) */
     var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (seen || reduce) { box.remove(); return; }
-    try { sessionStorage.setItem("insooni_loader", "1"); } catch (e) {}
+    if (reduce) { box.remove(); return; }
     var frames = $all("img", box);
     var i = 0;
     var started = false;
