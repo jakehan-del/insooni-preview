@@ -16,6 +16,11 @@ window.SITE_DATA = {
   archive: [
     { img: "assets/img/hero.jpg", w: 1280, h: 720, year: "2025", cat: "무대", caption: "'그래도 꿈은 흐른다' MV, 합창단과 함께" },
     { img: "assets/img/story.jpg", w: 720, h: 720, year: "2025", cat: "포트레이트", caption: "'그래도 꿈은 흐른다' 세션 스틸" },
+    { img: "assets/img/photos/hanteo-1.jpg", w: 1200, h: 1600, year: "2025", cat: "기록", caption: "한터뮤직어워즈, 트로피와 꽃다발" },
+    { img: "assets/img/photos/openc-1.jpg", w: 1200, h: 1600, year: "2025", cat: "무대", caption: "열린음악회 리허설" },
+    { img: "assets/img/photos/openc-2.jpg", w: 1200, h: 1600, year: "2025", cat: "비하인드", caption: "베이시스트와 함께, 녹화일 대기실" },
+    { img: "assets/img/photos/jazzc-1.jpg", w: 1600, h: 900, year: "", cat: "무대", caption: "재즈 라이브, 스포트라이트 아래" },
+    { img: "assets/img/photos/dsprac-1.jpg", w: 1600, h: 900, year: "2024", cat: "비하인드", caption: "디너쇼 안무 연습실" },
     { img: "assets/img/photos/dsc0427.jpg", w: 1600, h: 1065, year: "", cat: "무대", caption: "깃털 장식 흰 의상, 오케스트라와 함께" },
     { img: "assets/img/photos/dsc0081.jpg", w: 1063, h: 1600, year: "", cat: "무대", caption: "쏟아지는 조명 아래, 스팽글 드레스" },
     { img: "assets/img/photos/dsc0628.jpg", w: 1600, h: 1063, year: "", cat: "무대", caption: "댄서들과 함께한 스팽글 무대" },
@@ -84,6 +89,63 @@ window.SITE_DATA = {
      · 공연명은 사진·영상 안에서 검증된 것만 표기 (로고·현수막 등)
      · 미확인 무대는 중립적 제목 + "확인 중" 표기로만 묶는다 */
   recaps: [
+    {
+      date: "2025. 2. 16.", year: "2025",
+      title: "한터뮤직어워즈",
+      place: "장충체육관",
+      desc: "한터뮤직어워즈의 밤. 트로피와 꽃다발, 초록 드레스의 무대 인사까지 — 가족의 카메라로 남긴 기록.",
+      bg: "assets/img/photos/hanteo-1.jpg",
+      photos: [
+        { img: "assets/img/photos/hanteo-1.jpg", w: 1200, h: 1600, caption: "트로피와 꽃다발" },
+        { img: "assets/img/photos/hanteo-2.jpg", w: 1200, h: 1600, caption: "트로피를 들어 올리며" },
+        { img: "assets/img/photos/hanteo-3.jpg", w: 1600, h: 1227, caption: "무대 인사" },
+        { img: "assets/img/photos/hanteo-4.jpg", w: 900, h: 1600, caption: "스크린 속 초록 드레스" },
+        { img: "assets/img/photos/hanteo-5.jpg", w: 1600, h: 1200, caption: "한터뮤직어워즈 무대" }
+      ]
+    },
+    {
+      date: "2025. 1. 21.", year: "2025",
+      title: "열린음악회 녹화",
+      place: "KBS · 1514회 방송 2025. 2. 23.",
+      desc: "노란 꽃을 꽂은 검은 드레스, 베이시스트와 웃던 대기실, 그리고 무대 리허설까지 — 녹화일의 백스테이지 기록.",
+      bg: "assets/img/photos/openc-1.jpg",
+      photos: [
+        { img: "assets/img/photos/openc-1.jpg", w: 1200, h: 1600, caption: "무대 리허설" },
+        { img: "assets/img/photos/openc-2.jpg", w: 1200, h: 1600, caption: "베이시스트와 함께" },
+        { img: "assets/img/photos/openc-3.jpg", w: 1200, h: 1600, caption: "대기실의 웃음" },
+        { img: "assets/img/photos/openc-4.jpg", w: 1200, h: 1600, caption: "출연 대기" },
+        { img: "assets/img/photos/openc-5.jpg", w: 1232, h: 1600, caption: "노란 꽃, 검은 드레스" },
+        { img: "assets/img/photos/openc-6.jpg", w: 1268, h: 1600, caption: "백스테이지 포트레이트" }
+      ]
+    },
+    {
+      date: "2024. 12. 30.", year: "2024",
+      title: "2024 인순이 디너쇼",
+      place: "그랜드 인터컨티넨탈 서울 파르나스",
+      desc: "5년 만의 연말 디너쇼. 무대 뒤에는 몇 주간의 안무 연습이 있었습니다 — 연습실의 기록.",
+      video: "assets/media/dinner-practice.mp4",
+      poster: "assets/img/photos/dsprac-1.jpg",
+      bg: "assets/img/photos/dsprac-1.jpg",
+      photos: [
+        { img: "assets/img/photos/dsprac-1.jpg", w: 1600, h: 900, caption: "안무 연습실에서" },
+        { img: "assets/img/photos/dsprac-2.jpg", w: 900, h: 1600, caption: "거울 앞의 시간" }
+      ]
+    },
+    {
+      date: "", year: "",
+      title: "재즈 라이브",
+      place: "",
+      desc: "일자·장소 확인 중 [공식 확인 필요]. 소극장의 밤, 재즈 밴드와 함께한 라이브 기록.",
+      video: "assets/media/jazz-live.mp4",
+      poster: "assets/img/photos/jazzc-1.jpg",
+      bg: "assets/img/photos/jazzc-1.jpg",
+      photos: [
+        { img: "assets/img/photos/jazzc-1.jpg", w: 1600, h: 900, caption: "스포트라이트 아래, 재즈 밴드와" },
+        { img: "assets/img/photos/jazzc-2.jpg", w: 1200, h: 1600, caption: "객석에서 본 무대" },
+        { img: "assets/img/photos/jazzc-3.jpg", w: 900, h: 1600, caption: "소극장의 밤" }
+      ]
+    },
+
     {
       year: "2025",
       title: "Woman of Influence 2025",
@@ -157,9 +219,6 @@ window.SITE_DATA = {
   /* ---------- 지난 공연 아카이브 (플레이DB·보도 검증, 2026.7 리서치) ---------- */
   pastShows: [
     { date: "2025-07-09", city: "서울", venue: "국립극장 하늘극장", title: "여우락 페스티벌 '두 사랑 이야기'" },
-    { date: "2025-02-23", city: "", venue: "KBS", title: "열린음악회 1514회 피날레" },
-    { date: "2025-02-16", city: "서울", venue: "장충체육관", title: "한터뮤직어워즈" },
-    { date: "2024-12-30", city: "서울", venue: "그랜드 인터컨티넨탈 파르나스", title: "2024 인순이 디너쇼" },
     { date: "2024-05-18", city: "인천", venue: "송도컨벤시아", title: "골든걸스 콘서트" },
     { date: "2024-04-20", city: "부산", venue: "KBS부산홀", title: "골든걸스 전국투어" },
     { date: "2024-03-02", city: "성남", venue: "성남아트센터", title: "골든걸스 콘서트" },
@@ -216,36 +275,13 @@ window.SITE_DATA = {
 
   /* ---------- 소식 (type: 공지 | 공연 | 방송 | 보도) ---------- */
   news: [
-    {
-      type: "공지",
-      title: "인순이 공식 팬 플랫폼이 문을 열었습니다",
-      excerpt: "음악 아카이브, 공연 소식, 사랑방까지, 모든 공식 소식이 이곳에서 시작됩니다.",
-      date: "2026-08-01"
-    },
-    {
-      type: "공연",
-      title: "[샘플] 단독 콘서트 서울 공연 예매 안내",
-      excerpt: "예매 일정과 좌석 안내를 확인하세요. 팬클럽 회원 선예매는 협의 후 안내됩니다. [실제 공연 확인 필요]",
-      date: "2026-08-20"
-    },
-    {
-      type: "방송",
-      title: "TV조선 '조선의 사랑꾼' 출연 중",
-      excerpt: "고정 출연 소식이 알려져 있습니다. 방송 시간과 다시보기 안내는 공식 확인 후 게시됩니다. [출연·편성 정보 확인 필요]",
-      date: "2026-08-12"
-    },
-    {
-      type: "보도",
-      title: "[샘플] 새 싱글 '그래도 꿈은 흐른다' 소식",
-      excerpt: "꿈을 노래해 온 여정이 이어집니다. 음원 사이트에서 감상하실 수 있습니다.",
-      date: "2026-08-05"
-    },
-    {
-      type: "공지",
-      title: "사랑방 이용 안내: 서로를 존중하는 공간을 위해",
-      excerpt: "따뜻한 소통을 위한 커뮤니티 약속과 게시물 운영 원칙을 안내드립니다.",
-      date: "2026-08-02"
-    }
+    { date: "2026-03-10", type: "공연", title: "5월 9일 안동 '두 사랑 이야기' 예매 오픈", excerpt: "어버이날 특별기획 — 인순이 & 유지숙. 안동문화예술의전당 웅부홀, 티켓링크에서 예매할 수 있습니다." },
+    { date: "2025-11-28", type: "발매", title: "새 싱글 '그래도 꿈은 흐른다' 발매", excerpt: "실패 속에서도 계속되는 꿈. 공식 뮤직비디오가 유튜브에 공개되었습니다." },
+    { date: "2025-08-21", type: "수상", title: "펄벅 인터내셔널 '올해의 여성상' 수상", excerpt: "Woman of Influence 2025. 노래와 나눔이 함께 만든 자리 — 시상식 리캡을 라이브에서 볼 수 있습니다." },
+    { date: "2025-07-09", type: "공연", title: "여우락 페스티벌 '두 사랑 이야기'", excerpt: "국립극장 하늘극장, 인순이 x 유지숙. 이틀간의 무대." },
+    { date: "2025-02-23", type: "방송", title: "열린음악회 1514회 피날레 무대", excerpt: "1월 21일 녹화 — 백스테이지 기록은 라이브 페이지 리캡에." },
+    { date: "2025-02-19", type: "발매", title: "《인순이, 아름다운 우리나라》 발매", excerpt: "1984년 원곡 앨범을 다시 부른 아홉 곡." },
+    { date: "2024-12-30", type: "공연", title: "5년 만의 연말 디너쇼", excerpt: "그랜드 인터컨티넨탈 서울 파르나스, 이틀간의 밤." }
   ],
 
   /* ---------- 일정 (kind: 공연 | 방송 | 행사) ---------- */
