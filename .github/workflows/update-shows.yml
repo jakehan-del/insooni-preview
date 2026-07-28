@@ -1,0 +1,29 @@
+name: Update live shows
+# 공식 유튜브 채널을 매일 확인해 인순이 무대 영상을 지난 공연 그리드에 자동 반영한다.
+
+on:
+  schedule:
+    - cron: "0 21 * * *"   # 매일 06:00 KST
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Collect from official channels
+        run: python3 scripts/collect-shows.py
+      - name: Commit if changed
+        run: |
+          git config user.name "insooni-bot"
+          git config user.email "actions@users.noreply.github.com"
+          if ! git diff --quiet assets/data/live-shows.json 2>/dev/null; then
+            git add assets/data/live-shows.json
+            git commit -m "chore: auto-collect new official stage videos"
+            git push
+          else
+            echo "no changes"
+          fi

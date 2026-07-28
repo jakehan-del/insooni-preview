@@ -1445,6 +1445,19 @@ main h3 { font-family: var(--font-mono); font-weight: 400; font-size: .85rem; le
 .loader.split .loader-goose { animation: none; transform: translate(16vw, -24vh) rotate(-8deg) scale(1.18); opacity: 0; }
 .loader.split .loader-finale { transform: scale(1.25); opacity: 0; }
 
+/* 최근 공식 영상 (자동 갱신 목록) */
+.fresh-videos { border-top: 1px solid var(--line); }
+.fresh-row {
+  display: grid; grid-template-columns: 7.5em 1fr auto; gap: 1.2em; align-items: baseline;
+  width: 100%; text-align: left; padding: 1.05rem .3rem; background: transparent;
+  border: 0; border-bottom: 1px solid var(--line); color: var(--ivory); cursor: pointer;
+  font-family: inherit; font-size: 1rem; transition: color .2s ease;
+}
+.fresh-row:hover .fr-title { color: var(--gold); }
+.fresh-row .fr-date, .fresh-row .fr-ch { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .1em; color: var(--faint); }
+.fresh-row .fr-title { transition: color .2s ease; }
+@media (max-width: 640px) { .fresh-row { grid-template-columns: 1fr; gap: .25em; } }
+
 /* 리캡: 무대별 클립 선택 */
 .recap-clips { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .8rem; }
 .recap-clip {

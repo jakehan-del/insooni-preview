@@ -188,6 +188,12 @@ window.SITE_DATA = {
 
   /* ---------- 지난 공연 아카이브 (플레이DB·보도 검증, 2026.7 리서치) ---------- */
   pastShows: [
+    { date: "2026-07-28", city: "", venue: "tvN", title: "'킬잇' 파이널 깜짝 무대", en: { title: "Surprise stage on tvN 'Kill It' finale" },
+      recap: { desc: "tvN '킬잇: 스타일 크리에이터 대전쟁' 파이널 — 요요의 퍼스널 쇼케이스에 깜짝 조력자로 등장해 'This Is Me'를 불렀습니다. tvN 공식 클립.", en: { desc: "A surprise appearance on the finale of tvN's 'Kill It' - joining Yoyo's personal showcase with 'This Is Me'. Official tvN clips." },
+        clips: [
+          { id: "08uaw8xIVtg", title: "요요의 쇼케이스 — 깜짝 등장", en: { title: "Yoyo's showcase - the surprise entrance" } },
+          { id: "XVFE7KN9KVE", title: "인순이가 왜 여기서 나와?", en: { title: "'Why is Insooni here?'" } }
+        ] } },
     { date: "2026-07-26", city: "서울", venue: "고척스카이돔", title: "불꽃야구 생중계 애국가 열창", en: { title: "National anthem at Gocheok Sky Dome", city: "Seoul" },
       recap: { desc: "돔을 가득 채운 애국가. 현장 관객의 기록으로 남은 그날의 목소리.", en: { desc: "The national anthem filling the dome - captured by a fan in the stands." },
         clips: [{ id: "0dz08JtS3MQ", title: "애국가 열창 (현장 기록)", en: { title: "National anthem (fan video)" } }] } },
@@ -312,6 +318,7 @@ window.SITE_DATA = {
 
   /* ---------- 소식 (type: 공지 | 공연 | 방송 | 보도) ---------- */
   news: [
+    { date: "2026-07-28", type: "방송", title: "tvN '킬잇' 파이널 깜짝 무대", excerpt: "파이널 쇼케이스의 깜짝 조력자 — 'This Is Me'로 다름의 가치를 노래했습니다.", en: { title: "Surprise stage on tvN 'Kill It' finale", excerpt: "A surprise helper on the finale showcase - singing 'This Is Me' for everyone born different." } },
     { date: "2026-07-26", type: "방송", title: "고척스카이돔에서 애국가 열창", excerpt: "특집 불꽃야구 생중계 무대. 돔을 채운 목소리.", en: { title: "National anthem at Gocheok Sky Dome", excerpt: "A live broadcast moment that filled the dome." } },
     { date: "2026-06-05", type: "공연", title: "경주 봉황대 뮤직스퀘어 개막", excerpt: "봉황대 광장 특설무대, 2026 시즌의 문을 열다.", en: { title: "Opening Bonghwangdae Music Square, Gyeongju", excerpt: "Opening the 2026 season on the open-air stage." } },
     { date: "2026-03-16", type: "방송", title: "TV조선 '조선의 사랑꾼' 고정 합류", excerpt: "113회부터 새 멤버로 합류해 고정 출연 중입니다.", en: { title: "Joined TV Chosun 'Love Interventions'", excerpt: "A regular cast member since episode 113." } },
@@ -354,7 +361,7 @@ window.SITE_DATA = {
       tracks: ["실버들", "우리는 사랑해요", "이제는 모두 잊어요", "앵두", "말도 안돼", "아리랑 내님아", "어찌합니까", "달무리", "사랑만은 않겠어요", "오동잎"],
       credits: "'실버들' — 작사 김소월(시) · 작곡 안치행 · 1978 힛트레코드 (희자매: 김인순·김재희·이영숙)",
       links: [
-        { label: "YouTube Music", url: "https://music.youtube.com/playlist?list=OLAK5uy_lYCOexP5qLe9Sev4jwO-bWr81sBLu0NNg" },
+        { label: "YouTube", url: "https://www.youtube.com/playlist?list=OLAK5uy_lYCOexP5qLe9Sev4jwO-bWr81sBLu0NNg" },
         { label: "Apple Music", url: "https://music.apple.com/kr/album/silvers-arirang-my-love/1699110167" },
         { label: "Spotify", url: "https://open.spotify.com/track/6TufjMtsLO7W8tilip8BMr" }
       ] },
@@ -370,64 +377,64 @@ window.SITE_DATA = {
       tracks: ["밤이면 밤마다", "슬픈 아침", "한밤중", "내 고향집", "왜 나를 떠나셨나요", "손모아 마음모아", "욕망", "하늘 날고파라", "그리운 내사랑아", "다른 사람 말처럼 들리네", "고독", "고독 (경음악)"],
       credits: "'밤이면 밤마다' — 작사·작곡·편곡 김정택 · 1983 독집 제4집. 이 곡의 히트로 1984 KBS 7대가수상 수상.",
       links: [
-        { label: "YouTube Music", url: "https://music.youtube.com/browse/MPREb_pK9eBksyTWk" },
+        { label: "YouTube", url: "https://www.youtube.com/results?search_query=%EC%9D%B8%EC%88%9C%EC%9D%B4%20%EC%9D%B8%EC%88%9C%EC%9D%B4" },
         { label: "Apple Music", url: "https://music.apple.com/kr/album/1802774457" },
         { label: "멜론(곡)", url: "https://www.melon.com/song/detail.htm?songId=60847" },
         { label: "Spotify(2025 재녹음)", url: "https://open.spotify.com/album/5ErPwrIgz4dd8y6wEhXnwU" }
       ] },
     { year: "1984", title: "아름다운 우리나라 / 여기가 어디냐", kind: "정규 5집", note: "원곡 '아름다운 우리나라' 수록 (2025년 신보와 별개). HKR." },
     { year: "1985", title: "눈물의 편지 / 잊지 못하고", kind: "정규 6집", note: "대표곡 '눈물의 편지'. HKR." },
-    { art: "assets/img/photos/album07.jpg", year: "1987", title: "에레나라 불리운 여인", kind: "정규 7집", note: "대표곡 '에레나라 불리운 여인'. 지구레코드.", links: [{ label: "YT", url: "https://music.youtube.com/browse/MPREb_XhYDf1DeQ5q" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1827889007" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/38uPzmw0Vb0TrsXI2n78Bm" }] },
+    { art: "assets/img/photos/album07.jpg", year: "1987", title: "에레나라 불리운 여인", kind: "정규 7집", note: "대표곡 '에레나라 불리운 여인'. 지구레코드.", links: [{ label: "YT", url: "https://www.youtube.com/results?search_query=%EC%9D%B8%EC%88%9C%EC%9D%B4%20%EC%97%90%EB%A0%88%EB%82%98%EB%9D%BC%20%EB%B6%88%EB%A6%AC%EC%9A%B4%20%EC%97%AC%EC%9D%B8" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1827889007" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/38uPzmw0Vb0TrsXI2n78Bm" }] },
     { year: "1988", title: "그 어느 거리로", kind: "정규 8집", note: "대표곡 '그 어느 거리로'. HKR." },
-    { art: "assets/img/photos/album09.jpg", year: "1989", title: "Turning Point", kind: "정규 9집", note: "대표곡 '갈망'. 현대음향.", links: [{ label: "YT", url: "https://music.youtube.com/browse/MPREb_XxANP35JtFE" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1636175668" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/3L4FyfXeluTYdpfvgQtLYX" }] },
-    { art: "assets/img/photos/album10.jpg", year: "1991", title: "여자 (女子)", kind: "정규 10집", note: "대표곡 '하늘을 바라보소'. 가야음반.", links: [{ label: "YT", url: "https://music.youtube.com/browse/MPREb_B17LgGY0VdF" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1636175683" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/45fhjAADfcsykXkFLv1C6y" }] },
+    { art: "assets/img/photos/album09.jpg", year: "1989", title: "Turning Point", kind: "정규 9집", note: "대표곡 '갈망'. 현대음향.", links: [{ label: "YT", url: "https://www.youtube.com/results?search_query=%EC%9D%B8%EC%88%9C%EC%9D%B4%20Turning%20Point" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1636175668" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/3L4FyfXeluTYdpfvgQtLYX" }] },
+    { art: "assets/img/photos/album10.jpg", year: "1991", title: "여자 (女子)", kind: "정규 10집", note: "대표곡 '하늘을 바라보소'. 가야음반.", links: [{ label: "YT", url: "https://www.youtube.com/results?search_query=%EC%9D%B8%EC%88%9C%EC%9D%B4%20%EC%97%AC%EC%9E%90%20%20%E5%A5%B3%E5%AD%90" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1636175683" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/45fhjAADfcsykXkFLv1C6y" }] },
     { year: "1992", title: "인순이 골든 앨범", kind: "컴필레이션", note: "Oasis 발매.", links: [ { label: "Apple Music", url: "https://music.apple.com/kr/album/golden-album/1627796744" } ] },
     { art: "assets/img/photos/album11.jpg", year: "1996", title: "The Queen Of Soul", kind: "정규 11집", note: "'또' 수록. 소울의 여왕이라는 이름을 새긴 앨범.",
       tracks: ["또", "이별연습", "밀애", "너의 곁에 나", "이별을 준비할꺼야", "그대가 말하는 사랑", "혼자가 아닌 나", "White Christmas For You"],
       credits: "'또'·'밀애'·'그대가 말하는 사랑' — 작사·작곡 박진영 · '이별연습'·'이별을 준비할꺼야' — 작사·작곡 김형석 · '너의 곁에 나' — 작사 노영심, 작곡 김형석 · 1996년 5월 세원음반",
       links: [
-        { label: "YouTube Music", url: "https://music.youtube.com/playlist?list=OLAK5uy_kgDfVDMgA0LAkpbOh2W9Sy85WBg1FBlsM" },
+        { label: "YouTube", url: "https://www.youtube.com/playlist?list=OLAK5uy_kgDfVDMgA0LAkpbOh2W9Sy85WBg1FBlsM" },
         { label: "Apple Music", url: "https://music.apple.com/kr/album/the-queen-of-soul/1538223938" },
         { label: "Spotify", url: "https://open.spotify.com/album/7odz1LsIS2ltX2tQZe41Q7" }
       ] },
     { year: "1997", title: "가스펠 1 (내 영혼의 그윽히 깊은 데서)", kind: "정규 12집", note: "CCM 앨범. CREAM/국제음반." },
-    { art: "assets/img/photos/album13.jpg", year: "1997", title: "Future & Memories", kind: "정규 13집", note: "CREAM 발매.", links: [{ label: "YT", url: "https://music.youtube.com/browse/MPREb_JguH4xWBRaZ" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/3zJnoqg4pzpHHXky9bXcvk" }] },
+    { art: "assets/img/photos/album13.jpg", year: "1997", title: "Future & Memories", kind: "정규 13집", note: "CREAM 발매.", links: [{ label: "YT", url: "https://www.youtube.com/results?search_query=%EC%9D%B8%EC%88%9C%EC%9D%B4%20Future%20%26%20Memories" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/3zJnoqg4pzpHHXky9bXcvk" }] },
     { year: "2000", title: "인순이 복음성가 I·II", kind: "컴필레이션", note: "가스펠 모음." },
-    { art: "assets/img/photos/album15.jpg", year: "2001", title: "My Turn", kind: "정규 14집", note: "CREAM 발매.", links: [{ label: "YT", url: "https://music.youtube.com/browse/MPREb_1OOVQSv3qHB" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/6Sz903UNY6BNRnFXdeMIeC" }] },
-    { art: "assets/img/photos/jazz-album.jpg", year: "2003", title: "Jazz", kind: "정규 15집", note: "재즈 앨범. C&C Media.", links: [{ label: "YT", url: "https://music.youtube.com/browse/MPREb_aPAnEhl0hmm" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1839343758" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/5Fr9MCvgdDFcFgxLhnqTcy" }] },
+    { art: "assets/img/photos/album15.jpg", year: "2001", title: "My Turn", kind: "정규 14집", note: "CREAM 발매.", links: [{ label: "YT", url: "https://www.youtube.com/results?search_query=%EC%9D%B8%EC%88%9C%EC%9D%B4%20My%20Turn" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/6Sz903UNY6BNRnFXdeMIeC" }] },
+    { art: "assets/img/photos/jazz-album.jpg", year: "2003", title: "Jazz", kind: "정규 15집", note: "재즈 앨범. C&C Media.", links: [{ label: "YT", url: "https://www.youtube.com/results?search_query=%EC%9D%B8%EC%88%9C%EC%9D%B4%20Jazz" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1839343758" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/5Fr9MCvgdDFcFgxLhnqTcy" }] },
     { art: "assets/img/photos/album16.jpg", year: "2004", title: "A To Z", kind: "정규 16집", note: "'친구여'(feat. 조PD) 수록. 2004년 9월 9일 발매.",
       tracks: ["Tonight", "Higher", "웃고 있지만", "My Life", "연가", "여정", "Swing My Baby", "연인", "여자이니까", "잠깐", "첫사랑", "비에 스친 날들", "친구여 (feat. 조PD)", "비상"],
       credits: "'친구여' — 작사 조PD, 작곡·편곡 박근태 · 타이틀곡 'Tonight' — 작사 김민지, 작곡 박해운, 편곡 한태수 · 프로듀서 김도형",
       links: [
-        { label: "YouTube Music", url: "https://music.youtube.com/playlist?list=OLAK5uy_ngnowajTfdkaACKoTPeWLLcnyMVbfha-8" },
+        { label: "YouTube", url: "https://www.youtube.com/playlist?list=OLAK5uy_ngnowajTfdkaACKoTPeWLLcnyMVbfha-8" },
         { label: "Apple Music", url: "https://music.apple.com/kr/album/16th-a-to-z/1269489854" },
         { label: "Spotify", url: "https://open.spotify.com/album/7hdxullH6yeBjneaZ9rRDD" },
         { label: "멜론", url: "https://www.melon.com/album/detail.htm?albumId=35502" }
       ] },
     { year: "2004", title: "올림픽 응원가 - 비상", kind: "싱글", note: "BES기획." },
-    { art: "assets/img/photos/press-149006.jpg", year: "2006", title: "열정 (Can You Feel It)", kind: "싱글", note: "서커스엔터테인먼트.", links: [{ label: "YT", url: "https://music.youtube.com/browse/MPREb_YkFUKoP9SYH" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1655672126" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/2Oy7xhoxRhZhXiMyo4bJdU" }] },
+    { art: "assets/img/photos/press-149006.jpg", year: "2006", title: "열정 (Can You Feel It)", kind: "싱글", note: "서커스엔터테인먼트.", links: [{ label: "YT", url: "https://www.youtube.com/results?search_query=%EC%9D%B8%EC%88%9C%EC%9D%B4%20%EC%97%B4%EC%A0%95%20%20Can%20You%20Feel%20It" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1655672126" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/2Oy7xhoxRhZhXiMyo4bJdU" }] },
     { year: "2006", title: "Amazing Grace", kind: "라이브", note: "라이브 콘서트 앨범. C&C Media." },
     { featured: true, art: "assets/img/covers/cover2007.jpg", year: "2007", title: "거위의 꿈", kind: "대표곡", note: "카니발 원곡(1997) 리메이크. 위로의 상징이 된 노래.",
       tracks: ["거위의 꿈 (Original)", "거위의 꿈 (Inst.)", "거위의 꿈 (Radio Edit)", "거위의 꿈 (Director's Edit)", "하늘이여...제발 (주몽 OST)"],
       credits: "작사 이적 · 작곡 김동률 (원곡 카니발, 1997) · 2007. 1. 22. 디지털 싱글, 2007. 2. 1. 디지털 음반 《거위의 꿈, 꿈을 꾸는 모든 이들에게》",
       links: [
-        { label: "YouTube Music", url: "https://music.youtube.com/playlist?list=OLAK5uy_l28ucxxiGHAHyAYLmH9H_ZPr-946BcbNY" },
+        { label: "YouTube", url: "https://www.youtube.com/playlist?list=OLAK5uy_l28ucxxiGHAHyAYLmH9H_ZPr-946BcbNY" },
         { label: "Apple Music", url: "https://music.apple.com/kr/album/gooses-dream-to-all-dreamers-ep/1423480473" },
         { label: "Spotify", url: "https://open.spotify.com/album/7t69eXfrQb8fY51q8EvMQe" },
         { label: "멜론", url: "https://www.melon.com/album/detail.htm?albumId=342766" }
       ] },
-    { year: "2008", title: "Anthology 97-08", kind: "컴필레이션", note: "Vitamin Entertainment.", links: [{ label: "YT", url: "https://music.youtube.com/browse/MPREb_irlBEs0Fv5S" }] },
+    { year: "2008", title: "Anthology 97-08", kind: "컴필레이션", note: "Vitamin Entertainment.", links: [{ label: "YT", url: "https://www.youtube.com/results?search_query=%EC%9D%B8%EC%88%9C%EC%9D%B4%20Anthology%2097-08" }] },
     { art: "assets/img/covers/cover2009.jpg", year: "2009", title: "인순이 (17집)", kind: "정규", note: "타이틀곡 'Fantasia', '아버지' 수록.",
       tracks: ["Fantasia", "Cry", "향수", "아버지", "기회", "일어나", "뿌리 (Prologue)", "나무", "딸에게", "사랑가", "Merry Merry", "Fantasia (Inst.)"],
       credits: "'아버지' — 작사·작곡·편곡 이현승 · 'Fantasia' — 작사 나비, 작곡·편곡 이현승 · '향수' — 시 정지용, 작곡 김희갑 · 총괄 프로듀서 이현승 · 2009. 5. 8. 발매",
       links: [
-        { label: "YouTube Music", url: "https://music.youtube.com/playlist?list=OLAK5uy_krDMMbBGD0-KLrHm3xLHcBf241i247gXI" },
+        { label: "YouTube", url: "https://www.youtube.com/playlist?list=OLAK5uy_krDMMbBGD0-KLrHm3xLHcBf241i247gXI" },
         { label: "Apple Music", url: "https://music.apple.com/kr/album/insooni/1641834078" },
         { label: "Spotify", url: "https://open.spotify.com/album/2fdeLt66Qis4rWCYxWI8ro" },
         { label: "멜론", url: "https://www.melon.com/album/detail.htm?albumId=557957" }
       ] },
     { year: "2010", title: "꿈, 날개를 달다", kind: "참여", note: "여러 아티스트가 함께한 컴필레이션 — 인순이 버전 수록. 후너스크리에이티브." },
-    { art: "assets/img/photos/press-35024303.jpg", year: "2011", title: "어퍼컷", kind: "싱글", note: "지앤지프로덕션/KT뮤직.", links: [{ label: "YT", url: "https://music.youtube.com/browse/MPREb_Gil3bGu6Rs9" }, { label: "APPLE", url: "https://music.apple.com/kr/album/421981237" }] },
+    { art: "assets/img/photos/press-35024303.jpg", year: "2011", title: "어퍼컷", kind: "싱글", note: "지앤지프로덕션/KT뮤직.", links: [{ label: "YT", url: "https://www.youtube.com/results?search_query=%EC%9D%B8%EC%88%9C%EC%9D%B4%20%EC%96%B4%ED%8D%BC%EC%BB%B7" }, { label: "APPLE", url: "https://music.apple.com/kr/album/421981237" }] },
     { year: "2011", title: "Legend (30주년 기념 콘서트 실황)", kind: "라이브", note: "2CD 실황. 소솝/Vitamin Entertainment." },
     { year: "2011", title: "디스코 걸스: 안타 레코드 이어스 앤쏠로지 1978-1980", kind: "희자매 컴필", note: "2011 리마스터. Beatball." },
     { year: "2013", title: "Umbrella", kind: "정규 18집", note: "Sony 발매." },
@@ -437,27 +444,27 @@ window.SITE_DATA = {
     { year: "2016", title: "선물 (기억 OST Part 2)", kind: "OST 싱글", note: "CJ E&M." },
     { year: "2016", title: "하나의 꿈 (One K 콘서트 테마곡)", kind: "싱글", note: "코리안드림." },
     { year: "2017", title: "2018 평창 동계올림픽 성화봉송 주제가", kind: "디지털 싱글", note: "평창 동계올림픽 조직위원회." },
-    { year: "2019", title: "행복", kind: "디지털 싱글", note: "휴맵컨텐츠/지니뮤직.", links: [{ label: "YT", url: "https://music.youtube.com/browse/MPREb_IjZ2HxCHSnV" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1685893978" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/6jwzT0MFVj2RhRdhIq5MZN" }] },
+    { year: "2019", title: "행복", kind: "디지털 싱글", note: "휴맵컨텐츠/지니뮤직.", links: [{ label: "YT", url: "https://www.youtube.com/results?search_query=%EC%9D%B8%EC%88%9C%EC%9D%B4%20%ED%96%89%EB%B3%B5" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1685893978" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/6jwzT0MFVj2RhRdhIq5MZN" }] },
     { year: "2021", title: "드림오더", kind: "디지털 싱글", note: "글로벌오더/다날." },
-    { year: "2022", title: "내일이 빛날 테니까 (You will shine)", kind: "디지털 싱글", note: "박보람 듀엣. 제나두엔터테인먼트.", links: [{ label: "YT", url: "https://music.youtube.com/browse/MPREb_pBepLk5Myq6" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1622759706" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/74hfH7A2FyGp7R5SR0m0wG" }] },
+    { year: "2022", title: "내일이 빛날 테니까 (You will shine)", kind: "디지털 싱글", note: "박보람 듀엣. 제나두엔터테인먼트.", links: [{ label: "YT", url: "https://www.youtube.com/results?search_query=%EC%9D%B8%EC%88%9C%EC%9D%B4%20%EB%82%B4%EC%9D%BC%EC%9D%B4%20%EB%B9%9B%EB%82%A0%20%ED%85%8C%EB%8B%88%EA%B9%8C%20%20You%20will%20shine" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1622759706" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/74hfH7A2FyGp7R5SR0m0wG" }] },
     { year: "2022", title: "긴 편지", kind: "디지털 싱글", note: "휴맵컨텐츠/NHN벅스." },
     { featured: true, art: "assets/img/covers/cover2023.jpg", year: "2023", title: "One Last Time", kind: "골든걸스", note: "KBS2 '골든걸스' 프로젝트 그룹 데뷔곡 (박진영 프로듀싱).",
       tracks: ["One Last Time"],
       credits: "작사 박진영 'The Asiansoul' · 작곡 박진영, Deza · 편곡 박진영, 이해솔 · 제작 ZEMMIX C&B · 유통 워너뮤직코리아 · 2023. 12. 1. 디지털 싱글 (인순이·박미경·신효범·이은미)",
       links: [
-        { label: "YouTube Music", url: "https://music.youtube.com/playlist?list=OLAK5uy_naMN4pkC2SuC8hArJouy_4KJMQU_WtVBc" },
+        { label: "YouTube", url: "https://www.youtube.com/playlist?list=OLAK5uy_naMN4pkC2SuC8hArJouy_4KJMQU_WtVBc" },
         { label: "Apple Music", url: "https://music.apple.com/kr/album/one-last-time-single/1719039298" },
         { label: "Spotify", url: "https://open.spotify.com/track/0OYq4lcsCvC3aVWVt3lFTK" },
         { label: "멜론", url: "https://www.melon.com/album/detail.htm?albumId=11376398" }
       ] },
     { year: "2023", title: "처음 이야기 (어쩌다 사장3 OST)", kind: "OST 싱글", note: "류민희와 함께." },
-    { year: "2024", title: "토닥토닥", kind: "디지털 싱글", note: "리코브/NHN벅스.", links: [{ label: "YT", url: "https://music.youtube.com/browse/MPREb_NLJbxXX6J3X" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1787119633" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/61AP6USxC0sDcxr3ktVbTK" }] },
-    { year: "2024", title: "너의 이름을 세상이 부를 때", kind: "디지털 싱글", note: "리코브/NHN벅스.", links: [{ label: "YT", url: "https://music.youtube.com/browse/MPREb_SUq773Q9j40" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1771373716" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/3pDNQzz4RtG7LVOatoPreJ" }] },
+    { year: "2024", title: "토닥토닥", kind: "디지털 싱글", note: "리코브/NHN벅스.", links: [{ label: "YT", url: "https://www.youtube.com/results?search_query=%EC%9D%B8%EC%88%9C%EC%9D%B4%20%ED%86%A0%EB%8B%A5%ED%86%A0%EB%8B%A5" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1787119633" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/61AP6USxC0sDcxr3ktVbTK" }] },
+    { year: "2024", title: "너의 이름을 세상이 부를 때", kind: "디지털 싱글", note: "리코브/NHN벅스.", links: [{ label: "YT", url: "https://www.youtube.com/results?search_query=%EC%9D%B8%EC%88%9C%EC%9D%B4%20%EB%84%88%EC%9D%98%20%EC%9D%B4%EB%A6%84%EC%9D%84%20%EC%84%B8%EC%83%81%EC%9D%B4%20%EB%B6%80%EB%A5%BC%20%EB%95%8C" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1771373716" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/3pDNQzz4RtG7LVOatoPreJ" }] },
     { featured: true, art: "assets/img/covers/cover2025.jpg", year: "2025", title: "인순이, 아름다운 우리나라", kind: "정규 앨범", note: "2025년 2월 발매, 9곡 수록.",
       tracks: ["광주 광주", "밤이면 밤마다", "아름다운 우리나라", "야속한 내 님", "흔들리는 갈대", "너와 나", "욕망", "이별의 눈동자", "길섶에 핀 꽃"],
       credits: "정규 9곡 · 2025. 2. 19. 발매 (Apple Music·iTunes 확인) · ℗ RIAK · 타이틀곡 '아름다운 우리나라'는 1984년 정규 5집 수록곡을 다시 불렀습니다. 곡별 세부 크레딧은 공식 자료 확인 후 추가됩니다.",
       links: [
-        { label: "YouTube Music", url: "https://music.youtube.com/playlist?list=OLAK5uy_lg_F0ktj5nBUzEGoHZfANShrTMmUkL9xg" },
+        { label: "YouTube", url: "https://www.youtube.com/playlist?list=OLAK5uy_lg_F0ktj5nBUzEGoHZfANShrTMmUkL9xg" },
         { label: "Apple Music", url: "https://music.apple.com/kr/album/%EC%9D%B8%EC%88%9C%EC%9D%B4-%EC%95%84%EB%A6%84%EB%8B%A4%EC%9A%B4-%EC%9A%B0%EB%A6%AC%EB%82%98%EB%9D%BC/1797462838" },
         { label: "Spotify", url: "https://open.spotify.com/album/5ErPwrIgz4dd8y6wEhXnwU" }
       ] },
@@ -465,13 +472,13 @@ window.SITE_DATA = {
       tracks: ["그래도 꿈은 흐른다"],
       credits: "작사 Ashbun, 인순이 · 작곡 Ashbun · 편곡·프로듀싱 Ethan · 코프로듀싱 박세인 · 보컬 디렉팅 이현승 · 믹싱·마스터링 김석민 · 기획 주식회사 소솝 · 유통 NHN벅스 · 2025. 11. 28. 싱글",
       links: [
-        { label: "YouTube Music", url: "https://music.youtube.com/playlist?list=OLAK5uy_niL1gSBUE-O3GKhYqSvAR8Kp_TjcutfWE" },
+        { label: "YouTube", url: "https://www.youtube.com/playlist?list=OLAK5uy_niL1gSBUE-O3GKhYqSvAR8Kp_TjcutfWE" },
         { label: "Apple Music", url: "https://music.apple.com/kr/album/dream-single/1856589303" },
         { label: "Spotify", url: "https://open.spotify.com/album/6SnGs2WHjOOQko8116mIu8" },
         { label: "멜론", url: "https://www.melon.com/album/detail.htm?albumId=12411745" },
         { label: "공식 MV", url: "https://www.youtube.com/watch?v=6joBf4xW6Qs" }
       ] },
-    { year: "2025", title: "바보 멍청이 똥개", kind: "디지털 싱글", note: "주식회사 소솝/NHN벅스. 성수동 버스킹으로 알려진 곡.", links: [{ label: "YT", url: "https://music.youtube.com/browse/MPREb_JHtphkLfUlU" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1813115436" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/0xq8CwhUOkFhFG8jZLp87q" }] }
+    { year: "2025", title: "바보 멍청이 똥개", kind: "디지털 싱글", note: "주식회사 소솝/NHN벅스. 성수동 버스킹으로 알려진 곡.", links: [{ label: "YT", url: "https://www.youtube.com/results?search_query=%EC%9D%B8%EC%88%9C%EC%9D%B4%20%EB%B0%94%EB%B3%B4%20%EB%A9%8D%EC%B2%AD%EC%9D%B4%20%EB%98%A5%EA%B0%9C" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1813115436" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/0xq8CwhUOkFhFG8jZLp87q" }] }
   ],
 
   /* ---------- 연혁 타임라인 (milestone: 굵은 표시 / 검증 완료 항목 중심) ---------- */

@@ -311,7 +311,7 @@
           return '<a class="di-link" href="' + esc(l.url) + '" target="_blank" rel="noopener">' + esc(l.label) + "</a>";
         }).join("");
         if (!lk) {
-          var su = "https://music.youtube.com/search?q=" + encodeURIComponent("인순이 " + a.title.replace(/\s*\(.*\)$/, ""));
+          var su = "https://www.youtube.com/results?search_query=" + encodeURIComponent("인순이 " + a.title.replace(/\s*\(.*\)$/, ""));
           lk = '<a class="di-link" href="' + esc(su) + '" target="_blank" rel="noopener">' + t("rel.find", "듣기") + "</a>";
         }
         r.innerHTML = '<span class="di-year">' + esc(a.year) + "</span>" +
@@ -335,19 +335,19 @@
       var artistQ = ((a.kind || "") + (a.title || "")).indexOf("희자매") >= 0 || a.kind === "그룹" ? "희자매" : (a.kind === "골든걸스" ? "골든걸스" : "인순이");
       var tracksHtml = (a.tracks && a.tracks.length)
         ? '<ol class="a-tracks">' + a.tracks.map(function (trk) {
-            var q = "https://music.youtube.com/search?q=" + encodeURIComponent(artistQ + " " + trk.replace(/\s*\((Inst\.|경음악|MR)\)$/, ""));
+            var q = "https://www.youtube.com/results?search_query=" + encodeURIComponent(artistQ + " " + trk.replace(/\s*\((Inst\.|경음악|MR)\)$/, ""));
             return '<li><a class="tr-link" href="' + esc(q) + '" target="_blank" rel="noopener"><span class="tr-name">' + esc(trk) + '</span><span class="tr-play" aria-hidden="true">듣기 ▶</span></a></li>';
           }).join("") + "</ol>"
         : "<p>" + t("rel.tbd", "공식 자료 확인 중입니다.") + "</p>";
       var creditsHtml = a.credits
         ? '<p class="a-credits">' + esc(a.credits) + "</p>"
         : "<p>" + t("rel.tbd", "공식 자료 확인 중입니다.") + "</p>";
-      var searchUrl = "https://music.youtube.com/search?q=" + encodeURIComponent("인순이 " + a.title.replace(/\s*\(.*\)$/, ""));
+      var searchUrl = "https://www.youtube.com/results?search_query=" + encodeURIComponent("인순이 " + a.title.replace(/\s*\(.*\)$/, ""));
       var linksHtml = (a.links && a.links.length)
         ? '<p class="a-links">' + a.links.map(function (l) {
             return '<a class="a-link" href="' + esc(l.url) + '" target="_blank" rel="noopener">' + esc(l.label) + ' <span aria-hidden="true">↗</span></a>';
           }).join("") + "</p>"
-        : '<p class="a-links"><a class="a-link" href="' + esc(searchUrl) + '" target="_blank" rel="noopener">' + t("rel.search", "YouTube Music에서 찾기") + ' <span aria-hidden="true">↗</span></a></p>';
+        : '<p class="a-links"><a class="a-link" href="' + esc(searchUrl) + '" target="_blank" rel="noopener">' + t("rel.search", "YouTube에서 찾기") + ' <span aria-hidden="true">↗</span></a></p>';
       detail.innerHTML =
         "<div><h4>" + t("rel.tracks", "수록곡") + "</h4>" + tracksHtml + "</div>" +
         "<div><h4>" + t("rel.credits", "크레딧") + "</h4>" + creditsHtml + "</div>" +
@@ -422,6 +422,33 @@
       if (sh.recap) c.addEventListener("click", function () { openRecap(sh.recap, c); });
       box.appendChild(c);
     });
+  }
+
+  /* ---------- 최근 공식 영상 (자동 수집 live-shows.json — GitHub Actions 일일 갱신) ---------- */
+  function initFreshVideos() {
+    var box = $("#fresh-videos");
+    if (!box) return;
+    fetch("assets/data/live-shows.json?" + Date.now())
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!d || !d.items || !d.items.length) {
+          box.appendChild(el("p", "empty-note", t("dyn.freshEmpty", "공식 채널에 새 영상이 올라오면 이곳에 표시됩니다.")));
+          return;
+        }
+        d.items.slice(0, 8).forEach(function (v) {
+          var title = v.title.replace(/#\S+/g, "").replace(/\s+/g, " ").trim() || v.title;
+          var b = el("button", "fresh-row");
+          b.type = "button";
+          b.setAttribute("aria-haspopup", "dialog");
+          b.innerHTML =
+            '<span class="fr-date">' + esc(v.date) + "</span>" +
+            '<span class="fr-title">' + esc(title) + "</span>" +
+            '<span class="fr-ch">' + esc(v.channel) + "</span>";
+          b.addEventListener("click", function () { openLightbox(v.id, title, b); });
+          box.appendChild(b);
+        });
+      })
+      .catch(function () { /* 파일 미존재 시 조용히 생략 */ });
   }
 
   /* ---------- 리캡 패널 (beyonce.com/tour VIEW RECAP 문법) ---------- */
@@ -1200,6 +1227,7 @@
     initVhero();
     renderArchive();
     renderPastRecaps();
+    initFreshVideos();
     initVideoButtons();
     initNav();
     initScrollState();
