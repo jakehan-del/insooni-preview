@@ -473,7 +473,12 @@
     if (!grid || !D.archive) return;
     function draw(cat) {
       grid.innerHTML = "";
-      var items = D.archive.filter(function (a) { return cat === "전체" || a.cat === cat; });
+      var items = D.archive.filter(function (a) { return cat === "전체" || a.cat === cat; })
+        .slice().sort(function (a, b) {
+          var ya = parseInt(String(a.year).replace(/\D.*$/, ""), 10) || 9999;
+          var yb = parseInt(String(b.year).replace(/\D.*$/, ""), 10) || 9999;
+          return ya - yb;
+        });
       var viewables = items.filter(function (a) { return !a.placeholder; });
       archView.list = viewables;
       var st = $("#arch-status");
