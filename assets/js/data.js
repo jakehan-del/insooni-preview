@@ -425,22 +425,22 @@ window.SITE_DATA = {
 
   /* ---------- 연혁 타임라인 (milestone: 굵은 표시 / 검증 완료 항목 중심) ---------- */
   timeline: [
-    { year: "1957", event: "4월 5일 출생 (본명 김인순)", note: "" },
-    { year: "1978", event: "걸그룹 '희자매'로 데뷔", note: "타이틀곡 '실버들' TBC 가요차트 7주 1위", milestone: true },
-    { year: "1980", event: "솔로 1집 《인연》으로 홀로서기", note: "" },
-    { year: "1983", event: "'밤이면 밤마다' 발표", note: "디바의 시대 개막", milestone: true },
-    { year: "1996", event: "《The Queen Of Soul》 발매", note: "'또'(박진영 곡) 수록, 정규 11집" },
-    { year: "1999", event: "뉴욕 카네기홀 첫 공연", note: "", milestone: true },
-    { year: "2004", event: "'친구여' (조PD 피처링) 히트", note: "정규 16집 《A To Z》 수록 (2004. 9. 9. 발매)" },
-    { year: "2007", event: "'거위의 꿈' 발표", note: "위로와 도전의 아이콘이 되다", milestone: true },
-    { year: "2009", event: "'아버지' 발표", note: "정규 17집 《인순이》 수록 (작사·작곡 이현승)" },
-    { year: "2010", event: "카네기홀 두 번째 단독 콘서트", note: "" },
-    { year: "2012", event: "사단법인 '인순이와 좋은 사람들' 설립", note: "" },
-    { year: "2013", event: "다문화 대안학교 '해밀학교' 개교", note: "강원 홍천. 무대 밖의 또 다른 무대", milestone: true },
-    { year: "2023", event: "KBS2 '골든걸스' 출연, 'One Last Time' 발표", note: "인순이·박미경·신효범·이은미", milestone: true },
-    { year: "2025", event: "《인순이, 아름다운 우리나라》 발매", note: "2월, 9곡 수록" },
-    { year: "2025", event: "펄벅 인터내셔널 '올해의 여성상' 수상", note: "Woman of Influence 2025 (공식 채널 영상 확인)" },
-    { year: "2026", event: "데뷔 48주년, 그리고 계속되는 이야기", note: "새로운 기록이 이곳에 쌓입니다" }
+    { year: "1957", event: "4월 5일 출생 (본명 김인순)", note: "", en: { event: "Born Kim In-soon, April 5" } },
+    { year: "1978", event: "걸그룹 '희자매'로 데뷔", note: "타이틀곡 '실버들' TBC 가요차트 7주 1위", milestone: true, en: { event: "Debut with the trio Hee Sisters", note: "'Silvers' topped the TBC chart for 7 weeks" } },
+    { year: "1980", event: "솔로 1집 《인연》으로 홀로서기", note: "", en: { event: "Going solo with the first album Fate" } },
+    { year: "1983", event: "'밤이면 밤마다' 발표", note: "디바의 시대 개막", milestone: true, en: { event: "'Night After Night' released", note: "The diva era begins" } },
+    { year: "1996", event: "《The Queen Of Soul》 발매", note: "'또'(박진영 곡) 수록, 정규 11집", en: { event: "The Queen Of Soul released", note: "11th studio album - with a Park Jin-young title track" } },
+    { year: "1999", event: "뉴욕 카네기홀 첫 공연", note: "", milestone: true, en: { event: "First Carnegie Hall concert, New York" } },
+    { year: "2004", event: "'친구여' (조PD 피처링) 히트", note: "정규 16집 《A To Z》 수록 (2004. 9. 9. 발매)", en: { event: "'My Friend' (feat. Cho PD) becomes a hit", note: "On the 16th album A To Z (Sept 9, 2004)" } },
+    { year: "2007", event: "'거위의 꿈' 발표", note: "위로와 도전의 아이콘이 되다", milestone: true, en: { event: "'A Goose's Dream' released", note: "An anthem of comfort and challenge" } },
+    { year: "2009", event: "'아버지' 발표", note: "정규 17집 《인순이》 수록 (작사·작곡 이현승)", en: { event: "'Father' released", note: "On the 17th album Insooni (written by Lee Hyun-seung)" } },
+    { year: "2010", event: "카네기홀 두 번째 단독 콘서트", note: "", en: { event: "Second solo concert at Carnegie Hall" } },
+    { year: "2012", event: "사단법인 '인순이와 좋은 사람들' 설립", note: "", en: { event: "Founded the nonprofit 'Insooni and Good People'" } },
+    { year: "2013", event: "다문화 대안학교 '해밀학교' 개교", note: "강원 홍천. 무대 밖의 또 다른 무대", milestone: true, en: { event: "Opened Haemil School for multicultural youth", note: "Hongcheon, Gangwon - another stage beyond the stage" } },
+    { year: "2023", event: "KBS2 '골든걸스' 출연, 'One Last Time' 발표", note: "인순이·박미경·신효범·이은미", milestone: true, en: { event: "KBS2 'Golden Girls' - 'One Last Time' released", note: "Insooni, Park Mi-kyung, Shin Hyo-bum, Lee Eun-mi" } },
+    { year: "2025", event: "《인순이, 아름다운 우리나라》 발매", note: "2월, 9곡 수록", en: { event: "'Insooni, Beautiful Korea' released", note: "February - nine songs" } },
+    { year: "2025", event: "펄벅 인터내셔널 '올해의 여성상' 수상", note: "Woman of Influence 2025 (공식 채널 영상 확인)", en: { event: "Woman of Influence, Pearl S. Buck International" } },
+    { year: "2026", event: "데뷔 48주년, 그리고 계속되는 이야기", note: "새로운 기록이 이곳에 쌓입니다", en: { event: "48 years on stage - and the story continues", note: "New records will be added here" } }
   ],
 
   /* ---------- 사랑방 샘플 콘텐츠 ---------- */

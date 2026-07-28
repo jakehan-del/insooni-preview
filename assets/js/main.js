@@ -156,13 +156,6 @@
   function sortedNews() {
     return D.news.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; });
   }
-  function renderHomeNews() {
-    var box = $("#home-news");
-    if (!box || !D.news) return;
-    var items4 = sortedNews().slice(0, 3);
-    if (!items4.length) { box.appendChild(el("p", "empty-note", t("dyn.noNews", "새 소식이 곧 게시됩니다."))); return; }
-    items4.forEach(function (n) { box.appendChild(newsCard(n, true)); });
-  }
   function renderNewsPage() {
     var box = $("#news-list"), bar = $("#news-filter");
     if (!box || !D.news) return;
@@ -186,24 +179,6 @@
   }
 
   /* ---------- 5. 일정 ---------- */
-  function renderUpcoming() {
-    var box = $("#home-schedule");
-    if (!box || !D.events) return;
-    var now = new Date();
-    var todayISO = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
-    var upcoming = D.events.filter(function (e) { return e.date >= todayISO; })
-      .sort(function (a, b) { return a.date < b.date ? -1 : 1; }).slice(0, 3);
-    if (!upcoming.length) { box.appendChild(el("p", "empty-note", t("dyn.noEvents", "예정된 일정이 곧 공지됩니다."))); return; }
-    upcoming.forEach(function (ev) {
-      var d = new Date(ev.date + "T00:00:00");
-      var row = el("div", "event-row");
-      row.innerHTML =
-        '<div class="event-date"><span class="d">' + d.getDate() + '</span><span class="m">' + d.getFullYear() + "년 " + (d.getMonth() + 1) + '월</span></div>' +
-        '<div class="event-info"><span class="badge badge--' + (ev.kind === "공연" ? "gold" : "wine") + '">' + esc(kindLabel(ev.kind)) + "</span> <h3>" + esc(tr(ev, "title")) + '</h3><p class="where">' + esc(tr(ev, "place")) + "</p></div>" +
-        eventCta(ev);
-      box.appendChild(row);
-    });
-  }
 
   /* 월간 캘린더 (schedule.html) */
   function renderCalendar() {
@@ -298,8 +273,8 @@
     if (!box || !D.timeline) return;
     D.timeline.forEach(function (t) {
       var li = el("li", t.milestone ? "milestone" : "");
-      li.innerHTML = '<span class="year">' + esc(t.year) + '</span><span class="evt">' + esc(t.event) + "</span>" +
-        (t.note ? '<span class="note">' + esc(t.note) + "</span>" : "");
+      li.innerHTML = '<span class="year">' + esc(t.year) + '</span><span class="evt">' + esc(tr(t, "event")) + "</span>" +
+        (t.note ? '<span class="note">' + esc(tr(t, "note")) + "</span>" : "");
       box.appendChild(li);
     });
   }
@@ -357,38 +332,6 @@
       box.appendChild(row);
       box.appendChild(detail);
     });
-  }
-  function buildVideoTiles(box, items) {
-    if (!items.length) { box.appendChild(el("p", "empty-note", t("dyn.noVideos", "공식 영상이 곧 게시됩니다."))); return; }
-    items.forEach(function (v) {
-      var c;
-      if (v.youtubeId) {
-        c = el("button", "stage-tile stage-tile--video");
-        c.type = "button";
-        c.setAttribute("aria-haspopup", "dialog");
-        c.setAttribute("aria-label", v.title + " 영상 크게 보기");
-        c.innerHTML =
-          '<span class="t-bg" aria-hidden="true"' + (v.thumb ? ' style="background-image:url(\'' + esc(v.thumb) + '\')"' : "") + "></span>" +
-          '<span class="t-year">' + esc(v.year || "") + "</span>" +
-          '<h3 class="t-title">' + esc(v.title) + "</h3>" +
-          '<p class="t-desc">' + esc(v.desc || "") + "</p>" +
-          '<p class="t-note">' + t("dyn.watch", "무대 보기") + ' <span aria-hidden="true">→</span></p>';
-        c.addEventListener("click", function () { openLightbox(v.youtubeId, v.title, c); });
-      } else {
-        c = el("article", "stage-tile");
-        c.innerHTML =
-          '<span class="t-year">' + esc(v.year || "") + "</span>" +
-          '<h3 class="t-title">' + esc(v.title) + "</h3>" +
-          '<p class="t-desc">' + esc(v.desc || "") + "</p>" +
-          '<p class="t-note">' + t("dyn.pending", "공식 영상 게재 예정") + '</p>';
-      }
-      box.appendChild(c);
-    });
-  }
-  function renderVideos() {
-    var box = $("#videos") || $("#home-videos");
-    if (!box || !D.videos) return;
-    buildVideoTiles(box, box.id === "home-videos" ? D.videos.slice(0, 3) : D.videos);
   }
   /* 지난 무대 리캡: 타일 → VIEW RECAP 패널 (사진 갤러리 + 영상) */
   function renderPastRecaps() {
@@ -862,7 +805,7 @@
           n.setAttribute("aria-label", n.dataset.koAria);
         }
       });
-      var koIds = ["home-news", "home-schedule", "home-videos", "news-list", "event-list", "cal-grid", "timeline", "disco-index", "discography", "videos", "letter-list", "board-list", "poll"];
+      var koIds = ["home-news", "home-schedule", "home-videos", "news-list", "event-list", "cal-grid", "disco-index", "discography", "videos", "letter-list", "board-list", "poll"];
       koIds.forEach(function (id) {
         var n = document.getElementById(id);
         if (!n) return;
@@ -913,44 +856,8 @@
   }
 
   /* ---------- 스포트라이트 ---------- */
-  function renderSpotlight() {
-    var box = $("#spotlight");
-    if (!box || !D.spotlight) return;
-    var sp = D.spotlight;
-    box.innerHTML =
-      '<div class="spotlight-img"><img src="' + esc(sp.image) + '" alt=""></div>' +
-      '<div class="spotlight-copy">' +
-      '<span class="label">' + esc(sp.label) + "</span>" +
-      "<h2>" + esc(sp.title) + "</h2>" +
-      '<span class="s-date">' + esc(sp.date) + "</span>" +
-      "<p>" + esc(sp.desc) + "</p>" +
-      (sp.videoId
-        ? '<button type="button" class="more" style="background:none;border:0;border-bottom:1px solid var(--line-strong);padding:0 0 .2em;cursor:pointer" data-lightbox-video="' + esc(sp.videoId) + '" data-video-title="' + esc(sp.title) + '" aria-haspopup="dialog">' + esc(sp.linkText) + " →</button>"
-        : "") +
-      "</div>";
-  }
 
   /* ---------- 뮤직 에라 (대표 릴리즈 가로 갤러리) ---------- */
-  function renderMusicEra() {
-    var sc = $("#era-scroll");
-    if (!sc || !D.albums) return;
-    var feats = D.albums.filter(function (a) { return a.featured; });
-    var art = ["era-c1", "era-c2", "era-c3", "era-c4", "era-c5"];
-    feats.forEach(function (a, i) {
-      var card = el("a", "era-card" + (a.art ? "" : " " + art[i % art.length]));
-      card.href = "music.html";
-      if (a.art) {
-        card.style.background =
-          'linear-gradient(to top, rgba(8,8,8,.92) 12%, rgba(8,8,8,.22) 58%, rgba(8,8,8,.15)), ' +
-          'url("' + a.art + '") center 28% / cover no-repeat';
-      }
-      card.innerHTML =
-        '<span class="e-go">' + esc(a.year) + " · " + esc(a.kind || "") + "</span>" +
-        '<span class="e-word">' + esc(a.title) + "</span>" +
-        '<p class="e-desc">' + esc(a.note || "") + "</p>";
-      sc.appendChild(card);
-    });
-  }
 
   /* ---------- 라이트박스 범용 바인더 ---------- */
   function initVideoButtons() {
@@ -1110,86 +1017,8 @@
   }
 
   /* ---------- 가로 갤러리: 드래그 + 화살표 + 진행선 ---------- */
-  function initEraScroll() {
-    var sc = $("#era-scroll");
-    if (!sc) return;
-    var bar = $("#era-bar");
-    var prev = $('.era-btn[data-dir="-1"]'), next = $('.era-btn[data-dir="1"]');
-    function update() {
-      var max = sc.scrollWidth - sc.clientWidth;
-      if (bar) bar.style.width = (max > 0 ? (sc.scrollLeft / max) * 100 : 100) + "%";
-      if (prev) prev.disabled = sc.scrollLeft <= 2;
-      if (next) next.disabled = sc.scrollLeft >= max - 2;
-    }
-    sc.addEventListener("scroll", update, { passive: true });
-    update();
-    function step() {
-      var card = sc.querySelector(".era-card");
-      return card ? card.getBoundingClientRect().width + 2 : 400;
-    }
-    [prev, next].forEach(function (btn) {
-      if (!btn) return;
-      btn.addEventListener("click", function () {
-        sc.scrollBy({ left: step() * parseInt(btn.dataset.dir, 10), behavior: "smooth" });
-      });
-    });
-    /* 드래그로 넘기기 (마우스) */
-    var down = null, moved = 0;
-    sc.addEventListener("pointerdown", function (e) {
-      if (e.pointerType !== "mouse") return;
-      down = { x: e.clientX, left: sc.scrollLeft };
-      moved = 0;
-      sc.classList.add("dragging");
-    });
-    window.addEventListener("pointermove", function (e) {
-      if (!down) return;
-      var dx = e.clientX - down.x;
-      moved = Math.max(moved, Math.abs(dx));
-      sc.scrollLeft = down.left - dx;
-    });
-    window.addEventListener("pointerup", function () {
-      if (!down) return;
-      down = null;
-      sc.classList.remove("dragging");
-    });
-    /* 드래그 후 링크 오클릭 방지 */
-    sc.addEventListener("click", function (e) {
-      if (moved > 6) { e.preventDefault(); e.stopPropagation(); moved = 0; }
-    }, true);
-    /* 키보드 */
-    sc.addEventListener("keydown", function (e) {
-      if (e.key === "ArrowRight") { e.preventDefault(); sc.scrollBy({ left: step(), behavior: "smooth" }); }
-      if (e.key === "ArrowLeft") { e.preventDefault(); sc.scrollBy({ left: -step(), behavior: "smooth" }); }
-    });
-  }
 
   /* ---------- 히어로 우측 사진 슬라이더 (옆으로 흐르는 무한 루프) ---------- */
-  function initHeroSlider() {
-    var track = $("#vs-track");
-    if (!track) return;
-    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    var n = track.children.length; /* 마지막은 첫 장 복제 */
-    var idx = 0, timer = null;
-    function go(i, instant) {
-      if (instant) track.style.transition = "none";
-      track.style.transform = "translateX(-" + (i * 100) + "%)";
-      if (instant) {
-        void track.offsetWidth; /* reflow로 트랜지션 재활성 */
-        track.style.transition = "";
-      }
-    }
-    function tick() {
-      if (idx >= n - 1) { idx = 0; go(0, true); } /* 복제장에 있으면 순간 복귀 후 진행 */
-      idx++;
-      go(idx);
-    }
-    function start() { if (!timer) timer = setInterval(tick, 4500); }
-    function stop() { if (timer) { clearInterval(timer); timer = null; } }
-    document.addEventListener("visibilitychange", function () {
-      if (document.hidden) stop(); else start();
-    });
-    start();
-  }
 
   /* ---------- 부팅 ---------- */
   document.addEventListener("DOMContentLoaded", function () {
@@ -1199,23 +1028,16 @@
     initLoader();
     initStrip();
     initVhero();
-    initHeroSlider();
-    renderSpotlight();
-    renderMusicEra();
     renderArchive();
     renderPastRecaps();
     initVideoButtons();
-    initEraScroll();
     initNav();
     initScrollState();
     initReveal();
-    renderHomeNews();
     renderNewsPage();
-    renderUpcoming();
     renderCalendar();
     renderTimeline();
     renderDiscography();
-    renderVideos();
     initLetters();
     initBoard();
     initPoll();
