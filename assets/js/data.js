@@ -15,6 +15,9 @@ window.SITE_DATA = {
   /* ---------- 시각 아카이브 (실사진 확보 시 추가) ---------- */
   archive: [
     { img: "assets/img/story.jpg", w: 720, h: 720, year: "2025", cat: "포트레이트", caption: "'그래도 꿈은 흐른다' 세션 스틸" },
+    { img: "assets/img/photos/press-03.jpg", w: 420, h: 396, year: "1970년대(추정)", cat: "화보", caption: "장미와 함께한 젊은 날의 포트레이트" },
+    { img: "assets/img/photos/musical-chicago.jpg", w: 480, h: 649, year: "", cat: "무대", caption: "뮤지컬 '시카고' 벨마 켈리 (2012·2013)" },
+    { img: "assets/img/photos/kakao25.jpg", w: 1600, h: 1067, year: "", cat: "화보", caption: "붉은 빛망울 사이의 실루엣" },
     { img: "assets/img/photos/insooni007.jpg", w: 1064, h: 1600, year: "", cat: "무대", caption: "황금빛 조명 기둥 아래에서" },
     { img: "assets/img/photos/press-1723.jpg", w: 500, h: 333, year: "", cat: "무대", caption: "흰 모자와 베일, 순백의 퍼포먼스" },
     { img: "assets/img/photos/press-2019.jpg", w: 640, h: 960, year: "", cat: "무대", caption: "푸른 안개 속 흰 레이스 드레스" },
@@ -40,7 +43,6 @@ window.SITE_DATA = {
     { img: "assets/img/stills/s7.jpg", w: 1280, h: 720, year: "2025", cat: "무대", caption: "합창단과 함께한 클라이맥스" },
     { img: "assets/img/stills/s4.jpg", w: 1280, h: 720, year: "2025", cat: "포트레이트", caption: "노래에 잠긴 순간" },
     { img: "assets/img/stills/s8.jpg", w: 1280, h: 720, year: "2025", cat: "무대", caption: "어둠 속 한 줄기 빛, 무대 위의 사람" },
-    { img: "assets/img/photos/portrait-bw.jpg", w: 1067, h: 1600, year: "", cat: "화보", caption: "흑백 터틀넥 화보" },
   ],
 
   /* ---------- 지난 무대 리캡 (VIEW RECAP: 사진 갤러리 + 영상) ----------
