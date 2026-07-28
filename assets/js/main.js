@@ -417,7 +417,7 @@
         c = el("div", "show-cell");
       }
       c.innerHTML =
-        '<span class="show-mark" aria-hidden="true"><svg viewBox="0 0 120 90" focusable="false"><path fill="currentColor" d="M96 27 C101 27 106 30 105 33 C104.5 34.5 101 35 98 34.5 C93 34 88 38 82 44 C76 50 66 55 55 57 C45 58.7 34 60 26 57 C24.5 56.2 24.8 54.5 27 53.5 C33 51 40 49.5 46 48 C51 46.7 55 45.5 58 44 C54 34 46 24 40 17 C38 14.5 40 12.5 43 14 C52 19 61 30 65 40 C70 37 75 33 80 30 C85 27 90 27 96 27 Z"/></svg></span>' +
+        '<span class="show-mark" aria-hidden="true"><svg viewBox="0 0 120 72" focusable="false"><g fill="currentColor"><ellipse cx="48" cy="46" rx="27" ry="11.5" transform="rotate(-7 48 46)"/><path d="M66 41 C78 36 87 30 94 23" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><circle cx="96" cy="21" r="5.4"/><path d="M100 18.5 L111 21 L100 24.5 Z"/><path d="M45 38 C36 24 34 13 41 6 C48 12 55 27 57 37 C53 38.5 49 38.7 45 38 Z"/><path d="M24 42 L10 37 L22 50 Z"/></g></svg></span>' +
         '<span class="show-date">' + esc(sh.date) + "</span>" +
         '<span class="show-city">' + esc(sh.title) + (sh.city ? " · " + esc(sh.city) : "") + "</span>" +
         (sh.recap ? '<span class="show-cta">VIEW RECAP</span>' : "");
