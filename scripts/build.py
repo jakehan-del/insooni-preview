@@ -59,7 +59,29 @@ def minify_js(s):
     return "\n".join(out)
 
 
+def split_fonts():
+    """폰트 CSS를 본문용과 제목용으로 가른다.
+
+    fonts.css는 압축 후에도 90KB인데 통째로 렌더링을 막는다.
+    본문 글꼴(Pretendard)만 먼저 깔고 제목용 서체는 화면이 뜬 뒤 들여온다.
+    모두 font-display:swap이라 늦게 와도 글자는 먼저 보인다.
+    """
+    src_path = os.path.join(ROOT, "assets/fonts/fonts.css")
+    if not os.path.exists(src_path):
+        return
+    css = io.open(src_path, encoding="utf-8").read()
+    body, disp = [], []
+    for blk in re.findall(r"@font-face\s*\{[^}]*\}", css):
+        fam = re.search(r"font-family:\s*['\"]([^'\"]+)", blk)
+        (body if fam and "Pretendard" in fam.group(1) else disp).append(blk)
+    for name, blocks in (("body.css", body), ("display.css", disp)):
+        out = os.path.join(ROOT, "assets/fonts", name)
+        io.open(out, "w", encoding="utf-8").write(minify_css("\n".join(blocks)))
+        print("  %-26s %6.1f KB  (%d faces)" % (name, os.path.getsize(out) / 1024, len(blocks)))
+
+
 def run():
+    split_fonts()
     made = []
     css = os.path.join(ROOT, "assets/css/style.css")
     dst = os.path.join(ROOT, "assets/css/style.min.css")

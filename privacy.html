@@ -6,7 +6,11 @@
 <meta name="theme-color" content="#080808">
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
 <title>개인정보처리방침 | 인순이 INSOONI</title>
-<link rel="stylesheet" href="assets/fonts/fonts.css?v1">
+<!-- 본문 글꼴만 먼저 확실히. 제목용 서체는 화면이 뜬 뒤 들어온다
+     (모두 font-display:swap이라 늦게 와도 글자는 먼저 보인다) -->
+<link rel="stylesheet" href="assets/fonts/body.css?v107">
+<link rel="stylesheet" href="assets/fonts/display.css?v107" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?v107"></noscript>
 <link rel="stylesheet" href="assets/css/style.min.css?v107">
 <link rel="canonical" href="https://jakehan-del.github.io/insooni-preview/privacy.html">
 <meta property="og:url" content="https://jakehan-del.github.io/insooni-preview/privacy.html">

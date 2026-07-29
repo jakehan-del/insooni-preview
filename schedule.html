@@ -11,7 +11,11 @@
 <meta property="og:image" content="https://jakehan-del.github.io/insooni-preview/assets/img/hero.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="description" content="인순이의 공연, 방송, 행사 일정을 월간 캘린더로 확인하고 예매 안내를 받아보세요.">
-<link rel="stylesheet" href="assets/fonts/fonts.css?v1">
+<!-- 본문 글꼴만 먼저 확실히. 제목용 서체는 화면이 뜬 뒤 들어온다
+     (모두 font-display:swap이라 늦게 와도 글자는 먼저 보인다) -->
+<link rel="stylesheet" href="assets/fonts/body.css?v107">
+<link rel="stylesheet" href="assets/fonts/display.css?v107" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?v107"></noscript>
 <link rel="stylesheet" href="assets/css/style.min.css?v107">
 <link rel="canonical" href="https://jakehan-del.github.io/insooni-preview/schedule.html">
 <meta property="og:url" content="https://jakehan-del.github.io/insooni-preview/schedule.html">
