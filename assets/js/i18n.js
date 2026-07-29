@@ -164,6 +164,7 @@ window.I18N_EN = {
   "mc.share": "Share",
   "mc.hint": "The card is a keepsake stored only on this device. Come back and we'll greet you by name.",
   "mc.previewAria": "Fan card preview",
+  "dyn.newsAuto": "Auto-collected news",
   "arch.fan1d": "Old concert tickets, photographs taken from the floor, keepsakes held on to for decades - what you have kept is Insooni's history. Share it in the Fan Room and it will be reviewed and added to the archive.",
   "arch.fan2d": "Tell us the story you carry with one of Insooni's songs. Selected stories are published alongside the song, so that each one gathers the memories of the people who heard it.",
 
@@ -316,7 +317,7 @@ window.I18N_EN = {
   "dyn.archCount": " items shown",
   "nav.music": "Music",
   "ph.news.t": "News",
-  "ph.news.d": "Notices, shows, broadcasts and press. Only verified, official news is posted here.",
+  "ph.news.d": "Notices and show news, plus good news about Insooni gathered automatically every day.",
   "ph.schedule.t": "Tour",
   "ph.schedule.d": "Concerts, broadcasts and events at a glance. Ticket links go only to official vendors.",
   "ph.archive.t": "Music Archive",

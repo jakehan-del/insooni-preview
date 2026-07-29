@@ -145,12 +145,24 @@
 
   /* ---------- 4. 뉴스 렌더링 ---------- */
   function newsCard(item, asLink) {
-    var a = el(asLink ? "a" : "article", "news-item");
-    if (asLink) a.href = "news.html";
+    /* 자동 수집된 기사는 원문으로 링크되는 카드로 만든다. 큐레이션 소식은 기존 그대로. */
+    var isAuto = item.auto && item.url;
+    var a = el((asLink || isAuto) ? "a" : "article", "news-item" + (isAuto ? " news-item--auto" : ""));
+    if (isAuto) { a.href = item.url; a.target = "_blank"; a.rel = "noopener"; }
+    else if (asLink) a.href = "news.html";
+    var body = "<div><h3>" + esc(tr(item, "title")) + "</h3>";
+    if (isAuto) {
+      var lead = t("dyn.newsAuto", "자동 수집 소식");
+      body += '<p class="excerpt news-src">' + esc(lead) +
+        (item.source ? " · " + esc(item.source) : "") + " <span aria-hidden=\"true\">↗</span></p>";
+    } else {
+      body += '<p class="excerpt">' + esc(tr(item, "excerpt")) + "</p>";
+    }
+    body += "</div>";
     a.innerHTML =
       "<time datetime=\"" + esc(item.date) + '">' + fmtDate(item.date) + "</time>" +
       '<span class="badge badge--' + (item.type === "공지" ? "gold" : "wine") + '">' + esc(kindLabel(item.type)) + "</span>" +
-      "<div><h3>" + esc(tr(item, "title")) + '</h3><p class="excerpt">' + esc(tr(item, "excerpt")) + "</p></div>";
+      body;
     return a;
   }
   function sortedNews() {
@@ -2013,7 +2025,33 @@
         })
         .catch(function () {});
     }
+    /* 인순이 관련 좋은 소식 자동 수집(Google News 일일) 병합 — 소식 페이지·홈에 반영 */
+    if (!window.__newsMerged) {
+      window.__newsMerged = true;
+      fetch("assets/data/live-news.json?" + Date.now())
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) {
+          if (!d || !d.items || !d.items.length) return;
+          var have = {};
+          (D.news || []).forEach(function (n) { have[norm(tr(n, "title"))] = 1; });
+          var added = 0;
+          d.items.forEach(function (it) {
+            var k = norm(it.title || "");
+            if (!k || have[k]) return;
+            have[k] = 1;
+            D.news.push({
+              date: it.date, type: it.type || "소식", title: it.title,
+              excerpt: "", source: it.source || "", url: it.url || "", auto: true
+            });
+            added++;
+          });
+          if (added) safe(renderNewsPage);
+        })
+        .catch(function () {});
+    }
   }
+
+  function norm(s) { return String(s || "").replace(/[\s'"`·.,!?()\[\]/\-]/g, "").toLowerCase(); }
 
   window.INSOONI_PAGE_INIT = window.INSOONI_PAGE_INIT || [];
   window.INSOONI_PAGE_INIT.push(pageInit);

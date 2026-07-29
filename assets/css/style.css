@@ -435,6 +435,12 @@ html.js-anim .hero [data-rise="5"] { animation-delay: .5s; }
 .news-item h3 { margin: 0 0 .15em; transition: color .2s ease; }
 .news-item:hover h3 { color: var(--gold); }
 .news-item .excerpt { color: var(--muted); font-size: 1rem; margin: 0; }
+/* 자동 수집 소식: 원문으로 나가는 카드 — 출처를 모노로 조용히 표기 */
+a.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline; text-underline-offset: 4px; }
+.news-item .news-src {
+  font-family: var(--font-mono); font-size: .72rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--faint);
+}
 @media (max-width: 720px) {
   .news-item { grid-template-columns: 1fr; gap: .5rem; padding: 1.3rem .2rem; }
 }
