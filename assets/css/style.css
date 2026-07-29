@@ -5,7 +5,7 @@
    - 웜 블랙의 무대 어둠 + 샴페인 골드 단일 액센트
    - 기념비적 한글 세리프(Noto Serif KR 900) 디스플레이
    - 형태 규칙: 버튼=필(999px) / 패널·입력=2px (샤프)
-   - 시니어 기준 유지: 기본 18px, 글자 크기 3단계, 44px+ 타깃
+   - 타입: 데스크톱 17px / 모바일 16px 기준, 화면 폭에 따라 비례 축소, 44px+ 타깃
    ============================================================ */
 
 /* ---------- 1. 토큰 ---------- */
@@ -43,7 +43,7 @@
 }
 
 /* 글자 크기 3단계 (헤더 [가] 버튼 연동) */
-html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; font-size: 18px; scroll-padding-top: 6rem; background: var(--void); scrollbar-color: #2a2a2a #080808; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; font-size: 17px; scroll-padding-top: 6rem; background: var(--void); scrollbar-color: #2a2a2a #080808; }
 ::-webkit-scrollbar { width: 12px; }
 ::-webkit-scrollbar-track { background: var(--void); }
 ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 6px; border: 3px solid var(--void); }
@@ -2216,24 +2216,23 @@ body.deck-full .bt-deck[data-deck="1"] { opacity: .3; }
    본문을 더 줄이지 않고, 대신 제목의 낭비되는 크기만 걷어낸다.
    ============================================================ */
 @media (max-width: 900px) {
-  html { font-size: 17px; }
+  html { font-size: 16.5px; }
 }
 @media (max-width: 720px) {
-  html { font-size: 16px; }                     /* 웹 표준 크기 — 본문은 여기서 멈춘다 */
-  /* 제목은 화면 폭 대비 더 과감히 줄여야 한 화면에 내용이 들어온다 */
-  .page-hero h1 { font-size: clamp(1.75rem, 8.4vw, 2.6rem); line-height: 1.14; }
+  html { font-size: 16px; }                     /* 본문 16px — 웹 표준이자 가장 읽기 좋은 크기 */
+  /* 제목은 화면 폭에 비례해 시원하게, 그러나 한 화면을 다 먹지 않게 */
+  .page-hero h1 { font-size: clamp(1.9rem, 8.8vw, 2.8rem); line-height: 1.16; }
   .page-hero p { font-size: 1rem; line-height: 1.7; }
-  .page-hero { padding-block: clamp(3.4rem, 9vh, 5.5rem) clamp(1.6rem, 4vh, 2.6rem); }
-  h1 { font-size: clamp(1.75rem, 8vw, 2.6rem); }
-  h2 { font-size: clamp(1.35rem, 5.4vw, 1.9rem); }
-  /* 명조 서두 문단이 화면을 다 먹지 않게 */
-  .lede, #h-profile + p, .about-lede { font-size: clamp(1.05rem, 4.4vw, 1.3rem); line-height: 1.72; }
-  /* 한글 본문 자간은 좁은 화면에서 줄 수를 늘리기만 한다 */
+  .page-hero { padding-block: clamp(3.2rem, 8vh, 5rem) clamp(1.5rem, 4vh, 2.4rem); }
+  h1 { font-size: clamp(1.9rem, 8.4vw, 2.8rem); }
+  h2 { font-size: clamp(1.4rem, 5.6vw, 2rem); }
+  .lede, #h-profile + p, .about-lede { font-size: clamp(1.06rem, 4.4vw, 1.28rem); line-height: 1.7; }
+  /* 좁은 화면에서 한글 자간은 줄 수만 늘린다 */
   .page-hero p, .card-desc, .excerpt { letter-spacing: 0; }
 }
 @media (max-width: 400px) {
   html { font-size: 15.5px; }
-  .page-hero h1 { font-size: clamp(1.6rem, 8.4vw, 2.2rem); }
+  .page-hero h1 { font-size: clamp(1.75rem, 8.8vw, 2.4rem); }
 }
 
 /* ============================================================
@@ -2336,3 +2335,22 @@ button.sr-row {
 }
 button.sr-row:hover .sr-title, button.sr-row:focus-visible .sr-title { color: var(--gold); }
 button.sr-row .sr-play { color: var(--gold); }
+
+/* ============================================================
+   모바일 터치 타깃 정리 (v95)
+   전 페이지 공통. 어르신 팬이 손끝으로 정확히 누를 수 있어야 한다.
+   ============================================================ */
+/* 푸터 링크 — 홈에만 44px가 걸려 있었고 서브페이지는 18px였다 */
+.footer-min a,
+.site-footer ul a {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 .2em;
+}
+.footer-min nav { row-gap: .2rem; }
+/* 헤더 브랜드(로고) — 27px였다 */
+.brand { display: inline-flex; align-items: center; min-height: 44px; }
+/* 스트립 캡션의 곡 제목 링크 */
+.sc-title { display: inline-flex; align-items: center; min-height: 44px; }
+/* 본문 안의 단독 링크(해밀 공식 홈페이지 등) */
+.haemil-copy a, .card-body > a:not(.btn), .a-link, .di-link {
+  display: inline-flex; align-items: center; min-height: 44px;
+}
