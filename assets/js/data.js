@@ -21,7 +21,7 @@ window.SITE_DATA = {
     { img: "assets/img/photos/hm-3.jpg", w: 1280, h: 824, year: "", cat: "기록", caption: "해밀학교 건축 후원자 벽 앞에서" , en: { caption: "At Haemil School's donor wall" } },
     { img: "assets/img/hero.jpg", w: 1280, h: 720, year: "2025", cat: "무대", caption: "'그래도 꿈은 흐른다' MV, 합창단과 함께" , en: { caption: "'Still, the Dream Flows' MV, with the choir" } },
     { img: "assets/img/story.jpg", w: 720, h: 720, year: "2025", cat: "포트레이트", caption: "'그래도 꿈은 흐른다' 세션 스틸" , en: { caption: "'Still, the Dream Flows' session still" } },
-    { img: "assets/img/photos/press-03.jpg", w: 420, h: 396, year: "1970년대", cat: "화보", caption: "장미와 함께한 젊은 날의 포트레이트" , en: { caption: "A young portrait with roses" } },
+    { img: "assets/img/photos/press-03.jpg", w: 420, h: 396, year: "1970년대", cat: "화보", caption: "장미와 함께한 젊은 날의 포트레이트" , en: { caption: "A young portrait with roses", year: "The 1970s" } },
     { img: "assets/img/photos/musical-chicago.jpg", w: 480, h: 649, year: "", cat: "무대", caption: "뮤지컬 '시카고' 벨마 켈리 (2012·2013)" , en: { caption: "Velma Kelly in the musical 'Chicago' (2012-2013)" } },
     { img: "assets/img/photos/kakao25.jpg", w: 1600, h: 1067, year: "", cat: "화보", caption: "붉은 빛망울 사이의 실루엣" , en: { caption: "A silhouette among red bokeh lights" } },
     { img: "assets/img/photos/press-1723.jpg", w: 500, h: 333, year: "", cat: "무대", caption: "흰 모자와 베일, 순백의 퍼포먼스" , en: { caption: "White hat and veil, a performance in white" } },
@@ -492,7 +492,7 @@ window.SITE_DATA = {
     { year: "2013", event: "다문화 대안학교 '해밀학교' 개교", note: "강원 홍천. 무대 밖의 또 다른 무대", milestone: true, en: { event: "Opened Haemil School for multicultural youth", note: "Hongcheon, Gangwon - another stage beyond the stage" } },
     { year: "2023", event: "KBS2 '골든걸스' 출연, 'One Last Time' 발표", note: "인순이·박미경·신효범·이은미", milestone: true, en: { event: "KBS2 'Golden Girls' - 'One Last Time' released", note: "Insooni, Park Mi-kyung, Shin Hyo-bum, Lee Eun-mi" } },
     { year: "2025", event: "《인순이, 아름다운 우리나라》 발매", note: "2월, 9곡 수록", en: { event: "'Insooni, Beautiful Korea' released", note: "February - nine songs" } },
-    { year: "2025", event: "펄벅 인터내셔널 '올해의 여성상' 수상", note: "Woman of Influence 2025 (공식 채널 영상 확인)", en: { event: "Woman of Influence, Pearl S. Buck International" } },
+    { year: "2025", event: "펄벅 인터내셔널 '올해의 여성상' 수상", note: "Woman of Influence 2025", en: { event: "Woman of Influence, Pearl S. Buck International", note: "Woman of Influence 2025" } },
     { year: "2026", event: "데뷔 48주년, 그리고 계속되는 이야기", note: "새로운 기록이 이곳에 쌓입니다", en: { event: "48 years on stage - and the story continues", note: "New records will be added here" } }
   ],
 

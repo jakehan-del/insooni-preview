@@ -300,6 +300,20 @@
       box.appendChild(li);
     });
   }
+  /* 음반 한 줄 정보의 영문판을 고른다.
+     영문이 없으면 한국어를 그대로 둔다 — 반쯤 번역된 문장을 만들지 않는다.
+     정규 1~18집 크레딧은 형식이 일정해 규칙으로 옮긴다. */
+  function albEN(a, field) {
+    var ko = a[field] || "";
+    if (document.documentElement.getAttribute("lang") !== "en") return ko;
+    var e = (window.ALBUMS_EN || {})[a.title];
+    if (e && e[field]) return e[field];
+    if (field === "credits" && /^정규\s*\d+집\s·/.test(ko) && window.regCreditsEN) {
+      return window.regCreditsEN(ko);
+    }
+    return ko;
+  }
+
   function renderDiscography() {
     var box = $("#discography");
     if (!box || !D.albums) return;
@@ -348,7 +362,7 @@
         }
         r.innerHTML = '<span class="di-year">' + esc(a.year) + "</span>" +
           '<span class="di-title">' + esc(a.title) + "</span>" +
-          (lk ? '<span class="di-links">' + lk + "</span>" : '<span class="di-kind">' + esc(a.kind || "") + "</span>");
+          (lk ? '<span class="di-links">' + lk + "</span>" : '<span class="di-kind">' + esc(albEN(a, "kind")) + "</span>");
         idx.appendChild(r);
       });
     }
@@ -360,8 +374,8 @@
       row.innerHTML =
         (a.art ? '<img class="a-art" src="' + esc(a.art) + '" alt="" loading="lazy">' : '<span class="a-art a-art--empty" aria-hidden="true"></span>') +
         '<span class="a-year">' + esc(a.year) + "</span>" +
-        '<div><span class="a-title">' + esc(a.title) + '</span><span class="a-note">' + esc(a.note || "") + "</span></div>" +
-        '<span class="a-kind">' + esc(a.kind || "앨범") + "</span>";
+        '<div><span class="a-title">' + esc(a.title) + '</span><span class="a-note">' + esc(albEN(a, "note")) + "</span></div>" +
+        '<span class="a-kind">' + esc(albEN(a, "kind") || t("rel.album", "앨범")) + "</span>";
       var detail = el("div", "album-detail");
       detail.hidden = true;
       var artistQ = ((a.kind || "") + (a.title || "")).indexOf("희자매") >= 0 || a.kind === "그룹" ? "희자매" : (a.kind === "골든걸스" ? "골든걸스" : "인순이");
@@ -373,11 +387,12 @@
             var q = direct
               ? "https://www.youtube.com/watch?v=" + direct
               : "https://www.youtube.com/results?search_query=" + encodeURIComponent(artistQ + " " + base);
-            return '<li><a class="tr-link" href="' + esc(q) + '" target="_blank" rel="noopener"><span class="tr-name">' + esc(trk) + '</span><span class="tr-play" aria-hidden="true">듣기 ▶</span></a></li>';
+            return '<li><a class="tr-link" href="' + esc(q) + '" target="_blank" rel="noopener"><span class="tr-name">' + esc(trk) + '</span><span class="tr-play" aria-hidden="true">' + t("rel.play", "듣기 ▶") + "</span></a></li>";
           }).join("") + "</ol>"
         : "<p>" + t("rel.tbd", "수록곡은 곧 더해집니다.") + "</p>";
-      var creditsHtml = a.credits
-        ? '<p class="a-credits">' + esc(a.credits) + "</p>"
+      var creditsText = albEN(a, "credits");
+      var creditsHtml = creditsText
+        ? '<p class="a-credits">' + esc(creditsText) + "</p>"
         : "<p>" + t("rel.tbd", "수록곡은 곧 더해집니다.") + "</p>";
       var searchUrl = "https://www.youtube.com/results?search_query=" + encodeURIComponent("인순이 " + a.title.replace(/\s*\(.*\)$/, ""));
       var linksHtml = (a.links && a.links.length)
@@ -731,7 +746,7 @@
         b.setAttribute("aria-haspopup", "dialog");
         b.setAttribute("aria-label", tr(a, "caption") + " " + t("aria.zoom", "크게 보기"));
         b.innerHTML = '<img src="' + esc(a.img) + '" alt="' + esc(tr(a, "caption")) + '" width="' + a.w + '" height="' + a.h + '" loading="lazy">' +
-          '<span class="arch-cap">' + esc(a.year) + " · " + esc(kindCat(a.cat)) + "</span>";
+          '<span class="arch-cap">' + esc(tr(a, "year")) + " · " + esc(kindCat(a.cat)) + "</span>";
         b.addEventListener("click", function () { openImageViewer(i, b); });
         grid.appendChild(b);
       });
@@ -1374,15 +1389,19 @@
     });
   }
 
-  /* ---------- 언어 전환 (한/영) ---------- */
-  function initLang() {
+  /* ---------- 언어 전환 (한/영) ----------
+     번역은 문서마다 한 번이 아니라 **화면이 바뀔 때마다** 다시 걸어야 한다.
+     라우터가 <main>만 갈아끼우기 때문에, 새로 들어온 마크업은 아직 한국어다.
+     그래서 적용부(applyLang)를 따로 떼어 pageInit에서 매번 부른다. */
+  function applyLang(lang) {
     var dict = window.I18N_EN || {};
     var btn = $(".lang-toggle");
-    if (!btn) return;
-    function apply(lang) {
+    {
       document.documentElement.setAttribute("lang", lang);
-      btn.textContent = lang === "ko" ? "EN" : "한국어";
-      btn.setAttribute("aria-label", lang === "ko" ? "Switch to English" : "한국어로 보기");
+      if (btn) {
+        btn.textContent = lang === "ko" ? "EN" : "한국어";
+        btn.setAttribute("aria-label", lang === "ko" ? "Switch to English" : "한국어로 보기");
+      }
       $all("[data-i18n]").forEach(function (n) {
         var key = n.getAttribute("data-i18n");
         if (lang === "en") {
@@ -1401,7 +1420,11 @@
           n.setAttribute("aria-label", n.dataset.koAria);
         }
       });
-      var koIds = ["home-news", "home-schedule", "home-videos", "news-list", "event-list", "cal-grid", "disco-index", "discography", "videos", "letter-list", "board-list", "poll"];
+      /* 원래 한국어인 것들 — 곡명·공식 영상 제목·팬이 쓴 글.
+         번역하지 않고 한국어임을 표시만 해, 화면 낭독기가 올바른 발음으로 읽게 한다. */
+      var koIds = ["home-news", "home-schedule", "home-videos", "news-list", "event-list", "cal-grid",
+                   "disco-index", "discography", "videos", "letter-list", "board-list", "poll",
+                   "fresh-videos", "cheer-wall", "req-rank"];
       koIds.forEach(function (id) {
         var n = document.getElementById(id);
         if (!n) return;
@@ -1417,14 +1440,27 @@
           n.placeholder = n.dataset.koPh;
         }
       });
+      /* 탭 제목도 언어를 따른다. 라우터가 새 문서의 한국어 제목을 걸어 두므로 여기서 덮는다. */
+      var page = (location.pathname.split("/").pop() || "index.html").replace(/\.html$/, "") || "index";
+      if (lang === "en" && dict["title." + page]) document.title = dict["title." + page];
       store("insooni_lang", lang);
     }
+  }
+
+  /* 지금 걸려 있는 언어 — 저장값이 정본이다 */
+  function curLang() { return store("insooni_lang") === "en" ? "en" : "ko"; }
+
+  /* 토글 버튼은 헤더에 있어 라우터가 갈아끼우지 않는다. 한 번만 묶는다. */
+  function initLang() {
+    var btn = $(".lang-toggle");
+    if (!btn || btn.dataset.bound) return;
+    btn.dataset.bound = "1";
     btn.addEventListener("click", function () {
-      apply(document.documentElement.getAttribute("lang") === "ko" ? "en" : "ko");
+      applyLang(curLang() === "ko" ? "en" : "ko");
       /* 데이터 렌더 콘텐츠까지 완전 전환: 저장 후 재로드 */
       location.reload();
     });
-    if (store("insooni_lang") === "en") apply("en");
+    applyLang(curLang());
   }
 
   /* ---------- 비디오 히어로: 네이티브 루프 (모션 민감 시 제거) ---------- */
@@ -1655,6 +1691,9 @@
     initRise();
     initSubscribe();
     initAdmin();
+    /* 마지막에 번역을 건다 — 위 렌더러들이 만들어 낸 요소까지 함께 잡기 위해서.
+       라우터로 페이지를 옮겨도 새 <main>이 영어로 칠해진다. */
+    applyLang(curLang());
     /* 자동 수집 예정 공연(플레이DB 일일 수집) 병합 — 도착 시 일정 재렌더 */
     if (!window.__eventsMerged) {
       window.__eventsMerged = true;

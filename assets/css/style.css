@@ -1728,6 +1728,18 @@ body > main, body > header, body > footer { position: relative; z-index: 1; }
   border-color: var(--gold); color: #0b0b0b; background: var(--gold);
 }
 .radio-launch button[aria-pressed="true"]:hover { color: #0b0b0b; }
+/* 왜 이 결인지 한 줄 — 고르는 순간 이유가 따라온다 */
+.deck-setnote {
+  margin: 1rem 0 0; max-width: 44em;
+  font-size: .95rem; line-height: 1.7; color: var(--muted, rgba(243,239,231,.62));
+}
+/* 재생 바의 '왜 이 곡인가' — 제목 아래 한 줄, 조용하게 */
+.dk-why {
+  display: block; margin-top: .25rem; max-width: 46em;
+  font-size: .82rem; line-height: 1.55; color: rgba(243, 239, 231, .55);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+@media (max-width: 900px) { .dk-why { display: none; } }
 .radio {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
   background: rgba(10, 10, 10, .93);

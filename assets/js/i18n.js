@@ -92,6 +92,22 @@ window.I18N_EN = {
   "rd.modeFull": "FULL SONGS",
   "rd.lead": "Three sets, each built like a DJ's night - the songs are matched by tempo and blended on the beat. No ads, and it never stops as you move through the site.",
   "rd.trackNo": "IN SET",
+  "rel.album": "Album",
+  "form.lcat": "Category",
+  "arch.fan1d": "Old concert tickets, photographs taken from the floor, keepsakes held on to for decades - what you have kept is Insooni's history. Share it in the Fan Room and it will be reviewed and added to the archive.",
+  "arch.fan2d": "Tell us the story you carry with one of Insooni's songs. Selected stories are published alongside the song, so that each one gathers the memories of the people who heard it.",
+
+  /* 브라우저 탭 제목 — 라우터가 새 문서 제목을 걸므로 언어 적용 때 다시 칠한다 */
+  "title.index": "INSOONI | Official Fan Platform",
+  "title.about": "Her Story | INSOONI",
+  "title.music": "Music | INSOONI",
+  "title.schedule": "Tour & Dates | INSOONI",
+  "title.archive": "Archive | INSOONI",
+  "title.haemil": "Haemil School | INSOONI",
+  "title.community": "Fan Room | INSOONI",
+  "title.privacy": "Privacy Policy | INSOONI",
+  "title.terms": "Terms of Use | INSOONI",
+  "title.404": "Page Not Found | INSOONI",
   "disc.todayT": "TODAY, THIS SONG",
   "disc.todayHint": "Changes each day with Seoul's weather, season and hour.",
   "disc.findT": "FIND A SONG",
@@ -204,6 +220,7 @@ window.I18N_EN = {
   "sub.p": "New shows, broadcasts, and Insooni's messages, straight to your inbox.",
   "sub.btn": "Subscribe",
   "sub.ph": "Email address",
+  "sub.label": "Email address",
   "sub.ok": "Subscribed. Welcome! (demo)",
 
   /* 서브페이지 히어로 */

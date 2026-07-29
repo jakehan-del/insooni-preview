@@ -24,7 +24,7 @@
     }
     return Math.max(2.4, Math.min(6.6, want));
   }
-  var loaded = false, armed = false, busy = false, xfTimer = null;
+  var loaded = false, armed = false, busy = false, xfTimer = null, preloaded = null;
 
   function isEN() { return document.documentElement.getAttribute("lang") === "en"; }
   function T(ko, en) { return isEN() ? en : ko; }
@@ -66,8 +66,29 @@
       d.p = 0;             /* 한 박 길이(초) */
       d.b = 0;             /* 첫 박이 오는 지점(초) */
       d.e = 0;             /* 곡의 에너지 */
-      d.el.addEventListener("error", function () { next(); });
+      /* 음원을 못 받았을 때만 넘긴다.
+         **지금 울리고 있는 데크일 때로 한정**하는 게 중요하다 — 미리 받아 두는 데크에서
+         에러가 났다고 넘겨 버리면, 멀쩡히 나오던 곡이 뜬금없이 끊긴다. */
+      d.el.addEventListener("error", function () {
+        if (d !== decks[cur] || !d.live) return;
+        if (d.el.src) DEAD[d.el.src] = 1;
+        skipDead();
+      });
     });
+  }
+
+  /* 받지 못한 음원은 기억해 두고 큐에서 걷어낸다 (같은 곡을 계속 다시 시도하지 않게) */
+  var DEAD = {};
+  function skipDead() {
+    var fresh = queue.filter(function (t) { return !DEAD[t.u]; });
+    if (fresh.length < 2) return;
+    var here = queue[pos];
+    queue = fresh;
+    var i = queue.indexOf(here);
+    pos = i >= 0 ? i : Math.min(pos, queue.length - 1);
+    busy = false; armed = false;
+    cur = other();
+    playAt(pos + (queue.indexOf(here) >= 0 ? 1 : 0), false);
   }
 
   /* ---------- 박자표 ----------
@@ -99,11 +120,73 @@
      실제 DJ가 하듯 곡의 결로 나눈다 — 오늘의 흐름, 힘찬 무대, 조용한 밤.
      묶음이 셋뿐이라 각각이 50곡 넘게 깊고, 한 묶음 안에서는 템포가 이어진다. */
   var LISTS = {
-    today:  { ko: "오늘의 믹스",  en: "Today's Mix",  f: null },
-    bright: { ko: "뜨거운 무대",  en: "On Stage",     f: function (s) { return s.set === "bright"; } },
-    calm:   { ko: "고요한 밤",    en: "Quiet Night",  f: function (s) { return s.set === "calm"; } }
+    today: {
+      ko: "오늘의 믹스", en: "Today's Mix", f: null,
+      dko: "오늘 서울의 날씨와 계절, 지금 시간에 어울리는 곡부터 시작합니다. 매일 달라집니다.",
+      den: "Starts with the songs that suit Seoul's weather, the season and this hour. It changes every day."
+    },
+    bright: {
+      ko: "뜨거운 무대", en: "On Stage", f: function (s) { return s.set === "bright"; },
+      dko: "무대를 밀어 올리는 곡들. 리듬이 앞에 서고, 곡과 곡은 짧게 끊어 넘어갑니다.",
+      den: "The songs that lift a room. Rhythm out front, and the blends cut short and clean."
+    },
+    calm: {
+      ko: "고요한 밤", en: "Quiet Night", f: function (s) { return s.set === "calm"; },
+      dko: "혼자 있는 밤에 어울리는 곡들. 느리게 풀리고, 길게 겹쳐 넘어갑니다.",
+      den: "For a night on your own. Slow to unfold, and the songs overlap for a long while."
+    }
   };
   var kind = "today";
+
+  /* ---------- 왜 이 곡인가 ----------
+     노래가 그냥 흘러가면 배경음이 되고, 이유를 알면 이야기가 된다.
+     ① 오늘 날씨·계절·시간에 맞춰 고른 곡이면 큐레이션 문장을 그대로 쓴다(가사 인용 없음)
+     ② 아니면 앞 곡과의 관계로 설명한다
+     ③ 그래도 없으면 그 곡이 놓인 시절을 말해 준다
+     전부 확인된 데이터에서만 나온다 — 지어내지 않는다. */
+  function moodReason(track) {
+    var moods = window.SONG_MOODS || {};
+    var d = new Date(), m = d.getMonth() + 1, h = d.getHours();
+    var keys = [];
+    if (window.INSOONI_TODAY && window.INSOONI_TODAY.key) keys.push(window.INSOONI_TODAY.key);
+    keys.push(h < 6 ? "dawn" : h < 11 ? "morning" : h >= 20 ? "night" : "");
+    keys.push(m <= 2 || m === 12 ? "cold-winter" : m <= 5 ? "clear-spring"
+            : m <= 8 ? "clear-summer" : "clear-autumn");
+    for (var i = 0; i < keys.length; i++) {
+      var arr = moods[keys[i]] || [];
+      for (var j = 0; j < arr.length; j++) {
+        if (norm(arr[j].title) === norm(track.t)) {
+          return isEN() && arr[j].en ? arr[j].en : arr[j].reason;
+        }
+      }
+    }
+    return "";
+  }
+
+  function flowReason(track, prev) {
+    if (!prev) return T("여기서 오늘의 흐름이 시작됩니다.", "This is where today's set opens.");
+    var de = (track.e || 0) - (prev.e || 0);
+    var dp = Math.abs((track.p || 0.5) - (prev.p || 0.5));
+    if (de > 0.45) return T("여기서부터 무대가 뜨거워집니다.", "From here the room starts to lift.");
+    if (de < -0.45) return T("잠시 숨을 고르는 자리입니다.", "A place to catch your breath.");
+    if (dp < 0.035) return T("앞 곡과 같은 걸음으로 이어집니다.", "It keeps the same step as the song before.");
+    return "";
+  }
+
+  function eraReason(track) {
+    if (track.no && track.y) {
+      return T("정규 " + track.no + "집, " + track.y + "년의 노래입니다.",
+               "From studio album no." + track.no + ", " + track.y + ".");
+    }
+    if (track.y) return T(track.y + "년에 남긴 노래입니다.", "Recorded in " + track.y + ".");
+    return "";
+  }
+
+  function reasonFor(track, prev) {
+    var m = moodReason(track);
+    if (m) return m;
+    return [flowReason(track, prev), eraReason(track)].filter(Boolean).join(" ");
+  }
 
   function norm(s) { return String(s).toLowerCase().replace(/[\s'"`·.,!?()[\]/-]/g, ""); }
   /* 오늘의 믹스: 지금 서울 날씨에 맞는 곡을 앞에 세우고, 계절 곡으로 이어 붙인다.
@@ -143,17 +226,20 @@
     return r;
   }
 
-  /* 한 구간 안에서는 템포가 가까운 곡끼리 이어 붙인다.
-     에너지 폭이 좁은 구간이라 사실상 템포가 순서를 정하고, 그래서 박이 매끄럽게 넘어간다. */
+  /* 한 구간 안에서는 다음 곡을 세 가지로 고른다 — 템포, 세기, 그리고 시절.
+     시절을 넣는 이유: 1981년 곡 다음에 2009년 곡이 오면 편곡과 녹음 질감이 확 달라져
+     "뜬금없이 바뀌었다"고 느껴진다. 가까운 연대끼리 묶으면 흐름이 자연스럽다. */
   function chain(seg, from) {
     if (seg.length < 3) return seg.slice();
+    function yr(t) { var y = parseInt(t.y, 10); return y > 1900 ? y : 1995; }
     var pool = seg.slice(), out = [pool.splice(from % pool.length, 1)[0]];
     while (pool.length) {
       var last = out[out.length - 1], bi = 0, bd = Infinity;
       for (var i = 0; i < pool.length; i++) {
         var dp = Math.abs((pool[i].p || 0.5) - (last.p || 0.5));
         var de = Math.abs((pool[i].e || 0) - (last.e || 0));
-        var cost = dp * 2.2 + de * 0.6;
+        var dy = Math.abs(yr(pool[i]) - yr(last)) / 45;     /* 45년 = 활동 전체 폭 */
+        var cost = dp * 2.0 + de * 0.55 + dy * 1.3;
         if (cost < bd) { bd = cost; bi = i; }
       }
       out.push(pool.splice(bi, 1)[0]);
@@ -218,11 +304,12 @@
     var d = decks[cur];
     d.el.src = track.u;
     /* 들어오는 곡의 앞 무음을 건너뛴다. 첫 박 위치를 알고 있으므로
-       바로 그 박에 맞춰 얹혀 들어가 앞머리가 비어 들리지 않는다. */
+       바로 그 박에 맞춰 얹혀 들어가 앞머리가 비어 들리지 않는다.
+       다만 30초뿐이라 많이 잘라내면 곡이 더 토막처럼 들린다 — 2초까지만 건너뛴다. */
     var skip = 0;
     if (fade) {
-      if (track.b > 0.25 && track.b < 4) skip = track.b;
-      else if (track.s > 0.35) skip = track.s;
+      if (track.b > 0.25 && track.b < 2) skip = track.b;
+      else if (track.s > 0.35) skip = Math.min(track.s, 2);
     }
     d.el.currentTime = skip;
     d.el.addEventListener("loadedmetadata", function once() {
@@ -252,13 +339,18 @@
     /* 음량 보정 — 녹음 시대가 40년에 걸쳐 있어 곡마다 크기가 17dB까지 벌어진다.
        미리 재 둔 값으로 모두 같은 크기(-14 LUFS)에 맞춘다. */
     if (d.trim) d.trim.gain.setValueAtTime(track.g || 1, ctx.currentTime);
-    /* 다음 곡을 미리 받아 둔다 — 전환 순간에 버퍼링으로 끊기지 않게 */
+    /* 다음 곡을 미리 받아 둔다 — 전환 순간에 버퍼링으로 끊기지 않게.
+       재생용 데크를 건드리지 않도록 별도의 숨은 Audio로만 받는다. */
     var nx = queue[(pos + 1) % queue.length];
-    if (nx) {
-      var pre = decks[other()];
-      if (pre && pre.el.paused && pre.el.src !== nx.u) {
-        setTimeout(function () { if (pre.el.paused) { pre.el.src = nx.u; pre.el.load(); } }, 900);
-      }
+    if (nx && !DEAD[nx.u] && preloaded !== nx.u) {
+      preloaded = nx.u;
+      setTimeout(function () {
+        if (preloaded !== nx.u) return;
+        var warm = new Audio();
+        warm.preload = "auto";
+        warm.src = nx.u;
+        warm.addEventListener("error", function () { DEAD[nx.u] = 1; });
+      }, 900);
     }
     var p = d.el.play();
     if (p && p.catch) p.catch(function () {});
@@ -443,6 +535,7 @@
           '<span class="dk-kicker">INSOONI MIX · <b id="dk-list"></b></span>' +
           '<span class="dk-title" id="dk-title"></span>' +
           '<span class="dk-meta" id="dk-meta"></span>' +
+          '<span class="dk-why" id="dk-why"></span>' +
         "</div>" +
         '<canvas class="dk-viz" id="dk-viz" width="240" height="42" aria-hidden="true"></canvas>' +
         '<div class="dk-controls">' +
@@ -495,6 +588,9 @@
     document.getElementById("dk-title").textContent = track.t;
     document.getElementById("dk-meta").textContent = [albumName(track), track.y].filter(Boolean).join(" · ");
     document.getElementById("dk-list").textContent = isEN() ? LISTS[kind].en : LISTS[kind].ko;
+    var why = document.getElementById("dk-why");
+    /* 첫 곡에는 '앞 곡'이 없다 — 큐를 돌려 마지막 곡과 비교하면 엉뚱한 설명이 나온다 */
+    if (why) why.textContent = reasonFor(track, pos > 0 ? queue[pos - 1] : null);
     var art = document.getElementById("dk-art");
     if (track.art) { art.src = track.art; art.hidden = false; } else { art.hidden = true; }
     var full = document.getElementById("dk-full");
@@ -685,6 +781,13 @@
     }
   }
 
+  /* 고른 결이 어떤 자리인지 한 줄로 적어 준다 */
+  function setNote() {
+    var el = document.getElementById("deck-setnote");
+    if (!el || !LISTS[kind]) return;
+    el.textContent = isEN() ? LISTS[kind].den : LISTS[kind].dko;
+  }
+
   /* ---------- 진입점 ---------- */
   function bindLauncher() {
     /* 캐시된 옛 문서에는 radio-launch로 남아 있을 수 있다 */
@@ -704,15 +807,17 @@
         b.textContent = (isEN() ? LISTS[k].en : LISTS[k].ko) + "  " + n;
         b.addEventListener("click", function () {
           kind = k;
-          /* 지금 고른 결이 어느 것인지 눈에 보이게 한다 */
+          /* 지금 고른 결이 어느 것인지 눈에 보이게 하고, 왜 이 결인지 한 줄로 알려 준다 */
           Array.prototype.forEach.call(box.children, function (el) {
             el.setAttribute("aria-pressed", String(el.dataset.list === k));
           });
+          setNote();
           if (MODE === "full") { load().then(function () { queue = build(k); startFull(); }); }
           else start(k);
         });
         box.appendChild(b);
       });
+      setNote();
     }).catch(function () {});
   }
   /* 영상이 시작되면 믹스를 멈춘다 (소리 겹침 방지) */
