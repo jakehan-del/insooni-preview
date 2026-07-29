@@ -1056,6 +1056,15 @@
       alBody.textContent = tr(AL, "body");
       $("#al-date").textContent = AL.date;
       $("#al-sign").textContent = tr(AL, "sign");
+      /* 친필 사인 이미지가 준비되면 서명란에 실제 사인이 들어온다 */
+      var sigBox = $("#al-signature");
+      if (sigBox && AL.signature) {
+        var im = new Image();
+        im.alt = tr(AL, "sign");
+        im.className = "sig-img";
+        im.onload = function () { sigBox.innerHTML = ""; sigBox.appendChild(im); sigBox.hidden = false; };
+        im.src = AL.signature;
+      }
       var fBtn = $("#al-flower"), fN = $("#al-flower-n");
       var FKEY = "insooni_flower_letter";
       function drawFlower() {

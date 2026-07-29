@@ -88,6 +88,8 @@ window.I18N_EN = {
   "music.index": "SINGLES & FURTHER RECORDS 1978-2025",
   "rd.t": "INSOONI MIX",
   "rd.spin": "DROP THE NEEDLE",
+  "rd.modeMix": "30s MIX \u00B7 NO ADS",
+  "rd.modeFull": "FULL SONGS",
   "rd.lead": "Pick a mood and the songs blend into one another, endlessly. No ads, and it never stops as you move through the site.",
   "disc.todayT": "TODAY, THIS SONG",
   "disc.todayHint": "Changes each day with Seoul's weather, season and hour.",

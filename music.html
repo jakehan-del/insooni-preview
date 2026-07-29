@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Nanum+Myeongjo:wght@400;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v61">
+<link rel="stylesheet" href="assets/css/style.css?v63">
 </head>
 <body>
 <a class="skip-link" href="#main" data-i18n="nav.skip">본문 바로가기</a>
@@ -102,6 +102,10 @@
           <div class="bt-fader"><span class="bt-rail"></span><span class="bt-knob"></span></div>
           <p class="bt-fader-label">CROSSFADER</p>
           <p class="bt-bpm"><b id="bt-bpm">—</b> BPM</p>
+          <div class="bt-mode" role="group" aria-label="재생 방식">
+            <button type="button" id="mode-mix" aria-pressed="true" data-i18n="rd.modeMix">믹스 30초 · 광고 없음</button>
+            <button type="button" id="mode-full" aria-pressed="false" data-i18n="rd.modeFull">전곡 이어듣기</button>
+          </div>
         </div>
         <div class="bt-deck" data-deck="1">
           <div class="bt-platter"><span class="bt-vinyl"></span><img alt="" class="bt-art"><span class="bt-spindle"></span></div>
@@ -216,15 +220,15 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동">↑</button>
-<script src="assets/js/i18n.js?v61"></script>
-<script src="assets/js/tracklinks.js?v61"></script>
-<script src="assets/js/albums-full.js?v61"></script>
-<script src="assets/js/data.js?v61"></script>
-<script src="assets/js/song-moods.js?v61"></script>
-<script src="assets/js/main.js?v61"></script>
-<script src="assets/js/motion.js?v61"></script>
-<script src="assets/js/router.js?v61" defer></script>
-<script src="assets/js/discover.js?v61"></script>
-<script src="assets/js/deck.js?v61"></script>
+<script src="assets/js/i18n.js?v63"></script>
+<script src="assets/js/tracklinks.js?v63"></script>
+<script src="assets/js/albums-full.js?v63"></script>
+<script src="assets/js/data.js?v63"></script>
+<script src="assets/js/song-moods.js?v63"></script>
+<script src="assets/js/main.js?v63"></script>
+<script src="assets/js/motion.js?v63"></script>
+<script src="assets/js/router.js?v63" defer></script>
+<script src="assets/js/discover.js?v63"></script>
+<script src="assets/js/deck.js?v63"></script>
 </body>
 </html>

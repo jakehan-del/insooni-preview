@@ -2048,3 +2048,24 @@ html.has-cursor, html.has-cursor a, html.has-cursor button, html.has-cursor .sho
 .booth:not(.is-live) .bt-viz { opacity: .12; }
 .booth:not(.is-live) .bt-fader, .booth:not(.is-live) .bt-fader-label, .booth:not(.is-live) .bt-bpm { opacity: .35; }
 .booth:not(.is-live) .bt-track::after { content: attr(data-idle); color: var(--faint); }
+
+/* 재생 방식 전환 */
+.bt-mode { display: flex; gap: 2px; margin-top: .5rem; }
+.bt-mode button {
+  padding: .5em .9em; font-family: var(--font-mono); font-size: .56rem; letter-spacing: .12em;
+  background: transparent; border: 1px solid var(--line); color: var(--faint);
+  cursor: pointer; border-radius: 2px; min-height: 38px;
+  transition: color .2s ease, border-color .2s ease;
+}
+.bt-mode button[aria-pressed="true"] { color: var(--gold); border-color: var(--gold-deep); }
+.bt-mode button:hover { color: var(--ivory); }
+body.deck-full .bt-viz, body.deck-full .bt-fader, body.deck-full .bt-fader-label, body.deck-full .bt-bpm { opacity: .25; }
+body.deck-full .bt-deck[data-deck="1"] { opacity: .3; }
+#dk-yt { position: fixed; width: 1px; height: 1px; opacity: 0; pointer-events: none; left: -9999px; }
+
+/* 편지 서명란 — 친필 사인이 오면 이 자리에 놓인다 */
+.letter-signature { margin-top: 2rem; display: grid; justify-items: center; gap: .5rem; }
+.sig-slot { max-width: 260px; }
+.sig-img { width: 100%; height: auto; display: block; filter: brightness(0) invert(1); opacity: .92; }
+.letter-signature .letter-sign { margin-top: 0; }
+@media (max-width: 640px) { .letter-signature { justify-items: start; } }

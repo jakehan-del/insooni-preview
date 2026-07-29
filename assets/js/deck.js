@@ -382,11 +382,18 @@
     btCtx = btViz ? btViz.getContext("2d") : null;
     booth.setAttribute("aria-hidden", "false");
     idleBooth();
+    var mm = document.getElementById("mode-mix"), mf = document.getElementById("mode-full");
+    if (mm && !mm.dataset.bound) {
+      mm.dataset.bound = "1";
+      mm.addEventListener("click", function () { setMode("mix"); });
+      mf.addEventListener("click", function () { setMode("full"); });
+    }
     var pw = document.getElementById("bt-power");
     if (pw && !pw.dataset.bound) {
       pw.dataset.bound = "1";
       pw.addEventListener("click", function () {
         /* 아직 안 돌고 있으면 오늘의 믹스로 시작, 돌고 있으면 멈춤/재개 */
+        if (MODE === "full") { if (!yt) { kind = "today"; setMode("full"); } else toggle(); return; }
         if (!ctx || !queue.length) { start("today"); return; }
         toggle();
       });
@@ -501,8 +508,14 @@
     canvas = document.getElementById("dk-viz");
     cctx = canvas.getContext("2d");
     document.getElementById("dk-play").addEventListener("click", toggle);
-    document.getElementById("dk-next").addEventListener("click", function () { next(true); });
-    document.getElementById("dk-prev").addEventListener("click", prev);
+    document.getElementById("dk-next").addEventListener("click", function () {
+      if (MODE === "full") { if (yt) yt.nextVideo(); return; }
+      next(true);
+    });
+    document.getElementById("dk-prev").addEventListener("click", function () {
+      if (MODE === "full") { if (yt) yt.previousVideo(); return; }
+      prev();
+    });
     document.getElementById("dk-close").addEventListener("click", close);
     document.getElementById("dk-shuffle").addEventListener("click", function () {
       shuffled = !shuffled;
@@ -543,6 +556,12 @@
   }
 
   function toggle() {
+    if (MODE === "full") {
+      if (!yt || !ytReady) return;
+      var st = yt.getPlayerState();
+      if (st === 1) yt.pauseVideo(); else yt.playVideo();
+      return;
+    }
     var d = decks[cur];
     if (d.el.paused) {
       if (ctx.state === "suspended") ctx.resume();
@@ -613,6 +632,109 @@
     }).catch(function () { /* 프리뷰를 못 받으면 조용히 아무것도 하지 않는다 */ });
   }
 
+  /* ---------- 전곡 이어듣기 모드 ----------
+     공식 음원 전곡은 유튜브를 통해서만 재생할 수 있다(광고 포함).
+     30초 믹스와 전곡 감상 중에서 고를 수 있게 두 방식을 함께 둔다. */
+  var MODE = "mix";
+  var yt = null, ytReady = false;
+
+  function ytIds() {
+    var links = window.TRACK_LINKS || {};
+    var ids = [], seen = {};
+    queue.forEach(function (t) {
+      var id = links["인순이|" + t.t];
+      if (id && !seen[id]) { seen[id] = 1; ids.push(id); }
+    });
+    return ids;
+  }
+
+  function ensureYT(cb) {
+    if (window.YT && window.YT.Player) { cb(); return; }
+    var prev = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = function () { if (prev) prev(); cb(); };
+    if (!document.getElementById("yt-api")) {
+      var t = document.createElement("script");
+      t.id = "yt-api";
+      t.src = "https://www.youtube.com/iframe_api";
+      document.head.appendChild(t);
+    }
+  }
+
+  function startFull() {
+    var ids = ytIds();
+    if (!ids.length) return;
+    stopAll();
+    document.body.classList.add("deck-full", "deck-playing");
+    bar().hidden = false;
+    if (!document.getElementById("dk-yt")) {
+      var host = document.createElement("div");
+      host.id = "dk-yt";
+      document.body.appendChild(host);
+    }
+    ensureYT(function () {
+      function onState(e) {
+        if (e.data === 1) {
+          document.body.classList.add("deck-playing");
+          document.getElementById("dk-play").textContent = "\u275A\u275A";
+          var pw = document.getElementById("bt-power");
+          if (pw) pw.querySelector(".btp-icon").textContent = "\u275A\u275A";
+          paintFullNow();
+        } else if (e.data === 2) {
+          document.body.classList.remove("deck-playing");
+          document.getElementById("dk-play").textContent = "\u25B6";
+        }
+      }
+      if (yt) { yt.loadPlaylist(ids); return; }
+      yt = new YT.Player("dk-yt", {
+        height: "1", width: "1",
+        playerVars: { rel: 0, modestbranding: 1, playsinline: 1 },
+        events: {
+          onReady: function () { ytReady = true; yt.loadPlaylist(ids); },
+          onStateChange: onState,
+          onError: function () { try { yt.nextVideo(); } catch (e) {} }
+        }
+      });
+    });
+  }
+
+  function paintFullNow() {
+    if (!yt || !yt.getVideoData) return;
+    var vd = yt.getVideoData() || {};
+    var links = window.TRACK_LINKS || {};
+    var hit = null;
+    Object.keys(links).forEach(function (k) { if (links[k] === vd.video_id) hit = k.split("|")[1]; });
+    var meta = null;
+    TRACKS.forEach(function (t) { if (t.t === hit) meta = t; });
+    document.getElementById("dk-title").textContent = hit || vd.title || "";
+    document.getElementById("dk-meta").textContent = meta ? [albumName(meta), meta.y].filter(Boolean).join(" · ") : "";
+    document.getElementById("dk-list").textContent = (isEN() ? LISTS[kind].en : LISTS[kind].ko) + " · " + T("전곡", "full");
+    if (btDecks && btDecks[0] && meta) {
+      btDecks[0].classList.add("is-live");
+      setBoothTrack(0, meta);
+      var img = document.getElementById("dk-art");
+      if (meta.art) { img.src = meta.art; img.hidden = false; }
+    }
+    var full = document.getElementById("dk-full");
+    if (full && vd.video_id) full.href = "https://www.youtube.com/watch?v=" + vd.video_id;
+    document.body.classList.add("has-deck");
+  }
+
+  function setMode(m) {
+    if (MODE === m) return;
+    MODE = m;
+    document.getElementById("mode-mix").setAttribute("aria-pressed", String(m === "mix"));
+    document.getElementById("mode-full").setAttribute("aria-pressed", String(m === "full"));
+    if (m === "full") {
+      if (!TRACKS) { load().then(function () { queue = build(kind); startFull(); }); return; }
+      if (!queue.length) queue = build(kind);
+      startFull();
+    } else {
+      document.body.classList.remove("deck-full");
+      if (yt && yt.stopVideo) { try { yt.stopVideo(); } catch (e) {} }
+      start(kind);
+    }
+  }
+
   /* ---------- 진입점 ---------- */
   function bindLauncher() {
     /* 캐시된 옛 문서에는 radio-launch로 남아 있을 수 있다 */
@@ -628,7 +750,11 @@
         var b = document.createElement("button");
         b.type = "button";
         b.textContent = (isEN() ? LISTS[k].en : LISTS[k].ko) + (k === "today" ? "" : "  " + n);
-        b.addEventListener("click", function () { start(k); });
+        b.addEventListener("click", function () {
+          kind = k;
+          if (MODE === "full") { load().then(function () { queue = build(k); startFull(); }); }
+          else start(k);
+        });
         box.appendChild(b);
       });
     }).catch(function () {});
@@ -637,9 +763,11 @@
   window.INSOONI_DECK = {
     pause: function () {
       if (!ctx || !decks.length) return false;
-      var any = decks.some(function (d) { return !d.el.paused; });
+      var ytOn = !!(yt && yt.getPlayerState && yt.getPlayerState() === 1);
+      var any = decks.some(function (d) { return !d.el.paused; }) || ytOn;
       if (!any) return false;
       decks.forEach(function (d) { try { d.el.pause(); } catch (e) {} });
+      if (yt && yt.pauseVideo) { try { yt.pauseVideo(); } catch (e) {} }
       document.body.classList.remove("deck-playing");
       var pb = document.getElementById("dk-play");
       if (pb) pb.textContent = "\u25B6";

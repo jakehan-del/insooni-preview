@@ -517,6 +517,9 @@ window.SITE_DATA = {
     date: "2026. 7.",
     body: "사랑방에 들러 주셔서 고맙습니다.\n무대 위에서 받은 마음들을, 이 방에서는 제가 하나하나 읽어 보겠습니다.\n짧은 인사 한 줄이어도 좋습니다. 여러분이 계셔서 노래가 계속됩니다.",
     sign: "인순이 드림",
+    /* 친필 사인 스캔이 준비되면 아래 경로에 파일을 두면 서명란에 자동 표시됩니다
+       (예: assets/img/signature.png — 배경이 투명한 PNG 권장) */
+    signature: "assets/img/signature.png",
     flowers: 214,
     en: {
       body: "Thank you for stopping by the Sarangbang.\nAll the love I receive on stage - here, I get to read it back, one note at a time.\nEven a single line of hello is enough. You are the reason the songs go on.",
