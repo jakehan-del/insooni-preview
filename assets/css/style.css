@@ -1959,3 +1959,78 @@ body.has-deck .back-to-top { bottom: calc(92px + 1.2rem); }
 .rk-row .rk-n { font-family: var(--font-mono); font-size: .66rem; color: var(--faint); text-align: right; }
 .rk-row.is-mine .rk-name { color: var(--gold); }
 @media (max-width: 560px) { .rk-row { grid-template-columns: 1.4em minmax(0,1fr) 2.4em; } .rk-row .rk-bar { display: none; } }
+
+/* ============ 편집 타이포 · 한글 디스플레이 세리프 (v56) ============
+   Cormorant에는 한글 글자가 없어 한국어 제목이 고딕으로 떨어졌다.
+   나눔명조를 뒤에 붙여 라틴은 Cormorant, 한글은 명조로 조판된다. */
+:root { --font-display: "Cormorant Garamond", "Nanum Myeongjo", "Apple SD Gothic Neo", serif; }
+
+.page-hero h1 {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(2.8rem, 6.4vw, 5.8rem); line-height: 1.02; letter-spacing: -0.01em;
+  word-break: keep-all;
+}
+.page-hero p {
+  font-size: clamp(1rem, 1.35vw, 1.2rem); letter-spacing: .01em;
+  max-width: 34em; color: var(--muted); word-break: keep-all;
+}
+.page-hero { padding-block: clamp(6rem, 13vh, 10rem) clamp(3rem, 6vh, 5rem); }
+
+/* 큰 인용·서두 문단은 명조로 — 편집물의 인상 */
+.lede, #h-profile + p, .about-lede {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: clamp(1.25rem, 1.9vw, 1.7rem); line-height: 1.62; color: var(--ivory);
+  word-break: keep-all;
+}
+#h-profile {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(1.8rem, 3.2vw, 2.9rem); letter-spacing: 0; margin-bottom: 1.2rem;
+}
+.qna-q, .letter-body { word-break: keep-all; }
+
+/* 수직 리듬: 과한 여백을 줄여 페이지가 비어 보이지 않게 */
+.section { padding-block: clamp(3.4rem, 7vh, 6rem); }
+.section-head { margin-bottom: clamp(1.4rem, 2.6vh, 2.2rem); }
+
+/* 한글 줄바꿈 품질 */
+p, li, .card-desc, .a-note, .show-city { word-break: keep-all; overflow-wrap: break-word; }
+
+/* ============ 모션 레이어 (v56) ============ */
+/* 제목 마스크 리빌 */
+.rv .rv-mask { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: .12em; margin-bottom: -.12em; }
+.rv .rv-word {
+  display: inline-block; transform: translateY(105%);
+  transition: transform .95s cubic-bezier(.16,.84,.24,1);
+}
+.rv.rv-in .rv-word { transform: translateY(0); }
+
+/* 커서 */
+html.has-cursor, html.has-cursor a, html.has-cursor button, html.has-cursor .show-cell, html.has-cursor .aw-cell { cursor: none; }
+.cursor-dot, .cursor-ring {
+  position: fixed; left: 0; top: 0; z-index: 9999; pointer-events: none;
+  border-radius: 50%; margin-left: -3px; margin-top: -3px;
+}
+.cursor-dot { width: 6px; height: 6px; background: var(--gold); }
+.cursor-ring {
+  width: 34px; height: 34px; margin-left: -17px; margin-top: -17px;
+  border: 1px solid rgba(243,239,231,.55);
+  transition: width .28s ease, height .28s ease, margin .28s ease, border-color .28s ease, background-color .28s ease;
+}
+.cursor-ring.is-hot {
+  width: 58px; height: 58px; margin-left: -29px; margin-top: -29px;
+  border-color: rgba(212,175,55,.9); background: rgba(212,175,55,.08);
+}
+.cursor-ring.is-down { width: 26px; height: 26px; margin-left: -13px; margin-top: -13px; }
+@media (hover: none), (pointer: coarse) { .cursor-dot, .cursor-ring { display: none; } }
+
+/* 자석 버튼 */
+.btn, .cheer-chips button { transition: transform .35s cubic-bezier(.22,.8,.36,1), border-color .2s ease, color .2s ease; }
+.aw-cell { transition: transform .4s cubic-bezier(.22,.8,.36,1); }
+
+/* 패럴랙스 프레임 */
+.frame { overflow: hidden; }
+.frame img, .thumb img { transition: transform .1s linear; }
+@media (prefers-reduced-motion: reduce) {
+  .rv .rv-word { transform: none; transition: none; }
+  .frame img, .thumb img { transform: none !important; }
+}
