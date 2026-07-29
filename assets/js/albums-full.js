@@ -17,7 +17,7 @@ window.REG_ALBUMS = [
 "내마음 흔들려",
 "빨간 마후라 [군가]"
 ],
-"art": "assets/img/photos/album01.jpg",
+"art": "assets/img/photos/album01.webp",
 "credits": "정규 1집 · 발매 1980. 10. · 현대음향 · 12곡 수록"
 },
 {
@@ -36,7 +36,7 @@ window.REG_ALBUMS = [
 "빗방울",
 "산마을 [건전가요]"
 ],
-"art": "assets/img/covers/reg02.jpg",
+"art": "assets/img/covers/reg02.webp",
 "credits": "정규 2집 · 발매 1981. 5. 7. · Jigu · 11곡 수록"
 },
 {
@@ -57,7 +57,7 @@ window.REG_ALBUMS = [
 "너와 나의 사랑 노래",
 "산울림 [건전가요]"
 ],
-"art": "assets/img/covers/reg03.jpg",
+"art": "assets/img/covers/reg03.webp",
 "credits": "정규 3집 · 발매 1982. 4. · Jigu · 13곡 수록"
 },
 {
@@ -77,7 +77,7 @@ window.REG_ALBUMS = [
 "고독",
 "고독 (경음악)"
 ],
-"art": "assets/img/photos/album04.jpg",
+"art": "assets/img/photos/album04.webp",
 "credits": "정규 4집 · 발매 1983 · 12곡 수록"
 },
 {
@@ -97,7 +97,7 @@ window.REG_ALBUMS = [
 "흔들리는 갈대",
 "시장에 가면 [건전가요]"
 ],
-"art": "assets/img/covers/reg05.jpg",
+"art": "assets/img/covers/reg05.webp",
 "credits": "정규 5집 · 발매 1984. 4. · HKR · 12곡 수록"
 },
 {
@@ -117,7 +117,7 @@ window.REG_ALBUMS = [
 "울고싶어요",
 "시장에 가면 [건전가요]"
 ],
-"art": "assets/img/covers/reg06.jpg",
+"art": "assets/img/covers/reg06.webp",
 "credits": "정규 6집 · 발매 1985. 6. 15. · HKR · 12곡 수록"
 },
 {
@@ -136,7 +136,7 @@ window.REG_ALBUMS = [
 "장미들의 합창",
 "이세상의 어린이 [건전가요]"
 ],
-"art": "assets/img/photos/album07.jpg",
+"art": "assets/img/photos/album07.webp",
 "credits": "정규 7집 · 발매 1987. 4. · Jigu · 11곡 수록"
 },
 {
@@ -154,7 +154,7 @@ window.REG_ALBUMS = [
 "이젠 가슴아픈말 하지 말아요",
 "서로 믿는 우리마음 [건전가요]"
 ],
-"art": "assets/img/covers/reg08.jpg",
+"art": "assets/img/covers/reg08.webp",
 "credits": "정규 8집 · 발매 1988 · 10곡 수록"
 },
 {
@@ -172,7 +172,7 @@ window.REG_ALBUMS = [
 "샹들리제",
 "와인"
 ],
-"art": "assets/img/photos/album09.jpg",
+"art": "assets/img/photos/album09.webp",
 "credits": "정규 9집 · 발매 1989 · 10곡 수록"
 },
 {
@@ -190,7 +190,7 @@ window.REG_ALBUMS = [
 "혼자 가려고",
 "이별 연습"
 ],
-"art": "assets/img/photos/album10.jpg",
+"art": "assets/img/photos/album10.webp",
 "credits": "정규 10집 · 발매 1991 · 10곡 수록"
 },
 {
@@ -206,7 +206,7 @@ window.REG_ALBUMS = [
 "혼자가 아닌 나",
 "나의 겨울"
 ],
-"art": "assets/img/photos/album11.jpg",
+"art": "assets/img/photos/album11.webp",
 "credits": "정규 11집 · 발매 1996. 5. · 세원음반 · 8곡 수록"
 },
 {
@@ -226,7 +226,7 @@ window.REG_ALBUMS = [
 "Through Christ",
 "찬양해 Jesus (찬양해 주를 기뻐해)"
 ],
-"art": "assets/img/covers/reg12.jpg",
+"art": "assets/img/covers/reg12.webp",
 "credits": "정규 12집 · 발매 1997 · 12곡 수록"
 },
 {
@@ -264,7 +264,7 @@ window.REG_ALBUMS = [
 "사랑이 떠나가네",
 "All For Us"
 ],
-"art": "assets/img/photos/album15.jpg",
+"art": "assets/img/photos/album15.webp",
 "credits": "정규 14집 · 발매 2001. 6. 25. · CREAM · 10곡 수록"
 },
 {
@@ -286,7 +286,7 @@ window.REG_ALBUMS = [
 "Monologue",
 "Love"
 ],
-"art": "assets/img/photos/jazz-album.jpg",
+"art": "assets/img/photos/jazz-album.webp",
 "credits": "정규 15집 · 발매 2003. 9. 24. · C&C Media · 14곡 수록"
 },
 {
@@ -308,7 +308,7 @@ window.REG_ALBUMS = [
 "친구여 with 조PD",
 "비상"
 ],
-"art": "assets/img/photos/album16.jpg",
+"art": "assets/img/photos/album16.webp",
 "credits": "정규 16집 · 발매 2004. 9. 9. · BES · 14곡 수록"
 },
 {
@@ -328,7 +328,7 @@ window.REG_ALBUMS = [
 "Merry Merry",
 "Fantasia (Inst.)"
 ],
-"art": "assets/img/photos/album17.jpg",
+"art": "assets/img/photos/album17.webp",
 "credits": "정규 17집 · 발매 2009. 5. 8. · 지앤지프로덕션(주) · 12곡 수록"
 },
 {
@@ -350,7 +350,7 @@ window.REG_ALBUMS = [
 "사랑가 (Remake)",
 "아름다운 Girl (Inst.)"
 ],
-"art": "assets/img/photos/album18.jpg",
+"art": "assets/img/photos/album18.webp",
 "credits": "정규 18집 · 발매 2013. 9. 25. · Sony · 14곡 수록"
 }
 ];

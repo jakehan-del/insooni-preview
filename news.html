@@ -11,12 +11,20 @@
 <meta property="og:image" content="https://jakehan-del.github.io/insooni-preview/assets/img/photos/insooni007.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="description" content="인순이의 최신 뉴스, 공지사항, 방송·공연 소식을 한곳에서 확인하세요.">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Serif+KR:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v103">
+<link rel="stylesheet" href="assets/fonts/fonts.css?v1">
+<link rel="stylesheet" href="assets/css/style.min.css?v107">
+<link rel="canonical" href="https://jakehan-del.github.io/insooni-preview/news.html">
+<meta property="og:url" content="https://jakehan-del.github.io/insooni-preview/news.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="인순이 INSOONI 공식 팬 플랫폼">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:locale:alternate" content="en_US">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="twitter:title" content="소식 | 인순이 INSOONI">
+<meta name="twitter:description" content="공지·공연·방송·보도, 공식 확인을 거친 소식.">
+<meta name="twitter:image" content="https://jakehan-del.github.io/insooni-preview/assets/img/photos/insooni007.jpg">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://jakehan-del.github.io/insooni-preview/"},{"@type":"ListItem","position":2,"name":"소식","item":"https://jakehan-del.github.io/insooni-preview/news.html"}]}</script>
 </head>
 <body>
 <a class="skip-link" href="#main" data-i18n="nav.skip">본문 바로가기</a>
@@ -66,8 +74,8 @@
       <p class="sr-only" role="status" id="news-status"></p>
       <h2 class="sr-only">소식 목록</h2>
       <div id="news-list" class="news-list"></div>
-      <!-- 운영 메모: 이 목록은 프로토타입 샘플 데이터입니다. 실제 운영 시 관리자 페이지에서 등록한 소식이 이 자리에 표시되며,
-      언론 보도는 원문 링크로 연결됩니다. [공식 보도자료 연동 필요] -->
+      <!-- scripts/collect-news.py가 매일 국내 언론 보도를 모아 assets/data/live-news.json에 쌓는다.
+           원문 링크를 함께 싣고, 사이트 안에서 읽을 수 있게 보여 준다. -->
     </div>
   </section>
 </main>
@@ -89,15 +97,15 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동" data-i18n-aria="aria.toTop">↑</button>
-<script src="assets/js/i18n.js?v103"></script>
-<script src="assets/js/data.js?v103"></script>
-<script src="assets/js/tracklinks.js?v103"></script>
-<script src="assets/js/albums-full.js?v103"></script>
-<script src="assets/js/albums-en.js?v103"></script>
-<script src="assets/js/song-moods.js?v103"></script>
-<script src="assets/js/main.js?v103"></script>
-<script src="assets/js/motion.js?v103"></script>
-<script src="assets/js/router.js?v103" defer></script>
-<script src="assets/js/deck.js?v103"></script>
+<script src="assets/js/i18n.js?v106"></script>
+<script src="assets/js/data.min.js?v107"></script>
+<script src="assets/js/tracklinks.min.js?v107"></script>
+<script src="assets/js/albums-full.min.js?v107"></script>
+<script src="assets/js/albums-en.min.js?v107"></script>
+<script src="assets/js/song-moods.min.js?v107"></script>
+<script src="assets/js/main.min.js?v107"></script>
+<script src="assets/js/motion.min.js?v107"></script>
+<script src="assets/js/router.min.js?v107" defer></script>
+<script src="assets/js/deck.min.js?v107"></script>
 </body>
 </html>

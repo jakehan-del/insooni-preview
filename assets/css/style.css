@@ -8,6 +8,13 @@
    - 타입: 데스크톱 17px / 모바일 16px 기준, 화면 폭에 따라 비례 축소, 44px+ 타깃
    ============================================================ */
 
+/* hidden 속성이 반드시 이기게 한다.
+   브라우저 기본 스타일의 [hidden]{display:none}은 우선순위가 가장 낮아,
+   .album-detail{display:grid} 같은 클래스 규칙 하나에 조용히 밀린다.
+   그 결과 접혀 있어야 할 앨범 23장이 전부 펼쳐지고, 카드를 만들기도 전에
+   '이미지로 저장' 버튼이 떠 있었다. */
+[hidden] { display: none !important; }
+
 /* ---------- 1. 토큰 ---------- */
 :root {
   --void: #080808;           /* 페이지 배경: 웜 니어블랙 */
@@ -203,20 +210,28 @@ html.js-anim .reveal.in { opacity: 1; transform: none; transition: opacity .9s v
   .nav-toggle { display: flex; }
   .header-tools { margin-left: auto; }
   .main-nav {
-    position: fixed; inset: 0; z-index: -1; margin: 0;
+    position: fixed; inset: 0; margin: 0;
+    /* 닫혀 있을 땐 뒤로 보내고, 열리면 헤더 위로 올린다.
+       음수 z-index로 두면 다른 요소에 가려 눌리지 않을 위험이 있다. */
+    z-index: 70;
     height: 100dvh; background: rgba(8, 8, 8, .96);
     backdrop-filter: blur(22px);
     display: flex; align-items: center;
     opacity: 0; visibility: hidden;
     transition: opacity .35s ease, visibility .35s;
   }
-  .main-nav.open { opacity: 1; visibility: visible; }
+  .main-nav:not(.open) { pointer-events: none; }
+  .main-nav.open { opacity: 1; visibility: visible; pointer-events: auto; }
   .main-nav ul { flex-direction: column; gap: .2rem; width: 100%; padding: 0 2.4rem; }
   .main-nav ul { align-items: center; text-align: center; }
+  /* 전체화면 메뉴에서는 글자만이 아니라 '줄 전체'가 눌려야 한다.
+     inline-block이면 '음악'처럼 짧은 항목은 33px 폭만 눌려 손끝이 자주 빗나간다. */
+  .main-nav ul li { width: 100%; }
   .main-nav a {
     font-family: var(--font-mono); font-size: 15px; font-weight: 400;
     letter-spacing: .22em; text-transform: uppercase;
-    color: #fff; padding: 19px 0; display: inline-block;
+    color: #fff; padding: 19px 0; display: flex;
+    align-items: center; justify-content: center; width: 100%; min-height: 56px;
   }
   .main-nav a::after { display: none; }
   .main-nav a:hover, .main-nav a[aria-current="page"] { color: var(--gold); }
@@ -1032,7 +1047,7 @@ a.card { text-decoration: none; color: inherit; }
   width: 44px; height: 44px; border-radius: 50%; flex: none;
   display: flex; align-items: center; justify-content: center;
   background: var(--panel); border: 1px solid var(--line-strong);
-  color: var(--muted); font-weight: 800; font-size: 1.02rem;
+  color: var(--muted); font-weight: 700; font-size: 1.02rem;
 }
 .post-head .who { font-weight: 700; }
 .post-head time, .post-head .when { font-family: var(--font-mono); color: var(--faint); font-size: .76rem; letter-spacing: .08em; }
@@ -1103,7 +1118,13 @@ a.card { text-decoration: none; color: inherit; }
 .table-wrap { overflow-x: auto; }
 
 /* ---------- 20b. 시각 아카이브 ---------- */
-.arch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(228px, 1fr)); gap: 4px 4px; }
+.arch-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(228px, 1fr)); gap: 4px 4px;
+  /* 사진은 자바스크립트가 채운다. 자리를 미리 잡아 두지 않으면 채워지는 순간
+     아래 내용이 통째로 밀린다(레이아웃 이동). 첫 화면 몫만큼 높이를 예약해 둔다. */
+  min-height: 88vh;
+}
+.arch-grid:not(:empty) { min-height: 0; }
 .arch-item {
   position: relative; display: block; width: 100%; margin: 0 0 2px; padding: 0;
   border: 0; background: var(--void); break-inside: avoid; cursor: pointer; overflow: hidden;
@@ -1140,7 +1161,7 @@ button.album-row:hover { background: rgba(243,239,231,.03); }
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
   padding: 1.4rem .4rem 2rem; border-bottom: 1px solid var(--line);
 }
-.album-detail h4 { font-family: var(--font-mono); font-size: .7rem; font-weight: 500; letter-spacing: .18em; color: var(--gold); text-transform: uppercase; margin: 0 0 .5em; }
+.album-detail h4, .album-detail .a-sub { font-family: var(--font-mono); font-size: .7rem; font-weight: 500; letter-spacing: .18em; color: var(--gold); text-transform: uppercase; margin: 0 0 .5em; }
 .album-detail p { color: var(--faint); font-size: .95rem; margin: 0; }
 @media (max-width: 720px) { .album-detail { grid-template-columns: 1fr; gap: 1rem; } .arch-grid { grid-template-columns: repeat(2, 1fr); } }
 
@@ -1194,7 +1215,7 @@ button.album-row:hover { background: rgba(243,239,231,.03); }
 /* ---------- 홈 v17: 비욘세 문법 — 입장 로더 + 무한 가로 필름스트립 ---------- */
 body.home { overflow: hidden; height: 100dvh; }
 body.home .footer-min { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; border-top: 0; }
-body.home .footer-min nav { justify-content: center; padding-bottom: .6rem; padding-top: 2.2rem; background: linear-gradient(to top, rgba(8,8,8,.9) 55%, transparent); }
+body.home .footer-min nav { justify-content: center; padding-bottom: .6rem; padding-top: 2.2rem; }
 body.home .footer-min a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 .3em; color: var(--muted); }
 
 .loader { position: fixed; inset: 0; z-index: 300; background: transparent; pointer-events: none; animation: loader-safety 4.6s ease forwards; }
@@ -1523,7 +1544,9 @@ main h3 { font-family: var(--font-mono); font-weight: 400; font-size: .85rem; le
   color: var(--faint); opacity: 0; white-space: nowrap; transition: opacity .18s ease;
 }
 .tr-link:hover .tr-play, .tr-link:focus-visible .tr-play { opacity: 1; color: #fff; }
-@media (hover: none) { .tr-play { opacity: .6; } }
+/* 손가락 기기엔 호버가 없어 이 안내가 늘 떠 있다. 반투명하게 두면 배경과 섞여
+   대비가 2.55:1까지 떨어지므로, 흐리게 만드는 대신 또렷한 메타 색으로 보여 준다. */
+@media (hover: none) { .tr-play { opacity: 1; color: var(--faint); } }
 
 /* 로더 피날레: 거위가 머물다 화면이 사방으로 갈라지며 열림 */
 .lq { position: absolute; width: 50.35%; height: 50.35%; background: var(--void); z-index: 7;
@@ -1584,6 +1607,9 @@ main h3 { font-family: var(--font-mono); font-weight: 400; font-size: .85rem; le
   box-shadow: 0 18px 48px rgba(0,0,0,.45);
 }
 .mc-preview canvas.is-ready { border-color: var(--gold-deep); }
+/* 아직 만들지 않은 카드는 자리를 차지하지 않는다 — 빈 검은 상자가 한 화면을 먹던 문제 */
+.mc-preview canvas:not(.is-ready), .cc-preview canvas:not(.is-ready) { display: none; }
+.mc-preview:empty, .cc-preview:empty { display: none; }
 #mc-welcome { min-height: 1.4em; }
 
 /* 이달의 이야기 실마리 */
@@ -1656,10 +1682,12 @@ main h3 { font-family: var(--font-mono); font-weight: 400; font-size: .85rem; le
 .legal-body p { color: var(--muted); line-height: 1.9; }
 /* 홈 푸터 = 비욘세 우측 하단 한 줄 */
 body.home .footer-min nav {
-  justify-content: flex-end; padding: 0 22px 16px; gap: 1.5rem;
-  font-size: .6rem; background: none;
+  justify-content: flex-end; padding: 3rem 22px 16px; gap: 1.5rem;
+  font-size: .6rem;
+  /* 영상 위에 얹히는 줄이라, 밝은 장면에서도 읽히게 아래를 확실히 덮는다 */
+  background: linear-gradient(to top, rgba(8,8,8,.96) 0%, rgba(8,8,8,.86) 45%, rgba(8,8,8,.45) 78%, transparent 100%);
 }
-body.home .footer-min a { min-height: 44px; color: var(--faint); }
+body.home .footer-min a { min-height: 44px; color: var(--muted); }
 body.home .footer-min a:hover { color: #fff; }
 
 .strip-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
@@ -2410,3 +2438,38 @@ button.sr-row .sr-play { color: var(--gold); }
 @media (prefers-reduced-motion: reduce) {
   .strip-hint { animation: none; } .sh-arrow { animation: none; }
 }
+
+/* ============================================================
+   데스크톱 타입 스케일 교정 (v104)
+   ------------------------------------------------------------
+   실측 결과 데스크톱에서 제목이 92~99px까지 커져 있었고(편집물 기준 56~72px),
+   읽는 줄 길이가 42~107자로 들쭉날쭉했다(편안한 범위는 45~75자).
+   제목의 상한을 낮추고, 본문에는 읽기 폭을 줘 줄 길이를 범위 안에 넣는다.
+   ============================================================ */
+@media (min-width: 721px) {
+  /* 제목: 1440에서 66px, 1920 이상에서도 68px를 넘지 않는다 */
+  .page-hero h1 { font-size: clamp(2.2rem, 4.6vw, 4rem); line-height: 1.1; }
+  h1 { font-size: clamp(2.2rem, 4.4vw, 4rem); }
+
+  /* 서두 문단: 27~32px는 과했다 */
+  .lede, #h-profile + p, .about-lede {
+    font-size: clamp(1.15rem, 1.45vw, 1.42rem); line-height: 1.68;
+  }
+
+  /* 읽기 폭 — 한 줄이 45~75자에 들어오게 한다.
+     한글 기준 1em ≈ 2자이므로 34em이면 약 68자. (40em은 80자로 길었다) */
+  .legal-body > p, .legal-body > h2 { max-width: 34em; }
+  .haemil-copy p { max-width: 34em; }
+  .news-item .excerpt { max-width: 36em; }
+  .page-hero p { max-width: 34em; }
+  /* HTML에 인라인으로 박힌 46em(=92자)을 읽기 폭으로 되돌린다 */
+  .card-desc { max-width: 34em !important; }
+  #deck-setnote { max-width: 34em; }
+  /* 손편지는 본문이 아니라 전시물 — 크기는 두되 과하지 않게 */
+  .letter-body { font-size: clamp(1.3rem, 1.9vw, 1.68rem); }
+}
+
+/* 전체화면 메뉴가 떠 있는 동안 뒤 내용이 스크롤되지 않게 붙잡는다.
+   position:fixed 대신 overflow로 잠가 iOS에서 위치가 튀는 것을 피한다. */
+body.nav-open { overflow: hidden; touch-action: none; }
+@media (min-width: 1081px) { body.nav-open { overflow: visible; touch-action: auto; } }

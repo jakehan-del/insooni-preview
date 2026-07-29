@@ -7,16 +7,24 @@
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
 <title>사랑방 | 인순이 INSOONI</title>
 <meta property="og:title" content="사랑방 | 인순이 INSOONI">
-<meta property="og:description" content="팬레터와 안부, 함께 꺼내 보는 추억.">
+<meta property="og:description" content="편지를 쓰고, 응원 카드를 만들고, 마음을 전하는 곳.">
 <meta property="og:image" content="https://jakehan-del.github.io/insooni-preview/assets/img/photos/dsc0427.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="description" content="팬레터, 팬 게시판, 투표와 이벤트. 인순이와 팬들이 함께 만드는 사랑방.">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Serif+KR:wght@400;700;900&family=Space+Mono:wght@400;700&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v103">
+<meta name="description" content="편지를 쓰고, 팬 번호증과 응원 카드를 만들고, 공식 채널로 마음을 전하는 곳. 인순이 공식 사랑방.">
+<link rel="stylesheet" href="assets/fonts/fonts.css?v1">
+<link rel="stylesheet" href="assets/css/style.min.css?v107">
+<link rel="canonical" href="https://jakehan-del.github.io/insooni-preview/community.html">
+<meta property="og:url" content="https://jakehan-del.github.io/insooni-preview/community.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="인순이 INSOONI 공식 팬 플랫폼">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:locale:alternate" content="en_US">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="twitter:title" content="사랑방 | 인순이 INSOONI">
+<meta name="twitter:description" content="편지를 쓰고, 응원 카드를 만들고, 마음을 전하는 곳.">
+<meta name="twitter:image" content="https://jakehan-del.github.io/insooni-preview/assets/img/photos/dsc0427.jpg">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://jakehan-del.github.io/insooni-preview/"},{"@type":"ListItem","position":2,"name":"사랑방","item":"https://jakehan-del.github.io/insooni-preview/community.html"}]}</script>
 </head>
 <body>
 <a class="skip-link" href="#main" data-i18n="nav.skip">본문 바로가기</a>
@@ -50,7 +58,7 @@
   <section class="page-hero">
     <div class="container">
       <h1 data-i18n="ph.community.t">사랑방</h1>
-      <p data-i18n="ph.community.d">편지를 쓰고, 안부를 나누고, 추억을 함께 꺼내 보는 곳. 인순이와 팬들의 마당입니다.</p>
+      <p data-i18n="ph.community.d">편지를 쓰고, 안부를 남기고, 만든 것을 간직하는 곳. 인순이와 팬들의 마당입니다.</p>
     </div>
   </section>
 
@@ -61,8 +69,8 @@
     </div>
   </section>
 
-  <!-- 인순이의 편지: 아티스트 → 팬 방향 소통 (위버스 모먼트·손편지 문법) -->
-  <section class="section" id="artist-letter" aria-labelledby="h-artist-letter">
+  <!-- 인순이의 편지: 본인이 직접 쓴 글이 있을 때만 나타난다 (data.js의 artistLetter) -->
+  <section class="section" id="artist-letter" aria-labelledby="h-artist-letter" hidden>
     <div class="container">
       <div class="section-head">
         <h2 id="h-artist-letter" data-i18n="comm.alT">인순이의 편지</h2>
@@ -75,12 +83,6 @@
             <div id="al-signature" class="sig-slot" hidden></div>
             <p class="letter-sign"><span id="al-date"></span> · <span id="al-sign"></span></p>
           </div>
-        </div>
-        <div class="letter-foot">
-          <button type="button" class="flower-btn" id="al-flower" aria-pressed="false">
-            <span aria-hidden="true">✿</span> <span data-i18n="comm.flower">꽃 한 송이 드리기</span> · <strong id="al-flower-n">0</strong>
-          </button>
-          <p class="form-hint" data-i18n="comm.alNote">운영 예시 화면입니다. 실제 운영 시 인순이 님이 직접 쓴 편지와 음성 메시지가 이 자리에 게재됩니다.</p>
         </div>
       </article>
     </div>
@@ -126,10 +128,11 @@
           <button type="button" class="btn btn--gold greet-stamp" id="stamp-btn" data-i18n="comm.stampBtn">오늘 도장 찍기</button>
           <p class="greet-state" id="stamp-state" role="status"></p>
           <div class="cheer-chips" id="cheer-chips" aria-label="한 줄 응원 고르기" data-i18n-aria="aria.cheerPick"></div>
-          <p class="form-hint" data-i18n="comm.greetHint">응원 문구를 누르면 바로 남겨집니다. 더 긴 이야기는 아래 팬레터로 보내주세요.</p>
+          <p class="form-hint" data-i18n="comm.greetHint">응원 문구를 누르면 바로 남겨집니다. 더 긴 이야기는 아래에서 편지로 남겨 보세요.</p>
         </div>
         <div>
-          <h3 class="cheer-wall-t" data-i18n="comm.cheerWall">오늘의 응원</h3>
+          <h3 class="cheer-wall-t" data-i18n="comm.cheerWall">내가 남긴 응원</h3>
+          <p class="form-hint" style="margin:-.6rem 0 1rem" data-i18n="comm.cheerNote">이 기기에만 저장됩니다.</p>
           <div id="cheer-wall" class="cheer-wall"></div>
         </div>
       </div>
@@ -166,40 +169,25 @@
     </div>
   </section>
 
-  <!-- 인순이가 답합니다: 월간 팬 Q&A (Paul McCartney 'You Gave Me The Answer' 문법) -->
-  <section class="section section--band" id="qna" aria-labelledby="h-qna">
-    <div class="container">
-      <div class="section-head">
-        <h2 id="h-qna" data-i18n="qna.t">인순이가 답합니다</h2>
-      </div>
-      <p class="card-desc" style="max-width:46em;margin-bottom:1.8rem" data-i18n="qna.lead">팬 여러분이 남긴 질문 가운데 몇 가지를 골라, 매달 인순이 님이 직접 답합니다. 답변은 이 자리에 차곡차곡 쌓입니다.</p>
-      <article class="qna-item">
-        <p class="qna-q"><span class="qna-mark" aria-hidden="true">Q</span><span data-i18n="qna.exQ">무대에 오르기 전, 꼭 하시는 것이 있나요?</span></p>
-        <p class="qna-a"><span class="qna-mark qna-mark--a" aria-hidden="true">A</span><span class="qna-a-body" data-i18n="qna.exA">이 자리에 인순이 님의 답변이 실립니다.</span></p>
-        <p class="form-hint" data-i18n="qna.demo">운영 예시 화면입니다. 실제 답변은 인순이 님이 직접 작성해 게재됩니다.</p>
-      </article>
-      <a class="btn btn--gold mt-1" href="#letter" id="qna-ask" data-i18n="qna.ask">질문 보내기</a>
-    </div>
-  </section>
-
-  <!-- 소통 시스템: 남기기 → 검수 → 게재 -->
-  <section class="section" aria-label="사랑방 운영 방식" data-i18n-aria="aria.roomHow">
+  <!-- 지금 이 사랑방에서 실제로 되는 일 -->
+  <section class="section" aria-label="사랑방 이용 안내" data-i18n-aria="aria.roomHow">
     <div class="container">
       <div class="sys-strip">
-        <div class="sys-step"><span aria-hidden="true">01</span><p data-i18n="comm.s1">남기기 — 팬레터와 응원을 작성합니다</p></div>
-        <div class="sys-step"><span aria-hidden="true">02</span><p data-i18n="comm.s2">검수 — 소솝 운영진이 확인합니다</p></div>
-        <div class="sys-step"><span aria-hidden="true">03</span><p data-i18n="comm.s3">게재 — 승인된 글만 공개됩니다</p></div>
+        <div class="sys-step"><span aria-hidden="true">01</span><p data-i18n="comm.s1">간직하기 — 번호증·응원 카드·편지는 내 기기에 남습니다</p></div>
+        <div class="sys-step"><span aria-hidden="true">02</span><p data-i18n="comm.s2">전하기 — 공식 채널로 바로 이어 드립니다</p></div>
+        <div class="sys-step"><span aria-hidden="true">03</span><p data-i18n="comm.s3">나누기 — 만든 카드는 이미지로 저장해 보낼 수 있습니다</p></div>
       </div>
     </div>
   </section>
 
-  <!-- 팬레터 -->
+  <!-- 마음 전하기: 이 기기에 보관 + 실제로 닿는 공식 창구로 연결 -->
   <section class="section section--band" id="letter" aria-labelledby="h-letter">
     <div class="container">
       <div class="section-head">
-        <h2 id="h-letter" data-i18n="comm.letter">팬레터 보내기</h2>
+        <h2 id="h-letter" data-i18n="comm.letter">마음 전하기</h2>
       </div>
-      <div class="grid grid--2">
+      <p class="card-desc" style="max-width:46em;margin-bottom:1.8rem" data-i18n="comm.letterLead">여기 쓴 편지는 이 기기의 편지함에 간직됩니다. 다 쓰신 뒤 복사해서 아래 공식 채널에 남기시면 인순이에게 가장 빨리 닿습니다.</p>
+      <div class="grid grid--2 grid--start">
         <form id="letter-form" class="letter-form" aria-label="팬레터 작성" data-i18n-aria="aria.writeLetter">
           <div class="form-field">
             <label for="letter-name" data-i18n="form.lname">이름 (별명도 좋아요)</label>
@@ -215,67 +203,50 @@
               <option value="질문" data-i18n="opt.question">인순이에게 질문</option>
             </select>
             <textarea id="letter-body" required maxlength="1000" placeholder="인순이 님께 전하고 싶은 마음을 적어주세요." data-i18n-ph="form.lbodyPh"></textarea>
-            <p class="form-hint" data-i18n="form.lhint">따뜻한 마음은 검수 후 게시되며, 일부 편지는 인순이 님께 직접 전달됩니다.</p>
           </div>
-          <button class="btn btn--gold" type="submit" data-i18n="form.lsend">편지 보내기</button>
-          <p id="letter-ok" class="form-ok" role="status" hidden data-i18n="form.lok">편지가 접수되었습니다. 소중한 마음 감사합니다.</p>
+          <div class="btn-row">
+            <button class="btn btn--gold" type="submit" data-i18n="form.lkeep">편지함에 간직하기</button>
+            <button class="btn btn--ghost" type="button" id="letter-copy" data-i18n="form.lcopy">글 복사하기</button>
+          </div>
+          <p id="letter-ok" class="form-ok" role="status" hidden></p>
+          <p class="form-hint" data-i18n="form.lhint">사이트에서 바로 보내는 접수 창구는 아직 열리지 않았습니다. 열리면 이 자리에서 곧바로 보낼 수 있게 됩니다.</p>
         </form>
         <div>
-          <h3 style="margin-bottom:1rem" data-i18n="comm.arrived">도착한 편지들</h3>
+          <h3 style="margin-bottom:.4rem" data-i18n="comm.myLetters">내 편지함</h3>
+          <p class="form-hint" style="margin-bottom:1.2rem" data-i18n="comm.myLettersNote">이 기기에만 보관됩니다. 다른 분에게는 보이지 않습니다.</p>
           <div id="letter-list" class="board-list"></div>
+          <div class="official-send">
+            <h4 data-i18n="comm.sendNow">지금 마음이 닿는 곳</h4>
+            <a class="btn btn--sm" href="https://www.youtube.com/@insooni8081/community" target="_blank" rel="noopener">YouTube</a>
+            <a class="btn btn--sm" href="https://www.instagram.com/ins00ni/" target="_blank" rel="noopener">Instagram</a>
+            <a class="btn btn--sm" href="https://cafe.daum.net/seoulsister" target="_blank" rel="noopener" data-i18n="comm.cafeShort">인순사랑 팬카페</a>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 팬 게시판 -->
-  <section class="section" id="board" aria-labelledby="h-board">
-    <div class="container">
-      <div class="section-head">
-        <h2 id="h-board" data-i18n="comm.board">팬 게시판</h2>
-      </div>
-      <button type="button" class="board-prompt" id="board-prompt" hidden></button>
-      <form id="board-form" class="form-panel" aria-label="게시글 작성" data-i18n-aria="aria.writePost" style="margin-bottom:1.6rem">
-        <div class="form-field">
-          <label for="post-name" data-i18n="form.pname">이름 (별명)</label>
-          <input id="post-name" type="text" maxlength="20" placeholder="별명을 입력하세요" data-i18n-ph="form.pnamePh">
-        </div>
-        <div class="form-field">
-          <label for="post-body" data-i18n="form.pbody">하고 싶은 이야기</label>
-          <textarea id="post-body" required maxlength="600" data-i18n-ph="form.pbodyPh" placeholder="공연 후기, 응원, 추억 이야기. 자유롭게 남겨주세요."></textarea>
-          <p class="form-hint" data-i18n="form.phint">서로를 존중하는 글 문화를 지켜주세요. 신고된 글은 운영진이 검토합니다.</p>
-        </div>
-        <button class="btn btn--gold" type="submit" data-i18n="form.psend">글 올리기</button>
-      </form>
-      <div id="board-list" class="board-list"></div>
-    </div>
-  </section>
-
-  <!-- 투표 -->
+  <!-- 듣고 싶은 노래: 전곡 검색 + 내 신청 목록(이 기기) -->
   <section class="section section--band" id="poll-section" aria-labelledby="h-poll">
     <div class="container">
       <div class="section-head">
-        <h2 id="h-poll" data-i18n="comm.poll">이달의 팬 투표</h2>
+        <h2 id="h-poll" data-i18n="comm.poll">듣고 싶은 노래</h2>
       </div>
       <div class="grid grid--2 grid--start">
         <div class="form-panel">
-          <h3 data-i18n="comm.pollQ">다음 콘서트에서 듣고 싶은 노래를 신청해 주세요</h3>
-          <p class="form-hint" style="margin-bottom:1.2rem" data-i18n="comm.pollHint">인순이의 모든 노래 가운데 무엇이든 좋습니다. 제목을 입력하면 찾아 드립니다.</p>
+          <h3 data-i18n="comm.pollQ">다음 무대에서 듣고 싶은 노래를 찾아 담아 두세요</h3>
+          <p class="form-hint" style="margin-bottom:1.2rem" data-i18n="comm.pollHint">인순이의 모든 노래를 제목으로 찾을 수 있습니다. 초성으로도 됩니다.</p>
           <div class="form-field" style="margin-bottom:1rem">
             <label class="sr-only" for="req-q" data-i18n="comm.reqLabel">신청곡 검색</label>
             <input id="req-q" type="search" autocomplete="off" placeholder="곡 제목을 입력하세요 — 초성도 됩니다" data-i18n-ph="comm.reqPh">
           </div>
           <div id="req-results" class="req-results"></div>
           <p id="req-note" class="form-hint" role="status"></p>
-          <h4 class="req-rank-t" data-i18n="comm.rankT">지금 가장 많이 신청된 노래</h4>
-          <div id="req-rank" class="req-rank"></div>
         </div>
         <div class="form-panel">
-          <h3 data-i18n="comm.event">진행 중인 이벤트</h3>
-          <p class="card-desc" style="margin-top:.8rem" data-i18n="comm.evD">공연 관람 인증, 기념일 축하 메시지 모음, 우수 팬 콘텐츠 선정 등
-          시즌별 이벤트가 이 자리에 열립니다.</p>
-          <p class="card-desc" style="margin-top:.8rem" data-i18n="comm.evNow"><strong>지금:</strong> 데뷔 기념 '나의 첫 인순이' 사연 공모</p>
-          <div class="card-meta" style="margin-top:1.4rem"><span data-i18n="comm.evNote">당첨자 발표는 소식 페이지에 게시</span></div>
+          <h3 data-i18n="comm.myList">내가 담은 노래</h3>
+          <p class="form-hint" style="margin-top:.6rem" data-i18n="comm.myListNote">이 기기에만 저장됩니다. 공식 집계가 열리면 그대로 신청할 수 있게 이어 드리겠습니다.</p>
+          <div id="req-rank" class="req-rank"></div>
         </div>
       </div>
     </div>
@@ -307,17 +278,16 @@
     </div>
   </section>
 
-  <!-- 구독 -->
+  <!-- 공식 채널: 실제로 새 소식이 올라오는 곳 -->
   <section class="subscribe" aria-labelledby="h-subscribe">
     <div class="subscribe-inner reveal">
       <h2 id="h-subscribe" data-i18n="sub.h2">소식을 가장 먼저</h2>
-      <p data-i18n="sub.p">새 공연과 방송 일정, 인순이의 메시지를 이메일로 보내드립니다.</p>
-      <form aria-label="이메일 구독 신청" data-i18n-aria="aria.subscribe">
-        <label class="sr-only" for="sub-email" data-i18n="sub.label">이메일 주소</label>
-        <input id="sub-email" type="email" required placeholder="이메일 주소" data-i18n-ph="sub.ph">
-        <button class="btn btn--gold" type="submit" data-i18n="sub.btn">구독 신청</button>
-      </form>
-      <p class="subscribe-ok" role="status" hidden data-i18n="sub.ok">신청되었습니다. 환영합니다! (데모)</p>
+      <p data-i18n="sub.p">새 공연과 방송 소식은 공식 채널에 가장 먼저 올라옵니다. 구독해 두시면 놓치지 않습니다.</p>
+      <div class="sub-links">
+        <a class="btn btn--gold" href="https://www.youtube.com/@insooni8081?sub_confirmation=1" target="_blank" rel="noopener" data-i18n="sub.yt">YouTube 구독</a>
+        <a class="btn btn--ghost" href="https://www.instagram.com/ins00ni/" target="_blank" rel="noopener" data-i18n="sub.ig">Instagram 팔로우</a>
+      </div>
+      <p class="form-hint" style="margin-top:1.2rem" data-i18n="sub.note">이메일 소식지는 준비되면 이 자리에서 신청받겠습니다.</p>
     </div>
   </section>
 
@@ -340,15 +310,15 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동" data-i18n-aria="aria.toTop">↑</button>
-<script src="assets/js/i18n.js?v103"></script>
-<script src="assets/js/data.js?v103"></script>
-<script src="assets/js/tracklinks.js?v103"></script>
-<script src="assets/js/albums-full.js?v103"></script>
-<script src="assets/js/albums-en.js?v103"></script>
-<script src="assets/js/song-moods.js?v103"></script>
-<script src="assets/js/main.js?v103"></script>
-<script src="assets/js/motion.js?v103"></script>
-<script src="assets/js/router.js?v103" defer></script>
-<script src="assets/js/deck.js?v103"></script>
+<script src="assets/js/i18n.js?v106"></script>
+<script src="assets/js/data.min.js?v107"></script>
+<script src="assets/js/tracklinks.min.js?v107"></script>
+<script src="assets/js/albums-full.min.js?v107"></script>
+<script src="assets/js/albums-en.min.js?v107"></script>
+<script src="assets/js/song-moods.min.js?v107"></script>
+<script src="assets/js/main.min.js?v107"></script>
+<script src="assets/js/motion.min.js?v107"></script>
+<script src="assets/js/router.min.js?v107" defer></script>
+<script src="assets/js/deck.min.js?v107"></script>
 </body>
 </html>

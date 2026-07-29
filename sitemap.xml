@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://jakehan-del.github.io/insooni-preview/</loc></url>
-  <url><loc>https://jakehan-del.github.io/insooni-preview/about.html</loc></url>
-  <url><loc>https://jakehan-del.github.io/insooni-preview/music.html</loc></url>
-  <url><loc>https://jakehan-del.github.io/insooni-preview/schedule.html</loc></url>
-  <url><loc>https://jakehan-del.github.io/insooni-preview/archive.html</loc></url>
-  <url><loc>https://jakehan-del.github.io/insooni-preview/news.html</loc></url>
-  <url><loc>https://jakehan-del.github.io/insooni-preview/community.html</loc></url>
-  <url><loc>https://jakehan-del.github.io/insooni-preview/haemil.html</loc></url>
+  <url><loc>https://jakehan-del.github.io/insooni-preview/</loc><priority>1.0</priority></url>
+  <url><loc>https://jakehan-del.github.io/insooni-preview/about.html</loc><priority>0.8</priority></url>
+  <url><loc>https://jakehan-del.github.io/insooni-preview/music.html</loc><priority>0.8</priority></url>
+  <url><loc>https://jakehan-del.github.io/insooni-preview/schedule.html</loc><priority>0.8</priority></url>
+  <url><loc>https://jakehan-del.github.io/insooni-preview/news.html</loc><priority>0.8</priority></url>
+  <url><loc>https://jakehan-del.github.io/insooni-preview/archive.html</loc><priority>0.8</priority></url>
+  <url><loc>https://jakehan-del.github.io/insooni-preview/community.html</loc><priority>0.8</priority></url>
+  <url><loc>https://jakehan-del.github.io/insooni-preview/haemil.html</loc><priority>0.8</priority></url>
+  <url><loc>https://jakehan-del.github.io/insooni-preview/privacy.html</loc><priority>0.4</priority></url>
+  <url><loc>https://jakehan-del.github.io/insooni-preview/terms.html</loc><priority>0.4</priority></url>
 </urlset>

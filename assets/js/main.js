@@ -70,16 +70,32 @@
   function initNav() {
     var toggle = $(".nav-toggle"), nav = $(".main-nav");
     if (!toggle || !nav) return;
-    toggle.addEventListener("click", function () {
-      var open = nav.classList.toggle("open");
+
+    /* 열고 닫는 길이 세 군데(버튼·ESC·바깥 클릭)로 흩어져 있으면
+       한 곳을 고칠 때 나머지를 빠뜨린다. 한 곳으로 모은다. */
+    function setOpen(open) {
+      nav.classList.toggle("open", open);
       toggle.setAttribute("aria-expanded", String(open));
       toggle.setAttribute("aria-label", open ? t("aria.menuClose", "메뉴 닫기") : t("aria.menuOpen", "메뉴 열기"));
+      /* 메뉴가 화면을 덮은 동안 뒤 내용이 따라 움직이면, 닫았을 때 엉뚱한 곳에 와 있다.
+         스크롤 위치를 붙잡아 두고 닫을 때 그대로 돌려놓는다. */
+      if (open) {
+        document.body.dataset.scrollY = String(window.scrollY);
+        document.body.classList.add("nav-open");
+      } else if (document.body.classList.contains("nav-open")) {
+        document.body.classList.remove("nav-open");
+        var y = parseInt(document.body.dataset.scrollY || "0", 10);
+        delete document.body.dataset.scrollY;
+        window.scrollTo(0, y);
+      }
+    }
+
+    toggle.addEventListener("click", function () {
+      setOpen(!nav.classList.contains("open"));
     });
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape" && nav.classList.contains("open")) {
-        nav.classList.remove("open");
-        toggle.setAttribute("aria-expanded", "false");
-        toggle.setAttribute("aria-label", t("aria.menuOpen", "메뉴 열기"));
+        setOpen(false);
         toggle.focus();
       }
     });
@@ -92,10 +108,12 @@
     });
     document.addEventListener("click", function (e) {
       if (nav.classList.contains("open") && !nav.contains(e.target) && !toggle.contains(e.target)) {
-        nav.classList.remove("open");
-        toggle.setAttribute("aria-expanded", "false");
-        toggle.setAttribute("aria-label", t("aria.menuOpen", "메뉴 열기"));
+        setOpen(false);
       }
+    });
+    /* 메뉴에서 다른 페이지로 넘어갈 때도 잠금을 반드시 푼다 */
+    nav.addEventListener("click", function (e) {
+      if (e.target.closest && e.target.closest("a[href]")) setOpen(false);
     });
   }
 
@@ -488,9 +506,9 @@
           }).join("") + "</p>"
         : '<p class="a-links"><a class="a-link" href="' + esc(searchUrl) + '" target="_blank" rel="noopener">' + t("rel.search", "YouTube에서 찾기") + ' <span aria-hidden="true">↗</span></a></p>';
       detail.innerHTML =
-        "<div><h4>" + t("rel.tracks", "수록곡") + "</h4>" + tracksHtml + "</div>" +
-        "<div><h4>" + t("rel.credits", "크레딧") + "</h4>" + creditsHtml + "</div>" +
-        "<div><h4>" + t("rel.listen", "감상") + "</h4>" + linksHtml + "</div>";
+        "<div><h3 class=\"a-sub\">" + t("rel.tracks", "수록곡") + "</h3>" + tracksHtml + "</div>" +
+        "<div><h3 class=\"a-sub\">" + t("rel.credits", "크레딧") + "</h3>" + creditsHtml + "</div>" +
+        "<div><h3 class=\"a-sub\">" + t("rel.listen", "감상") + "</h3>" + linksHtml + "</div>";
       row.addEventListener("click", function () {
         var open = detail.hidden;
         detail.hidden = !open;
@@ -986,136 +1004,114 @@
     $(".lightbox-close", box).focus();
   }
 
-  /* ---------- 7. 사랑방: 팬레터 ---------- */
+  /* ---------- 7. 사랑방: 마음 전하기 ----------
+     편지는 이 기기의 편지함에만 남는다. 서버가 없으니 그 이상은 할 수 없고,
+     할 수 없는 일을 한 것처럼 말하지 않는다. 대신 실제로 닿는 공식 창구로 이어 준다.
+     지울 수 있어야 진짜 '내 편지함'이므로 삭제 버튼을 둔다. */
   function initLetters() {
     var form = $("#letter-form"), listBox = $("#letter-list");
     if (!form) return;
     var KEY = "insooni_letters";
+
     function draw() {
       if (!listBox) return;
       listBox.innerHTML = "";
-      var letters = (store(KEY) || []).concat(D.sampleLetters || []);
-      if (!letters.length) { listBox.appendChild(el("p", "empty-note", t("dyn.firstLetter", "첫 번째 편지의 주인공이 되어 주세요."))); return; }
-      letters.slice(0, 6).forEach(function (L) {
+      var letters = store(KEY) || [];
+      if (!letters.length) {
+        listBox.appendChild(el("p", "empty-note",
+          t("dyn.emptyBox", "아직 간직한 편지가 없습니다. 첫 편지를 써 보세요.")));
+        return;
+      }
+      letters.forEach(function (L, i) {
         var p = el("article", "post");
         p.innerHTML =
           '<div class="post-head"><span class="avatar" aria-hidden="true">' + esc(firstChar(L.name)) + '</span>' +
-          '<span class="who">' + esc(L.name || t("dyn.anon", "익명 팬")) + '</span><span class="when">' + esc(L.date || "") + "</span></div>" +
-          '<p class="post-body">' + esc(L.body) + "</p>";
+          '<span class="who">' + esc(L.name || t("dyn.anon", "익명 팬")) + '</span>' +
+          '<span class="when">' + esc(L.date || "") + "</span></div>" +
+          '<p class="post-body">' + esc(L.body) + "</p>" +
+          '<div class="post-actions"><button type="button" data-del="' + i + '">' +
+          t("dyn.delLetter", "지우기") + "</button></div>";
         listBox.appendChild(p);
       });
     }
+
+    if (listBox) {
+      listBox.addEventListener("click", function (e) {
+        var b = e.target.closest("[data-del]");
+        if (!b) return;
+        var arr = store(KEY) || [];
+        arr.splice(+b.getAttribute("data-del"), 1);
+        store(KEY, arr);
+        draw();
+      });
+    }
+
     var okTimer = null;
+    function say(msg) {
+      var okMsg = $("#letter-ok");
+      if (!okMsg) return;
+      okMsg.textContent = msg;
+      okMsg.hidden = false;
+      if (okTimer) clearTimeout(okTimer);
+      okTimer = setTimeout(function () { okMsg.hidden = true; }, 4000);
+    }
+
+    function compose() {
+      var name = $("#letter-name").value.trim();
+      var cat = $("#letter-cat") ? $("#letter-cat").value : "";
+      var body = $("#letter-body").value.trim();
+      return { name: name, cat: cat, body: body };
+    }
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       var btn = form.querySelector("[type=submit]");
       if (btn && btn.disabled) return;
-      var name = $("#letter-name").value.trim() || t("dyn.anon", "익명 팬");
-      var body = $("#letter-body").value.trim();
-      if (!body) { $("#letter-body").focus(); return; }
+      var c = compose();
+      if (!c.body) { $("#letter-body").focus(); return; }
       if (btn) { btn.disabled = true; setTimeout(function () { btn.disabled = false; }, 800); }
       var letters = store(KEY) || [];
       var now = new Date();
-      letters.unshift({ name: name, body: body, date: now.getFullYear() + ". " + (now.getMonth() + 1) + ". " + now.getDate() + "." });
+      letters.unshift({
+        name: c.name || t("dyn.anon", "익명 팬"), body: c.body,
+        date: now.getFullYear() + ". " + (now.getMonth() + 1) + ". " + now.getDate() + "."
+      });
       store(KEY, letters);
       form.reset();
-      var okMsg = $("#letter-ok");
-      if (okMsg) {
-        okMsg.hidden = false;
-        if (okTimer) clearTimeout(okTimer);
-        okTimer = setTimeout(function () { okMsg.hidden = true; }, 4000);
-      }
+      say(t("dyn.kept", "이 기기의 편지함에 간직했습니다."));
       draw();
     });
+
+    /* 복사해서 공식 채널에 그대로 붙여 넣을 수 있게 한다 */
+    var copyBtn = $("#letter-copy");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", function () {
+        var c = compose();
+        if (!c.body) { $("#letter-body").focus(); return; }
+        var text = c.body + (c.name ? "\n\n— " + c.name : "");
+        function ok() { say(t("dyn.copied", "복사했습니다. 공식 채널에 붙여 넣어 주세요.")); }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(ok, fallback);
+        } else { fallback(); }
+        function fallback() {
+          var ta = document.createElement("textarea");
+          ta.value = text; ta.setAttribute("readonly", "");
+          ta.style.position = "fixed"; ta.style.opacity = "0";
+          document.body.appendChild(ta); ta.select();
+          try { document.execCommand("copy"); ok(); }
+          catch (err) { say(t("dyn.copyFail", "복사가 안 되면 글을 직접 선택해 복사해 주세요.")); }
+          ta.remove();
+        }
+      });
+    }
+
     draw();
   }
 
-  /* ---------- 8. 사랑방: 게시판 ---------- */
-  var GOOSE_AVATAR = '<svg viewBox="0 0 120 72" aria-hidden="true" focusable="false" style="width:20px;height:auto"><g fill="currentColor"><ellipse cx="48" cy="46" rx="27" ry="11.5" transform="rotate(-7 48 46)"/><path d="M66 41 C78 36 87 30 94 23" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><circle cx="96" cy="21" r="5.4"/><path d="M100 18.5 L111 21 L100 24.5 Z"/><path d="M45 38 C36 24 34 13 41 6 C48 12 55 27 57 37 C53 38.5 49 38.7 45 38 Z"/><path d="M24 42 L10 37 L22 50 Z"/></g></svg>';
-  function initBoard() {
-    var listBox = $("#board-list"), form = $("#board-form");
-    if (!listBox) return;
-    /* 이달의 이야기: 달마다 다른 실마리 한 줄. 누르면 이야기 칸으로 옮겨 준다. */
-    var promptBtn = $("#board-prompt");
-    if (promptBtn && D.boardPrompts && D.boardPrompts.length) {
-      var bpEN = document.documentElement.getAttribute("lang") === "en";
-      var now = new Date();
-      var idx = (now.getFullYear() * 12 + now.getMonth()) % D.boardPrompts.length;
-      var pr = D.boardPrompts[idx];
-      var prText = (bpEN && pr.en) ? pr.en : pr.ko;
-      promptBtn.innerHTML = '<span class="bp-kicker">' +
-        (bpEN ? "THIS MONTH'S STORY" : "이달의 이야기") +
-        '</span><span class="bp-text"></span>';
-      promptBtn.querySelector(".bp-text").textContent = prText;
-      promptBtn.hidden = false;
-      promptBtn.addEventListener("click", function () {
-        var ta = $("#post-body");
-        if (ta) { ta.value = prText + "\n\n"; ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); ta.scrollIntoView({ block: "center", behavior: "smooth" }); }
-      });
-    }
-    var KEY = "insooni_posts";
-    function likeKey(id) { return "insooni_like_" + id; }
-    function draw() {
-      listBox.innerHTML = "";
-      var posts = (store(KEY) || []).concat(D.samplePosts || []);
-      posts.forEach(function (P, idx) {
-        var id = P.id || "u" + idx;
-        var liked = !!store(likeKey(id));
-        var likes = (P.likes || 0) + (liked ? 1 : 0);
-        var article = el("article", "post" + (P.artist ? " post--artist" : ""));
-        article.innerHTML =
-          '<div class="post-head"><span class="avatar" aria-hidden="true">' + (P.artist ? GOOSE_AVATAR : esc(firstChar(P.name))) + "</span>" +
-          '<span class="who">' + esc(P.name) + "</span>" +
-          (P.artist ? '<span class="badge badge--gold">공식</span>' : "") +
-          '<span class="when">' + esc(P.date || "") + "</span></div>" +
-          '<p class="post-body">' + esc(P.body) + "</p>" +
-          '<div class="post-actions">' +
-          '<button type="button" data-like="' + esc(id) + '" aria-pressed="' + liked + '">응원 ' + likes + "</button>" +
-          '<button type="button" data-report="' + esc(id) + '"' + (store("insooni_report_" + id) ? ' disabled>' + t("dyn.reportedBtn", "신고 접수됨") : ">" + t("dyn.report", "신고")) + "</button></div>";
-        listBox.appendChild(article);
-      });
-    }
-    listBox.addEventListener("click", function (e) {
-      var likeBtn = e.target.closest("[data-like]");
-      var reportBtn = e.target.closest("[data-report]");
-      if (likeBtn) {
-        var id = likeBtn.getAttribute("data-like");
-        store(likeKey(id), store(likeKey(id)) ? null : true);
-        if (store(likeKey(id)) === null) localStorage.removeItem("insooni_like_" + id);
-        draw();
-      }
-      if (reportBtn) {
-        var rid = reportBtn.getAttribute("data-report");
-        if (store("insooni_report_" + rid)) return;
-        store("insooni_report_" + rid, true);
-        reportBtn.disabled = true;
-        reportBtn.textContent = t("dyn.reportedBtn", "신고 접수됨");
-        var post = reportBtn.closest(".post");
-        var msg = el("p", "form-hint", t("dyn.reported", "신고가 접수되었습니다. 운영진이 검토합니다."));
-        msg.setAttribute("role", "status");
-        post.appendChild(msg);
-        setTimeout(function () { msg.remove(); }, 4000);
-      }
-    });
-    if (form) {
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        var btn = form.querySelector("[type=submit]");
-        if (btn && btn.disabled) return;
-        var name = $("#post-name").value.trim() || t("dyn.anon", "익명 팬");
-        var body = $("#post-body").value.trim();
-        if (!body) { $("#post-body").focus(); return; }
-        if (btn) { btn.disabled = true; setTimeout(function () { btn.disabled = false; }, 800); }
-        var posts = store(KEY) || [];
-        var now = new Date();
-        posts.unshift({ id: "p" + Date.now(), name: name, body: body, likes: 0, date: now.getFullYear() + ". " + (now.getMonth() + 1) + ". " + now.getDate() + "." });
-        store(KEY, posts);
-        form.reset();
-        draw();
-      });
-    }
-    draw();
-  }
+  /* ---------- 8. (삭제) 팬 게시판 ----------
+     정적 사이트에는 공용 게시판을 둘 수 없다. localStorage는 그 기기에만 남는데
+     이를 "모두의 게시판"으로 보여 주면 팬을 속이게 된다. 대신 실제로 사람이 모이는
+     팬카페로 이어 주고(이웃 팬 공간), 여기서는 내 편지함만 다룬다. */
 
   /* ---------- 9. 사랑방: 투표 ---------- */
   function initPoll() {
@@ -1155,40 +1151,35 @@
       });
     })();
 
-    function counts() {
-      var base = {};
-      (D.requestSeed || []).forEach(function (r) { base[r.t] = r.n; });
-      var mine = store(KEY) || {};
-      Object.keys(mine).forEach(function (k) { base[k] = (base[k] || 0) + 1; });
-      return base;
-    }
     function drawRank() {
-      var c = counts();
-      var list = Object.keys(c).map(function (k) { return { t: k, n: c[k] }; })
-        .sort(function (a, b) { return b.n - a.n; }).slice(0, 8);
-      var max = list.length ? list[0].n : 1;
-      rank.innerHTML = "";
+      if (!rank) return;
       var mine = store(KEY) || {};
-      list.forEach(function (r, i) {
-        var row = el("div", "rk-row" + (mine[r.t] ? " is-mine" : ""));
+      var list = Object.keys(mine);
+      rank.innerHTML = "";
+      if (!list.length) {
+        rank.appendChild(el("p", "empty-note", t("dyn.reqEmpty", "아직 담은 노래가 없습니다.")));
+        return;
+      }
+      list.forEach(function (title, i) {
+        var row = el("div", "rk-row is-mine");
         row.innerHTML =
           '<span class="rk-no">' + (i + 1) + "</span>" +
           '<span class="rk-name"></span>' +
-          '<span class="rk-bar"><i style="width:' + Math.round(r.n / max * 100) + '%"></i></span>' +
-          '<span class="rk-n">' + r.n + "</span>";
-        row.querySelector(".rk-name").textContent = r.t;
+          '<button type="button" class="rk-x" data-drop="' + esc(title) + '">' +
+          t("dyn.reqDrop", "빼기") + "</button>";
+        row.querySelector(".rk-name").textContent = title;
         rank.appendChild(row);
       });
     }
     function request(title) {
       var mine = store(KEY) || {};
       if (mine[title]) {
-        note.textContent = t("dyn.reqDup", "이미 신청하신 곡입니다.");
+        note.textContent = t("dyn.reqDup", "이미 담은 곡입니다.");
         return;
       }
       mine[title] = 1;
       store(KEY, mine);
-      note.textContent = "\u2018" + title + "\u2019 " + t("dyn.reqOk", "신청이 접수되었습니다. 공연 준비에 참고자료로 전달됩니다.");
+      note.textContent = "\u2018" + title + "\u2019 " + t("dyn.reqOk", "목록에 담았습니다.");
       input.value = "";
       out.innerHTML = "";
       drawRank();
@@ -1207,7 +1198,7 @@
       hits.forEach(function (s2) {
         var b = el("button", "req-hit");
         b.type = "button";
-        b.innerHTML = '<span class="rh-t"></span><span class="rh-m"></span><span class="rh-go">' + t("dyn.reqBtn", "신청") + "</span>";
+        b.innerHTML = '<span class="rh-t"></span><span class="rh-m"></span><span class="rh-go">' + t("dyn.reqBtn", "담기") + "</span>";
         b.querySelector(".rh-t").textContent = s2.t;
         b.querySelector(".rh-m").textContent = [s2.al, s2.y].filter(Boolean).join(" · ");
         b.addEventListener("click", function () { request(s2.t); });
@@ -1215,6 +1206,16 @@
       });
     }
     input.addEventListener("input", search);
+    if (rank) {
+      rank.addEventListener("click", function (e) {
+        var b = e.target.closest("[data-drop]");
+        if (!b) return;
+        var mine = store(KEY) || {};
+        delete mine[b.getAttribute("data-drop")];
+        store(KEY, mine);
+        drawRank();
+      });
+    }
     drawRank();
   }
 
@@ -1224,7 +1225,9 @@
   function initSarangbang() {
     /* 인순이의 편지 */
     var alBody = $("#al-body");
-    if (alBody && D.artistLetter) {
+    var alSec = $("#artist-letter");
+    if (alBody && D.artistLetter && D.artistLetter.body) {
+      if (alSec) alSec.hidden = false;
       var AL = D.artistLetter;
       alBody.textContent = tr(AL, "body");
       $("#al-date").textContent = AL.date;
@@ -1238,18 +1241,6 @@
         im.onload = function () { sigBox.innerHTML = ""; sigBox.appendChild(im); sigBox.hidden = false; };
         im.src = AL.signature;
       }
-      var fBtn = $("#al-flower"), fN = $("#al-flower-n");
-      var FKEY = "insooni_flower_letter";
-      function drawFlower() {
-        var mine = !!store(FKEY);
-        fN.textContent = String((AL.flowers || 0) + (mine ? 1 : 0));
-        fBtn.setAttribute("aria-pressed", String(mine));
-      }
-      fBtn.addEventListener("click", function () {
-        if (store(FKEY)) { localStorage.removeItem(FKEY); } else { store(FKEY, true); }
-        drawFlower();
-      });
-      drawFlower();
     }
 
     /* 오늘의 문안 인사: 출석 도장 */
@@ -1306,7 +1297,11 @@
       function drawWall() {
         wall.innerHTML = "";
         var mine = store(CKEY) || [];
-        var all = mine.concat(D.sampleCheers || []).slice(0, 7);
+        if (!mine.length) {
+          wall.appendChild(el("p", "empty-note", t("dyn.cheerEmpty", "아직 남긴 응원이 없습니다. 위에서 한 줄 골라 보세요.")));
+          return;
+        }
+        var all = mine.slice(0, 7);   /* 내가 남긴 것만 — 지어낸 팬을 섞지 않는다 */
         all.forEach(function (c) {
           var row = el("div", "cheer-item");
           var text = isEN && presetEN[c.text] ? presetEN[c.text] : c.text;
@@ -1630,19 +1625,10 @@
     setTimeout(function () { targets.forEach(function (el2) { el2.classList.add("in"); }); }, 4000);
   }
 
-  /* ---------- 10. 구독 폼 (데모) ---------- */
-  function initSubscribe() {
-    $all(".subscribe form").forEach(function (form) {
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        var input = form.querySelector("input[type=email]");
-        var msg = form.parentElement.querySelector(".subscribe-ok");
-        if (msg) { msg.hidden = false; setTimeout(function () { msg.hidden = true; }, 4000); }
-        form.reset();
-        if (input) input.blur();
-      });
-    });
-  }
+  /* ---------- 10. (삭제) 이메일 구독 폼 ----------
+     메일링 시스템이 없으니 '신청되었습니다'는 거짓말이다.
+     실제로 구독이 되는 곳(공식 유튜브·인스타그램)으로 바로 보낸다. */
+
 
   /* ---------- 11. 관리자 대시보드 (데모) ---------- */
   function initAdmin() {
@@ -1774,7 +1760,7 @@
     /* 화질과 데이터 사이의 균형. 소스를 HTML에 박아 두면 preload가 큰 파일을
        먼저 받아 버리므로, 여기서 화면·연결을 보고 골라 넣는다.
        큰 화면·좋은 연결은 1080p, 작은 화면이나 데이터 절약 모드는 720p 경량본. */
-    (function pickSource() {
+    function pickSource() {
       var src = v.querySelector("source");
       if (!src || v.dataset.picked || !src.getAttribute("data-src")) return;
       v.dataset.picked = "1";
@@ -1784,15 +1770,28 @@
       var lite = src.getAttribute("data-lite");
       src.setAttribute("src", (lite && (small || saver)) ? lite : src.getAttribute("data-src"));
       v.load();
-    })();
+      tryPlay();
+    }
+    /* 포스터가 먼저 뜨는 것이 영상보다 중요하다. 첫 화면이 다 그려지고 나서
+       한가한 틈에 영상을 받는다 — 안 그러면 몇 MB짜리 영상이 대표 이미지의
+       표시 시각을 통째로 늦춘다. */
+    function later(fn) {
+      if (document.readyState === "complete") idle(fn);
+      else window.addEventListener("load", function () { idle(fn); }, { once: true });
+      function idle(f) {
+        if (window.requestIdleCallback) requestIdleCallback(f, { timeout: 2500 });
+        else setTimeout(f, 600);
+      }
+    }
     /* 실제 프레임이 흐르기 시작하면 포스터 위로 영상이 피어난다 */
     var stage = v.closest(".strip-item--video") || v.parentNode;
     v.addEventListener("playing", function () { if (stage) stage.classList.add("is-playing"); });
     function tryPlay() {
+      if (!v.dataset.picked) return;
       var p = v.play();
       if (p && p.catch) p.catch(function () { /* 자동재생 차단 시 포스터 유지 */ });
     }
-    tryPlay();
+    later(pickSource);
     document.addEventListener("visibilitychange", function () {
       if (!document.hidden && v.paused && v.dataset.userPaused !== "1") tryPlay();
     });
@@ -1822,6 +1821,13 @@
     /* 비욘세 문법: 입장 액션은 매 진입마다 재생 (모션 민감 시에만 스킵) */
     var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) { box.remove(); return; }
+    /* 한 세션에 한 번만. 페이지를 옮길 때마다 4초짜리 입장 액션을 다시 보는 것은
+       두 번째부터는 대접이 아니라 방해다. */
+    try {
+      if (sessionStorage.getItem("insooni_entered")) { box.remove(); return; }
+      sessionStorage.setItem("insooni_entered", "1");
+    } catch (e) { /* 저장이 막힌 환경이면 그냥 재생한다 */ }
+
     var frames = $all("img", box);
     var i = 0;
     var started = false;
@@ -1830,8 +1836,10 @@
       started = true;
       run();
     }
-    var cap = setTimeout(start, 900);
-    Promise.all(frames.map(function (im) {
+    /* 첫 두 장만 기다린다. 나머지는 액션이 도는 동안 따라 들어온다 —
+       여덟 장을 모두 기다리면 그만큼 화면이 늦게 열린다. */
+    var cap = setTimeout(start, 600);
+    Promise.all(frames.slice(0, 2).map(function (im) {
       return im.decode ? im.decode().catch(function () {}) : Promise.resolve();
     })).then(function () { clearTimeout(cap); start(); });
     function run() {
@@ -1842,10 +1850,10 @@
       } else {
         clearInterval(iv);
         /* 피날레: 거위가 날갯짓하며 잠시 머문 뒤 화면이 사방으로 갈라지며 열린다 */
-        setTimeout(function () { box.classList.add("split"); }, 620);
-        setTimeout(function () { if (box.parentNode) box.remove(); }, 1800);
+        setTimeout(function () { box.classList.add("split"); }, 420);
+        setTimeout(function () { if (box.parentNode) box.remove(); }, 1300);
       }
-    }, 265);
+    }, 150);
     }
   }
 
@@ -2016,9 +2024,9 @@
   function pageInit() {
     [renderEventList, initStrip, initVhero, renderArchive, renderPastRecaps,
      initFreshVideos, initVideoButtons, initReveal, renderNewsPage, renderCalendar,
-     renderTimeline, renderAnniversary, renderDiscography, initLetters, initBoard,
+     renderTimeline, renderAnniversary, renderDiscography, initLetters,
      initPoll, initSarangbang, initMemberCard, initCheerCard, initQna, initRise,
-     initSubscribe, initAdmin].forEach(safe);
+     initAdmin].forEach(safe);
     /* 마지막에 번역을 건다 — 위 렌더러들이 만들어 낸 요소까지 함께 잡기 위해서.
        라우터로 페이지를 옮겨도 새 <main>이 영어로 칠해진다. */
     applyLang(curLang());
