@@ -244,11 +244,24 @@
     btBpm = document.getElementById("bt-bpm");
     btViz = booth.querySelector(".bt-viz");
     btCtx = btViz ? btViz.getContext("2d") : null;
+    booth.setAttribute("aria-hidden", "false");
+    idleBooth();
+    var pw = document.getElementById("bt-power");
+    if (pw && !pw.dataset.bound) {
+      pw.dataset.bound = "1";
+      pw.addEventListener("click", function () {
+        /* 아직 안 돌고 있으면 오늘의 믹스로 시작, 돌고 있으면 멈춤/재개 */
+        if (!ctx || !queue.length) { start("today"); return; }
+        toggle();
+      });
+    }
   }
   function paintBooth() {
     if (!booth || !btDecks || !btDecks[0] || !decks.length) return;
     booth.classList.add("is-live");
     booth.setAttribute("aria-hidden", "false");
+    var pw = document.getElementById("bt-power");
+    if (pw) pw.querySelector(".btp-icon").textContent = decks[cur].el.paused ? "\u25B6" : "\u275A\u275A";
     for (var i = 0; i < 2; i++) {
       var d = decks[i], el = btDecks[i];
       if (!el) continue;
@@ -268,6 +281,12 @@
       var p = decks[cur].period;
       btBpm.textContent = p ? String(Math.round(60 / p)) : "—";
     }
+  }
+  function idleBooth() {
+    if (!btDecks || !btDecks[0]) return;
+    var msg = T("눌러서 판을 올려 보세요", "Press to drop the needle");
+    btDecks[0].querySelector(".bt-track").textContent = msg;
+    btDecks[1].querySelector(".bt-track").textContent = "";
   }
   function setBoothTrack(i, track) {
     if (!btDecks || !btDecks[i]) return;
@@ -426,9 +445,20 @@
       });
   }
 
+  /* 날씨 응답이 아직이면 잠깐 기다렸다가 오늘의 믹스를 짠다 */
+  function waitToday(k) {
+    if (k !== "today" || window.INSOONI_TODAY) return Promise.resolve();
+    return new Promise(function (res) {
+      var n = 0;
+      var iv = setInterval(function () {
+        if (window.INSOONI_TODAY || ++n > 16) { clearInterval(iv); res(); }
+      }, 100);
+    });
+  }
+
   function start(k, resumeTitle) {
     kind = k || "all";
-    load().then(function () {
+    Promise.all([load(), waitToday(kind)]).then(function () {
       ensureAudio();
       if (ctx.state === "suspended") ctx.resume();
       queue = build(kind);

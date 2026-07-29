@@ -87,6 +87,7 @@ window.I18N_EN = {
   "haemil.moments": "SCHOOL MOMENTS",
   "music.index": "SINGLES & FURTHER RECORDS 1978-2025",
   "rd.t": "INSOONI MIX",
+  "rd.spin": "DROP THE NEEDLE",
   "rd.lead": "Pick a mood and the songs blend into one another, endlessly. No ads, and it never stops as you move through the site.",
   "disc.todayT": "TODAY, THIS SONG",
   "disc.todayHint": "Changes each day with Seoul's weather, season and hour.",

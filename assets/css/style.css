@@ -1838,7 +1838,7 @@ body.has-deck .back-to-top { bottom: calc(92px + 1.2rem); }
 
 /* ============ DJ 부스: LP 두 장이 실제로 도는 믹싱 머신 (v55) ============ */
 .booth {
-  display: none; margin-top: 2.6rem;
+  display: grid; margin-top: 2.6rem;
   grid-template-columns: 1fr minmax(220px, 1.1fr) 1fr;
   gap: clamp(1rem, 3vw, 2.6rem); align-items: start;
   padding: clamp(1.4rem, 3vw, 2.6rem);
@@ -1847,7 +1847,7 @@ body.has-deck .back-to-top { bottom: calc(92px + 1.2rem); }
     radial-gradient(ellipse 80% 60% at 50% 0%, rgba(212,175,55,.07), transparent 70%),
     linear-gradient(to bottom, #0e0e0e, #080808);
 }
-.booth.is-live { display: grid; }
+
 
 .bt-deck { display: grid; justify-items: center; gap: .7rem; position: relative; }
 .bt-platter {
@@ -2034,3 +2034,17 @@ html.has-cursor, html.has-cursor a, html.has-cursor button, html.has-cursor .sho
   .rv .rv-word { transform: none; transition: none; }
   .frame img, .thumb img { transform: none !important; }
 }
+
+/* 부스 대기 상태: 판은 멈춰 있고 중앙의 재생 버튼이 기다린다 */
+.bt-power {
+  display: grid; justify-items: center; gap: .55rem; padding: 1.1rem 1.6rem; cursor: pointer;
+  background: transparent; border: 1px solid var(--line-strong); border-radius: 2px; color: var(--ivory);
+  transition: border-color .25s ease, color .25s ease, transform .3s cubic-bezier(.22,.8,.36,1);
+}
+.bt-power:hover { border-color: var(--gold); color: var(--gold); }
+.bt-power .btp-icon { font-size: 1.5rem; line-height: 1; }
+.bt-power .btp-label { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .24em; }
+.booth.is-live .bt-power .btp-icon { font-size: 1.2rem; }
+.booth:not(.is-live) .bt-viz { opacity: .12; }
+.booth:not(.is-live) .bt-fader, .booth:not(.is-live) .bt-fader-label, .booth:not(.is-live) .bt-bpm { opacity: .35; }
+.booth:not(.is-live) .bt-track::after { content: attr(data-idle); color: var(--faint); }
