@@ -1838,7 +1838,24 @@
       sessionStorage.setItem("insooni_entered", "1");
     } catch (e) { /* 저장이 막힌 환경이면 그냥 재생한다 */ }
 
+    /* 휴대폰에서는 장수를 줄인다. 2.5초짜리 입장 액션을 위해 전면 사진 여덟 장을
+       모바일 데이터로 받게 하는 것은 과하고, 이 사진들이 곧 '가장 큰 그림'으로
+       잡혀 체감 로딩까지 늦춘다. 큰 화면에서는 여덟 장 그대로 간다. */
     var frames = $all("img", box);
+    var wide = !(window.matchMedia && window.matchMedia("(max-width: 760px)").matches);
+    if (wide) {
+      /* 큰 화면에서만 뒷장을 불러온다. HTML에 src로 적어 두면 브라우저의
+         미리읽기 스캐너가 자바스크립트보다 먼저 받아 버려서, 나중에 지워도
+         이미 데이터를 쓴 뒤가 된다. */
+      frames.forEach(function (im) {
+        var d = im.getAttribute("data-src");
+        if (d && !im.getAttribute("src")) im.setAttribute("src", d);
+      });
+    } else {
+      frames.filter(function (im) { return !im.getAttribute("src"); })
+            .forEach(function (im) { im.remove(); });
+      frames = $all("img", box);
+    }
     var i = 0;
     var started = false;
     function start() {
