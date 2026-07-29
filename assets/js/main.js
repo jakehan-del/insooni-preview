@@ -329,10 +329,13 @@
       (a.tracks && a.tracks.length ? rich : plain).push(a);
     });
     /* 정규는 최신 → 1집 순으로 전부 상세 행 (수록곡 없는 앨범도 앨범으로 보이게) */
+    /* 시간순: 1집 → 18집 → 2025 (섹션 제목의 흐름과 일치) */
     regs.sort(function (a, b) {
-      var y = String(b.year).localeCompare(String(a.year));
-      return y !== 0 ? y : (regNo(b) || 0) - (regNo(a) || 0);
+      var y = String(a.year).localeCompare(String(b.year));
+      return y !== 0 ? y : (regNo(a) || 99) - (regNo(b) || 99);
     });
+    rich.sort(function (a, b) { return String(a.year).localeCompare(String(b.year)); });
+    plain.sort(function (a, b) { return String(a.year).localeCompare(String(b.year)); });
     if (idx) {
       plain.forEach(function (a) {
         var r = el("p", "di-row");
