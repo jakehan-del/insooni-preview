@@ -1130,13 +1130,24 @@ body.home .footer-min nav { justify-content: center; padding-bottom: .6rem; padd
 body.home .footer-min a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 .3em; color: var(--muted); }
 
 .loader { position: fixed; inset: 0; z-index: 300; background: transparent; pointer-events: none; animation: loader-safety 4.6s ease forwards; }
-.loader img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .26s ease; }
-.loader img:nth-child(1) { z-index: 15; }
-.loader img:nth-child(2) { z-index: 14; }
-.loader img:nth-child(3) { z-index: 13; }
-.loader img:nth-child(4) { z-index: 12; }
-.loader img:nth-child(5) { z-index: 11; }
-.loader img.gone { opacity: 0; }
+.loader img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  /* 천천히 밀려드는 화면 + 위에서 아래로 걷히는 컷 전환 */
+  animation: ld-drift 3.4s ease-out both;
+  transition: opacity .34s ease, clip-path .46s cubic-bezier(.65,0,.35,1), transform .6s ease;
+  clip-path: inset(0 0 0 0);
+  will-change: transform, clip-path, opacity;
+}
+@keyframes ld-drift { from { transform: scale(1.09); } to { transform: scale(1); } }
+.loader img:nth-child(1) { z-index: 18; }
+.loader img:nth-child(2) { z-index: 17; }
+.loader img:nth-child(3) { z-index: 16; }
+.loader img:nth-child(4) { z-index: 15; }
+.loader img:nth-child(5) { z-index: 14; }
+.loader img:nth-child(6) { z-index: 13; }
+.loader img:nth-child(7) { z-index: 12; }
+.loader img:nth-child(8) { z-index: 11; }
+.loader img.gone { opacity: 0; clip-path: inset(0 0 100% 0); transform: scale(1.02); }
 .loader-mark {
   position: absolute; inset: 0; z-index: 6; display: grid; place-items: center;
   font-family: var(--font-latin); font-weight: 600;
@@ -1824,3 +1835,127 @@ body.has-deck .back-to-top { bottom: calc(92px + 1.2rem); }
   .deck { animation: none; }
   body.deck-playing .dk-disc { animation: none; }
 }
+
+/* ============ DJ 부스: LP 두 장이 실제로 도는 믹싱 머신 (v55) ============ */
+.booth {
+  display: none; margin-top: 2.6rem;
+  grid-template-columns: 1fr minmax(220px, 1.1fr) 1fr;
+  gap: clamp(1rem, 3vw, 2.6rem); align-items: start;
+  padding: clamp(1.4rem, 3vw, 2.6rem);
+  border: 1px solid var(--line); border-radius: var(--r-panel);
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(212,175,55,.07), transparent 70%),
+    linear-gradient(to bottom, #0e0e0e, #080808);
+}
+.booth.is-live { display: grid; }
+
+.bt-deck { display: grid; justify-items: center; gap: .7rem; position: relative; }
+.bt-platter {
+  position: relative; width: min(100%, 190px); aspect-ratio: 1; border-radius: 50%;
+  background: #0a0a0a;
+  box-shadow: 0 0 0 1px rgba(243,239,231,.09), 0 18px 50px rgba(0,0,0,.65),
+              inset 0 0 40px rgba(0,0,0,.9);
+  transition: filter .5s ease, box-shadow .5s ease;
+  filter: grayscale(70%) brightness(.55);
+}
+.bt-vinyl {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: repeating-radial-gradient(circle at 50% 50%, #191919 0 1.5px, #0d0d0d 1.5px 3.5px);
+}
+.bt-platter .bt-art {
+  position: absolute; left: 50%; top: 50%; width: 46%; height: 46%; margin: -23% 0 0 -23%;
+  border-radius: 50%; object-fit: cover;
+  box-shadow: 0 0 0 1px rgba(212,175,55,.35);
+}
+.bt-platter .bt-spindle {
+  position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; margin: -5px 0 0 -5px;
+  border-radius: 50%; background: #050505; box-shadow: 0 0 0 1px rgba(212,175,55,.55);
+}
+.bt-deck.is-live .bt-platter {
+  filter: none;
+  box-shadow: 0 0 0 1px rgba(212,175,55,.5), 0 22px 60px rgba(0,0,0,.7),
+              inset 0 0 40px rgba(0,0,0,.85);
+  animation: bt-spin 2.4s linear infinite;
+}
+@keyframes bt-spin { to { transform: rotate(360deg); } }
+
+/* 톤암: 재생 중인 데크로 내려앉는다 */
+.bt-arm {
+  position: absolute; top: 6%; right: 4%; width: 44%; height: 5px; transform-origin: right center;
+  background: linear-gradient(to left, rgba(243,239,231,.75), rgba(243,239,231,.35));
+  border-radius: 4px; transform: rotate(-32deg); opacity: .35;
+  transition: transform .8s cubic-bezier(.4,0,.2,1), opacity .5s ease;
+}
+.bt-arm::after {
+  content: ""; position: absolute; left: -6px; top: -3px; width: 14px; height: 11px;
+  background: rgba(243,239,231,.85); border-radius: 2px;
+}
+.bt-deck.is-live .bt-arm { transform: rotate(-6deg); opacity: .9; }
+
+.bt-label { font-family: var(--font-mono); font-size: .6rem; letter-spacing: .28em; color: var(--faint); margin: 0; }
+.bt-deck.is-live .bt-label { color: var(--gold); }
+.bt-track {
+  margin: 0; font-size: .92rem; color: var(--muted); text-align: center; min-height: 2.6em;
+  line-height: 1.35; max-width: 15em;
+}
+.bt-deck.is-live .bt-track { color: var(--ivory); }
+
+.bt-center { display: grid; justify-items: center; gap: .9rem; padding-top: 1.2rem; }
+.bt-viz { width: 100%; max-width: 300px; height: 78px; }
+.bt-fader {
+  position: relative; width: min(100%, 260px); height: 40px; display: flex; align-items: center;
+}
+.bt-rail {
+  position: absolute; left: 0; right: 0; height: 4px; border-radius: 4px;
+  background: linear-gradient(to right, rgba(212,175,55,.5), rgba(243,239,231,.15), rgba(212,175,55,.5));
+}
+.bt-knob {
+  position: absolute; left: 0; width: 26px; height: 34px; margin-left: -13px; border-radius: 3px;
+  background: linear-gradient(to bottom, #2a2a2a, #111);
+  box-shadow: 0 0 0 1px rgba(212,175,55,.6), 0 4px 14px rgba(0,0,0,.7);
+  transition: left .12s linear;
+}
+.bt-knob::after {
+  content: ""; position: absolute; left: 50%; top: 6px; bottom: 6px; width: 2px; margin-left: -1px;
+  background: rgba(212,175,55,.9);
+}
+.bt-fader-label, .bt-bpm { margin: 0; font-family: var(--font-mono); font-size: .56rem; letter-spacing: .26em; color: var(--faint); }
+.bt-bpm b { color: var(--gold); font-weight: 400; font-size: .8rem; letter-spacing: .1em; }
+
+@media (max-width: 760px) {
+  .booth { grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .bt-center { grid-column: 1 / -1; order: 3; padding-top: .4rem; }
+  .bt-platter { width: min(100%, 140px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bt-deck.is-live .bt-platter { animation: none; }
+  .bt-arm { transition: none; }
+}
+
+/* ============ 신청곡 (사랑방) ============ */
+#req-q { width: 100%; padding: .9em 1.1em; font-size: 1.05rem; font-family: inherit;
+  background: var(--void); color: var(--ivory); border: 1px solid var(--line-strong); border-radius: var(--r-panel); }
+#req-q:focus { border-color: var(--gold); outline: 3px solid var(--gold); outline-offset: 2px; }
+.req-results { display: grid; gap: 2px; margin-bottom: .8rem; }
+.req-results:empty { margin: 0; }
+.req-hit {
+  display: grid; grid-template-columns: 1fr auto auto; gap: 1em; align-items: baseline;
+  width: 100%; text-align: left; padding: .85em .9em; cursor: pointer;
+  background: var(--void); border: 1px solid var(--line); border-radius: 2px; color: var(--ivory);
+  font-family: inherit; transition: border-color .2s ease, color .2s ease;
+}
+.req-hit:hover { border-color: var(--gold); }
+.req-hit .rh-t { font-size: 1rem; }
+.req-hit .rh-m { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .1em; color: var(--faint); }
+.req-hit .rh-go { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .14em; color: var(--gold); }
+.req-rank-t { font-family: var(--font-mono); font-weight: 400; font-size: .68rem; letter-spacing: .2em;
+  color: var(--faint); margin: 1.8rem 0 .9rem; }
+.req-rank { display: grid; gap: .5rem; }
+.rk-row { display: grid; grid-template-columns: 1.6em minmax(0,1fr) 4.5em 2.4em; gap: .7em; align-items: center; font-size: .95rem; }
+.rk-row .rk-no { font-family: var(--font-mono); font-size: .68rem; color: var(--faint); }
+.rk-row .rk-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rk-row .rk-bar { height: 4px; background: rgba(243,239,231,.12); border-radius: 3px; overflow: hidden; }
+.rk-row .rk-bar i { display: block; height: 100%; background: var(--gold); }
+.rk-row .rk-n { font-family: var(--font-mono); font-size: .66rem; color: var(--faint); text-align: right; }
+.rk-row.is-mine .rk-name { color: var(--gold); }
+@media (max-width: 560px) { .rk-row { grid-template-columns: 1.4em minmax(0,1fr) 2.4em; } .rk-row .rk-bar { display: none; } }

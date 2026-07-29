@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Space+Mono:wght@400;700&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v54">
+<link rel="stylesheet" href="assets/css/style.css?v55">
 </head>
 <body>
 <a class="skip-link" href="#main" data-i18n="nav.skip">본문 바로가기</a>
@@ -176,10 +176,10 @@
               <option value="질문" data-i18n="opt.question">인순이에게 질문</option>
             </select>
             <textarea id="letter-body" required maxlength="1000" placeholder="인순이 님께 전하고 싶은 마음을 적어주세요." data-i18n-ph="form.lbodyPh"></textarea>
-            <p class="form-hint">따뜻한 마음은 검수 후 게시되며, 일부 편지는 인순이 님께 직접 전달됩니다.</p>
+            <p class="form-hint" data-i18n="form.lhint">따뜻한 마음은 검수 후 게시되며, 일부 편지는 인순이 님께 직접 전달됩니다.</p>
           </div>
           <button class="btn btn--gold" type="submit" data-i18n="form.lsend">편지 보내기</button>
-          <p id="letter-ok" class="form-ok" role="status" hidden>편지가 접수되었습니다. 소중한 마음 감사합니다.</p>
+          <p id="letter-ok" class="form-ok" role="status" hidden data-i18n="form.lok">편지가 접수되었습니다. 소중한 마음 감사합니다.</p>
         </form>
         <div>
           <h3 style="margin-bottom:1rem" data-i18n="comm.arrived">도착한 편지들</h3>
@@ -203,7 +203,7 @@
         <div class="form-field">
           <label for="post-body" data-i18n="form.pbody">하고 싶은 이야기</label>
           <textarea id="post-body" required maxlength="600" data-i18n-ph="form.pbodyPh" placeholder="공연 후기, 응원, 추억 이야기. 자유롭게 남겨주세요."></textarea>
-          <p class="form-hint">서로를 존중하는 글 문화를 지켜주세요. 신고된 글은 운영진이 검토합니다.</p>
+          <p class="form-hint" data-i18n="form.phint">서로를 존중하는 글 문화를 지켜주세요. 신고된 글은 운영진이 검토합니다.</p>
         </div>
         <button class="btn btn--gold" type="submit" data-i18n="form.psend">글 올리기</button>
       </form>
@@ -219,17 +219,23 @@
       </div>
       <div class="grid grid--2 grid--start">
         <div class="form-panel">
-          <h3 data-i18n="comm.pollQ">다음 콘서트에서 꼭 듣고 싶은 노래는?</h3>
-          <p class="form-hint" style="margin-bottom:1.2rem">투표 결과는 공연 준비에 참고자료로 전달됩니다.</p>
-          <div id="poll"></div>
-          <p id="poll-note" class="form-hint" role="status"></p>
+          <h3 data-i18n="comm.pollQ">다음 콘서트에서 듣고 싶은 노래를 신청해 주세요</h3>
+          <p class="form-hint" style="margin-bottom:1.2rem" data-i18n="comm.pollHint">인순이의 모든 노래 가운데 무엇이든 좋습니다. 제목을 입력하면 찾아 드립니다.</p>
+          <div class="form-field" style="margin-bottom:1rem">
+            <label class="sr-only" for="req-q" data-i18n="comm.reqLabel">신청곡 검색</label>
+            <input id="req-q" type="search" autocomplete="off" placeholder="곡 제목을 입력하세요 — 초성도 됩니다" data-i18n-ph="comm.reqPh">
+          </div>
+          <div id="req-results" class="req-results"></div>
+          <p id="req-note" class="form-hint" role="status"></p>
+          <h4 class="req-rank-t" data-i18n="comm.rankT">지금 가장 많이 신청된 노래</h4>
+          <div id="req-rank" class="req-rank"></div>
         </div>
         <div class="form-panel">
           <h3 data-i18n="comm.event">진행 중인 이벤트</h3>
-          <p class="card-desc" style="margin-top:.8rem">공연 관람 인증, 기념일 축하 메시지 모음, 우수 팬 콘텐츠 선정 등
+          <p class="card-desc" style="margin-top:.8rem" data-i18n="comm.evD">공연 관람 인증, 기념일 축하 메시지 모음, 우수 팬 콘텐츠 선정 등
           시즌별 이벤트가 이 자리에 열립니다.</p>
-          <p class="card-desc" style="margin-top:.8rem"><strong>지금:</strong> 데뷔 기념 '나의 첫 인순이' 사연 공모</p>
-          <div class="card-meta" style="margin-top:1.4rem"><span>당첨자 발표는 소식 페이지에 게시</span></div>
+          <p class="card-desc" style="margin-top:.8rem" data-i18n="comm.evNow"><strong>지금:</strong> 데뷔 기념 '나의 첫 인순이' 사연 공모</p>
+          <div class="card-meta" style="margin-top:1.4rem"><span data-i18n="comm.evNote">당첨자 발표는 소식 페이지에 게시</span></div>
         </div>
       </div>
     </div>
@@ -294,13 +300,13 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동">↑</button>
-<script src="assets/js/i18n.js?v54"></script>
-<script src="assets/js/data.js?v54"></script>
-<script src="assets/js/tracklinks.js?v54"></script>
-<script src="assets/js/albums-full.js?v54"></script>
-<script src="assets/js/song-moods.js?v54"></script>
-<script src="assets/js/main.js?v54"></script>
-<script src="assets/js/router.js?v54" defer></script>
-<script src="assets/js/deck.js?v54"></script>
+<script src="assets/js/i18n.js?v55"></script>
+<script src="assets/js/data.js?v55"></script>
+<script src="assets/js/tracklinks.js?v55"></script>
+<script src="assets/js/albums-full.js?v55"></script>
+<script src="assets/js/song-moods.js?v55"></script>
+<script src="assets/js/main.js?v55"></script>
+<script src="assets/js/router.js?v55" defer></script>
+<script src="assets/js/deck.js?v55"></script>
 </body>
 </html>

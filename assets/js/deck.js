@@ -119,11 +119,36 @@
   var kind = "all";
 
   function norm(s) { return String(s).toLowerCase().replace(/[\s'"`·.,!?()[\]/-]/g, ""); }
+  /* 오늘의 믹스: 지금 서울 날씨에 맞는 곡을 앞에 세우고, 계절 곡으로 이어 붙인다.
+     같은 날은 늘 같은 순서, 날이 바뀌면 순서도 바뀐다. */
   function todayFilter(list) {
-    var moods = window.SONG_MOODS || {}, want = {};
-    Object.keys(moods).forEach(function (k) { moods[k].forEach(function (s) { want[norm(s.title)] = 1; }); });
-    var hit = list.filter(function (s) { return want[norm(s.t)]; });
-    return hit.length ? hit : list;
+    var moods = window.SONG_MOODS || {};
+    var today = (window.INSOONI_TODAY && window.INSOONI_TODAY.key) || null;
+    var d = new Date();
+    var seed = d.getFullYear() * 372 + d.getMonth() * 31 + d.getDate();
+    function bucket(keys) {
+      var want = {};
+      keys.forEach(function (k) {
+        (moods[k] || []).forEach(function (s) { want[norm(s.title)] = 1; });
+      });
+      return list.filter(function (s) { return want[norm(s.t)]; });
+    }
+    var month = d.getMonth() + 1;
+    var season = month <= 2 || month === 12 ? "cold-winter"
+               : month <= 5 ? "clear-spring"
+               : month <= 8 ? "clear-summer" : "clear-autumn";
+    var hour = d.getHours();
+    var timeKey = hour < 6 ? "dawn" : hour < 11 ? "morning" : hour >= 20 ? "night" : season;
+    var head = today ? bucket([today]) : [];
+    var mid = bucket([timeKey, season]).filter(function (s) { return head.indexOf(s) < 0; });
+    var rest = list.filter(function (s) { return head.indexOf(s) < 0 && mid.indexOf(s) < 0; });
+    /* 날짜 시드로 뒤쪽을 회전시켜 매일 다른 흐름을 만든다 */
+    if (rest.length) {
+      var cut = seed % rest.length;
+      rest = rest.slice(cut).concat(rest.slice(0, cut));
+    }
+    var out = head.concat(mid, rest);
+    return out.length ? out : list;
   }
   function shuffleArr(a) {
     var r = a.slice();
@@ -161,9 +186,11 @@
       d.gain.gain.setValueAtTime(1, ctx.currentTime);
       d.bass.gain.setValueAtTime(0, ctx.currentTime);
     }
+    d.live = true;
     var p = d.el.play();
     if (p && p.catch) p.catch(function () {});
     paint(track);
+    setBoothTrack(cur, track);
     armed = false;
     save();
   }
@@ -180,7 +207,7 @@
     from.bass.gain.cancelScheduledValues(ctx.currentTime);
     from.bass.gain.setValueAtTime(from.bass.gain.value, ctx.currentTime);
     from.bass.gain.linearRampToValueAtTime(-16, at + XFADE * 0.5);
-    setTimeout(function () { try { from.el.pause(); } catch (e) {} },
+    setTimeout(function () { try { from.el.pause(); } catch (e) {} from.live = false; },
                (at - ctx.currentTime + XFADE) * 1000 + 150);
     cur = other();
     playAt(pos + 1, true, at);
@@ -188,6 +215,7 @@
   function prev() {
     var from = decks[cur];
     try { from.el.pause(); } catch (e) {}
+    from.live = false;
     if (ctx) { from.gain.gain.cancelScheduledValues(ctx.currentTime); from.gain.gain.value = 0; }
     cur = other();
     playAt(pos - 1, false);
@@ -206,12 +234,72 @@
     draw();
   }
 
+  /* ---------- DJ 부스 (LP 두 장) ---------- */
+  var booth = null, btDecks = null, btKnob = null, btBpm = null, btViz = null, btCtx = null;
+  function bindBooth() {
+    booth = document.getElementById("booth");
+    if (!booth) { btDecks = null; return; }
+    btDecks = [booth.querySelector('[data-deck="0"]'), booth.querySelector('[data-deck="1"]')];
+    btKnob = booth.querySelector(".bt-knob");
+    btBpm = document.getElementById("bt-bpm");
+    btViz = booth.querySelector(".bt-viz");
+    btCtx = btViz ? btViz.getContext("2d") : null;
+  }
+  function paintBooth() {
+    if (!booth || !btDecks || !btDecks[0] || !decks.length) return;
+    booth.classList.add("is-live");
+    booth.setAttribute("aria-hidden", "false");
+    for (var i = 0; i < 2; i++) {
+      var d = decks[i], el = btDecks[i];
+      if (!el) continue;
+      var live = !!d.live && !d.el.paused;
+      el.classList.toggle("is-live", !!live);
+      var plate = el.querySelector(".bt-platter");
+      /* 실제 박자에 맞춰 판이 도는 속도를 맞춘다 (한 바퀴 = 4박) */
+      if (plate) plate.style.animationDuration = (d.period ? (d.period * 4).toFixed(2) : "2.4") + "s";
+    }
+    if (btKnob) {
+      var g0 = decks[0].gain ? Math.max(0, decks[0].gain.gain.value) : 0;
+      var g1 = decks[1].gain ? Math.max(0, decks[1].gain.gain.value) : 0;
+      var ratio = (g0 + g1) > 0.02 ? g1 / (g0 + g1) : (cur === 0 ? 0 : 1);
+      btKnob.style.left = (ratio * 100).toFixed(1) + "%";
+    }
+    if (btBpm) {
+      var p = decks[cur].period;
+      btBpm.textContent = p ? String(Math.round(60 / p)) : "—";
+    }
+  }
+  function setBoothTrack(i, track) {
+    if (!btDecks || !btDecks[i]) return;
+    var el = btDecks[i];
+    var img = el.querySelector(".bt-art");
+    if (track.art) { img.src = track.art; img.hidden = false; } else { img.hidden = true; }
+    el.querySelector(".bt-track").textContent = track.t + (track.y ? "  " + track.y : "");
+  }
+
   /* ---------- 비주얼 ---------- */
   var canvas = null, cctx = null, bins = null;
+  function drawOn(c, cx) {
+    var w = c.width, h = c.height;
+    cx.clearRect(0, 0, w, h);
+    var n = 34, step = Math.max(1, Math.floor(bins.length / n)), bw = w / n;
+    for (var i = 0; i < n; i++) {
+      var v = bins[i * step] / 255;
+      var bh = Math.max(2, v * h * 0.94);
+      var g = cx.createLinearGradient(0, h, 0, h - bh);
+      g.addColorStop(0, "rgba(212,175,55,.95)");
+      g.addColorStop(1, "rgba(243,239,231,.3)");
+      cx.fillStyle = g;
+      cx.fillRect(i * bw + bw * 0.2, h - bh, bw * 0.6, bh);
+    }
+  }
   function draw() {
-    if (!canvas || !analyser) return;
+    if (!analyser) return;
     if (!bins) bins = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(bins);
+    if (btCtx && btViz) drawOn(btViz, btCtx);
+    paintBooth();
+    if (!canvas) return;
     var w = canvas.width, h = canvas.height;
     cctx.clearRect(0, 0, w, h);
     var n = 28, step = Math.floor(bins.length / n), bw = w / n;
@@ -349,6 +437,7 @@
         var f = queue.findIndex(function (s) { return s.t === resumeTitle; });
         if (f >= 0) i = f;
       }
+      bindBooth();
       bar().hidden = false;
       cur = 0;
       playAt(i, false);
@@ -359,7 +448,9 @@
 
   /* ---------- 진입점 ---------- */
   function bindLauncher() {
-    var box = document.getElementById("deck-launch");
+    /* 캐시된 옛 문서에는 radio-launch로 남아 있을 수 있다 */
+    bindBooth();
+    var box = document.getElementById("deck-launch") || document.getElementById("radio-launch");
     if (!box || box.dataset.bound) return;
     box.dataset.bound = "1";
     Object.keys(LISTS).forEach(function (k) {

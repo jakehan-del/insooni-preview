@@ -207,6 +207,7 @@
       return hit;
     }
     function paint(key, headline) {
+      window.INSOONI_TODAY = { key: key, label: headline };
       var picks = pick(key);
       if (!picks.length) { box.hidden = true; return; }
       line.textContent = headline;

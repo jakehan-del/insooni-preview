@@ -940,37 +940,103 @@
 
   /* ---------- 9. 사랑방: 투표 ---------- */
   function initPoll() {
-    var box = $("#poll");
-    if (!box || !D.poll) return;
-    var KEY = "insooni_poll_" + D.poll.id;
-    function draw() {
-      box.innerHTML = "";
-      var votedIdx = store(KEY);
-      var counts = D.poll.options.map(function (o, i) {
-        return o.base + (votedIdx === i ? 1 : 0);
-      });
-      var total = counts.reduce(function (a, b) { return a + b; }, 0);
-      D.poll.options.forEach(function (o, i) {
-        var wrap = el("div", "poll-option");
-        if (votedIdx === null || votedIdx === undefined) {
-          var b = el("button", "", esc(o.label));
-          b.type = "button";
-          b.addEventListener("click", function () { store(KEY, i); draw(); });
-          wrap.appendChild(b);
-        } else {
-          var pct = total ? Math.round(counts[i] / total * 100) : 0;
-          wrap.innerHTML =
-            '<div class="bar-wrap"><span class="bar" style="width:' + pct + '%"></span>' +
-            '<span class="bar-label"><span>' + esc(o.label) + (votedIdx === i ? " ✓" : "") + "</span><strong>" + pct + "%</strong></span></div>";
-        }
-        box.appendChild(wrap);
-      });
-      var note = $("#poll-note");
-      if (note) note.textContent = (votedIdx === null || votedIdx === undefined)
-        ? t("dyn.pollHint", "보기를 누르면 바로 투표됩니다. (1인 1표)")
-        : t("dyn.pollThanks", "투표해 주셔서 감사합니다! 총 ") + total + "명 참여 (데모 수치)";
+    /* 신청곡: 258곡 전체에서 검색해 신청하고, 많이 신청된 순으로 보여준다 */
+    var input = $("#req-q");
+    if (!input) return;
+    var out = $("#req-results"), note = $("#req-note"), rank = $("#req-rank");
+    var KEY = "insooni_requests";
+    var CHO = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+    function toCho(x) {
+      return String(x).replace(/[가-힣]/g, function (c) { return CHO[Math.floor((c.charCodeAt(0) - 0xac00) / 588)]; });
     }
-    draw();
+    function nm(x) { return String(x).toLowerCase().replace(/[\s'"`·.,!?()\[\]/-]/g, ""); }
+
+    var songs = [];
+    (function build() {
+      var D2 = window.SITE_DATA || {}, seen = {};
+      function add(title, album, year) {
+        var base = String(title).replace(/\s*\((Inst\.|경음악|MR)\)$/, "").replace(/\s*\[[^\]]+\]$/, "");
+        var k = nm(base);
+        if (!k || seen[k]) return;
+        seen[k] = 1;
+        songs.push({ t: base, al: album, y: String(year || ""), c: toCho(base), n: k });
+      }
+      (window.REG_ALBUMS || []).forEach(function (a) {
+        var meta = null;
+        (D2.albums || []).forEach(function (x) {
+          var m = (x.kind || "").match(/정규\s*(\d+)집/);
+          var no = m ? +m[1] : (x.kind === "솔로 1집" ? 1 : ((x.kind === "정규" && x.year === "2009") ? 17 : null));
+          if (no === a.no) meta = x;
+        });
+        (a.tracks || []).forEach(function (t2) { add(t2, meta ? meta.title : a.no + "집", a.year); });
+      });
+      (D2.albums || []).forEach(function (a) {
+        if (a.tracks && a.tracks.length) a.tracks.forEach(function (t2) { add(t2, a.title, a.year); });
+        else add(a.title, a.title, a.year);
+      });
+    })();
+
+    function counts() {
+      var base = {};
+      (D.requestSeed || []).forEach(function (r) { base[r.t] = r.n; });
+      var mine = store(KEY) || {};
+      Object.keys(mine).forEach(function (k) { base[k] = (base[k] || 0) + 1; });
+      return base;
+    }
+    function drawRank() {
+      var c = counts();
+      var list = Object.keys(c).map(function (k) { return { t: k, n: c[k] }; })
+        .sort(function (a, b) { return b.n - a.n; }).slice(0, 8);
+      var max = list.length ? list[0].n : 1;
+      rank.innerHTML = "";
+      var mine = store(KEY) || {};
+      list.forEach(function (r, i) {
+        var row = el("div", "rk-row" + (mine[r.t] ? " is-mine" : ""));
+        row.innerHTML =
+          '<span class="rk-no">' + (i + 1) + "</span>" +
+          '<span class="rk-name"></span>' +
+          '<span class="rk-bar"><i style="width:' + Math.round(r.n / max * 100) + '%"></i></span>' +
+          '<span class="rk-n">' + r.n + "</span>";
+        row.querySelector(".rk-name").textContent = r.t;
+        rank.appendChild(row);
+      });
+    }
+    function request(title) {
+      var mine = store(KEY) || {};
+      if (mine[title]) {
+        note.textContent = t("dyn.reqDup", "이미 신청하신 곡입니다.");
+        return;
+      }
+      mine[title] = 1;
+      store(KEY, mine);
+      note.textContent = "\u2018" + title + "\u2019 " + t("dyn.reqOk", "신청이 접수되었습니다. 공연 준비에 참고자료로 전달됩니다.");
+      input.value = "";
+      out.innerHTML = "";
+      drawRank();
+    }
+    function search() {
+      var raw = input.value.trim();
+      out.innerHTML = "";
+      if (!raw) { note.textContent = ""; return; }
+      var isCho = /^[ㄱ-ㅎ\s]+$/.test(raw) && /[ㄱ-ㅎ]/.test(raw);
+      var q = isCho ? raw.replace(/\s/g, "") : nm(raw);
+      var hits = songs.filter(function (s2) {
+        return isCho ? s2.c.replace(/\s/g, "").indexOf(q) >= 0
+                     : (s2.n.indexOf(q) >= 0 || nm(s2.al).indexOf(q) >= 0);
+      }).slice(0, 8);
+      note.textContent = hits.length ? "" : t("dyn.reqNone", "찾는 곡이 없습니다. 제목 일부로 다시 찾아보세요.");
+      hits.forEach(function (s2) {
+        var b = el("button", "req-hit");
+        b.type = "button";
+        b.innerHTML = '<span class="rh-t"></span><span class="rh-m"></span><span class="rh-go">' + t("dyn.reqBtn", "신청") + "</span>";
+        b.querySelector(".rh-t").textContent = s2.t;
+        b.querySelector(".rh-m").textContent = [s2.al, s2.y].filter(Boolean).join(" · ");
+        b.addEventListener("click", function () { request(s2.t); });
+        out.appendChild(b);
+      });
+    }
+    input.addEventListener("input", search);
+    drawRank();
   }
 
   /* ---------- 9.5 사랑방: 인순이의 편지 + 오늘의 문안 인사 ----------
@@ -1413,7 +1479,7 @@
         setTimeout(function () { box.classList.add("split"); }, 620);
         setTimeout(function () { if (box.parentNode) box.remove(); }, 1800);
       }
-    }, 300);
+    }, 265);
     }
   }
 
