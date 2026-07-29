@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Nanum+Myeongjo:wght@400;700;800&family=Space+Mono:wght@400;700&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v69">
+<link rel="stylesheet" href="assets/css/style.css?v74">
 </head>
 <body>
 <a class="skip-link" href="#main" data-i18n="nav.skip">본문 바로가기</a>
@@ -25,14 +25,14 @@
   <div class="header-inner">
     <a class="brand" href="index.html">
       <span class="brand-en">INSOONI</span>
-      <span class="brand-ko">인순이 공식 팬 플랫폼</span>
+      <span class="brand-ko" data-i18n="brand.sr">인순이 공식 팬 플랫폼</span>
     </a>
-    <nav class="main-nav" id="site-nav" aria-label="주 메뉴">
+    <nav class="main-nav" id="site-nav" aria-label="주 메뉴" data-i18n-aria="aria.mainNav">
       <ul>
         <li><a href="about.html" data-i18n="nav.about">이야기</a></li>
         <li><a href="music.html" data-i18n="nav.music">음악</a></li>
         <li><a href="schedule.html" data-i18n="nav.schedule">공연</a></li>
-        <li class="nav-mark"><a href="index.html" aria-label="인순이 홈"><svg class="mark-goose" viewBox="0 0 120 72" aria-hidden="true" focusable="false"><g fill="currentColor"><ellipse cx="48" cy="46" rx="27" ry="11.5" transform="rotate(-7 48 46)"/><path d="M66 41 C78 36 87 30 94 23" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><circle cx="96" cy="21" r="5.4"/><path d="M100 18.5 L111 21 L100 24.5 Z"/><path d="M45 38 C36 24 34 13 41 6 C48 12 55 27 57 37 C53 38.5 49 38.7 45 38 Z"/><path d="M24 42 L10 37 L22 50 Z"/></g></svg></a></li>
+        <li class="nav-mark"><a href="index.html" aria-label="인순이 홈" data-i18n-aria="aria.home"><svg class="mark-goose" viewBox="0 0 120 72" aria-hidden="true" focusable="false"><g fill="currentColor"><ellipse cx="48" cy="46" rx="27" ry="11.5" transform="rotate(-7 48 46)"/><path d="M66 41 C78 36 87 30 94 23" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><circle cx="96" cy="21" r="5.4"/><path d="M100 18.5 L111 21 L100 24.5 Z"/><path d="M45 38 C36 24 34 13 41 6 C48 12 55 27 57 37 C53 38.5 49 38.7 45 38 Z"/><path d="M24 42 L10 37 L22 50 Z"/></g></svg></a></li>
         <li><a href="archive.html" data-i18n="nav.archive">아카이브</a></li>
         <li><a href="haemil.html" data-i18n="nav.haemil">해밀학교</a></li>
         <li><a href="community.html" aria-current="page" data-i18n="nav.community">사랑방</a></li>
@@ -89,7 +89,7 @@
           <p class="greet-lead" data-i18n="comm.greetLead">하루 한 번, 버튼 한 번이면 충분합니다. 긴 글은 쓰지 않으셔도 돼요.</p>
           <button type="button" class="btn btn--gold greet-stamp" id="stamp-btn" data-i18n="comm.stampBtn">오늘 도장 찍기</button>
           <p class="greet-state" id="stamp-state" role="status"></p>
-          <div class="cheer-chips" id="cheer-chips" aria-label="한 줄 응원 고르기"></div>
+          <div class="cheer-chips" id="cheer-chips" aria-label="한 줄 응원 고르기" data-i18n-aria="aria.cheerPick"></div>
           <p class="form-hint" data-i18n="comm.greetHint">응원 문구를 누르면 바로 남겨집니다. 더 긴 이야기는 아래 팬레터로 보내주세요.</p>
         </div>
         <div>
@@ -114,12 +114,12 @@
             <input id="cc-name" type="text" maxlength="12" placeholder="예) 우리 딸 지현" data-i18n-ph="cc.namePh">
           </div>
           <p class="form-field" style="margin-bottom:.5rem"><span style="font-weight:700" data-i18n="cc.sit">어떤 응원인가요?</span></p>
-          <div class="cheer-chips" id="cc-situations" aria-label="응원 상황 고르기"></div>
+          <div class="cheer-chips" id="cc-situations" aria-label="응원 상황 고르기" data-i18n-aria="aria.cheerCase"></div>
           <button type="button" class="btn btn--gold greet-stamp mt-1" id="cc-make" data-i18n="cc.make">응원 카드 만들기</button>
           <p class="form-hint" data-i18n="cc.hint">'거위의 꿈'의 마음을 담아 사랑방이 쓴 응원 문구가 담깁니다. 만든 카드는 이미지로 저장해 카카오톡으로 전할 수 있어요.</p>
         </div>
         <div class="cc-preview">
-          <canvas id="cc-canvas" width="1080" height="1350" role="img" aria-label="응원 카드 미리보기"></canvas>
+          <canvas id="cc-canvas" width="1080" height="1350" role="img" aria-label="응원 카드 미리보기" data-i18n-aria="aria.cheerPreview"></canvas>
           <div class="cc-actions" hidden id="cc-actions">
             <button type="button" class="btn btn--gold" id="cc-save" data-i18n="cc.save">이미지로 저장</button>
             <button type="button" class="btn btn--ghost" id="cc-share" data-i18n="cc.share">공유하기</button>
@@ -147,7 +147,7 @@
   </section>
 
   <!-- 소통 시스템: 남기기 → 검수 → 게재 -->
-  <section class="section" aria-label="사랑방 운영 방식">
+  <section class="section" aria-label="사랑방 운영 방식" data-i18n-aria="aria.roomHow">
     <div class="container">
       <div class="sys-strip">
         <div class="sys-step"><span aria-hidden="true">01</span><p data-i18n="comm.s1">남기기 — 팬레터와 응원을 작성합니다</p></div>
@@ -164,7 +164,7 @@
         <h2 id="h-letter" data-i18n="comm.letter">팬레터 보내기</h2>
       </div>
       <div class="grid grid--2">
-        <form id="letter-form" class="letter-form" aria-label="팬레터 작성">
+        <form id="letter-form" class="letter-form" aria-label="팬레터 작성" data-i18n-aria="aria.writeLetter">
           <div class="form-field">
             <label for="letter-name" data-i18n="form.lname">이름 (별명도 좋아요)</label>
             <input id="letter-name" type="text" maxlength="20" placeholder="예) 30년 팬 순이언니" data-i18n-ph="form.lnamePh">
@@ -198,7 +198,7 @@
       <div class="section-head">
         <h2 id="h-board" data-i18n="comm.board">팬 게시판</h2>
       </div>
-      <form id="board-form" class="form-panel" aria-label="게시글 작성" style="margin-bottom:1.6rem">
+      <form id="board-form" class="form-panel" aria-label="게시글 작성" data-i18n-aria="aria.writePost" style="margin-bottom:1.6rem">
         <div class="form-field">
           <label for="post-name" data-i18n="form.pname">이름 (별명)</label>
           <input id="post-name" type="text" maxlength="20" placeholder="별명을 입력하세요" data-i18n-ph="form.pnamePh">
@@ -275,7 +275,7 @@
     <div class="subscribe-inner reveal">
       <h2 id="h-subscribe" data-i18n="sub.h2">소식을 가장 먼저</h2>
       <p data-i18n="sub.p">새 공연과 방송 일정, 인순이의 메시지를 이메일로 보내드립니다.</p>
-      <form aria-label="이메일 구독 신청">
+      <form aria-label="이메일 구독 신청" data-i18n-aria="aria.subscribe">
         <label class="sr-only" for="sub-email" data-i18n="sub.label">이메일 주소</label>
         <input id="sub-email" type="email" required placeholder="이메일 주소" data-i18n-ph="sub.ph">
         <button class="btn btn--gold" type="submit" data-i18n="sub.btn">구독 신청</button>
@@ -287,7 +287,7 @@
 </main>
 
 <footer class="footer-min">
-  <nav aria-label="푸터 메뉴">
+  <nav aria-label="푸터 메뉴" data-i18n-aria="aria.footerNav">
     <a href="news.html" data-i18n="nav.news">소식</a>
     <a href="schedule.html" data-i18n="nav.schedule">공연</a>
     <a href="music.html" data-i18n="nav.music">음악</a>
@@ -302,16 +302,16 @@
   </nav>
 </footer>
 
-<button class="back-to-top" aria-label="맨 위로 이동">↑</button>
-<script src="assets/js/i18n.js?v69"></script>
-<script src="assets/js/data.js?v69"></script>
-<script src="assets/js/tracklinks.js?v69"></script>
-<script src="assets/js/albums-full.js?v69"></script>
-<script src="assets/js/albums-en.js?v69"></script>
-<script src="assets/js/song-moods.js?v69"></script>
-<script src="assets/js/main.js?v69"></script>
-<script src="assets/js/motion.js?v69"></script>
-<script src="assets/js/router.js?v69" defer></script>
-<script src="assets/js/deck.js?v69"></script>
+<button class="back-to-top" aria-label="맨 위로 이동" data-i18n-aria="aria.toTop">↑</button>
+<script src="assets/js/i18n.js?v74"></script>
+<script src="assets/js/data.js?v74"></script>
+<script src="assets/js/tracklinks.js?v74"></script>
+<script src="assets/js/albums-full.js?v74"></script>
+<script src="assets/js/albums-en.js?v74"></script>
+<script src="assets/js/song-moods.js?v74"></script>
+<script src="assets/js/main.js?v74"></script>
+<script src="assets/js/motion.js?v74"></script>
+<script src="assets/js/router.js?v74" defer></script>
+<script src="assets/js/deck.js?v74"></script>
 </body>
 </html>

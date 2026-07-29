@@ -427,7 +427,8 @@
       b.type = "button";
       b.setAttribute("role", "listitem");
       var no = regNo(a);
-      var label = (no ? no + "집" : a.year) + " " + a.title;
+      /* 앨범 제목은 고유명사라 그대로 두고, 붙는 말만 언어를 따른다 */
+      var label = (no ? t("dyn.albNo", no + "집").replace("{n}", no) : a.year) + " " + a.title;
       b.setAttribute("aria-label", label);
       b.innerHTML =
         '<img src="' + esc(a.art) + '" alt="" loading="lazy">' +
@@ -636,6 +637,8 @@
         else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
       }
     });
+    /* 이 창은 첫 클릭 때 만들어진다 — 번역은 이미 끝난 뒤라 여기서 직접 건다 */
+    applyLang(curLang());
     return recapEl;
   }
   function closeRecap() {
@@ -828,6 +831,8 @@
         else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
       }
     });
+    /* 위와 같은 이유 — 늦게 태어난 요소에도 언어를 입힌다 */
+    applyLang(curLang());
     return lightboxEl;
   }
   function openLightbox(videoId, title, opener) {
@@ -837,7 +842,7 @@
     $(".lb-prev", box).hidden = true;
     $(".lb-next", box).hidden = true;
     lightboxOpener = opener || null;
-    box.setAttribute("aria-label", title + " 영상 재생");
+    box.setAttribute("aria-label", title + t("aria.lbVideoSuffix", " 영상 재생"));
     $(".lightbox-caption", box).textContent = title + " · INSOONI OFFICIAL";
     $(".lightbox-frame", box).innerHTML =
       '<iframe src="https://www.youtube-nocookie.com/embed/' + esc(videoId) + '?autoplay=1&rel=0&modestbranding=1" title="' + esc(title) + '" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>';
@@ -1400,7 +1405,8 @@
       document.documentElement.setAttribute("lang", lang);
       if (btn) {
         btn.textContent = lang === "ko" ? "EN" : "한국어";
-        btn.setAttribute("aria-label", lang === "ko" ? "Switch to English" : "한국어로 보기");
+        /* 영어로 보고 있는 사람에게는 설명도 영어여야 한다 */
+        btn.setAttribute("aria-label", lang === "ko" ? "Switch to English" : "Switch to Korean");
       }
       $all("[data-i18n]").forEach(function (n) {
         var key = n.getAttribute("data-i18n");
@@ -1438,6 +1444,17 @@
           if (dict[key]) n.placeholder = dict[key];
         } else if (n.dataset.koPh !== undefined) {
           n.placeholder = n.dataset.koPh;
+        }
+      });
+      /* 사진 설명(alt)도 언어를 따른다.
+         화면에는 안 보이지만 화면 낭독기를 쓰는 분에게는 이게 사진의 전부다. */
+      $all("[data-i18n-alt]").forEach(function (n) {
+        var key = n.getAttribute("data-i18n-alt");
+        if (lang === "en") {
+          if (n.dataset.koAlt === undefined) n.dataset.koAlt = n.getAttribute("alt") || "";
+          if (dict[key]) n.setAttribute("alt", dict[key]);
+        } else if (n.dataset.koAlt !== undefined) {
+          n.setAttribute("alt", n.dataset.koAlt);
         }
       });
       /* 탭 제목도 언어를 따른다. 라우터가 새 문서의 한국어 제목을 걸어 두므로 여기서 덮는다. */

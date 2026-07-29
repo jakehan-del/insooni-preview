@@ -24,7 +24,10 @@
     }
     return Math.max(2.4, Math.min(6.6, want));
   }
-  var loaded = false, armed = false, busy = false, xfTimer = null, preloaded = null;
+  var loaded = false, armed = false, busy = false, xfTimer = null;
+  /* 전환마다 번호를 매긴다. 늦게 도착한 옛 타이머가 이미 남의 것이 된 데크를
+     건드려 곡을 멈춰 버리는 일을 막는다. */
+  var xfGen = 0;
 
   function isEN() { return document.documentElement.getAttribute("lang") === "en"; }
   function T(ko, en) { return isEN() ? en : ko; }
@@ -47,6 +50,10 @@
     analyser.smoothingTimeConstant = 0.78;
     analyser.connect(ctx.destination);
     decks = [makeDeck(), makeDeck()];
+    /* 예비 시계 — timeupdate가 뜸해지는 브라우저에서도 전환을 놓치지 않는다 */
+    if (!window.__insooniDeckTimer) {
+      window.__insooniDeckTimer = setInterval(maybeAdvance, 500);
+    }
     decks.forEach(function (d) {
       d.src = ctx.createMediaElementSource(d.el);
       /* 저역 셸빙: 두 곡이 겹칠 때 베이스가 뭉개지지 않게 들어오는 쪽 저역을 눌렀다 올린다 */
@@ -66,29 +73,68 @@
       d.p = 0;             /* 한 박 길이(초) */
       d.b = 0;             /* 첫 박이 오는 지점(초) */
       d.e = 0;             /* 곡의 에너지 */
-      /* 음원을 못 받았을 때만 넘긴다.
-         **지금 울리고 있는 데크일 때로 한정**하는 게 중요하다 — 미리 받아 두는 데크에서
-         에러가 났다고 넘겨 버리면, 멀쩡히 나오던 곡이 뜬금없이 끊긴다. */
+      /* 음원을 못 받았을 때의 처리.
+         잠깐 끊긴 것(네트워크)과 아예 못 쓰는 것(형식)을 구분한다 —
+         일시적인 끊김에 곡을 영영 버리면, 멀쩡한 곡이 목록에서 사라지고
+         순서가 저절로 바뀐 것처럼 보인다. */
+      /* 소리가 흐르는 동안 계속 들어온다 — 탭이 뒤로 가도 멈추지 않는 신호 */
+      d.el.addEventListener("timeupdate", maybeAdvance);
       d.el.addEventListener("error", function () {
         if (d !== decks[cur] || !d.live) return;
+        var code = d.el.error && d.el.error.code;
+        if (code !== 4 && !d.retried) {          /* 4 = 재생 불가 형식 */
+          d.retried = 1;
+          var at = d.el.currentTime;
+          try {
+            d.el.load();
+            d.el.currentTime = at;
+            var pr = d.el.play();
+            if (pr && pr.catch) pr.catch(function () {});
+          } catch (e) {}
+          return;                                 /* 한 번은 다시 붙여 본다 */
+        }
         if (d.el.src) DEAD[d.el.src] = 1;
+        if (busy) { abortXfade(d); return; }      /* 겹치는 중이면 나가던 곡을 되살린다 */
         skipDead();
       });
     });
   }
 
-  /* 받지 못한 음원은 기억해 두고 큐에서 걷어낸다 (같은 곡을 계속 다시 시도하지 않게) */
+  /* 겹치는 도중 들어오던 곡이 죽었다 — 나가던 곡을 도로 올리고 없던 일로 한다.
+     이걸 안 하면 듣고 있던 곡이 문장 한가운데서 잘린다. */
+  function abortXfade(bad) {
+    xfGen++;
+    clearTimeout(xfTimer); xfTimer = null;
+    var from = decks[other()];
+    try { bad.el.pause(); } catch (e) {}
+    bad.live = false;
+    bad.gain.gain.cancelScheduledValues(ctx.currentTime);
+    bad.gain.gain.setValueAtTime(0, ctx.currentTime);
+    if (from.gain.gain.cancelAndHoldAtTime) from.gain.gain.cancelAndHoldAtTime(ctx.currentTime);
+    else from.gain.gain.cancelScheduledValues(ctx.currentTime);
+    from.gain.gain.linearRampToValueAtTime(1, ctx.currentTime + 0.3);
+    from.bass.gain.cancelScheduledValues(ctx.currentTime);
+    from.bass.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.3);
+    cur = other();
+    busy = false; armed = false;
+    pos = (pos - 1 + queue.length) % queue.length;   /* 넘어가던 것을 되돌린다 */
+  }
+
+  /* 못 쓰는 음원은 목록에서 걷어내고 짧게 겹쳐 다음 곡으로 넘어간다 */
   var DEAD = {};
   function skipDead() {
+    xfGen++;
+    clearTimeout(xfTimer); xfTimer = null;
     var fresh = queue.filter(function (t) { return !DEAD[t.u]; });
     if (fresh.length < 2) return;
     var here = queue[pos];
     queue = fresh;
     var i = queue.indexOf(here);
+    var next1 = i >= 0 ? i + 1 : Math.min(pos, queue.length - 1);
     pos = i >= 0 ? i : Math.min(pos, queue.length - 1);
     busy = false; armed = false;
     cur = other();
-    playAt(pos + (queue.indexOf(here) >= 0 ? 1 : 0), false);
+    playAt(next1, true, ctx.currentTime + 0.02, 0.45);   /* 딱 끊지 않고 짧게 넘긴다 */
   }
 
   /* ---------- 박자표 ----------
@@ -280,6 +326,7 @@
 
   /* 두 데크를 완전히 멈춘다 — 새 믹스를 걸기 전에 반드시 호출한다 */
   function stopAll() {
+    xfGen++;                       /* 예약돼 있던 옛 전환을 전부 무효로 만든다 */
     clearTimeout(xfTimer); xfTimer = null;
     busy = false; armed = false;
     decks.forEach(function (d) {
@@ -308,8 +355,9 @@
        다만 30초뿐이라 많이 잘라내면 곡이 더 토막처럼 들린다 — 2초까지만 건너뛴다. */
     var skip = 0;
     if (fade) {
-      if (track.b > 0.25 && track.b < 2) skip = track.b;
-      else if (track.s > 0.35) skip = Math.min(track.s, 2);
+      /* 앞 무음이 첫 박보다 길 수도 있다 — 둘 중 큰 쪽까지 건너뛰어야 빈 앞머리가 안 남는다 */
+      skip = Math.max(track.b > 0.25 ? track.b : 0, track.s > 0.35 ? track.s : 0);
+      skip = Math.min(skip, 2);
     }
     d.el.currentTime = skip;
     d.el.addEventListener("loadedmetadata", function once() {
@@ -339,19 +387,11 @@
     /* 음량 보정 — 녹음 시대가 40년에 걸쳐 있어 곡마다 크기가 17dB까지 벌어진다.
        미리 재 둔 값으로 모두 같은 크기(-14 LUFS)에 맞춘다. */
     if (d.trim) d.trim.gain.setValueAtTime(track.g || 1, ctx.currentTime);
-    /* 다음 곡을 미리 받아 둔다 — 전환 순간에 버퍼링으로 끊기지 않게.
-       재생용 데크를 건드리지 않도록 별도의 숨은 Audio로만 받는다. */
-    var nx = queue[(pos + 1) % queue.length];
-    if (nx && !DEAD[nx.u] && preloaded !== nx.u) {
-      preloaded = nx.u;
-      setTimeout(function () {
-        if (preloaded !== nx.u) return;
-        var warm = new Audio();
-        warm.preload = "auto";
-        warm.src = nx.u;
-        warm.addEventListener("error", function () { DEAD[nx.u] = 1; });
-      }, 900);
-    }
+    /* 다음 곡을 미리 받아 두지 않는다.
+       애플 프리뷰 CDN은 짧은 시간에 몰린 요청에 민감해서, 미리 받기가 쌓이면
+       정작 재생 중인 곡의 요청이 거절당한다. 곡이 죽고 순서가 저절로 바뀌던
+       원인이 이것이었다. preload="auto"만으로 충분하다. */
+    d.retried = 0;
     var p = d.el.play();
     if (p && p.catch) p.catch(function () {});
     paint(track);
@@ -362,7 +402,7 @@
 
   function next(onBeat) {
     var from = decks[cur];
-    if (!ctx || busy) return;      /* 전환 중 중복 호출 차단 */
+    if (!ctx || busy) return false;   /* 전환 중 중복 호출 차단 */
     busy = true;
     /* 박자에 걸어 전환한다 — 박을 못 읽었으면 즉시 */
     var at = onBeat ? nextBeatTime(from) : ctx.currentTime;
@@ -375,13 +415,16 @@
     from.bass.gain.setValueAtTime(from.bass.gain.value, ctx.currentTime);
     from.bass.gain.linearRampToValueAtTime(-16, at + XF * 0.5);
     clearTimeout(xfTimer);
+    var myGen = ++xfGen;
     xfTimer = setTimeout(function () {
+      if (myGen !== xfGen) return;   /* 그 사이 다른 전환이 있었다면 남의 데크다 */
       try { from.el.pause(); } catch (e) {}
       from.live = false;
       busy = false;                /* 겹침이 끝나야 다음 전환을 허용한다 */
     }, (at - ctx.currentTime + XF) * 1000 + 150);
     cur = other();
     playAt(pos + 1, true, at, XF);
+    return true;
   }
   function prev() {
     if (!ctx) return;
@@ -391,15 +434,27 @@
     playAt(here - 1, false);
   }
 
+  /* 끝나기 전 여유를 두고, 다음 박에 맞춰 겹쳐 넘긴다.
+     ------------------------------------------------------------
+     이 판단을 화면 그리기(requestAnimationFrame)에 얹어 두면 안 된다.
+     듣는 사람이 다른 탭으로 넘어가는 순간 브라우저가 그리기를 멈추기 때문에,
+     노래는 계속 나오는데 넘길 사람이 없어져 곡이 끝나고 그대로 멈춰 버린다.
+     그래서 소리 자체의 진행(timeupdate)과 느린 예비 시계로도 함께 확인한다. */
+  function maybeAdvance() {
+    if (!ctx || !decks.length || armed) return;
+    var d = decks[cur];
+    if (!d.el.duration || !(d.el.currentTime > 0) || d.el.paused) return;
+    if (d.el.duration - d.el.currentTime > xfadeLen(d) + 0.9) return;
+    /* 먼저 잠가야 같은 순간에 두 번 걸리지 않는다.
+       전환이 성사되면 playAt이 잠금을 풀어 다음 곡이 제 차례에 준비된다.
+       막혀서 못 걸었다면 여기서 풀어, 영영 못 넘어가는 일이 없게 한다. */
+    armed = true;
+    if (!next(true)) armed = false;
+  }
+
   function tick() {
     raf = requestAnimationFrame(tick);
-    var d = decks[cur];
-    /* 끝나기 전 여유를 두고, 다음 박에 맞춰 겹쳐 넘긴다 */
-    if (!armed && d.el.duration && d.el.currentTime > 0 && !d.el.paused &&
-        d.el.duration - d.el.currentTime <= xfadeLen(d) + 0.9) {
-      armed = true;
-      next(true);
-    }
+    maybeAdvance();
     draw();
   }
 
@@ -580,7 +635,7 @@
       var n = m ? +m[1] : (x.kind === "솔로 1집" ? 1 : ((x.kind === "정규" && x.year === "2009") ? 17 : null));
       if (n && n === track.no) hit = x.title;
     });
-    if (hit) return hit + (track.no ? " · 정규 " + track.no + "집" : "");
+    if (hit) return hit + (track.no ? T(" · 정규 " + track.no + "집", " · studio album no." + track.no) : "");
     return track.al || "";
   }
 
@@ -623,7 +678,8 @@
     }
   }
   function close() {
-    decks.forEach(function (d) { try { d.el.pause(); } catch (e) {} });
+    if (ctx && decks.length) stopAll();   /* 예약된 전환까지 확실히 접는다 */
+    else decks.forEach(function (d) { try { d.el.pause(); } catch (e) {} });
     cancelAnimationFrame(raf); raf = null;
     bar().hidden = true;
     document.body.classList.remove("has-deck", "deck-playing");
