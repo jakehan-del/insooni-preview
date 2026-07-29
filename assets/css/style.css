@@ -35,6 +35,12 @@
   --line: rgba(243, 239, 231, .12);
   --line-strong: rgba(243, 239, 231, .26);
   --scrim: rgba(8, 8, 8, .88);
+  /* 어둠의 층: 배경(void)에서 조금씩 떠오르는 표면들.
+     같은 값이 여기저기 손으로 적혀 있던 것을 한곳에 모았다. */
+  --sink: #0a0a0a;           /* void보다 살짝 더 가라앉은 면 (미디어 바닥) */
+  --surface-1: #0d0d0d;      /* 카드·타일 바닥 */
+  --surface-2: #101010;      /* 한 겹 위 */
+  --hairline: #2a2a2a;       /* 아주 옅은 구분선·스크롤바 */
 
   --font-display: "Pretendard Variable", Pretendard, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
   --font-latin: "Cormorant Garamond", "Noto Serif KR", serif;
@@ -50,10 +56,10 @@
 }
 
 /* 글자 크기 3단계 (헤더 [가] 버튼 연동) */
-html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; font-size: 17px; scroll-padding-top: 6rem; background: var(--void); scrollbar-color: #2a2a2a #080808; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; font-size: 17px; scroll-padding-top: 6rem; background: var(--void); scrollbar-color: var(--hairline) #080808; }
 ::-webkit-scrollbar { width: 12px; }
 ::-webkit-scrollbar-track { background: var(--void); }
-::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 6px; border: 3px solid var(--void); }
+::-webkit-scrollbar-thumb { background: var(--hairline); border-radius: 6px; border: 3px solid var(--void); }
 ::-webkit-scrollbar-thumb:hover { background: var(--gold-deep); }
 html[data-fs="2"] { font-size: 20px; }
 html[data-fs="3"] { font-size: 22px; }
@@ -529,7 +535,7 @@ button.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline
 .stage-tile:nth-child(2) {
   background:
     radial-gradient(80% 90% at 20% 0%, rgba(20,19,18,.3), transparent 60%),
-    linear-gradient(200deg, #101010, var(--void) 75%);
+    linear-gradient(200deg, var(--surface-2), var(--void) 75%);
 }
 .stage-tile:nth-child(3) {
   background:
@@ -716,17 +722,17 @@ button.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline
 .era-c2 {
   background:
     radial-gradient(75% 110% at 0% 50%, rgba(20,19,18,.5), transparent 60%),
-    linear-gradient(200deg, #101010, var(--void) 80%);
+    linear-gradient(200deg, var(--surface-2), var(--void) 80%);
 }
 .era-c3 {
   background:
     conic-gradient(from 178deg at 50% -20%, transparent 44%, rgba(243,239,231,.12) 50%, transparent 56%),
-    linear-gradient(180deg, #101010, var(--void) 85%);
+    linear-gradient(180deg, var(--surface-2), var(--void) 85%);
 }
 .era-c4 {
   background:
     radial-gradient(80% 55% at 50% 115%, rgba(243,239,231,.05), transparent 65%),
-    linear-gradient(160deg, #101010, var(--void) 80%);
+    linear-gradient(160deg, var(--surface-2), var(--void) 80%);
 }
 .era-c5 {
   background:
@@ -786,17 +792,17 @@ button.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline
 .era-tile:nth-child(2) {
   background:
     radial-gradient(75% 110% at 0% 50%, rgba(20,19,18,.5), transparent 60%),
-    linear-gradient(200deg, #101010, var(--void) 80%);
+    linear-gradient(200deg, var(--surface-2), var(--void) 80%);
 }
 .era-tile:nth-child(3) {
   background:
     conic-gradient(from 178deg at 50% -20%, transparent 44%, rgba(243,239,231,.12) 50%, transparent 56%),
-    linear-gradient(180deg, #101010, var(--void) 85%);
+    linear-gradient(180deg, var(--surface-2), var(--void) 85%);
 }
 .era-tile:nth-child(4) {
   background:
     radial-gradient(80% 55% at 50% 115%, rgba(243,239,231,.05), transparent 65%),
-    linear-gradient(160deg, #101010, var(--void) 80%);
+    linear-gradient(160deg, var(--surface-2), var(--void) 80%);
 }
 .era-tile:nth-child(5) {
   background:
@@ -1253,7 +1259,7 @@ body.home .footer-min a { display: inline-flex; align-items: center; min-height:
 .strip:focus-visible { outline: 2px solid var(--ivory); outline-offset: -4px; }
 .strip.dragging { cursor: grabbing; }
 .strip-track { display: flex; height: 100%; width: max-content; align-items: stretch; }
-.strip-item { flex: 0 0 auto; height: 100%; display: block; position: relative; background: #0d0d0d; }
+.strip-item { flex: 0 0 auto; height: 100%; display: block; position: relative; background: var(--surface-1); }
 .strip-item img { height: 100%; width: auto; display: block; object-fit: cover; -webkit-user-drag: none; user-select: none; }
 .strip-item--tall { width: calc(100dvh * .7); }
 .strip-item--tall img { width: 100%; }
@@ -1304,7 +1310,7 @@ body.home .footer-min a { display: inline-flex; align-items: center; min-height:
 }
 
 /* 스트립 비디오 타일(버튼) 초기화 + 배경 영상 일시정지 토글 (WCAG 2.2.2) */
-button.strip-item { border: 0; padding: 0; background: #0d0d0d; cursor: pointer; text-align: inherit; }
+button.strip-item { border: 0; padding: 0; background: var(--surface-1); cursor: pointer; text-align: inherit; }
 button.strip-item:focus-visible { outline: 3px solid var(--ivory); outline-offset: -4px; }
 .strip-pause {
   position: absolute; right: 1.1rem; bottom: 4.6rem; z-index: 5;
@@ -1506,7 +1512,7 @@ button.show-cell:hover .show-cta, button.show-cell:focus-visible .show-cta { col
 .hstrip {
   display: flex; gap: 4px; overflow-x: auto; scroll-snap-type: x proximity;
   padding: 0 0 .9rem; cursor: grab; -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin; scrollbar-color: #2a2a2a transparent;
+  scrollbar-width: thin; scrollbar-color: var(--hairline) transparent;
 }
 .hstrip img { height: 62vh; min-height: 320px; width: auto; flex: none; scroll-snap-align: center; border-radius: 2px; display: block; }
 @media (max-width: 700px) { .hstrip img { height: 44vh; } }
@@ -1605,7 +1611,7 @@ main h3 { font-family: var(--font-mono); font-weight: 400; font-size: .85rem; le
 /* 사랑방 팬 번호증 */
 .mc-preview canvas {
   width: 100%; max-width: 520px; height: auto; display: block;
-  border: 1px solid var(--line); border-radius: 6px; background: #0a0a0a;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--sink);
   box-shadow: 0 18px 48px rgba(0,0,0,.45);
 }
 .mc-preview canvas.is-ready { border-color: var(--gold-deep); }
@@ -1632,7 +1638,7 @@ main h3 { font-family: var(--font-mono); font-weight: 400; font-size: .85rem; le
 /* 거위의 꿈 응원 카드 */
 .cc-preview canvas {
   width: 100%; max-width: 420px; height: auto; display: block;
-  border: 1px solid var(--line); border-radius: 2px; background: #0a0a0a;
+  border: 1px solid var(--line); border-radius: 2px; background: var(--sink);
 }
 .cc-preview canvas.is-ready { border-color: var(--gold-deep); }
 .cc-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
@@ -1693,7 +1699,7 @@ body.home .footer-min a { min-height: 44px; color: var(--muted); }
 body.home .footer-min a:hover { color: #fff; }
 
 .strip-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-a.strip-item--video { position: relative; display: block; background: #0d0d0d; }
+a.strip-item--video { position: relative; display: block; background: var(--surface-1); }
 
 /* ============ 시네마틱 프리미엄 패스 (v47) ============ */
 /* 필름 그레인 + 비네트: 홈 스트립을 필름 룩으로 */
@@ -1736,7 +1742,7 @@ body.home .strip-caption, body.home .strip-pause { z-index: 4; }
 
 /* 골드 셀렉션 + 다크 스크롤바 */
 ::selection { background: rgba(212, 175, 55, .32); }
-html { scrollbar-color: #2a2a2a #0a0a0a; }
+html { scrollbar-color: var(--hairline) var(--sink); }
 
 /* ============ 곡 찾기 & 오늘의 노래 (v50) ============ */
 .today-line {
@@ -1793,7 +1799,7 @@ html { scrollbar-color: #2a2a2a #0a0a0a; }
   gap: 3px; margin-bottom: 3.4rem;
 }
 .aw-cell {
-  position: relative; aspect-ratio: 1; padding: 0; border: 0; background: #0d0d0d;
+  position: relative; aspect-ratio: 1; padding: 0; border: 0; background: var(--surface-1);
   cursor: pointer; overflow: hidden; display: block;
 }
 .aw-cell img {
@@ -2030,7 +2036,7 @@ body.has-deck .back-to-top { bottom: calc(92px + 1.2rem); }
 .bt-deck { display: grid; justify-items: center; gap: .7rem; position: relative; }
 .bt-platter {
   position: relative; width: min(100%, 190px); aspect-ratio: 1; border-radius: 50%;
-  background: #0a0a0a;
+  background: var(--sink);
   box-shadow: 0 0 0 1px rgba(243,239,231,.09), 0 18px 50px rgba(0,0,0,.65),
               inset 0 0 40px rgba(0,0,0,.9);
   transition: filter .5s ease, box-shadow .5s ease;
@@ -2038,7 +2044,7 @@ body.has-deck .back-to-top { bottom: calc(92px + 1.2rem); }
 }
 .bt-vinyl {
   position: absolute; inset: 0; border-radius: 50%;
-  background: repeating-radial-gradient(circle at 50% 50%, #191919 0 1.5px, #0d0d0d 1.5px 3.5px);
+  background: repeating-radial-gradient(circle at 50% 50%, #191919 0 1.5px, var(--surface-1) 1.5px 3.5px);
 }
 .bt-platter .bt-art {
   position: absolute; left: 50%; top: 50%; width: 46%; height: 46%; margin: -23% 0 0 -23%;
@@ -2089,7 +2095,7 @@ body.has-deck .back-to-top { bottom: calc(92px + 1.2rem); }
 }
 .bt-knob {
   position: absolute; left: 0; width: 26px; height: 34px; margin-left: -13px; border-radius: 3px;
-  background: linear-gradient(to bottom, #2a2a2a, #111);
+  background: linear-gradient(to bottom, var(--hairline), #111);
   box-shadow: 0 0 0 1px rgba(212,175,55,.6), 0 4px 14px rgba(0,0,0,.7);
   transition: left .12s linear;
 }
@@ -2309,7 +2315,7 @@ body.deck-full .bt-deck[data-deck="1"] { opacity: .3; }
 /* 플래터: 금속 림 + 깊이 */
 .bt-platter {
   background:
-    radial-gradient(circle at 50% 50%, #101010 0 60%, #0a0a0a 100%);
+    radial-gradient(circle at 50% 50%, var(--surface-2) 0 60%, var(--sink) 100%);
   box-shadow:
     0 0 0 1px rgba(243,239,231,.10),
     0 0 0 7px #131313,                       /* 플래터 림 */
@@ -2345,7 +2351,7 @@ body.deck-full .bt-deck[data-deck="1"] { opacity: .3; }
 
 /* 크로스페이더: 홈이 파인 레일 + 발광 노브 */
 .bt-rail {
-  background: linear-gradient(180deg, #0a0a0a, #121212);
+  background: linear-gradient(180deg, var(--sink), #121212);
   box-shadow: inset 0 1px 3px rgba(0,0,0,.9), 0 1px 0 rgba(243,239,231,.06);
 }
 .bt-knob {

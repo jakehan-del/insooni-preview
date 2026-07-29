@@ -525,16 +525,6 @@ window.SITE_DATA = {
     { d: "02-19", y: 2025, ko: "《인순이, 아름다운 우리나라》 발매", en: "'Insooni, Beautiful Korea' released" },
     { d: "11-28", y: 2025, ko: "싱글 《그래도 꿈은 흐른다》 발매", en: "Single 'Still, the Dream Flows' released" }
   ],
-  /* 이달의 이야기 — 게시판의 빈 칸 앞에서 팬이 무엇을 쓸지 실마리를 준다.
-     달마다 하나씩 돌아가며, 눌러서 바로 이야기 칸에 옮겨 쓸 수 있다. */
-  boardPrompts: [
-    { ko: "인순이의 노래를 처음 만난 순간을 기억하시나요?", en: "Do you remember the first time you met one of Insooni's songs?" },
-    { ko: "가장 힘들 때 곁을 지켜 준 인순이의 한 곡은?", en: "Which Insooni song stayed beside you through your hardest days?" },
-    { ko: "직접 본 무대 중 잊지 못하는 순간이 있다면.", en: "A moment from a show you saw in person that you'll never forget." },
-    { ko: "'거위의 꿈'이 나를 붙잡아 준 날의 이야기.", en: "The day 'A Goose's Dream' held you up." },
-    { ko: "인순이에게 꼭 전하고 싶은 한마디.", en: "One thing you've always wanted to tell Insooni." },
-    { ko: "함께 나이 들어가며 더 좋아진 노래가 있나요?", en: "A song that has only grown on you over the years." }
-  ],
   cheerPresets: [
     { ko: "오늘도 응원합니다", en: "Cheering for you today" },
     { ko: "거위의 꿈 듣고 갑니다", en: "Listened to A Goose's Dream today" },
