@@ -552,12 +552,14 @@
       cx.fillRect(i * bw + bw * 0.2, h - bh, bw * 0.6, bh);
     }
   }
+  var REDUCE = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   function draw() {
     if (!analyser) return;
+    paintBooth();                      /* 기능 표시(트랙·크로스페이더)는 항상 갱신 */
+    if (REDUCE) return;                /* 모션 최소화: 장식용 주파수 막대는 그리지 않는다 */
     if (!bins) bins = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(bins);
     if (btCtx && btViz) drawOn(btViz, btCtx);
-    paintBooth();
     if (!canvas) return;
     var w = canvas.width, h = canvas.height;
     cctx.clearRect(0, 0, w, h);
@@ -588,7 +590,7 @@
         '<div class="dk-disc" id="dk-disc"><img alt="" id="dk-art"><span class="dk-spindle"></span></div>' +
         '<div class="dk-now">' +
           '<span class="dk-kicker">INSOONI MIX · <b id="dk-list"></b></span>' +
-          '<span class="dk-title" id="dk-title"></span>' +
+          '<span class="dk-title" id="dk-title" aria-live="polite" aria-atomic="true"></span>' +
           '<span class="dk-meta" id="dk-meta"></span>' +
           '<span class="dk-why" id="dk-why"></span>' +
         "</div>" +

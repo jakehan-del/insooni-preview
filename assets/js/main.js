@@ -739,7 +739,7 @@
       if (r.clips.length > 1) {
         html += '<div class="recap-clips" role="group" aria-label="' + t("recap.clips", "무대 클립 선택") + '">';
         r.clips.forEach(function (cl, ci) {
-          html += '<button type="button" class="recap-clip' + (ci === 0 ? " is-on" : "") + '" data-cid="' + esc(cl.id) + '" data-ct="' + esc(tr(cl, "title")) + '">' + esc(tr(cl, "title")) + "</button>";
+          html += '<button type="button" class="recap-clip' + (ci === 0 ? " is-on" : "") + '" aria-pressed="' + (ci === 0) + '" data-cid="' + esc(cl.id) + '" data-ct="' + esc(tr(cl, "title")) + '">' + esc(tr(cl, "title")) + "</button>";
         });
         html += "</div>";
       }
@@ -760,8 +760,9 @@
     if (clipBtns.length && clipHost) {
       clipBtns.forEach(function (b) {
         b.addEventListener("click", function () {
-          inner.querySelectorAll(".recap-clip.is-on").forEach(function (x) { x.classList.remove("is-on"); });
+          inner.querySelectorAll(".recap-clip.is-on").forEach(function (x) { x.classList.remove("is-on"); x.setAttribute("aria-pressed", "false"); });
           b.classList.add("is-on");
+          b.setAttribute("aria-pressed", "true");
           mountHDVideo(clipHost, b.getAttribute("data-cid"), b.getAttribute("data-ct"), true);
         });
       });
@@ -1479,9 +1480,11 @@
     SITS.forEach(function (s2, i) {
       var b = el("button", i === 0 ? "is-on" : "", isEN ? s2.en : s2.ko);
       b.type = "button";
+      b.setAttribute("aria-pressed", String(i === 0));   /* 낭독기가 선택 상태를 읽게 */
       b.addEventListener("click", function () {
-        chipsBox.querySelectorAll(".is-on").forEach(function (x) { x.classList.remove("is-on"); });
+        chipsBox.querySelectorAll(".is-on").forEach(function (x) { x.classList.remove("is-on"); x.setAttribute("aria-pressed", "false"); });
         b.classList.add("is-on");
+        b.setAttribute("aria-pressed", "true");
         state.sit = s2.key;
       });
       chipsBox.appendChild(b);

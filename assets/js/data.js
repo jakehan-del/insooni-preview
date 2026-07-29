@@ -15,8 +15,8 @@ window.SITE_DATA = {
   /* ---------- 시각 아카이브 (실사진 확보 시 추가) ---------- */
   archive: [
     { img: "assets/img/photos/kakao26.jpg", w: 1600, h: 1067, year: "2024", cat: "화보", caption: "블랙 크롭 수트, 무대 뒤 안개 속에서" , en: { caption: "Black cropped suit, in the backstage haze" } },
-    { img: "assets/img/photos/seasons-1.jpg", w: 1281, h: 1600, year: "2024", cat: "화보", caption: "은빛 페인팅 재킷 — '더 시즌즈' 대기실에서 (2024. 12.)" , en: { caption: "Silver-painted jacket - backstage at 'The Seasons' (Dec 2024)" } },
-    { img: "assets/img/photos/seasons-2.jpg", w: 1277, h: 1600, year: "2024", cat: "화보", caption: "무대 직전의 프로필 — '더 시즌즈' 대기실에서 (2024. 12.)" , en: { caption: "A profile just before the stage - backstage at 'The Seasons' (Dec 2024)" } },
+    { img: "assets/img/photos/seasons-1.jpg", w: 1281, h: 1600, year: "2024", cat: "화보", caption: "은빛 페인팅 재킷 — '더 시즌즈' 대기실에서 (2024. 12.)" , en: { caption: "Silver-painted jacket — backstage at 'The Seasons' (Dec 2024)" } },
+    { img: "assets/img/photos/seasons-2.jpg", w: 1277, h: 1600, year: "2024", cat: "화보", caption: "무대 직전의 프로필 — '더 시즌즈' 대기실에서 (2024. 12.)" , en: { caption: "A profile just before the stage — backstage at 'The Seasons' (Dec 2024)" } },
     { img: "assets/img/photos/hinkchi5.jpg", w: 1067, h: 1600, year: "2025", cat: "화보", caption: "데님 수트, 스텝을 밟으며" , en: { caption: "Denim suit, mid-step" } },
     { img: "assets/img/photos/hm-3.jpg", w: 1280, h: 824, year: "", cat: "기록", caption: "해밀학교 건축 후원자 벽 앞에서" , en: { caption: "At Haemil School's donor wall" } },
     { img: "assets/img/hero.jpg", w: 1280, h: 720, year: "2025", cat: "무대", caption: "'그래도 꿈은 흐른다' MV, 합창단과 함께" , en: { caption: "'Still, the Dream Flows' MV, with the choir" } },
@@ -42,7 +42,7 @@ window.SITE_DATA = {
     {
       date: "2025. 2. 15.", year: "2025",
       title: "한터뮤직어워즈",
-      en: { title: "Hanteo Music Awards", place: "Jangchung Arena, Seoul", desc: "Two days at the Hanteo Music Awards (Feb 15-16) - 'A Goose's Dream' with Kim Jae-joong, trophy and flowers, and a green-dress stage greeting, captured by family." },
+      en: { title: "Hanteo Music Awards", place: "Jangchung Arena, Seoul", desc: "Two days at the Hanteo Music Awards (Feb 15-16) — 'A Goose's Dream' with Kim Jae-joong, trophy and flowers, and a green-dress stage greeting, captured by family." },
       place: "장충체육관",
       desc: "한터뮤직어워즈의 이틀(2. 15.–16.) — 김재중과 함께 부른 '거위의 꿈' 무대, 트로피와 꽃다발, 초록 드레스의 무대 인사까지. 가족의 카메라로 남긴 기록.",
       bg: "assets/img/photos/hanteo-1.jpg",
@@ -57,7 +57,7 @@ window.SITE_DATA = {
     {
       date: "2025. 1. 21.", year: "2025",
       title: "열린음악회 녹화",
-      en: { title: "Open Concert Taping", place: "KBS - Ep.1514 aired Feb 23, 2025", desc: "A yellow flower on a black dress, laughter with the bassist backstage, and the stage rehearsal on taping day." },
+      en: { title: "Open Concert Taping", place: "KBS — Ep.1514 aired Feb 23, 2025", desc: "A yellow flower on a black dress, laughter with the bassist backstage, and the stage rehearsal on taping day." },
       place: "KBS · 1514회 방송 2025. 2. 23.",
       desc: "노란 꽃을 꽂은 검은 드레스, 베이시스트와 웃던 대기실, 그리고 무대 리허설까지 — 녹화일의 백스테이지 기록.",
       bg: "assets/img/photos/openc-1.jpg",
@@ -179,26 +179,26 @@ window.SITE_DATA = {
   /* ---------- 지난 공연 아카이브 (플레이DB·보도 검증, 2026.7 리서치) ---------- */
   pastShows: [
     { date: "2026-07-28", city: "", venue: "tvN", title: "'킬잇' 파이널 깜짝 무대", en: { title: "Surprise stage on tvN 'Kill It' finale" },
-      recap: { desc: "tvN '킬잇: 스타일 크리에이터 대전쟁' 파이널 — 요요의 퍼스널 쇼케이스에 깜짝 조력자로 등장해 'This Is Me'를 불렀습니다. tvN 공식 클립.", en: { desc: "A surprise appearance on the finale of tvN's 'Kill It' - joining Yoyo's personal showcase with 'This Is Me'. Official tvN clips." },
+      recap: { desc: "tvN '킬잇: 스타일 크리에이터 대전쟁' 파이널 — 요요의 퍼스널 쇼케이스에 깜짝 조력자로 등장해 'This Is Me'를 불렀습니다. tvN 공식 클립.", en: { desc: "A surprise appearance on the finale of tvN's 'Kill It' — joining Yoyo's personal showcase with 'This Is Me'. Official tvN clips." },
         clips: [
-          { id: "08uaw8xIVtg", title: "요요의 쇼케이스 — 깜짝 등장", en: { title: "Yoyo's showcase - the surprise entrance" } },
+          { id: "08uaw8xIVtg", title: "요요의 쇼케이스 — 깜짝 등장", en: { title: "Yoyo's showcase — the surprise entrance" } },
           { id: "XVFE7KN9KVE", title: "인순이가 왜 여기서 나와?", en: { title: "'Why is Insooni here?'" } }
         ] } },
     { date: "2026-07-26", city: "서울", venue: "고척스카이돔", title: "불꽃야구 생중계 애국가 열창", en: { title: "National anthem at Gocheok Sky Dome", city: "Seoul" },
-      recap: { desc: "돔을 가득 채운 애국가. 현장 관객의 기록으로 남은 그날의 목소리.", en: { desc: "The national anthem filling the dome - captured by a fan in the stands." },
+      recap: { desc: "돔을 가득 채운 애국가. 현장 관객의 기록으로 남은 그날의 목소리.", en: { desc: "The national anthem filling the dome — captured by a fan in the stands." },
         clips: [{ id: "0dz08JtS3MQ", title: "애국가 열창 (현장 기록)", en: { title: "National anthem (fan video)" } }] } },
     { date: "2026-07-22", city: "서울", venue: "하나금융 명동사옥", title: "하나다문화가정대상 축하공연", en: { title: "Hana Multicultural Awards performance", city: "Seoul" } },
     { date: "2026-07-12", city: "서울", venue: "KBS홀", title: "열린음악회 1581회 피날레", en: { title: "Open Concert Ep.1581 finale", city: "Seoul" },
-      recap: { desc: "1581회 피날레 무대. KBS 공식 클립.", en: { desc: "Finale stages from Ep.1581 - official KBS clips." },
+      recap: { desc: "1581회 피날레 무대. KBS 공식 클립.", en: { desc: "Finale stages from Ep.1581 — official KBS clips." },
         clips: [
           { id: "9uP_XhjG5z8", title: "Higher (with Rap.D.Y)" },
           { id: "lfIUDMKHBPM", title: "Let Everyone Shine" }
         ] } },
     { date: "2026-06-21", city: "", venue: "KBS", title: "열린음악회 김구 탄생 150주년 특집", en: { title: "Open Concert, Kim Koo 150th special" },
-      recap: { desc: "김구 탄생 150주년 특집 무대. KBS 공식 클립.", en: { desc: "Kim Koo 150th anniversary special - official KBS clip." },
+      recap: { desc: "김구 탄생 150주년 특집 무대. KBS 공식 클립.", en: { desc: "Kim Koo 150th anniversary special — official KBS clip." },
         clips: [{ id: "Djq4n3j6Vv0", title: "친구여 (with Rap.D.Y)", en: { title: "Chinguyeo (with Rap.D.Y)" } }] } },
     { date: "2026-06-05", city: "경주", venue: "봉황대 광장 특설무대", title: "봉황대 뮤직스퀘어 개막공연", en: { title: "Bonghwangdae Music Square opening", city: "Gyeongju" },
-      recap: { desc: "경주 봉황대 아래에서 김태우와 함께 연 개막 무대. 공식 뉴스 리포트와 현장 기록.", en: { desc: "Opening night beneath Gyeongju's Bonghwangdae mound, opened with Kim Tae-woo - official news report and fan videos." },
+      recap: { desc: "경주 봉황대 아래에서 김태우와 함께 연 개막 무대. 공식 뉴스 리포트와 현장 기록.", en: { desc: "Opening night beneath Gyeongju's Bonghwangdae mound, opened with Kim Tae-woo — official news report and fan videos." },
         clips: [
           { id: "kaPBHZMMSpw", title: "개막 뉴스 리포트 (헬로tv뉴스)", en: { title: "Opening news report (HelloTV News)" } },
           { id: "MB_yMYiURN4", title: "거위의 꿈", en: { title: "A Goose's Dream" } },
@@ -208,26 +208,26 @@ window.SITE_DATA = {
         ] } },
     { date: "2026-05-09", city: "안동", venue: "안동문화예술의전당 웅부홀", title: "어버이날 특별기획 '두 사랑 이야기'", en: { title: "Parents' Day Special 'Two Love Stories'", city: "Andong" },
       poster: "assets/img/posters/andong2026.jpg", pw: 721, phh: 1000,
-      recap: { desc: "명창 유지숙과 함께한 어버이날 특별기획 — 2025 국립극장 여우락 초연작의 안동 무대. 한웅원·박범태 참여.", en: { desc: "A Parents' Day special with master singer Yoo Ji-sook - the Yeowoorak premiere brought to Andong, with Han Woong-won and Park Beom-tae." } } },
+      recap: { desc: "명창 유지숙과 함께한 어버이날 특별기획 — 2025 국립극장 여우락 초연작의 안동 무대. 한웅원·박범태 참여.", en: { desc: "A Parents' Day special with master singer Yoo Ji-sook — the Yeowoorak premiere brought to Andong, with Han Woong-won and Park Beom-tae." } } },
     { date: "2026-04-07", city: "양산", venue: "웅상체육공원", title: "열린음악회 양산 특집 녹화", en: { title: "Open Concert Yangsan special taping", city: "Yangsan" },
-      recap: { desc: "양산 특집 무대 (4월 26일 방송). KBS 공식 클립.", en: { desc: "Yangsan special, aired April 26 - official KBS clip." },
+      recap: { desc: "양산 특집 무대 (4월 26일 방송). KBS 공식 클립.", en: { desc: "Yangsan special, aired April 26 — official KBS clip." },
         clips: [{ id: "LLHR9WWBIAg", title: "밤이면 밤마다", en: { title: "Night After Night" } }] } },
     { date: "2026-03-16", city: "", venue: "TV조선", title: "'조선의 사랑꾼' 고정 합류 첫 방송", en: { title: "Joined TV Chosun 'Love Interventions'" },
-      recap: { desc: "일상을 처음 공개한 고정 합류 첫 방송. TV조선 공식 클립.", en: { desc: "Her first episode as a regular cast member - official TV Chosun clips." },
+      recap: { desc: "일상을 처음 공개한 고정 합류 첫 방송. TV조선 공식 클립.", en: { desc: "Her first episode as a regular cast member — official TV Chosun clips." },
         clips: [
           { id: "OIKqhdBojRo", title: "라디오 생방송 공개 고백", en: { title: "A surprise on-air confession" } },
           { id: "FGrEZTiozxI", title: "인순이 부부의 이야기 (풀버전)", en: { title: "The couple's story (full)" } }
         ] } },
     { date: "2026-02-22", city: "인천", venue: "", title: "열린음악회 1562회 피날레", en: { title: "Open Concert Ep.1562 finale", city: "Incheon" },
-      recap: { desc: "1562회 피날레 무대. KBS 공식 클립.", en: { desc: "Finale stage from Ep.1562 - official KBS clip." },
+      recap: { desc: "1562회 피날레 무대. KBS 공식 클립.", en: { desc: "Finale stage from Ep.1562 — official KBS clip." },
         clips: [{ id: "g0ChQ6VTYaI", title: "열정 (with Rap.D.Y)", en: { title: "Passion (with Rap.D.Y)" } }] } },
     { date: "2025-12-27", city: "밀양", venue: "밀양아리랑아트센터", title: "인순이 스페셜 송년 콘서트", en: { title: "Insooni Special Year-End Concert", city: "Miryang" } },
-    { date: "2025-12-01", city: "", venue: "", title: "뷰티플 비전콘서트 — 신곡 첫 무대", en: { title: "Beautiful Vision Concert - new single debut" } },
+    { date: "2025-12-01", city: "", venue: "", title: "뷰티플 비전콘서트 — 신곡 첫 무대", en: { title: "Beautiful Vision Concert — new single debut" } },
     { date: "2025-11-05", city: "", venue: "MBN", title: "'언포게터블 듀엣' 출연", en: { title: "MBN 'Unforgettable Duet'" },
-      recap: { desc: "1회 무대. MBN MUSIC 공식 클립.", en: { desc: "From the premiere episode - official MBN MUSIC clip." },
+      recap: { desc: "1회 무대. MBN MUSIC 공식 클립.", en: { desc: "From the premiere episode — official MBN MUSIC clip." },
         clips: [{ id: "Eexbh5AeSIs", title: "선물", en: { title: "The Gift" } }] } },
     { date: "2025-10-25", city: "양산", venue: "황산공원", title: "낙동강 시월愛 콘서트", en: { title: "Nakdong River October Concert", city: "Yangsan" },
-      recap: { desc: "황산공원을 채운 1만 관중. KNN 공식 스케치와 현장 기록.", en: { desc: "Ten thousand by the Nakdong river - official KNN coverage and fan videos." },
+      recap: { desc: "황산공원을 채운 1만 관중. KNN 공식 스케치와 현장 기록.", en: { desc: "Ten thousand by the Nakdong river — official KNN coverage and fan videos." },
         clips: [
           { id: "_W71GxdH5AY", title: "KNN 현장 스케치", en: { title: "KNN highlights" } },
           { id: "k-0SzKmfWRk", title: "거위의 꿈 (현장 기록)", en: { title: "A Goose's Dream (fan video)" } },
@@ -235,20 +235,20 @@ window.SITE_DATA = {
         ] } },
     { date: "2025-09-27", city: "경산", venue: "DYC 특설무대", title: "DYC 음악회 — 교향악단 협연", en: { title: "DYC Concert with symphony orchestra", city: "Gyeongsan" } },
     { date: "2025-09-26", city: "울주", venue: "영남알프스 웰컴센터", title: "울주세계산악영화제 개막 축하공연", en: { title: "Ulju Mountain Film Festival opening", city: "Ulju" },
-      recap: { desc: "영남알프스 아래 개막 축하 무대. 현장 관객의 기록 영상.", en: { desc: "Opening celebration beneath the Yeongnam Alps - fan video." },
+      recap: { desc: "영남알프스 아래 개막 축하 무대. 현장 관객의 기록 영상.", en: { desc: "Opening celebration beneath the Yeongnam Alps — fan video." },
         clips: [
           { id: "mxRGpqyy-yE", title: "개막 축하 무대 (현장 기록)", en: { title: "Opening stage (fan video)" } },
           { id: "Pq3OJR_hen8", title: "인순이 인사 영상 (영화제 공식)", en: { title: "Greeting video (festival official)" } }
         ] } },
     { date: "2025-09-21", city: "서울", venue: "마루공원", title: "국악한마당 — 인순이×유지숙 '지음'", en: { title: "KBS Gugak Hanmadang with Yoo Ji-sook", city: "Seoul" },
-      recap: { desc: "서도민요 명창 유지숙과의 '지음' 무대 (10월 25일 방송). KBS 공식 클립.", en: { desc: "With master singer Yoo Ji-sook, aired October 25 - official KBS clips." },
+      recap: { desc: "서도민요 명창 유지숙과의 '지음' 무대 (10월 25일 방송). KBS 공식 클립.", en: { desc: "With master singer Yoo Ji-sook, aired October 25 — official KBS clips." },
         clips: [
           { id: "mZahvsE3mtk", title: "긴 편지", en: { title: "A Long Letter" } },
           { id: "id_fzJtGWvI", title: "사설난봉가–친구여 (듀엣)", en: { title: "Saseol-nanbongga / Chinguyeo (duet)" } },
           { id: "9ZwwSPiwCNw", title: "싸름타령", en: { title: "Ssareum-taryeong" } }
         ] } },
     { date: "2025-09-14", city: "인천", venue: "송도 트라이보울", title: "송도 재즈 페스티벌 피날레", en: { title: "Songdo Jazz Festival finale", city: "Incheon" },
-      recap: { desc: "재즈 쿼텟과 함께한 피날레. 현장 관객의 기록 영상.", en: { desc: "Festival finale with a jazz quartet - fan videos." },
+      recap: { desc: "재즈 쿼텟과 함께한 피날레. 현장 관객의 기록 영상.", en: { desc: "Festival finale with a jazz quartet — fan videos." },
         clips: [
           { id: "LpkGaVPA2d4", title: "공식 애프터무비 (인천문화재단)", en: { title: "Official aftermovie (IFAC)" } },
           { id: "IgIIVNg8sP8", title: "Mr. Saturday Night" },
@@ -313,7 +313,7 @@ window.SITE_DATA = {
 
   /* ---------- 소식 (type: 공지 | 공연 | 방송 | 보도) ---------- */
   news: [
-    { date: "2026-07-28", type: "방송", title: "tvN '킬잇' 파이널 깜짝 무대", excerpt: "파이널 쇼케이스의 깜짝 조력자 — 'This Is Me'로 다름의 가치를 노래했습니다.", en: { title: "Surprise stage on tvN 'Kill It' finale", excerpt: "A surprise helper on the finale showcase - singing 'This Is Me' for everyone born different." } },
+    { date: "2026-07-28", type: "방송", title: "tvN '킬잇' 파이널 깜짝 무대", excerpt: "파이널 쇼케이스의 깜짝 조력자 — 'This Is Me'로 다름의 가치를 노래했습니다.", en: { title: "Surprise stage on tvN 'Kill It' finale", excerpt: "A surprise helper on the finale showcase — singing 'This Is Me' for everyone born different." } },
     { date: "2026-07-26", type: "방송", title: "고척스카이돔에서 애국가 열창", excerpt: "특집 불꽃야구 생중계 무대. 돔을 채운 목소리.", en: { title: "National anthem at Gocheok Sky Dome", excerpt: "A live broadcast moment that filled the dome." } },
     { date: "2026-06-05", type: "공연", title: "경주 봉황대 뮤직스퀘어 개막", excerpt: "봉황대 광장 특설무대, 2026 시즌의 문을 열다.", en: { title: "Opening Bonghwangdae Music Square, Gyeongju", excerpt: "Opening the 2026 season on the open-air stage." } },
     { date: "2026-03-16", type: "방송", title: "TV조선 '조선의 사랑꾼' 고정 합류", excerpt: "113회부터 새 멤버로 합류해 고정 출연 중입니다.", en: { title: "Joined TV Chosun 'Love Interventions'", excerpt: "A regular cast member since episode 113." } },
@@ -321,7 +321,7 @@ window.SITE_DATA = {
     { date: "2025-11-28", type: "발매", title: "새 싱글 '그래도 꿈은 흐른다' 발매", excerpt: "실패 속에서도 계속되는 꿈. 공식 뮤직비디오가 유튜브에 공개되었습니다.", en: { title: "New single 'Still, the Dream Flows' released", excerpt: "A dream that keeps flowing through failure. The official music video is on YouTube." } },
     { date: "2025-08-21", type: "수상", title: "펄벅 인터내셔널 '올해의 여성상' 수상", excerpt: "Woman of Influence 2025. 노래와 나눔이 함께 만든 자리 — 시상식 리캡을 라이브에서 볼 수 있습니다.", en: { title: "Woman of Influence 2025, Pearl S. Buck International", excerpt: "An award where song and giving met. See the ceremony recap on the Tour page." } },
     { date: "2025-07-09", type: "공연", title: "여우락 페스티벌 '두 사랑 이야기'", excerpt: "국립극장 하늘극장, 인순이 x 유지숙. 이틀간의 무대.", en: { title: "Yeowoorak Festival 'Two Love Stories'", excerpt: "Two nights with Yoo Ji-sook at the National Theater of Korea." } },
-    { date: "2025-02-23", type: "방송", title: "열린음악회 1514회 피날레 무대", excerpt: "1월 21일 녹화 — 백스테이지 기록은 라이브 페이지 리캡에.", en: { title: "Open Concert Ep.1514 finale", excerpt: "Taped January 21 - backstage records in the Tour page recap." } },
+    { date: "2025-02-23", type: "방송", title: "열린음악회 1514회 피날레 무대", excerpt: "1월 21일 녹화 — 백스테이지 기록은 라이브 페이지 리캡에.", en: { title: "Open Concert Ep.1514 finale", excerpt: "Taped January 21 — backstage records in the Tour page recap." } },
     { date: "2025-02-19", type: "발매", title: "《인순이, 아름다운 우리나라》 발매", excerpt: "1984년 원곡 앨범을 다시 부른 아홉 곡.", en: { title: "'Insooni, Beautiful Korea' released", excerpt: "Nine songs revisiting the 1984 original album." } },
     { date: "2024-12-30", type: "공연", title: "5년 만의 연말 디너쇼", excerpt: "그랜드 인터컨티넨탈 서울 파르나스, 이틀간의 밤.", en: { title: "First year-end dinner show in five years", excerpt: "Two nights at Grand InterContinental Seoul Parnas." } }
   ],
@@ -406,7 +406,7 @@ window.SITE_DATA = {
         { label: "Spotify", url: "https://open.spotify.com/album/7hdxullH6yeBjneaZ9rRDD" },
         { label: "멜론", url: "https://www.melon.com/album/detail.htm?albumId=35502" }
       ] },
-    { year: "2004", title: "올림픽 응원가 - 비상", kind: "싱글", note: "BES기획." },
+    { year: "2004", title: "올림픽 응원가 — 비상", kind: "싱글", note: "BES기획." },
     { art: "assets/img/photos/press-149006.jpg", year: "2006", title: "열정 (Can You Feel It)", kind: "싱글", note: "서커스엔터테인먼트.", links: [{ label: "YT", url: "https://www.youtube.com/results?search_query=%EC%9D%B8%EC%88%9C%EC%9D%B4%20%EC%97%B4%EC%A0%95%20%20Can%20You%20Feel%20It" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1655672126" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/2Oy7xhoxRhZhXiMyo4bJdU" }] },
     { year: "2006", title: "Amazing Grace", kind: "라이브", note: "라이브 콘서트 앨범. C&C Media." },
     { featured: true, art: "assets/img/covers/cover2007.jpg", year: "2007", title: "거위의 꿈", kind: "대표곡", note: "카니발 원곡(1997) 리메이크. 위로의 상징이 된 노래.",
@@ -482,18 +482,18 @@ window.SITE_DATA = {
     { year: "1978", event: "걸그룹 '희자매'로 데뷔", note: "타이틀곡 '실버들' TBC 가요차트 7주 1위", milestone: true, en: { event: "Debut with the trio Hee Sisters", note: "'Silvers' topped the TBC chart for 7 weeks" } },
     { year: "1980", event: "솔로 1집 《인연》으로 홀로서기", note: "", en: { event: "Going solo with the first album Fate" } },
     { year: "1983", event: "'밤이면 밤마다' 발표", note: "디바의 시대 개막", milestone: true, en: { event: "'Night After Night' released", note: "The diva era begins" } },
-    { year: "1996", event: "《The Queen Of Soul》 발매", note: "'또'(박진영 곡) 수록, 정규 11집", en: { event: "The Queen Of Soul released", note: "11th studio album - with a Park Jin-young title track" } },
+    { year: "1996", event: "《The Queen Of Soul》 발매", note: "'또'(박진영 곡) 수록, 정규 11집", en: { event: "The Queen Of Soul released", note: "11th studio album — with a Park Jin-young title track" } },
     { year: "1999", event: "뉴욕 카네기홀 첫 공연", note: "", milestone: true, en: { event: "First Carnegie Hall concert, New York" } },
-    { year: "2004", event: "'친구여' (조PD 피처링) 히트", note: "정규 16집 《A To Z》 수록 (2004. 9. 9. 발매)", en: { event: "'My Friend' (feat. Cho PD) becomes a hit", note: "On the 16th album A To Z (Sept 9, 2004)" } },
+    { year: "2004", event: "'친구여' (조PD 피처링) 히트", note: "정규 16집 《A To Z》 수록 (2004. 9. 9. 발매)", en: { event: "'Chinguyeo' (feat. Cho PD) becomes a hit", note: "On the 16th album A To Z (Sept 9, 2004)" } },
     { year: "2007", event: "'거위의 꿈' 발표", note: "위로와 도전의 아이콘이 되다", milestone: true, en: { event: "'A Goose's Dream' released", note: "An anthem of comfort and challenge" } },
     { year: "2009", event: "'아버지' 발표", note: "정규 17집 《인순이》 수록 (작사·작곡 이현승)", en: { event: "'Father' released", note: "On the 17th album Insooni (written by Lee Hyun-seung)" } },
     { year: "2010", event: "카네기홀 두 번째 단독 콘서트", note: "", en: { event: "Second solo concert at Carnegie Hall" } },
     { year: "2012", event: "사단법인 '인순이와 좋은 사람들' 설립", note: "", en: { event: "Founded the nonprofit 'Insooni and Good People'" } },
-    { year: "2013", event: "다문화 대안학교 '해밀학교' 개교", note: "강원 홍천. 무대 밖의 또 다른 무대", milestone: true, en: { event: "Opened Haemil School for multicultural youth", note: "Hongcheon, Gangwon - another stage beyond the stage" } },
-    { year: "2023", event: "KBS2 '골든걸스' 출연, 'One Last Time' 발표", note: "인순이·박미경·신효범·이은미", milestone: true, en: { event: "KBS2 'Golden Girls' - 'One Last Time' released", note: "Insooni, Park Mi-kyung, Shin Hyo-bum, Lee Eun-mi" } },
-    { year: "2025", event: "《인순이, 아름다운 우리나라》 발매", note: "2월, 9곡 수록", en: { event: "'Insooni, Beautiful Korea' released", note: "February - nine songs" } },
+    { year: "2013", event: "다문화 대안학교 '해밀학교' 개교", note: "강원 홍천. 무대 밖의 또 다른 무대", milestone: true, en: { event: "Opened Haemil School for multicultural youth", note: "Hongcheon, Gangwon — another stage beyond the stage" } },
+    { year: "2023", event: "KBS2 '골든걸스' 출연, 'One Last Time' 발표", note: "인순이·박미경·신효범·이은미", milestone: true, en: { event: "KBS2 'Golden Girls' — 'One Last Time' released", note: "Insooni, Park Mi-kyung, Shin Hyo-bum, Lee Eun-mi" } },
+    { year: "2025", event: "《인순이, 아름다운 우리나라》 발매", note: "2월, 9곡 수록", en: { event: "'Insooni, Beautiful Korea' released", note: "February — nine songs" } },
     { year: "2025", event: "펄벅 인터내셔널 '올해의 여성상' 수상", note: "Woman of Influence 2025", en: { event: "Woman of Influence, Pearl S. Buck International", note: "Woman of Influence 2025" } },
-    { year: "2026", event: "데뷔 48주년, 그리고 계속되는 이야기", note: "새로운 기록이 이곳에 쌓입니다", en: { event: "48 years on stage - and the story continues", note: "New records will be added here" } }
+    { year: "2026", event: "데뷔 48주년, 그리고 계속되는 이야기", note: "새로운 기록이 이곳에 쌓입니다", en: { event: "48 years on stage — and the story continues", note: "New records will be added here" } }
   ],
 
   /* ---------- 사랑방 샘플 콘텐츠 ---------- */
@@ -522,7 +522,7 @@ window.SITE_DATA = {
     signature: "assets/img/signature.png",
     flowers: 214,
     en: {
-      body: "Thank you for stopping by the Sarangbang.\nAll the love I receive on stage - here, I get to read it back, one note at a time.\nEven a single line of hello is enough. You are the reason the songs go on.",
+      body: "Thank you for stopping by the Sarangbang.\nAll the love I receive on stage — here, I get to read it back, one note at a time.\nEven a single line of hello is enough. You are the reason the songs go on.",
       sign: "With love, Insooni"
     }
   },
@@ -536,12 +536,12 @@ window.SITE_DATA = {
     { d: "06-15", y: 1985, ko: "정규 6집 발매", en: "6th studio album released" },
     { d: "06-25", y: 2001, ko: "정규 14집 《My Turn》 발매", en: "14th album 'My Turn' released" },
     { d: "09-24", y: 2003, ko: "재즈 앨범 《Jazz》 발매", en: "The jazz album 'Jazz' released" },
-    { d: "09-09", y: 2004, ko: "정규 16집 《A To Z》 발매 — '친구여'", en: "16th album 'A To Z' — 'My Friend'" },
+    { d: "09-09", y: 2004, ko: "정규 16집 《A To Z》 발매 — '친구여'", en: "16th album 'A To Z' — 'Chinguyeo'" },
     { d: "02-01", y: 2007, ko: "《거위의 꿈》 — 위로가 된 노래", en: "'A Goose's Dream' — the song that became comfort" },
     { d: "05-08", y: 2009, ko: "정규 17집 《인순이》 발매 — 'Fantasia'·'아버지'", en: "17th album released — 'Fantasia', 'Father'" },
     { d: "09-25", y: 2013, ko: "정규 18집 《Umbrella》 발매", en: "18th album 'Umbrella' released" },
-    { d: "02-19", y: 2025, ko: "《인순이, 아름다운 우리나라》 발매", en: "'Insooni, Our Beautiful Country' released" },
-    { d: "11-28", y: 2025, ko: "싱글 《그래도 꿈은 흐른다》 발매", en: "Single '그래도 꿈은 흐른다' released" }
+    { d: "02-19", y: 2025, ko: "《인순이, 아름다운 우리나라》 발매", en: "'Insooni, Beautiful Korea' released" },
+    { d: "11-28", y: 2025, ko: "싱글 《그래도 꿈은 흐른다》 발매", en: "Single 'Still, the Dream Flows' released" }
   ],
   /* 이달의 이야기 — 게시판의 빈 칸 앞에서 팬이 무엇을 쓸지 실마리를 준다.
      달마다 하나씩 돌아가며, 눌러서 바로 이야기 칸에 옮겨 쓸 수 있다. */
