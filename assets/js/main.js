@@ -1775,13 +1775,13 @@
     /* 포스터가 먼저 뜨는 것이 영상보다 중요하다. 첫 화면이 다 그려지고 나서
        한가한 틈에 영상을 받는다 — 안 그러면 몇 MB짜리 영상이 대표 이미지의
        표시 시각을 통째로 늦춘다. */
+    /* 포스터가 먼저 뜨는 것이 중요하지만, 너무 오래 미루면 이번엔 영상이
+       '가장 큰 그림'으로 늦게 잡혀 체감 로딩이 되레 나빠진다.
+       첫 화면이 그려진 직후(다음 프레임)에 바로 받기 시작한다. */
     function later(fn) {
-      if (document.readyState === "complete") idle(fn);
-      else window.addEventListener("load", function () { idle(fn); }, { once: true });
-      function idle(f) {
-        if (window.requestIdleCallback) requestIdleCallback(f, { timeout: 2500 });
-        else setTimeout(f, 600);
-      }
+      if (document.readyState === "complete") soon(fn);
+      else window.addEventListener("load", function () { soon(fn); }, { once: true });
+      function soon(f) { requestAnimationFrame(function () { setTimeout(f, 0); }); }
     }
     /* 실제 프레임이 흐르기 시작하면 포스터 위로 영상이 피어난다 */
     var stage = v.closest(".strip-item--video") || v.parentNode;
