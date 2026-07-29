@@ -39,6 +39,11 @@ POSITIVE = [
     "해밀", "기부", "후원", "나눔", "장학", "선행", "감동",
     "인터뷰", "디바", "거위의 꿈", "희자매", "골든걸스", "애국가",
 ]
+# 동명이인(가수 아닌 '인순이') 기사 배제.
+# 예: 방송인 박경배의 아내 '인순이' — '아내 인순이' 맥락. 가수와 무관하므로 제외한다.
+NON_SINGER = [
+    "박경배", "아내 인순이", "부인 인순이", "인순이씨 남편", "며느리", "장모",
+]
 
 
 def fetch(url):
@@ -99,6 +104,8 @@ def main():
                 continue
             if "인순이" not in raw:
                 continue
+            if any(x in raw for x in NON_SINGER):
+                continue                                  # 동명이인(가수 아닌 인순이) 제외
             if any(neg in raw for neg in NEGATIVE):
                 continue                                  # 부정적 소식 제외
             if not any(pos in raw for pos in POSITIVE):

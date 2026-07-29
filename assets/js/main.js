@@ -303,60 +303,28 @@
 
   /* ---------- 6. 아카이브: 타임라인 / 디스코그래피 / 영상 ---------- */
   /* ---------- 오늘의 기념일 ----------
-     검증된 연대기에서 오늘 날짜에 걸리는 일이 있으면 'N년 전 오늘'로 비추고,
-     없으면 다음 기념일까지 남은 날을 센다. 팬에게 이 방이 살아 있는 달력처럼
-     느껴지게 하는 장치 — 모든 날짜는 앨범 크레딧·보도로 확인된 것이다. */
+     검증된 연대기에서 '오늘 날짜에 실제로 있었던 일'만 'N년 전 오늘'로 비춘다.
+     미래를 예측해 카운트다운하지 않는다 — 확정되지 않은 일정을 앞당겨 보여주지 않기 위해서.
+     오늘이 아무 기념일도 아니면 배너 자체를 숨긴다. 모든 날짜는 앨범 크레딧·보도로 확인된 것. */
   function renderAnniversary() {
     var sec = $("#anniv"), card = $("#anniv-card");
     if (!sec || !card || !D.milestones || !D.milestones.length) return;
+    sec.hidden = true;
     var isEN = document.documentElement.getAttribute("lang") === "en";
-    var pick = function (o) { return (isEN && o.en) ? o.en : o.ko; };   /* 평면 {ko,en} 선택 */
-    var ord = function (n) {                                            /* 1st·2nd·3rd·Nth */
-      var s = ["th", "st", "nd", "rd"], v = n % 100;
-      return n + (s[(v - 20) % 10] || s[v] || s[0]);
-    };
+    var pick = function (o) { return (isEN && o.en) ? o.en : o.ko; };
     var now = new Date();
-    var mm = String(now.getMonth() + 1).padStart(2, "0");
-    var dd = String(now.getDate()).padStart(2, "0");
-    var todayKey = mm + "-" + dd;
-    var thisYear = now.getFullYear();
-
+    var todayKey = String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
     var todays = D.milestones.filter(function (m) { return m.d === todayKey; });
-    if (todays.length) {
-      /* 오늘이 기념일 — 가장 오래된(가장 뜻깊은) 것을 앞세운다 */
-      todays.sort(function (a, b) { return a.y - b.y; });
-      var m = todays[0];
-      var years = thisYear - m.y;
-      var head = isEN ? (years + " year" + (years === 1 ? "" : "s") + " ago today")
-                        : (years + "년 전 오늘");
-      card.innerHTML =
-        '<span class="anniv-kicker">' + esc(isEN ? "ON THIS DAY" : "오늘의 기념일") + "</span>" +
-        '<p class="anniv-head">' + esc(head) + "</p>" +
-        '<p class="anniv-body">' + esc(pick(m)) + "</p>";
-      sec.hidden = false;
-      return;
-    }
-
-    /* 오늘이 아니면 다음 기념일까지 카운트다운 */
-    function nextDate(m) {
-      var parts = m.d.split("-");
-      var d = new Date(thisYear, +parts[0] - 1, +parts[1]);
-      if (d < new Date(thisYear, now.getMonth(), now.getDate())) d.setFullYear(thisYear + 1);
-      return d;
-    }
-    var upcoming = D.milestones.map(function (m) { return { m: m, when: nextDate(m) }; })
-      .sort(function (a, b) { return a.when - b.when; })[0];
-    if (!upcoming) return;
-    var days = Math.round((upcoming.when - new Date(thisYear, now.getMonth(), now.getDate())) / 86400000);
-    var willBe = upcoming.when.getFullYear() - upcoming.m.y;
-    var countLabel = isEN
-      ? (days === 0 ? "today" : days + " day" + (days === 1 ? "" : "s") + " to go")
-      : (days === 0 ? "오늘" : days + "일 남음");
-    var anniLabel = isEN ? (ord(willBe) + " anniversary") : (willBe + "주년");
+    if (!todays.length) return;                       /* 오늘이 기념일이 아니면 아무것도 안 보인다 */
+    todays.sort(function (a, b) { return a.y - b.y; });
+    var m = todays[0];
+    var years = now.getFullYear() - m.y;
+    var head = isEN ? (years + " year" + (years === 1 ? "" : "s") + " ago today")
+                    : (years + "년 전 오늘");
     card.innerHTML =
-      '<span class="anniv-kicker">' + esc(isEN ? "COMING UP" : "다가오는 기념일") + "</span>" +
-      '<p class="anniv-head">' + esc(pick(upcoming.m)) + "</p>" +
-      '<p class="anniv-body"><b>' + esc(countLabel) + "</b> · " + esc(anniLabel) + "</p>";
+      '<span class="anniv-kicker">' + esc(isEN ? "ON THIS DAY" : "오늘의 기념일") + "</span>" +
+      '<p class="anniv-head">' + esc(head) + "</p>" +
+      '<p class="anniv-body">' + esc(pick(m)) + "</p>";
     sec.hidden = false;
   }
 
