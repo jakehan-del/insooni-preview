@@ -1004,6 +1004,32 @@
     $(".lightbox-close", box).focus();
   }
 
+  /* ---------- 6.5 백엔드 연결 상태 ----------
+     키가 채워져 있으면 서버로 보내고, 없으면 지금까지의 '이 기기에만 저장'을 쓴다.
+     둘 사이를 오갈 때 문구가 사실과 어긋나지 않게, 판단을 한 곳에서만 한다. */
+  function BE() {
+    return (window.INSOONI_BACKEND && window.INSOONI_BACKEND.isReady())
+      ? window.INSOONI_BACKEND : null;
+  }
+  /* 서버가 거절/실패한 이유를 사람 말로 옮긴다. 성공으로 둘러대지 않는다. */
+  function beWhy(res) {
+    var r = res && res.reason;
+    if (r === "rate_limited") return t("be.rate", "잠시 뒤에 다시 보내 주세요. 짧은 시간에 너무 많이 보냈습니다.");
+    if (r === "too_long")     return t("be.long", "글이 너무 깁니다. 조금 줄여 주세요.");
+    if (r === "empty")        return t("be.empty", "내용을 입력해 주세요.");
+    if (r === "bad_email")    return t("be.email", "이메일 주소를 다시 확인해 주세요.");
+    if (r === "timeout" || r === "network")
+      return t("be.net", "지금 보내지 못했습니다. 연결을 확인하고 다시 시도해 주세요.");
+    return t("be.fail", "지금 보내지 못했습니다. 잠시 뒤 다시 시도해 주세요.");
+  }
+  /* 서버에서 받은 날짜를 화면용으로 */
+  function beDate(iso) {
+    if (!iso) return "";
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return "";
+    return d.getFullYear() + ". " + (d.getMonth() + 1) + ". " + d.getDate() + ".";
+  }
+
   /* ---------- 7. 사랑방: 마음 전하기 ----------
      편지는 이 기기의 편지함에만 남는다. 서버가 없으니 그 이상은 할 수 없고,
      할 수 없는 일을 한 것처럼 말하지 않는다. 대신 실제로 닿는 공식 창구로 이어 준다.
@@ -1011,9 +1037,28 @@
   function initLetters() {
     var form = $("#letter-form"), listBox = $("#letter-list");
     if (!form) return;
-    var KEY = "insooni_letters";
+    var KEY = "insooni_letters";       /* 내가 쓴 글의 사본 (이 기기) */
+    var be = BE();
 
-    function draw() {
+    /* 제목·안내 문구를 상태에 맞게 바꾼다.
+       서버가 붙으면 '내 편지함'이 아니라 '도착한 편지들'이 된다. */
+    (function relabel() {
+      var h = $("#comm-myletters"), note = $("#comm-myletters-note");
+      var lead = $("#comm-letter-lead"), hint = $("#comm-letter-hint");
+      var keep = form.querySelector("[type=submit]");
+      if (be) {
+        if (h) h.textContent = t("comm.arrived", "도착한 편지들");
+        if (note) note.textContent = t("comm.arrivedNote", "운영진이 확인한 편지가 이곳에 게시됩니다.");
+        if (lead) lead.textContent = t("comm.letterLeadLive",
+          "여기 쓴 편지는 인순이에게 전해집니다. 운영진이 확인한 뒤 아래에 게시됩니다.");
+        if (hint) hint.textContent = t("form.lhintLive",
+          "보내신 편지는 검수를 거쳐 게시됩니다. 게시되지 않아도 마음은 그대로 전해집니다.");
+        if (keep) keep.textContent = t("form.lsend", "편지 보내기");
+      }
+    })();
+
+    /* ---- 목록 ---- */
+    function drawLocal() {
       if (!listBox) return;
       listBox.innerHTML = "";
       var letters = store(KEY) || [];
@@ -1023,17 +1068,47 @@
         return;
       }
       letters.forEach(function (L, i) {
-        var p = el("article", "post");
-        p.innerHTML =
-          '<div class="post-head"><span class="avatar" aria-hidden="true">' + esc(firstChar(L.name)) + '</span>' +
-          '<span class="who">' + esc(L.name || t("dyn.anon", "익명 팬")) + '</span>' +
-          '<span class="when">' + esc(L.date || "") + "</span></div>" +
-          '<p class="post-body">' + esc(L.body) + "</p>" +
-          '<div class="post-actions"><button type="button" data-del="' + i + '">' +
-          t("dyn.delLetter", "지우기") + "</button></div>";
-        listBox.appendChild(p);
+        listBox.appendChild(letterCard(L.name, L.body, L.date, i));
       });
     }
+
+    function drawRemote() {
+      if (!listBox) return;
+      listBox.innerHTML = "";
+      listBox.appendChild(el("p", "empty-note", t("dyn.loading", "불러오는 중…")));
+      be.listLetters().then(function (res) {
+        listBox.innerHTML = "";
+        if (!res.ok) {
+          listBox.appendChild(el("p", "empty-note",
+            t("dyn.loadFail", "편지를 불러오지 못했습니다. 잠시 뒤 새로고침해 주세요.")));
+          return;
+        }
+        if (!res.rows.length) {
+          listBox.appendChild(el("p", "empty-note",
+            t("dyn.noArrived", "아직 게시된 편지가 없습니다. 첫 편지의 주인공이 되어 주세요.")));
+          return;
+        }
+        res.rows.forEach(function (r) {
+          listBox.appendChild(letterCard(r.name, r.body, beDate(r.created_at), null));
+        });
+      });
+    }
+
+    /* 남이 쓴 글이 내 화면에 그려진다. 태그가 살아나지 않게 전부 esc()를 통과시킨다. */
+    function letterCard(name, body, date, delIndex) {
+      var p = el("article", "post");
+      p.innerHTML =
+        '<div class="post-head"><span class="avatar" aria-hidden="true">' + esc(firstChar(name)) + '</span>' +
+        '<span class="who">' + esc(name || t("dyn.anon", "익명 팬")) + '</span>' +
+        '<span class="when">' + esc(date || "") + "</span></div>" +
+        '<p class="post-body">' + esc(body) + "</p>" +
+        (delIndex === null ? "" :
+          '<div class="post-actions"><button type="button" data-del="' + delIndex + '">' +
+          t("dyn.delLetter", "지우기") + "</button></div>");
+      return p;
+    }
+
+    function draw() { if (be) drawRemote(); else drawLocal(); }
 
     if (listBox) {
       listBox.addEventListener("click", function (e) {
@@ -1053,14 +1128,25 @@
       okMsg.textContent = msg;
       okMsg.hidden = false;
       if (okTimer) clearTimeout(okTimer);
-      okTimer = setTimeout(function () { okMsg.hidden = true; }, 4000);
+      okTimer = setTimeout(function () { okMsg.hidden = true; }, 6000);
     }
 
     function compose() {
-      var name = $("#letter-name").value.trim();
-      var cat = $("#letter-cat") ? $("#letter-cat").value : "";
-      var body = $("#letter-body").value.trim();
-      return { name: name, cat: cat, body: body };
+      return {
+        name: $("#letter-name").value.trim(),
+        cat: $("#letter-cat") ? $("#letter-cat").value : "",
+        body: $("#letter-body").value.trim()
+      };
+    }
+
+    function keepLocal(c) {
+      var letters = store(KEY) || [];
+      var now = new Date();
+      letters.unshift({
+        name: c.name || t("dyn.anon", "익명 팬"), body: c.body,
+        date: now.getFullYear() + ". " + (now.getMonth() + 1) + ". " + now.getDate() + "."
+      });
+      store(KEY, letters);
     }
 
     form.addEventListener("submit", function (e) {
@@ -1069,17 +1155,31 @@
       if (btn && btn.disabled) return;
       var c = compose();
       if (!c.body) { $("#letter-body").focus(); return; }
-      if (btn) { btn.disabled = true; setTimeout(function () { btn.disabled = false; }, 800); }
-      var letters = store(KEY) || [];
-      var now = new Date();
-      letters.unshift({
-        name: c.name || t("dyn.anon", "익명 팬"), body: c.body,
-        date: now.getFullYear() + ". " + (now.getMonth() + 1) + ". " + now.getDate() + "."
+
+      if (!be) {
+        /* 서버가 없다. 있는 그대로 말한다. */
+        if (btn) { btn.disabled = true; setTimeout(function () { btn.disabled = false; }, 800); }
+        keepLocal(c);
+        form.reset();
+        say(t("dyn.kept", "이 기기의 편지함에 간직했습니다."));
+        draw();
+        return;
+      }
+
+      if (btn) { btn.disabled = true; btn.dataset.label = btn.textContent; btn.textContent = t("dyn.sending", "보내는 중…"); }
+      be.submitLetter({ name: c.name, category: c.cat, body: c.body }).then(function (res) {
+        if (btn) { btn.disabled = false; btn.textContent = btn.dataset.label || t("form.lsend", "편지 보내기"); }
+        if (res && res.ok) {
+          keepLocal(c);        /* 내가 무엇을 보냈는지 기억할 수 있게 사본을 남긴다 */
+          form.reset();
+          /* '보냈다'와 '게시됐다'는 다른 말이다. 정확히 구분해 말한다. */
+          say(t("dyn.sentPending", "편지를 보냈습니다. 운영진이 확인한 뒤 이곳에 게시됩니다."));
+        } else {
+          /* 실패했으면 글이라도 잃지 않게 이 기기에 임시 보관한다 */
+          keepLocal(c);
+          say(beWhy(res) + " " + t("dyn.savedDraft", "쓰신 글은 이 기기에 보관해 두었습니다."));
+        }
       });
-      store(KEY, letters);
-      form.reset();
-      say(t("dyn.kept", "이 기기의 편지함에 간직했습니다."));
-      draw();
     });
 
     /* 복사해서 공식 채널에 그대로 붙여 넣을 수 있게 한다 */
@@ -1108,10 +1208,116 @@
     draw();
   }
 
-  /* ---------- 8. (삭제) 팬 게시판 ----------
-     정적 사이트에는 공용 게시판을 둘 수 없다. localStorage는 그 기기에만 남는데
-     이를 "모두의 게시판"으로 보여 주면 팬을 속이게 된다. 대신 실제로 사람이 모이는
-     팬카페로 이어 주고(이웃 팬 공간), 여기서는 내 편지함만 다룬다. */
+  /* ---------- 8. 팬 게시판 ----------
+     서버가 붙어 있을 때만 나타난다. 백엔드 없이 '모두의 게시판'은 만들 수 없고,
+     localStorage를 그렇게 보여 주면 팬을 속이는 일이 된다. */
+  function initBoard() {
+    var sec = $("#board-section"), form = $("#board-form"), listBox = $("#board-list");
+    if (!sec || !form) return;
+    var be = BE();
+    if (!be) return;                 /* 숨은 상태 그대로 둔다 */
+    sec.hidden = false;
+
+    function draw() {
+      if (!listBox) return;
+      listBox.innerHTML = "";
+      listBox.appendChild(el("p", "empty-note", t("dyn.loading", "불러오는 중…")));
+      be.listPosts().then(function (res) {
+        listBox.innerHTML = "";
+        if (!res.ok) {
+          listBox.appendChild(el("p", "empty-note",
+            t("dyn.loadFail", "글을 불러오지 못했습니다. 잠시 뒤 새로고침해 주세요.")));
+          return;
+        }
+        if (!res.rows.length) {
+          listBox.appendChild(el("p", "empty-note",
+            t("dyn.noPosts", "아직 게시된 글이 없습니다.")));
+          return;
+        }
+        res.rows.forEach(function (r) {
+          var a = el("article", "post");
+          /* 남이 쓴 글이다 — 반드시 esc()를 거친다 */
+          a.innerHTML =
+            '<div class="post-head"><span class="avatar" aria-hidden="true">' + esc(firstChar(r.name)) + "</span>" +
+            '<span class="who">' + esc(r.name || t("dyn.anon", "익명 팬")) + "</span>" +
+            '<span class="when">' + esc(beDate(r.created_at)) + "</span></div>" +
+            '<p class="post-body">' + esc(r.body) + "</p>";
+          listBox.appendChild(a);
+        });
+      });
+    }
+
+    var okT = null;
+    function say(msg) {
+      var n = $("#post-ok");
+      if (!n) return;
+      n.textContent = msg; n.hidden = false;
+      if (okT) clearTimeout(okT);
+      okT = setTimeout(function () { n.hidden = true; }, 6000);
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var btn = form.querySelector("[type=submit]");
+      if (btn && btn.disabled) return;
+      var name = $("#post-name").value.trim();
+      var body = $("#post-body").value.trim();
+      if (!body) { $("#post-body").focus(); return; }
+      if (btn) { btn.disabled = true; btn.dataset.label = btn.textContent; btn.textContent = t("dyn.sending", "보내는 중…"); }
+      be.submitPost({ name: name, body: body }).then(function (res) {
+        if (btn) { btn.disabled = false; btn.textContent = btn.dataset.label || t("form.psend", "글 올리기"); }
+        if (res && res.ok) {
+          form.reset();
+          say(t("dyn.postPending", "글을 올렸습니다. 운영진이 확인한 뒤 게시됩니다."));
+        } else {
+          say(beWhy(res));
+        }
+      });
+    });
+
+    draw();
+  }
+
+  /* ---------- 8.5 소식지 구독 ----------
+     받을 수단이 있을 때만 주소를 여쭙는다. 서버가 없으면 폼을 숨긴 채 둔다. */
+  function initSubscribe() {
+    var form = $("#sub-form"), msg = $("#sub-msg"), note = $("#sub-note");
+    if (!form) return;
+    var be = BE();
+    if (!be) return;                 /* 폼은 hidden 그대로, 공식 채널 링크만 보인다 */
+    form.hidden = false;
+    if (note) note.textContent = t("sub.noteLive",
+      "이메일은 소식 발송에만 쓰이며, 언제든 해지하실 수 있습니다.");
+
+    var okT = null;
+    function say(text, good) {
+      if (!msg) return;
+      msg.textContent = text;
+      msg.className = good ? "form-ok" : "form-hint";
+      msg.hidden = false;
+      if (okT) clearTimeout(okT);
+      okT = setTimeout(function () { msg.hidden = true; }, 6000);
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var input = $("#sub-email");
+      var btn = form.querySelector("[type=submit]");
+      var email = (input.value || "").trim();
+      if (!email) { input.focus(); return; }
+      if (btn) { btn.disabled = true; btn.dataset.label = btn.textContent; btn.textContent = t("dyn.sending", "보내는 중…"); }
+      be.subscribe(email).then(function (res) {
+        if (btn) { btn.disabled = false; btn.textContent = btn.dataset.label || t("sub.btn", "소식지 신청"); }
+        if (res && res.ok) {
+          form.reset();
+          /* 아직 첫 소식지를 보내지 않았다. '보내드립니다'가 아니라 사실대로. */
+          say(t("dyn.subOk", "신청을 받았습니다. 소식지가 준비되면 이 주소로 보내드리겠습니다."), true);
+        } else {
+          say(beWhy(res), false);
+        }
+      });
+    });
+  }
 
   /* ---------- 9. 사랑방: 투표 ---------- */
   function initPoll() {
@@ -1151,10 +1357,46 @@
       });
     })();
 
+    var pbe = BE();
+    /* 서버가 붙으면 진짜 집계가 존재한다. 그때만 '가장 많이 신청된 노래'라고 부른다. */
+    if (pbe) {
+      var lt = $("#comm-mylist"), ln = $("#comm-mylist-note");
+      if (lt) lt.textContent = t("comm.tallyT", "지금 가장 많이 신청된 노래");
+      if (ln) ln.textContent = t("comm.tallyNote", "팬들의 신청이 함께 집계됩니다.");
+    }
+
     function drawRank() {
       if (!rank) return;
-      var mine = store(KEY) || {};
-      var list = Object.keys(mine);
+      if (pbe) {
+        pbe.songTally().then(function (res) {
+          rank.innerHTML = "";
+          if (!res.ok) {
+            rank.appendChild(el("p", "empty-note",
+              t("dyn.loadFail", "불러오지 못했습니다. 잠시 뒤 새로고침해 주세요.")));
+            return;
+          }
+          if (!res.rows.length) {
+            rank.appendChild(el("p", "empty-note",
+              t("dyn.tallyNone", "아직 신청된 곡이 없습니다. 첫 신청을 남겨 주세요.")));
+            return;
+          }
+          var max = res.rows[0].n || 1;
+          var mine = store(KEY) || {};
+          res.rows.forEach(function (r, i) {
+            var row = el("div", "rk-row" + (mine[r.title] ? " is-mine" : ""));
+            row.innerHTML =
+              '<span class="rk-no">' + (i + 1) + "</span>" +
+              '<span class="rk-name"></span>' +
+              '<span class="rk-bar"><i style="width:' + Math.round(r.n / max * 100) + '%"></i></span>' +
+              '<span class="rk-n">' + (r.n | 0) + "</span>";
+            row.querySelector(".rk-name").textContent = r.title;
+            rank.appendChild(row);
+          });
+        });
+        return;
+      }
+      var mine2 = store(KEY) || {};
+      var list = Object.keys(mine2);
       rank.innerHTML = "";
       if (!list.length) {
         rank.appendChild(el("p", "empty-note", t("dyn.reqEmpty", "아직 담은 노래가 없습니다.")));
@@ -1179,9 +1421,22 @@
       }
       mine[title] = 1;
       store(KEY, mine);
-      note.textContent = "\u2018" + title + "\u2019 " + t("dyn.reqOk", "목록에 담았습니다.");
       input.value = "";
       out.innerHTML = "";
+      if (pbe) {
+        note.textContent = t("dyn.sending", "보내는 중…");
+        pbe.requestSong(title).then(function (res) {
+          if (res && res.ok) {
+            note.textContent = "\u2018" + title + "\u2019 " + t("dyn.reqSent", "신청했습니다.");
+          } else {
+            /* 서버에 못 갔으면 갔다고 하지 않는다. 내 목록에는 남아 있다. */
+            note.textContent = beWhy(res);
+          }
+          drawRank();
+        });
+        return;
+      }
+      note.textContent = "\u2018" + title + "\u2019 " + t("dyn.reqOk", "목록에 담았습니다.");
       drawRank();
     }
     function search() {
@@ -1294,35 +1549,76 @@
       var isEN = document.documentElement.getAttribute("lang") === "en";
       var presetEN = {};
       D.cheerPresets.forEach(function (p) { if (p.en) presetEN[p.ko] = p.en; });
+      var cbe = BE();
+      /* 서버가 붙으면 '내가 남긴 응원'이 아니라 모두의 응원 벽이 된다.
+         제목도 함께 바꿔 준다 — 화면 문구와 실제 내용이 어긋나면 안 된다. */
+      if (cbe) {
+        var wt = $("#comm-cheerwall"), wn = $("#comm-cheernote");
+        if (wt) wt.textContent = t("comm.cheerWallLive", "오늘의 응원");
+        if (wn) wn.textContent = t("comm.cheerNoteLive", "팬들이 남긴 응원이 함께 쌓입니다.");
+      }
+
+      function row(text, who, date) {
+        var r = el("div", "cheer-item");
+        var shown = isEN && presetEN[text] ? presetEN[text] : text;
+        r.innerHTML = "<span>" + esc(shown) + '</span><span class="cw-who">' +
+          esc(who || t("dyn.anon", "익명 팬")) + " · " + esc(date || "") + "</span>";
+        return r;
+      }
+
       function drawWall() {
         wall.innerHTML = "";
+        if (cbe) {
+          cbe.listCheers().then(function (res) {
+            wall.innerHTML = "";
+            if (!res.ok) {
+              wall.appendChild(el("p", "empty-note",
+                t("dyn.loadFail", "불러오지 못했습니다. 잠시 뒤 새로고침해 주세요.")));
+              return;
+            }
+            if (!res.rows.length) {
+              wall.appendChild(el("p", "empty-note",
+                t("dyn.cheerNone", "아직 오늘의 응원이 없습니다. 첫 한 줄을 남겨 주세요.")));
+              return;
+            }
+            res.rows.slice(0, 7).forEach(function (c) {
+              wall.appendChild(row(c.text, c.name, beDate(c.created_at)));
+            });
+          });
+          return;
+        }
         var mine = store(CKEY) || [];
         if (!mine.length) {
           wall.appendChild(el("p", "empty-note", t("dyn.cheerEmpty", "아직 남긴 응원이 없습니다. 위에서 한 줄 골라 보세요.")));
           return;
         }
-        var all = mine.slice(0, 7);   /* 내가 남긴 것만 — 지어낸 팬을 섞지 않는다 */
-        all.forEach(function (c) {
-          var row = el("div", "cheer-item");
-          var text = isEN && presetEN[c.text] ? presetEN[c.text] : c.text;
-          var who = c.name === "익명 팬" ? t("dyn.anon", "익명 팬") : c.name;
-          row.innerHTML = "<span>" + esc(text) + '</span><span class="cw-who">' + esc(who) + " · " + esc(c.date) + "</span>";
-          wall.appendChild(row);
-        });
+        mine.slice(0, 7).forEach(function (c) { wall.appendChild(row(c.text, c.name, c.date)); });
       }
       D.cheerPresets.forEach(function (p) {
         var b = el("button", "", isEN && p.en ? p.en : p.ko);
         b.type = "button";
         b.addEventListener("click", function () {
+          var txt = isEN && p.en ? p.en : p.ko;
+          var prev = b.textContent;
+          function flash(msg) {
+            b.disabled = true; b.textContent = msg;
+            setTimeout(function () { b.disabled = false; b.textContent = prev; }, 1800);
+          }
+          if (cbe) {
+            b.disabled = true; b.textContent = t("dyn.sending", "보내는 중…");
+            cbe.submitCheer({ name: null, text: txt }).then(function (res) {
+              if (res && res.ok) { flash(t("dyn.cheerOk", "남겨졌습니다!")); drawWall(); }
+              else { flash(t("dyn.cheerFail", "보내지 못했어요")); }
+            });
+            return;
+          }
           var mine = store(CKEY) || [];
           var n = new Date();
-          mine.unshift({ name: t("dyn.anon", "익명 팬"), text: isEN && p.en ? p.en : p.ko, date: n.getFullYear() + ". " + (n.getMonth() + 1) + ". " + n.getDate() + "." });
+          mine.unshift({ name: t("dyn.anon", "익명 팬"), text: txt,
+            date: n.getFullYear() + ". " + (n.getMonth() + 1) + ". " + n.getDate() + "." });
           store(CKEY, mine.slice(0, 20));
           drawWall();
-          var prev = b.textContent;
-          b.disabled = true;
-          b.textContent = t("dyn.cheerOk", "남겨졌습니다!");
-          setTimeout(function () { b.disabled = false; b.textContent = prev; }, 1600);
+          flash(t("dyn.cheerOk", "남겨졌습니다!"));
         });
         chipsBox.appendChild(b);
       });
@@ -2051,7 +2347,7 @@
   function pageInit() {
     [renderEventList, initStrip, initVhero, renderArchive, renderPastRecaps,
      initFreshVideos, initVideoButtons, initReveal, renderNewsPage, renderCalendar,
-     renderTimeline, renderAnniversary, renderDiscography, initLetters,
+     renderTimeline, renderAnniversary, renderDiscography, initLetters, initBoard, initSubscribe,
      initPoll, initSarangbang, initMemberCard, initCheerCard, initQna, initRise,
      initAdmin].forEach(safe);
     /* 마지막에 번역을 건다 — 위 렌더러들이 만들어 낸 요소까지 함께 잡기 위해서.

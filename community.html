@@ -13,10 +13,10 @@
 <meta name="description" content="편지를 쓰고, 팬 번호증과 응원 카드를 만들고, 공식 채널로 마음을 전하는 곳. 인순이 공식 사랑방.">
 <!-- 본문 글꼴은 먼저 확실히 깐다(미뤄 봤지만 첫 화면이 빨라지지 않았다).
      제목용 서체는 화면이 뜬 뒤 들어온다 — font-display:swap이라 늦어도 글자는 보인다. -->
-<link rel="stylesheet" href="assets/fonts/body.css?v114">
-<link rel="stylesheet" href="assets/fonts/display.css?v114" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/fonts/display.css?v114"></noscript>
-<link rel="stylesheet" href="assets/css/style.min.css?v114">
+<link rel="stylesheet" href="assets/fonts/body.css?v115">
+<link rel="stylesheet" href="assets/fonts/display.css?v115" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?v115"></noscript>
+<link rel="stylesheet" href="assets/css/style.min.css?v115">
 <link rel="canonical" href="https://jakehan-del.github.io/insooni-preview/community.html">
 <meta property="og:url" content="https://jakehan-del.github.io/insooni-preview/community.html">
 <meta property="og:type" content="website">
@@ -135,8 +135,8 @@
           <p class="form-hint" data-i18n="comm.greetHint">응원 문구를 누르면 바로 남겨집니다. 더 긴 이야기는 아래에서 편지로 남겨 보세요.</p>
         </div>
         <div>
-          <h3 class="cheer-wall-t" data-i18n="comm.cheerWall">내가 남긴 응원</h3>
-          <p class="form-hint" style="margin:-.6rem 0 1rem" data-i18n="comm.cheerNote">이 기기에만 저장됩니다.</p>
+          <h3 class="cheer-wall-t" id="comm-cheerwall" data-i18n="comm.cheerWall">내가 남긴 응원</h3>
+          <p class="form-hint" id="comm-cheernote" style="margin:-.6rem 0 1rem" data-i18n="comm.cheerNote">이 기기에만 저장됩니다.</p>
           <div id="cheer-wall" class="cheer-wall"></div>
         </div>
       </div>
@@ -190,7 +190,7 @@
       <div class="section-head">
         <h2 id="h-letter" data-i18n="comm.letter">마음 전하기</h2>
       </div>
-      <p class="card-desc" style="max-width:46em;margin-bottom:1.8rem" data-i18n="comm.letterLead">여기 쓴 편지는 이 기기의 편지함에 간직됩니다. 다 쓰신 뒤 복사해서 아래 공식 채널에 남기시면 인순이에게 가장 빨리 닿습니다.</p>
+      <p class="card-desc" id="comm-letter-lead" style="max-width:46em;margin-bottom:1.8rem" data-i18n="comm.letterLead">여기 쓴 편지는 이 기기의 편지함에 간직됩니다. 다 쓰신 뒤 복사해서 아래 공식 채널에 남기시면 인순이에게 가장 빨리 닿습니다.</p>
       <div class="grid grid--2 grid--start">
         <form id="letter-form" class="letter-form" aria-label="팬레터 작성" data-i18n-aria="aria.writeLetter">
           <div class="form-field">
@@ -213,11 +213,11 @@
             <button class="btn btn--ghost" type="button" id="letter-copy" data-i18n="form.lcopy">글 복사하기</button>
           </div>
           <p id="letter-ok" class="form-ok" role="status" hidden></p>
-          <p class="form-hint" data-i18n="form.lhint">사이트에서 바로 보내는 접수 창구는 아직 열리지 않았습니다. 열리면 이 자리에서 곧바로 보낼 수 있게 됩니다.</p>
+          <p class="form-hint" id="comm-letter-hint" data-i18n="form.lhint">사이트에서 바로 보내는 접수 창구는 아직 열리지 않았습니다. 열리면 이 자리에서 곧바로 보낼 수 있게 됩니다.</p>
         </form>
         <div>
-          <h3 style="margin-bottom:.4rem" data-i18n="comm.myLetters">내 편지함</h3>
-          <p class="form-hint" style="margin-bottom:1.2rem" data-i18n="comm.myLettersNote">이 기기에만 보관됩니다. 다른 분에게는 보이지 않습니다.</p>
+          <h3 id="comm-myletters" style="margin-bottom:.4rem" data-i18n="comm.myLetters">내 편지함</h3>
+          <p class="form-hint" id="comm-myletters-note" style="margin-bottom:1.2rem" data-i18n="comm.myLettersNote">이 기기에만 보관됩니다. 다른 분에게는 보이지 않습니다.</p>
           <div id="letter-list" class="board-list"></div>
           <div class="official-send">
             <h4 data-i18n="comm.sendNow">지금 마음이 닿는 곳</h4>
@@ -225,6 +225,35 @@
             <a class="btn btn--sm" href="https://www.instagram.com/ins00ni/" target="_blank" rel="noopener">Instagram</a>
             <a class="btn btn--sm" href="https://cafe.daum.net/seoulsister" target="_blank" rel="noopener" data-i18n="comm.cafeShort">인순사랑 팬카페</a>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 팬 게시판: 서버가 연결되면 나타난다. 백엔드 없이 공용 게시판은 만들 수 없다 -->
+  <section class="section" id="board-section" aria-labelledby="h-board" hidden>
+    <div class="container">
+      <div class="section-head">
+        <h2 id="h-board" data-i18n="comm.board">팬 게시판</h2>
+      </div>
+      <p class="card-desc" style="max-width:46em;margin-bottom:1.8rem" data-i18n="comm.boardLead">공연 후기, 응원, 추억. 운영진이 확인한 글이 이곳에 게시됩니다.</p>
+      <div class="grid grid--2 grid--start">
+        <form id="board-form" class="form-panel" aria-label="게시글 작성" data-i18n-aria="aria.writePost">
+          <div class="form-field">
+            <label for="post-name" data-i18n="form.pname">이름 (별명)</label>
+            <input id="post-name" type="text" maxlength="20" placeholder="별명을 입력하세요" data-i18n-ph="form.pnamePh">
+          </div>
+          <div class="form-field">
+            <label for="post-body" data-i18n="form.pbody">하고 싶은 이야기</label>
+            <textarea id="post-body" required maxlength="600" data-i18n-ph="form.pbodyPh" placeholder="공연 후기, 응원, 추억 이야기. 자유롭게 남겨주세요."></textarea>
+          </div>
+          <button class="btn btn--gold" type="submit" data-i18n="form.psend">글 올리기</button>
+          <p id="post-ok" class="form-ok" role="status" hidden></p>
+          <p class="form-hint" data-i18n="form.phint">서로를 존중하는 글 문화를 지켜주세요. 검수를 거쳐 게시됩니다.</p>
+        </form>
+        <div>
+          <h3 style="margin-bottom:1rem" data-i18n="comm.boardList">올라온 이야기</h3>
+          <div id="board-list" class="board-list"></div>
         </div>
       </div>
     </div>
@@ -248,8 +277,8 @@
           <p id="req-note" class="form-hint" role="status"></p>
         </div>
         <div class="form-panel">
-          <h3 data-i18n="comm.myList">내가 담은 노래</h3>
-          <p class="form-hint" style="margin-top:.6rem" data-i18n="comm.myListNote">이 기기에만 저장됩니다. 공식 집계가 열리면 그대로 신청할 수 있게 이어 드리겠습니다.</p>
+          <h3 id="comm-mylist" data-i18n="comm.myList">내가 담은 노래</h3>
+          <p class="form-hint" id="comm-mylist-note" style="margin-top:.6rem" data-i18n="comm.myListNote">이 기기에만 저장됩니다. 공식 집계가 열리면 그대로 신청할 수 있게 이어 드리겠습니다.</p>
           <div id="req-rank" class="req-rank"></div>
         </div>
       </div>
@@ -287,11 +316,19 @@
     <div class="subscribe-inner reveal">
       <h2 id="h-subscribe" data-i18n="sub.h2">소식을 가장 먼저</h2>
       <p data-i18n="sub.p">새 공연과 방송 소식은 공식 채널에 가장 먼저 올라옵니다. 구독해 두시면 놓치지 않습니다.</p>
+      <!-- 이메일 소식지: 서버가 연결되면 나타난다. 그전까지는 숨어 있다
+           (받을 곳이 없는데 주소를 달라고 하지 않는다) -->
+      <form id="sub-form" hidden>
+        <label class="sr-only" for="sub-email" data-i18n="sub.label">이메일 주소</label>
+        <input id="sub-email" type="email" required placeholder="이메일 주소" data-i18n-ph="sub.ph" autocomplete="email">
+        <button class="btn btn--gold" type="submit" data-i18n="sub.btn">소식지 신청</button>
+      </form>
+      <p id="sub-msg" class="form-ok" role="status" hidden></p>
       <div class="sub-links">
         <a class="btn btn--gold" href="https://www.youtube.com/@insooni8081?sub_confirmation=1" target="_blank" rel="noopener" data-i18n="sub.yt">YouTube 구독</a>
         <a class="btn btn--ghost" href="https://www.instagram.com/ins00ni/" target="_blank" rel="noopener" data-i18n="sub.ig">Instagram 팔로우</a>
       </div>
-      <p class="form-hint" style="margin-top:1.2rem" data-i18n="sub.note">이메일 소식지는 준비되면 이 자리에서 신청받겠습니다.</p>
+      <p class="form-hint" id="sub-note" style="margin-top:1.2rem" data-i18n="sub.note">이메일 소식지는 준비되면 이 자리에서 신청받겠습니다.</p>
     </div>
   </section>
 
@@ -314,15 +351,17 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동" data-i18n-aria="aria.toTop">↑</button>
-<script src="assets/js/i18n.min.js?v114" defer></script>
-<script src="assets/js/data.min.js?v114" defer></script>
-<script src="assets/js/tracklinks.min.js?v114" defer></script>
-<script src="assets/js/albums-full.min.js?v114" defer></script>
-<script src="assets/js/albums-en.min.js?v114" defer></script>
-<script src="assets/js/song-moods.min.js?v114" defer></script>
-<script src="assets/js/main.min.js?v114" defer></script>
-<script src="assets/js/motion.min.js?v114" defer></script>
-<script src="assets/js/router.min.js?v114" defer></script>
-<script src="assets/js/deck.min.js?v114" defer></script>
+<script src="assets/js/config.js?v115" defer></script>
+<script src="assets/js/backend.js?v115" defer></script>
+<script src="assets/js/i18n.min.js?v115" defer></script>
+<script src="assets/js/data.min.js?v115" defer></script>
+<script src="assets/js/tracklinks.min.js?v115" defer></script>
+<script src="assets/js/albums-full.min.js?v115" defer></script>
+<script src="assets/js/albums-en.min.js?v115" defer></script>
+<script src="assets/js/song-moods.min.js?v115" defer></script>
+<script src="assets/js/main.min.js?v115" defer></script>
+<script src="assets/js/motion.min.js?v115" defer></script>
+<script src="assets/js/router.min.js?v115" defer></script>
+<script src="assets/js/deck.min.js?v115" defer></script>
 </body>
 </html>
