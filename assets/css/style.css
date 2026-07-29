@@ -1752,3 +1752,75 @@ body.has-radio .back-to-top { bottom: calc(96px + 1.2rem); }
   body.has-radio { padding-bottom: 78px; }
 }
 @media (prefers-reduced-motion: reduce) { .radio { animation: none; } }
+
+/* ============ INSOONI DECK · 무광고 믹스 플레이어 (v54) ============ */
+.deck {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+  background: linear-gradient(to top, rgba(6,6,6,.97), rgba(12,12,12,.9));
+  backdrop-filter: blur(26px) saturate(1.2); -webkit-backdrop-filter: blur(26px) saturate(1.2);
+  border-top: 1px solid var(--gold-deep);
+  box-shadow: 0 -18px 60px rgba(0,0,0,.55);
+  animation: dk-up .5s cubic-bezier(.22,.8,.36,1) both;
+}
+@keyframes dk-up { from { transform: translateY(100%); } }
+.dk-inner {
+  max-width: 1400px; margin: 0 auto; padding: .75rem clamp(.9rem, 3vw, 2rem);
+  display: grid; grid-template-columns: auto minmax(0,1fr) auto auto auto;
+  gap: clamp(.9rem, 2vw, 1.8rem); align-items: center;
+}
+/* 회전하는 판 */
+.dk-disc {
+  position: relative; width: 62px; height: 62px; border-radius: 50%;
+  background: repeating-radial-gradient(circle at 50% 50%, #141414 0 2px, #0c0c0c 2px 4px);
+  box-shadow: 0 0 0 1px rgba(212,175,55,.35), 0 6px 26px rgba(0,0,0,.6);
+  overflow: hidden; flex: 0 0 auto;
+}
+.dk-disc img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; opacity: .92; }
+.dk-disc .dk-spindle {
+  position: absolute; left: 50%; top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px;
+  border-radius: 50%; background: var(--void); box-shadow: 0 0 0 1px rgba(212,175,55,.5);
+}
+body.deck-playing .dk-disc { animation: dk-spin 3.6s linear infinite; }
+@keyframes dk-spin { to { transform: rotate(360deg); } }
+
+.dk-now { min-width: 0; display: grid; gap: .2rem; }
+.dk-kicker { font-family: var(--font-mono); font-size: .56rem; letter-spacing: .22em; color: var(--faint); }
+.dk-kicker b { color: var(--gold); font-weight: 400; }
+.dk-title { font-size: 1.06rem; font-weight: 600; color: var(--ivory); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dk-meta { font-family: var(--font-mono); font-size: .6rem; letter-spacing: .1em; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.dk-viz { width: 200px; height: 42px; opacity: .95; }
+.dk-controls { display: flex; align-items: center; gap: .3rem; }
+.dk-controls button {
+  min-width: 44px; min-height: 44px; padding: 0 .55em; background: transparent; border: 1px solid transparent;
+  color: var(--muted); font-family: var(--font-mono); font-size: .76rem; cursor: pointer; border-radius: 2px;
+  transition: color .2s ease, border-color .2s ease;
+}
+.dk-controls button:hover { color: var(--gold); }
+.dk-controls .dk-play { border-color: var(--line-strong); color: var(--ivory); font-size: .9rem; min-width: 54px; }
+.dk-controls .dk-play:hover { border-color: var(--gold); }
+.dk-controls [aria-pressed="true"] { color: var(--gold); border-color: var(--gold-deep); }
+.dk-full {
+  margin-left: .5rem; padding: .55em .9em; font-family: var(--font-mono); font-size: .6rem; letter-spacing: .14em;
+  color: var(--faint); text-decoration: none; border: 1px solid var(--line); border-radius: 2px; white-space: nowrap;
+  transition: color .2s ease, border-color .2s ease;
+}
+.dk-full:hover { color: var(--gold); border-color: var(--gold-deep); }
+.dk-close { min-width: 44px; min-height: 44px; background: transparent; border: 0; color: var(--faint); font-size: 1.3rem; cursor: pointer; }
+.dk-close:hover { color: var(--ivory); }
+
+body.has-deck { padding-bottom: 92px; }
+body.has-deck .back-to-top { bottom: calc(92px + 1.2rem); }
+@media (max-width: 900px) { .dk-viz { display: none; } .dk-inner { grid-template-columns: auto minmax(0,1fr) auto auto; } }
+@media (max-width: 640px) {
+  .dk-inner { grid-template-columns: auto minmax(0,1fr) auto; gap: .7rem; padding: .6rem .8rem; }
+  .dk-disc { width: 46px; height: 46px; }
+  .dk-full { display: none; }
+  .dk-close { position: absolute; top: .15rem; right: .3rem; min-height: 30px; min-width: 30px; font-size: 1rem; }
+  .dk-controls button { min-width: 40px; padding: 0 .25em; }
+  body.has-deck { padding-bottom: 76px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .deck { animation: none; }
+  body.deck-playing .dk-disc { animation: none; }
+}
