@@ -97,6 +97,7 @@ def main():
             pub = it.findtext("pubDate") or ""
             src_el = it.find("{*}source")
             source = src_el.text.strip() if src_el is not None and src_el.text else ""
+            source_site = (src_el.get("url") or "").strip() if src_el is not None else ""
             when = parse_date(pub)
             if not raw or not link or not when:
                 continue
@@ -118,13 +119,35 @@ def main():
                 "date": when.astimezone(timezone(timedelta(hours=9))).strftime("%Y-%m-%d"),
                 "title": title,
                 "source": source,
+                "sourceSite": source_site,
                 "url": link,
                 "type": classify(title),
                 "auto": True,
                 "_when": when,
             }
 
-    items = sorted(by_key.values(), key=lambda x: x["_when"], reverse=True)[:16]
+    # '좋은 소식'을 앞세운다: 어머니가 주인공이거나 따뜻한 이야기일수록 위로.
+    # (다른 사람이 주인공이고 인순이는 심사평만 한 줄 나오는 기사는 뒤로 밀린다)
+    HEART = ["해밀", "기부", "후원", "나눔", "장학", "선행", "감동", "울컥", "눈물", "위로",
+             "헌정", "존경", "레전드", "디바", "거위의 꿈"]
+    HONOR = ["수상", "시상", "영예", "헌액", "공로", "표창", "위촉", "홍보대사", "명예"]
+    STAGE = ["공연", "콘서트", "무대", "열창", "애국가", "신곡", "발매", "앨범", "컴백", "리사이틀", "디너쇼"]
+
+    def score(x):
+        t2 = x["title"]
+        s2 = 0
+        if t2.startswith("인순이") or t2.startswith("가수 인순이"):
+            s2 += 40                       # 어머니가 기사 주인공
+        s2 += 30 * sum(1 for k in HEART if k in t2)
+        s2 += 24 * sum(1 for k in HONOR if k in t2)
+        s2 += 12 * sum(1 for k in STAGE if k in t2)
+        if "인순이" in t2[:14]:
+            s2 += 10                       # 제목 앞쪽에 언급될수록 비중이 크다
+        return s2
+
+    ranked = sorted(by_key.values(), key=lambda x: (-score(x), -x["_when"].timestamp()))
+    items = ranked[:16]
+    items.sort(key=lambda x: x["_when"], reverse=True)   # 화면에는 최신순으로
     for x in items:
         x.pop("_when", None)
 

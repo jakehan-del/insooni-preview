@@ -145,16 +145,19 @@
 
   /* ---------- 4. 뉴스 렌더링 ---------- */
   function newsCard(item, asLink) {
-    /* 자동 수집된 기사는 원문으로 링크되는 카드로 만든다. 큐레이션 소식은 기존 그대로. */
+    /* 자동 수집 기사는 사이트를 떠나지 않고 이 안에서 펼쳐 본다(버튼 → 리더 패널).
+       큐레이션 소식은 기존 그대로. */
     var isAuto = item.auto && item.url;
-    var a = el((asLink || isAuto) ? "a" : "article", "news-item" + (isAuto ? " news-item--auto" : ""));
-    if (isAuto) { a.href = item.url; a.target = "_blank"; a.rel = "noopener"; }
-    else if (asLink) a.href = "news.html";
+    var a = el(isAuto ? "button" : (asLink ? "a" : "article"), "news-item" + (isAuto ? " news-item--auto" : ""));
+    if (isAuto) {
+      a.type = "button";
+      a.setAttribute("aria-haspopup", "dialog");
+      a.addEventListener("click", function () { openNewsReader(item, a); });
+    } else if (asLink) a.href = "news.html";
     var body = "<div><h3>" + esc(tr(item, "title")) + "</h3>";
     if (isAuto) {
-      var lead = t("dyn.newsAuto", "자동 수집 소식");
-      body += '<p class="excerpt news-src">' + esc(lead) +
-        (item.source ? " · " + esc(item.source) : "") + " <span aria-hidden=\"true\">↗</span></p>";
+      body += '<p class="excerpt news-src">' + esc(t("dyn.newsAuto", "자동 수집 소식")) +
+        (item.source ? " · " + esc(item.source) : "") + "</p>";
     } else {
       body += '<p class="excerpt">' + esc(tr(item, "excerpt")) + "</p>";
     }
@@ -164,6 +167,52 @@
       '<span class="badge badge--' + (item.type === "공지" ? "gold" : "wine") + '">' + esc(kindLabel(item.type)) + "</span>" +
       body;
     return a;
+  }
+
+  /* ---------- 소식 리더 (사이트 안에서 보기) ----------
+     기사를 누르면 밖으로 나가지 않고 이 패널이 열린다. 팬이 사이트에 머문 채
+     제목·매체·날짜를 확인하고, 전문을 읽고 싶을 때만 원문으로 나간다.
+     기사 본문은 언론사의 저작물이라 이곳에 옮겨 싣지 않는다. */
+  var newsEl = null, newsOpener = null;
+  function ensureNewsReader() {
+    if (newsEl) return newsEl;
+    newsEl = el("div", "news-reader");
+    newsEl.setAttribute("role", "dialog");
+    newsEl.setAttribute("aria-modal", "true");
+    newsEl.hidden = true;
+    newsEl.innerHTML =
+      '<button type="button" class="lightbox-close nr-close" aria-label="닫기" data-i18n-aria="aria.close">×</button>' +
+      '<article class="nr-card"><div class="nr-body"></div></article>';
+    document.body.appendChild(newsEl);
+    function close() {
+      newsEl.hidden = true;
+      document.body.style.overflow = "";
+      if (newsOpener) { newsOpener.focus(); newsOpener = null; }
+    }
+    $(".nr-close", newsEl).addEventListener("click", close);
+    newsEl.addEventListener("click", function (e) { if (e.target === newsEl) close(); });
+    document.addEventListener("keydown", function (e) {
+      if (!newsEl.hidden && e.key === "Escape") close();
+    });
+    applyLang(curLang());
+    return newsEl;
+  }
+  function openNewsReader(item, opener) {
+    var box = ensureNewsReader();
+    newsOpener = opener || null;
+    var outlet = item.source || "";
+    box.setAttribute("aria-label", tr(item, "title"));
+    $(".nr-body", box).innerHTML =
+      '<span class="nr-kicker">' + esc(kindLabel(item.type)) + " · " + esc(fmtDate(item.date)) + "</span>" +
+      "<h2>" + esc(tr(item, "title")) + "</h2>" +
+      (outlet ? '<p class="nr-outlet">' + esc(t("dyn.newsBy", "보도")) + " · " + esc(outlet) + "</p>" : "") +
+      '<p class="nr-note">' + esc(t("dyn.newsNote",
+        "기사 전문은 해당 언론사에 저작권이 있어 이곳에 옮겨 싣지 않습니다. 아래에서 원문을 확인하실 수 있습니다.")) + "</p>" +
+      '<p class="nr-actions"><a class="btn btn--gold btn--sm" href="' + esc(item.url) + '" target="_blank" rel="noopener">' +
+        esc(t("dyn.newsOpen", "원문 보기")) + ' <span aria-hidden="true">↗</span></a></p>';
+    box.hidden = false;
+    document.body.style.overflow = "hidden";
+    $(".nr-close", box).focus();
   }
   function sortedNews() {
     return D.news.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; });
