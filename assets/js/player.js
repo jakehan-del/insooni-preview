@@ -214,9 +214,10 @@
   }
 
   /* ---------- 진입점 ---------- */
-  function init() {
+  function bindLauncher() {
     var launcher = document.getElementById("radio-launch");
-    if (launcher) {
+    if (launcher && !launcher.dataset.bound) {
+      launcher.dataset.bound = "1";
       Object.keys(LISTS).forEach(function (k) {
         var b = document.createElement("button");
         b.type = "button";
@@ -225,7 +226,11 @@
         launcher.appendChild(b);
       });
     }
-    /* 다른 페이지에서 듣던 중이면 이어서 */
+  }
+
+  function init() {
+    bindLauncher();
+    /* 이전 방문에서 듣던 중이면 이어서 (전체 새로고침 시) */
     try {
       var raw = sessionStorage.getItem(KEY);
       if (raw) {
@@ -240,6 +245,8 @@
     document.addEventListener("visibilitychange", function () { if (document.hidden) save(); });
   }
 
+  window.INSOONI_PAGE_INIT = window.INSOONI_PAGE_INIT || [];
+  window.INSOONI_PAGE_INIT.push(bindLauncher);   /* 페이지 전환 시 런처만 다시 연결 */
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 })();

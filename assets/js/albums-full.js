@@ -36,7 +36,7 @@ window.REG_ALBUMS = [
 "빗방울",
 "산마을 [건전가요]"
 ],
-"art": "assets/img/photos/album02.jpg",
+"art": "assets/img/covers/reg02.jpg",
 "credits": "정규 2집 · 발매 1981. 5. 7. · Jigu · 11곡 수록"
 },
 {

@@ -1537,41 +1537,29 @@
 
   /* ---------- 히어로 우측 사진 슬라이더 (옆으로 흐르는 무한 루프) ---------- */
 
-  /* ---------- 부팅 ---------- */
-  document.addEventListener("DOMContentLoaded", function () {
+  /* ---------- 부팅 ----------
+     라우터가 <main>을 갈아끼울 때마다 pageInit()만 다시 돈다.
+     헤더·전역 리스너에 붙는 것들은 최초 1회만 실행한다. */
+  var GLOBAL_DONE = false;
+
+  function globalInit() {
+    if (GLOBAL_DONE) return;
+    GLOBAL_DONE = true;
     initLang();
-    renderEventList();
-    initIntro();
+    initNav();
+    initScrollState();
     initLoader();
+    initIntro();
+  }
+
+  function pageInit() {
+    renderEventList();
     initStrip();
     initVhero();
     renderArchive();
     renderPastRecaps();
     initFreshVideos();
-    /* 자동 수집 예정 공연(플레이DB 일일 수집) 병합 — 도착 시 일정 재렌더 */
-    fetch("assets/data/live-events.json?" + Date.now())
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (d) {
-        if (!d || !d.items || !d.items.length) return;
-        var have = {};
-        (D.events || []).forEach(function (ev) { have[(ev.date || "") + (ev.title || "")] = 1; });
-        var added = 0;
-        d.items.forEach(function (it) {
-          if (have[it.start + it.title]) return;
-          D.events.push({
-            date: it.start, kind: "공연", status: "onsale", verified: false,
-            title: it.title, place: it.place,
-            note: t("dyn.autoSrc", "자동 수집") + " · " + it.src,
-            link: it.url
-          });
-          added++;
-        });
-        if (added) renderEventList();
-      })
-      .catch(function () {});
     initVideoButtons();
-    initNav();
-    initScrollState();
     initReveal();
     renderNewsPage();
     renderCalendar();
@@ -1586,5 +1574,36 @@
     initRise();
     initSubscribe();
     initAdmin();
-  });
+    /* 자동 수집 예정 공연(플레이DB 일일 수집) 병합 — 도착 시 일정 재렌더 */
+    if (!window.__eventsMerged) {
+      window.__eventsMerged = true;
+      fetch("assets/data/live-events.json?" + Date.now())
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) {
+          if (!d || !d.items || !d.items.length) return;
+          var have = {};
+          (D.events || []).forEach(function (ev) { have[(ev.date || "") + (ev.title || "")] = 1; });
+          var added = 0;
+          d.items.forEach(function (it) {
+            if (have[it.start + it.title]) return;
+            D.events.push({
+              date: it.start, kind: "공연", status: "onsale", verified: false,
+              title: it.title, place: it.place,
+              note: t("dyn.autoSrc", "자동 수집") + " · " + it.src,
+              link: it.url
+            });
+            added++;
+          });
+          if (added) renderEventList();
+        })
+        .catch(function () {});
+    }
+  }
+
+  window.INSOONI_PAGE_INIT = window.INSOONI_PAGE_INIT || [];
+  window.INSOONI_PAGE_INIT.push(pageInit);
+
+  function boot() { globalInit(); pageInit(); }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
 })();

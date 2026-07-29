@@ -258,7 +258,9 @@
       .catch(function () { /* 계절 추천 유지 */ });
   }
 
-  function boot() { initSearch(); initToday(); }
+  function boot() { INDEX = null; initSearch(); initToday(); }
+  window.INSOONI_PAGE_INIT = window.INSOONI_PAGE_INIT || [];
+  window.INSOONI_PAGE_INIT.push(boot);
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();
 })();
