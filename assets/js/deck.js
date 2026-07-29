@@ -165,21 +165,38 @@
      연도나 앨범으로 나누면 숫자만 다를 뿐 소리가 섞이지 않는다.
      실제 DJ가 하듯 곡의 결로 나눈다 — 오늘의 흐름, 힘찬 무대, 조용한 밤.
      묶음이 셋뿐이라 각각이 50곡 넘게 깊고, 한 묶음 안에서는 템포가 이어진다. */
+  /* 히트곡 — 차트·수상·대표 무대로 확인된 곡을 앞에, 대표 타이틀곡이 뒤를 받친다.
+     순서는 '얼마나 그를 상징하는가' 기준. 근거 없는 곡은 넣지 않는다.
+       거위의 꿈   2007 뮤직뱅크 1위(카니발 원곡 리메이크)
+       밤이면 밤마다 1983 최대 히트 · 1984 KBS 7대 가수상
+       아버지      2011 '나는 가수다' 1위(27.7%)
+       친구여      2004 음악캠프 3주 1위 · 2005 한국대중음악상 올해의 노래(조PD feat.)
+       또         1996 재기작 · 박진영 작사·작곡
+       실버들      1978 희자매 데뷔 히트 · TBC 차트 1위
+       이별연습     1989 김형석 데뷔작
+       행복        2019 싱글 · 현재 라이브 오프닝
+       에레나라…    1987 7집 타이틀 */
+  var HIT_ORDER = [
+    "거위의 꿈", "밤이면 밤마다", "아버지", "친구여", "또", "실버들",
+    "이별연습", "행복", "에레나라 불리운 여인",
+    "여자이니까", "비상", "Fantasia", "향수", "밀애", "그대가 말하는 사랑",
+    "Tonight", "일어나", "딸에게", "나무", "그래도 꿈은 흐른다",
+    "토닥토닥", "너의 이름을 세상이 부를 때", "바보 멍청이 똥개"
+  ];
+  var HIT_SET = {};
+  HIT_ORDER.forEach(function (t, i) { HIT_SET[baseTitle(t)] = i + 1; });
+  function hitRank(track) { return HIT_SET[baseTitle(track.t)] || 0; }
+
   var LISTS = {
     today: {
       ko: "오늘의 믹스", en: "Today's Mix", f: null,
       dko: "오늘 서울의 날씨와 계절, 지금 시간에 어울리는 곡부터 시작합니다. 매일 달라집니다.",
       den: "Starts with the songs that suit Seoul's weather, the season and this hour. It changes every day."
     },
-    bright: {
-      ko: "뜨거운 무대", en: "On Stage", f: function (s) { return s.set === "bright"; },
-      dko: "무대를 밀어 올리는 곡들. 리듬이 앞에 서고, 곡과 곡은 짧게 끊어 넘어갑니다.",
-      den: "The songs that lift a room. Rhythm out front, and the blends cut short and clean."
-    },
-    calm: {
-      ko: "고요한 밤", en: "Quiet Night", f: function (s) { return s.set === "calm"; },
-      dko: "혼자 있는 밤에 어울리는 곡들. 느리게 풀리고, 길게 겹쳐 넘어갑니다.",
-      den: "For a night on your own. Slow to unfold, and the songs overlap for a long while."
+    hits: {
+      ko: "히트곡 모음", en: "The Hits", f: function (s) { return hitRank(s) > 0; },
+      dko: "차트와 무대가 증명한 대표곡들. '거위의 꿈'으로 열고, 시대를 오가며 이어집니다.",
+      den: "The songs the charts and the stage made hers. It opens with 'A Goose's Dream' and moves across the decades."
     }
   };
   var kind = "today";
@@ -228,13 +245,74 @@
     return "";
   }
 
+  /* 히트곡의 근거 — 리서치로 확인된 사실만 (차트·수상·대표 무대) */
+  var HIT_WHY = {
+    "거위의 꿈": ["2007년 뮤직뱅크 1위. 데뷔 30년 만의 첫 음악방송 1위였습니다. (카니발 원곡 리메이크)",
+                "No.1 on Music Bank in 2007 - her first, thirty years after her debut. A remake of Carnival's original."],
+    "밤이면 밤마다": ["1983년 최대 히트곡. 이 곡으로 1984년 KBS 7대 가수상을 받았습니다.",
+                  "Her biggest hit of 1983, and the song that won her the 1984 KBS Seven Singers Award."],
+    "아버지": ["2011년 '나는 가수다'에서 27.7% 지지로 1위에 오른 무대입니다.",
+             "The stage that took first place on 'I Am a Singer' in 2011, with 27.7% of the vote."],
+    "친구여": ["2004년 음악캠프 3주 연속 1위. 2005년 한국대중음악상 올해의 노래. (조PD feat. 인순이)",
+             "Three weeks at No.1 in 2004, and Song of the Year at the 2005 Korean Music Awards. (Jo PD feat. Insooni)"],
+    "또": ["1996년, 약 5년 공백을 깬 재기작입니다. 박진영 작사·작곡.",
+          "Her 1996 comeback after a five-year silence. Written and composed by Park Jin-young."],
+    "실버들": ["1978년 희자매 데뷔 히트곡. TBC 가요차트 1위에 올랐습니다. (김소월 시)",
+             "The 1978 debut hit with the Hee Sisters, No.1 on the TBC chart. (Poem by Kim Sowol)"],
+    "이별연습": ["작곡가 김형석이 이 곡으로 데뷔했습니다.",
+              "The song composer Kim Hyung-suk made his debut with."],
+    "행복": ["2019년 싱글. 지금도 공연의 문을 여는 곡입니다.",
+            "A 2019 single that still opens her shows."],
+    "에레나라 불리운 여인": ["1987년 7집 타이틀곡. 스스로 '어두웠던 유년의 자화상'이라 적은 앨범입니다.",
+                      "Title track of her 1987 seventh album, which she called a self-portrait of a dark childhood."]
+  };
+  function hitReason(track) {
+    var w = HIT_WHY[baseTitleRaw(track.t)];
+    return w ? (isEN() ? w[1] : w[0]) : "";
+  }
+  /* 원제목 그대로의 키 (HIT_WHY 조회용) */
+  function baseTitleRaw(s2) {
+    return String(s2).replace(/\s*\((?:[^)]*)\)\s*$/, "").replace(/\s*\[[^\]]*\]\s*$/, "").trim();
+  }
+  /* 오늘 날짜·날씨를 한 줄 앞에 붙인다 — '왜 오늘 이 곡인지'가 분명해지도록 */
+  function todayPrefix() {
+    var d = new Date();
+    var date = isEN()
+      ? (d.getMonth() + 1) + "/" + d.getDate()
+      : (d.getMonth() + 1) + "월 " + d.getDate() + "일";
+    var w = (window.INSOONI_TODAY && window.INSOONI_TODAY.label) || "";
+    return w ? (date + " · " + w) : date;
+  }
+
   function reasonFor(track, prev) {
+    if (kind === "hits") {
+      var h = hitReason(track);
+      if (h) return h;
+      return [flowReason(track, prev), eraReason(track)].filter(Boolean).join(" ");
+    }
     var m = moodReason(track);
-    if (m) return m;
+    if (m) return (kind === "today" ? todayPrefix() + " — " : "") + m;
     return [flowReason(track, prev), eraReason(track)].filter(Boolean).join(" ");
   }
 
   function norm(s) { return String(s).toLowerCase().replace(/[\s'"`·.,!?()[\]/-]/g, ""); }
+  /* 검색 제목과 프리뷰 곡을 맞춘다.
+     '거위의 꿈 (Original)'처럼 괄호 표기가 붙은 변형도 같은 곡으로 본다. */
+  function baseTitle(s2) {
+    return norm(String(s2).replace(/\s*\((?:[^)]*)\)\s*$/, "").replace(/\s*\[[^\]]*\]\s*$/, ""));
+  }
+  function matchTrack(title) {
+    if (!TRACKS || !title) return -1;
+    var q = baseTitle(title);
+    if (!q) return -1;
+    var i;
+    for (i = 0; i < TRACKS.length; i++) if (baseTitle(TRACKS[i].t) === q) return i;
+    for (i = 0; i < TRACKS.length; i++) {
+      var t2 = baseTitle(TRACKS[i].t);
+      if (t2.indexOf(q) >= 0 || q.indexOf(t2) >= 0) return i;
+    }
+    return -1;
+  }
   /* 오늘의 믹스: 지금 서울 날씨에 맞는 곡을 앞에 세우고, 계절 곡으로 이어 붙인다.
      같은 날은 늘 같은 순서, 날이 바뀌면 순서도 바뀐다. */
   function todayFilter(list) {
@@ -312,6 +390,13 @@
     var base = LISTS[k] && LISTS[k].f ? TRACKS.filter(LISTS[k].f) : TRACKS;
     if (base.length < 3) base = TRACKS;
     if (shuffled) return shuffleArr(base);
+    /* 히트곡은 대표성 순서가 곧 이야기다 — 가장 상징적인 곡으로 열고,
+       뒤쪽은 템포가 이어지도록 흐름을 다듬는다. */
+    if (k === "hits") {
+      var ranked = base.slice().sort(function (a, b) { return hitRank(a) - hitRank(b); });
+      var head = ranked.slice(0, 3);                 /* 거위의 꿈·밤이면 밤마다·아버지 */
+      return head.concat(chain(ranked.slice(3), 0));
+    }
     if (k !== "today") return arc(base);
     /* 오늘의 믹스는 날씨·계절 곡을 앞에 세우고, 나머지를 셋의 모양대로 잇는다.
        앞머리도 조용한 곡부터 차오르게 세워 문이 부드럽게 열리도록 한다. */
@@ -880,6 +965,41 @@
   }
   /* 영상이 시작되면 믹스를 멈춘다 (소리 겹침 방지) */
   window.INSOONI_DECK = {
+    /* 특정 곡을 이 사이트 안에서 바로 튼다 (곡 찾기·칩에서 호출).
+       그 곡부터 시작해 뒤로 오늘의 믹스가 이어지므로, 한 곡만 듣고 끝나지 않는다.
+       프리뷰가 없는 곡이면 false를 돌려주고, 부르는 쪽이 공식 영상으로 안내한다. */
+    playSong: function (title) {
+      if (!title) return false;
+      var key = norm(title);
+      function go() {
+        var i = matchTrack(title);
+        if (i < 0) return false;
+        key = norm(TRACKS[i].t);
+        ensureAudio();
+        if (ctx.state === "suspended") ctx.resume();
+        stopAll();
+        kind = "today";
+        /* 고른 곡을 맨 앞에 세우고 나머지를 오늘의 흐름으로 잇는다 */
+        var rest = build("today").filter(function (t) { return norm(t.t) !== key; });
+        queue = [TRACKS[i]].concat(rest);
+        pos = 0;
+        bindBooth();
+        bar().hidden = false;
+        cur = 0;
+        playAt(0, false);
+        if (!raf) tick();
+        var pb = document.getElementById("dk-play");
+        if (pb) pb.textContent = "❚❚";
+        return true;
+      }
+      if (!TRACKS) { load().then(function () { go(); }).catch(function () {}); return true; }
+      return go();
+    },
+    /* 이 제목에 재생 가능한 프리뷰가 있는지 (버튼 모양을 정하는 데 쓴다) */
+    hasSong: function (title) {
+      return !!(TRACKS && title && matchTrack(title) >= 0);
+    },
+    ready: function () { return load(); },
     pause: function () {
       if (!ctx || !decks.length) return false;
       var ytOn = !!(yt && yt.getPlayerState && yt.getPlayerState() === 1);

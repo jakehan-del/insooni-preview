@@ -93,19 +93,31 @@
         return;
       }
       count.textContent = list.length ? list.length + T.hit : T.none;
+      var deck = window.INSOONI_DECK;
       list.slice(0, 40).forEach(function (s) {
-        var a = document.createElement("a");
-        a.className = "sr-row";
-        a.href = s.url || s.q;
-        a.target = "_blank";
-        a.rel = "noopener";
-        a.innerHTML =
+        /* 사이트 안에서 바로 들을 수 있는 곡이면 버튼으로 만들어 여기서 재생한다.
+           프리뷰가 없는 곡만 공식 영상으로 안내한다 (밖으로 나가는 건 최후 수단). */
+        var playable = !!(deck && deck.hasSong && deck.hasSong(s.title));
+        var row;
+        if (playable) {
+          row = document.createElement("button");
+          row.type = "button";
+          row.className = "sr-row sr-row--play";
+          row.addEventListener("click", function () { deck.playSong(s.title); });
+        } else {
+          row = document.createElement("a");
+          row.className = "sr-row";
+          row.href = s.url || s.q;
+          row.target = "_blank";
+          row.rel = "noopener";
+        }
+        row.innerHTML =
           '<span class="sr-title"></span>' +
           '<span class="sr-meta"></span>' +
-          '<span class="sr-play">' + (s.url ? T.play : T.find) + " ▶</span>";
-        a.querySelector(".sr-title").textContent = s.title;
-        a.querySelector(".sr-meta").textContent = [s.album, s.year].filter(Boolean).join(" · ");
-        out.appendChild(a);
+          '<span class="sr-play">' + (playable ? T.play : T.find) + " ▶</span>";
+        row.querySelector(".sr-title").textContent = s.title;
+        row.querySelector(".sr-meta").textContent = [s.album, s.year].filter(Boolean).join(" · ");
+        out.appendChild(row);
       });
     }
 
@@ -130,6 +142,10 @@
       render(list, raw);
     }
 
+    /* 데크 곡 목록을 미리 받아 둔다 — 받아야 '사이트에서 재생' 가능 여부를 알 수 있다 */
+    if (window.INSOONI_DECK && window.INSOONI_DECK.ready) {
+      window.INSOONI_DECK.ready().then(function () { if (input.value.trim()) search(); }).catch(function () {});
+    }
     input.addEventListener("input", search);
     var chips = document.getElementById("song-chips");
     if (chips) {

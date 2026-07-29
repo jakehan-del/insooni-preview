@@ -43,7 +43,7 @@
 }
 
 /* 글자 크기 3단계 (헤더 [가] 버튼 연동) */
-html { font-size: 18px; scroll-padding-top: 6rem; background: var(--void); scrollbar-color: #2a2a2a #080808; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; font-size: 18px; scroll-padding-top: 6rem; background: var(--void); scrollbar-color: #2a2a2a #080808; }
 ::-webkit-scrollbar { width: 12px; }
 ::-webkit-scrollbar-track { background: var(--void); }
 ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 6px; border: 3px solid var(--void); }
@@ -2097,7 +2097,7 @@ body.has-deck .back-to-top { bottom: calc(92px + 1.2rem); }
 /* ============ 편집 타이포 · 한글 디스플레이 세리프 (v56) ============
    Cormorant에는 한글 글자가 없어 한국어 제목이 고딕으로 떨어졌다.
    나눔명조를 뒤에 붙여 라틴은 Cormorant, 한글은 명조로 조판된다. */
-:root { --font-display: "Cormorant Garamond", "Nanum Myeongjo", "Apple SD Gothic Neo", serif; }
+:root { --font-display: "Cormorant Garamond", "Noto Serif KR", "Apple SD Gothic Neo", serif; }
 
 .page-hero h1 {
   font-family: var(--font-display); font-weight: 700;
@@ -2204,3 +2204,135 @@ body.deck-full .bt-deck[data-deck="1"] { opacity: .3; }
 .sig-img { width: 100%; height: auto; display: block; filter: brightness(0) invert(1); opacity: .92; }
 .letter-signature .letter-sign { margin-top: 0; }
 @media (max-width: 640px) { .letter-signature { justify-items: start; } }
+
+/* ============================================================
+   모바일 타입 스케일 (v91)
+   ------------------------------------------------------------
+   문제: 루트가 18px로 고정돼 있었다. 웹 기본값 16px보다 12.5% 큰 값이라
+   좁은 화면에서는 제목·본문이 과하게 커져, 데스크톱에서 공들여 만든 화면이
+   모바일에서는 한 번에 조금밖에 안 보였다.
+   해법: 루트를 화면 폭에 따라 낮춘다. rem 기반이라 전체가 비례해 함께 줄고,
+   레이아웃 비율은 그대로 유지된다. 시니어 가독성을 지키려 16px 아래로는
+   본문을 더 줄이지 않고, 대신 제목의 낭비되는 크기만 걷어낸다.
+   ============================================================ */
+@media (max-width: 900px) {
+  html { font-size: 17px; }
+}
+@media (max-width: 720px) {
+  html { font-size: 16px; }                     /* 웹 표준 크기 — 본문은 여기서 멈춘다 */
+  /* 제목은 화면 폭 대비 더 과감히 줄여야 한 화면에 내용이 들어온다 */
+  .page-hero h1 { font-size: clamp(1.75rem, 8.4vw, 2.6rem); line-height: 1.14; }
+  .page-hero p { font-size: 1rem; line-height: 1.7; }
+  .page-hero { padding-block: clamp(3.4rem, 9vh, 5.5rem) clamp(1.6rem, 4vh, 2.6rem); }
+  h1 { font-size: clamp(1.75rem, 8vw, 2.6rem); }
+  h2 { font-size: clamp(1.35rem, 5.4vw, 1.9rem); }
+  /* 명조 서두 문단이 화면을 다 먹지 않게 */
+  .lede, #h-profile + p, .about-lede { font-size: clamp(1.05rem, 4.4vw, 1.3rem); line-height: 1.72; }
+  /* 한글 본문 자간은 좁은 화면에서 줄 수를 늘리기만 한다 */
+  .page-hero p, .card-desc, .excerpt { letter-spacing: 0; }
+}
+@media (max-width: 400px) {
+  html { font-size: 15.5px; }
+  .page-hero h1 { font-size: clamp(1.6rem, 8.4vw, 2.2rem); }
+}
+
+/* ============================================================
+   DJ 부스 프리미엄 패스 (v91)
+   ------------------------------------------------------------
+   실제 턴테이블의 무게감을 흉내낸다: 브러시드 메탈 상판, 두께가 느껴지는
+   플래터, 빛을 머금는 비닐 홈, 금속 톤암, 발광하는 크로스페이더.
+   전부 CSS 그라디언트라 이미지 요청이 늘지 않는다.
+   ============================================================ */
+.booth {
+  position: relative; overflow: hidden;
+  border-color: var(--line-strong);
+  background:
+    radial-gradient(ellipse 70% 50% at 50% -10%, rgba(212,175,55,.10), transparent 65%),
+    linear-gradient(180deg, #161614 0%, #0d0d0c 40%, #080808 100%);
+  box-shadow: inset 0 1px 0 rgba(243,239,231,.07), 0 30px 80px rgba(0,0,0,.55);
+}
+/* 상판 브러시드 메탈 결 */
+.booth::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5;
+  background: repeating-linear-gradient(90deg, rgba(243,239,231,.028) 0 1px, transparent 1px 3px);
+}
+/* 부스 하단 금색 실 — 장비의 라인 */
+.booth::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(212,175,55,.5), transparent);
+}
+.booth > * { position: relative; z-index: 1; }
+
+/* 플래터: 금속 림 + 깊이 */
+.bt-platter {
+  background:
+    radial-gradient(circle at 50% 50%, #101010 0 60%, #0a0a0a 100%);
+  box-shadow:
+    0 0 0 1px rgba(243,239,231,.10),
+    0 0 0 7px #131313,                       /* 플래터 림 */
+    0 0 0 8px rgba(243,239,231,.07),
+    0 22px 60px rgba(0,0,0,.75),
+    inset 0 0 46px rgba(0,0,0,.92);
+}
+/* 비닐 홈이 빛을 받는 느낌 */
+.bt-vinyl::after {
+  content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+  background: conic-gradient(from 210deg,
+    rgba(243,239,231,.10) 0deg, transparent 55deg,
+    transparent 175deg, rgba(243,239,231,.06) 205deg,
+    transparent 250deg, transparent 360deg);
+  mix-blend-mode: screen;
+}
+.bt-deck.is-live .bt-platter {
+  box-shadow:
+    0 0 0 1px rgba(212,175,55,.5),
+    0 0 0 7px #161513,
+    0 0 0 8px rgba(212,175,55,.22),
+    0 26px 70px rgba(0,0,0,.8),
+    inset 0 0 46px rgba(0,0,0,.88);
+}
+/* 라벨(앨범아트) 가장자리를 금테로 */
+.bt-platter .bt-art { box-shadow: 0 0 0 1px rgba(212,175,55,.45), 0 4px 14px rgba(0,0,0,.6); }
+
+/* 톤암: 금속 질감 + 그림자 */
+.bt-arm {
+  background: linear-gradient(180deg, #d9d5cc, #8d8880 60%, #5f5b55);
+  box-shadow: 0 2px 6px rgba(0,0,0,.6);
+}
+
+/* 크로스페이더: 홈이 파인 레일 + 발광 노브 */
+.bt-rail {
+  background: linear-gradient(180deg, #0a0a0a, #121212);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.9), 0 1px 0 rgba(243,239,231,.06);
+}
+.bt-knob {
+  background: linear-gradient(180deg, #f3efe7, #c9c4b8);
+  box-shadow: 0 0 0 1px rgba(212,175,55,.5), 0 0 14px rgba(212,175,55,.45), 0 3px 8px rgba(0,0,0,.7);
+}
+
+/* 전원(판을 올리다) 버튼 — 장비의 메인 버튼처럼 */
+.bt-power {
+  border-color: var(--line-strong);
+  background: linear-gradient(180deg, #171613, #0d0d0c);
+  box-shadow: inset 0 1px 0 rgba(243,239,231,.08), 0 8px 22px rgba(0,0,0,.6);
+  transition: border-color .25s ease, box-shadow .35s var(--ease-out), transform .2s var(--ease-out);
+}
+.bt-power:hover {
+  border-color: var(--gold);
+  box-shadow: inset 0 1px 0 rgba(243,239,231,.12), 0 0 26px rgba(212,175,55,.28), 0 8px 22px rgba(0,0,0,.6);
+}
+.bt-power:active { transform: scale(.985); }
+/* 재생 중이면 은은히 숨 쉰다 */
+.booth.is-live .bt-power { border-color: rgba(212,175,55,.55); }
+
+@media (prefers-reduced-motion: reduce) {
+  .bt-vinyl::after { display: none; }
+}
+
+/* 곡 찾기 결과: 사이트 안에서 재생되는 행 */
+button.sr-row {
+  width: 100%; text-align: left; background: none; font: inherit;
+  cursor: pointer; color: inherit;
+}
+button.sr-row:hover .sr-title, button.sr-row:focus-visible .sr-title { color: var(--gold); }
+button.sr-row .sr-play { color: var(--gold); }
