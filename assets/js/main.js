@@ -298,6 +298,11 @@
     var sec = $("#anniv"), card = $("#anniv-card");
     if (!sec || !card || !D.milestones || !D.milestones.length) return;
     var isEN = document.documentElement.getAttribute("lang") === "en";
+    var pick = function (o) { return (isEN && o.en) ? o.en : o.ko; };   /* 평면 {ko,en} 선택 */
+    var ord = function (n) {                                            /* 1st·2nd·3rd·Nth */
+      var s = ["th", "st", "nd", "rd"], v = n % 100;
+      return n + (s[(v - 20) % 10] || s[v] || s[0]);
+    };
     var now = new Date();
     var mm = String(now.getMonth() + 1).padStart(2, "0");
     var dd = String(now.getDate()).padStart(2, "0");
@@ -315,7 +320,7 @@
       card.innerHTML =
         '<span class="anniv-kicker">' + esc(isEN ? "ON THIS DAY" : "오늘의 기념일") + "</span>" +
         '<p class="anniv-head">' + esc(head) + "</p>" +
-        '<p class="anniv-body">' + esc(tr(m, "ko")) + "</p>";
+        '<p class="anniv-body">' + esc(pick(m)) + "</p>";
       sec.hidden = false;
       return;
     }
@@ -335,10 +340,10 @@
     var countLabel = isEN
       ? (days === 0 ? "today" : days + " day" + (days === 1 ? "" : "s") + " to go")
       : (days === 0 ? "오늘" : days + "일 남음");
-    var anniLabel = isEN ? (willBe + "th anniversary") : (willBe + "주년");
+    var anniLabel = isEN ? (ord(willBe) + " anniversary") : (willBe + "주년");
     card.innerHTML =
       '<span class="anniv-kicker">' + esc(isEN ? "COMING UP" : "다가오는 기념일") + "</span>" +
-      '<p class="anniv-head">' + esc(tr(upcoming.m, "ko")) + "</p>" +
+      '<p class="anniv-head">' + esc(pick(upcoming.m)) + "</p>" +
       '<p class="anniv-body"><b>' + esc(countLabel) + "</b> · " + esc(anniLabel) + "</p>";
     sec.hidden = false;
   }
@@ -1000,6 +1005,24 @@
   function initBoard() {
     var listBox = $("#board-list"), form = $("#board-form");
     if (!listBox) return;
+    /* 이달의 이야기: 달마다 다른 실마리 한 줄. 누르면 이야기 칸으로 옮겨 준다. */
+    var promptBtn = $("#board-prompt");
+    if (promptBtn && D.boardPrompts && D.boardPrompts.length) {
+      var bpEN = document.documentElement.getAttribute("lang") === "en";
+      var now = new Date();
+      var idx = (now.getFullYear() * 12 + now.getMonth()) % D.boardPrompts.length;
+      var pr = D.boardPrompts[idx];
+      var prText = (bpEN && pr.en) ? pr.en : pr.ko;
+      promptBtn.innerHTML = '<span class="bp-kicker">' +
+        (bpEN ? "THIS MONTH'S STORY" : "이달의 이야기") +
+        '</span><span class="bp-text"></span>';
+      promptBtn.querySelector(".bp-text").textContent = prText;
+      promptBtn.hidden = false;
+      promptBtn.addEventListener("click", function () {
+        var ta = $("#post-body");
+        if (ta) { ta.value = prText + "\n\n"; ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); ta.scrollIntoView({ block: "center", behavior: "smooth" }); }
+      });
+    }
     var KEY = "insooni_posts";
     function likeKey(id) { return "insooni_like_" + id; }
     function draw() {

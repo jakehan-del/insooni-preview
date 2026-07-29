@@ -1534,6 +1534,21 @@ main h3 { font-family: var(--font-mono); font-weight: 400; font-size: .85rem; le
 .mc-preview canvas.is-ready { border-color: var(--gold-deep); }
 #mc-welcome { min-height: 1.4em; }
 
+/* 이달의 이야기 실마리 */
+.board-prompt {
+  display: block; width: 100%; text-align: left; cursor: pointer;
+  border: 1px solid var(--line-strong); border-radius: var(--r-panel);
+  background: linear-gradient(180deg, rgba(212,175,55,.06), transparent);
+  padding: 1.1rem 1.4rem; margin-bottom: 1.4rem;
+  transition: border-color .2s ease, transform .2s cubic-bezier(.22,.8,.36,1);
+}
+.board-prompt:hover { border-color: var(--gold); transform: translateY(-1px); }
+.board-prompt .bp-kicker {
+  display: block; font-family: var(--font-mono); font-size: .64rem;
+  letter-spacing: .24em; text-transform: uppercase; color: var(--gold); margin-bottom: .4rem;
+}
+.board-prompt .bp-text { font-size: 1.08rem; line-height: 1.5; color: var(--ivory); word-break: keep-all; }
+
 /* 거위의 꿈 응원 카드 */
 .cc-preview canvas {
   width: 100%; max-width: 420px; height: auto; display: block;
