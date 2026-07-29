@@ -165,6 +165,7 @@ window.I18N_EN = {
   "mc.hint": "The card is a keepsake stored only on this device. Come back and we'll greet you by name.",
   "mc.previewAria": "Fan card preview",
   "dyn.newsAuto": "Auto-collected news",
+  "strip.swipe": "Swipe to see more",
   "dyn.newsBy": "Reported by",
   "dyn.newsOpen": "Read the original",
   "dyn.newsNote": "The full article is the publisher's copyrighted work, so it is not reproduced here. You can read the original at the link below.",

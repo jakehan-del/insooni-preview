@@ -84,6 +84,14 @@
     document.addEventListener("pointerout", function (e) {
       if (e.target.closest && e.target.closest(HOT)) ring.classList.remove("is-hot");
     }, { passive: true });
+    /* 터치가 한 번이라도 감지되면 커서는 거둔다 —
+       터치 되는 노트북·태블릿처럼 두 입력을 다 가진 기기를 위한 안전장치.
+       (순수 터치 기기는 위의 pointer:fine 조건에서 이미 제외된다) */
+    window.addEventListener("touchstart", function once() {
+      window.removeEventListener("touchstart", once);
+      dot.remove(); ring.remove();
+      document.documentElement.classList.remove("has-cursor");
+    }, { passive: true, once: true });
     document.addEventListener("pointerdown", function () { ring.classList.add("is-down"); }, { passive: true });
     document.addEventListener("pointerup", function () { ring.classList.remove("is-down"); }, { passive: true });
   }

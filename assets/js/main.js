@@ -1899,6 +1899,7 @@
       if (e.button !== 0) return;
       dragging = true; moved = 0; lastX = e.clientX; vel = 0;
       strip.classList.add("dragging");
+      strip.classList.add("is-touched");   /* 한 번 넘기면 안내 문구를 거둔다 */
     });
     strip.addEventListener("pointermove", function (e) {
       if (!dragging) return;
