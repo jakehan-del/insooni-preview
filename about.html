@@ -11,12 +11,16 @@
 <meta property="og:image" content="https://jakehan-del.github.io/insooni-preview/assets/img/portrait.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="description" content="1978년 데뷔부터 오늘까지. 인순이의 삶과 음악, 해밀학교 이야기를 타임라인으로 만나보세요.">
-<!-- 본문 글꼴만 먼저 확실히. 제목용 서체는 화면이 뜬 뒤 들어온다
-     (모두 font-display:swap이라 늦게 와도 글자는 먼저 보인다) -->
-<link rel="stylesheet" href="assets/fonts/body.css?v107">
-<link rel="stylesheet" href="assets/fonts/display.css?v107" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/fonts/display.css?v107"></noscript>
-<link rel="stylesheet" href="assets/css/style.min.css?v107">
+<!-- 웹폰트 CSS는 첫 화면을 막지 않는다. 시스템 한글 글꼴로 먼저 그리고,
+     받아지는 대로 갈아 끼운다(모두 font-display:swap). 글자 크기·자간을
+     같게 맞춰 두어 바뀌는 순간에도 줄이 밀리지 않는다. -->
+<link rel="stylesheet" href="assets/fonts/body.css?v108" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="assets/fonts/display.css?v108" media="print" onload="this.media='all'">
+<noscript>
+  <link rel="stylesheet" href="assets/fonts/body.css?v108">
+  <link rel="stylesheet" href="assets/fonts/display.css?v108">
+</noscript>
+<link rel="stylesheet" href="assets/css/style.min.css?v108">
 <link rel="canonical" href="https://jakehan-del.github.io/insooni-preview/about.html">
 <meta property="og:url" content="https://jakehan-del.github.io/insooni-preview/about.html">
 <meta property="og:type" content="profile">
@@ -172,14 +176,14 @@
 
 <button class="back-to-top" aria-label="맨 위로 이동" data-i18n-aria="aria.toTop">↑</button>
 <script src="assets/js/i18n.js?v106"></script>
-<script src="assets/js/data.min.js?v107"></script>
-<script src="assets/js/tracklinks.min.js?v107"></script>
-<script src="assets/js/albums-full.min.js?v107"></script>
-<script src="assets/js/albums-en.min.js?v107"></script>
-<script src="assets/js/song-moods.min.js?v107"></script>
-<script src="assets/js/main.min.js?v107"></script>
-<script src="assets/js/motion.min.js?v107"></script>
-<script src="assets/js/router.min.js?v107" defer></script>
-<script src="assets/js/deck.min.js?v107"></script>
+<script src="assets/js/data.min.js?v108"></script>
+<script src="assets/js/tracklinks.min.js?v108"></script>
+<script src="assets/js/albums-full.min.js?v108"></script>
+<script src="assets/js/albums-en.min.js?v108"></script>
+<script src="assets/js/song-moods.min.js?v108"></script>
+<script src="assets/js/main.min.js?v108"></script>
+<script src="assets/js/motion.min.js?v108"></script>
+<script src="assets/js/router.min.js?v108" defer></script>
+<script src="assets/js/deck.min.js?v108"></script>
 </body>
 </html>
