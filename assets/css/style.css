@@ -1455,11 +1455,21 @@ button.show-cell:hover .show-cta, button.show-cell:focus-visible .show-cta { col
 .di-link:hover { color: #fff; border-color: #fff; }
 
 /* 시그니처 마크: 仁 인장 (비욘세 ★ 슬롯 대응) */
-/* 거위 마크는 글자 항목과 정확히 같은 높이여야 한 줄로 반듯하게 정렬된다.
-   글자 링크는 padding 1em(위아래) + 줄높이로 51px가 되므로, 마크도 같은 높이를 강제한다. */
-.main-nav li { display: flex; align-items: center; }
-.main-nav .nav-mark { align-self: stretch; }
-.nav-mark a { color: #fff !important; padding: 0 .4em !important; display: inline-flex; align-items: center; height: 100%; }
+/* 거위 마크 정렬.
+   가로 내비(데스크톱)에서는 글자 항목과 같은 높이여야 한 줄로 반듯하고,
+   세로 오버레이(모바일)에서는 다른 항목처럼 가운데에 놓여야 한다.
+   li를 flex로 만들면 세로 메뉴에서 마크가 왼쪽에 붙어 버리므로, 가로일 때만 적용한다. */
+.nav-mark a { color: #fff !important; padding: 0 .4em !important; display: inline-flex; align-items: center; }
+@media (min-width: 1081px) {
+  .main-nav li { display: flex; align-items: center; }
+  .main-nav .nav-mark { align-self: stretch; }
+  .main-nav .nav-mark a { height: 100%; }
+}
+@media (max-width: 1080px) {
+  /* 세로 메뉴: 마크도 글자 항목과 같은 가운데 축에 세운다 */
+  .main-nav .nav-mark { display: flex; justify-content: center; }
+  .main-nav .nav-mark a { justify-content: center; }
+}
 .mark-goose { width: 30px; height: auto; display: block; }
 .nav-mark a::after { display: none !important; }
 .nav-mark a:hover { opacity: .75; }
@@ -1638,7 +1648,10 @@ main h3 { font-family: var(--font-mono); font-weight: 400; font-size: .85rem; le
 .recap-clip:hover, .recap-clip.is-on { border-color: var(--gold); color: var(--gold); }
 
 /* 리걸 페이지 */
-.legal-body { max-width: 46em; }
+/* 약관·개인정보: 컨테이너는 페이지 기준폭을 유지하고, 읽기 폭은 각 문단에 준다.
+   컨테이너 자체를 46em으로 좁히면 가운데로 밀려, 위의 제목(왼쪽 정렬)과 209px 어긋났다. */
+.legal-body { max-width: var(--container); }
+.legal-body > * { max-width: 46em; }
 .legal-body h2 { font-family: var(--font-mono); font-weight: 400; font-size: .78rem; letter-spacing: .3em; text-transform: uppercase; color: #fff; margin: 2.2em 0 .7em; }
 .legal-body p { color: var(--muted); line-height: 1.9; }
 /* 홈 푸터 = 비욘세 우측 하단 한 줄 */
@@ -1715,7 +1728,8 @@ html { scrollbar-color: #2a2a2a #0a0a0a; }
   .ts-row .ts-why { grid-column: 1 / -1; }
 }
 
-.song-search { max-width: 62em; }
+/* 검색창은 페이지의 다른 블록과 같은 폭이어야 오른쪽 끝이 맞는다 (62em이면 98px 짧았다) */
+.song-search { max-width: none; }
 #song-q {
   width: 100%; padding: 1.05em 1.2em; font-size: 1.15rem; font-family: inherit;
   background: var(--void); color: var(--ivory);

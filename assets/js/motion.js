@@ -67,7 +67,11 @@
     document.body.appendChild(ring);
     document.documentElement.classList.add("has-cursor");
     var mx = innerWidth / 2, my = innerHeight / 2, rx = mx, ry = my;
+    /* 마우스가 움직이기 전에는 보이지 않아야 한다.
+       그러지 않으면 페이지를 연 순간 화면 한가운데에 동그라미가 덩그러니 떠 있다. */
+    dot.style.opacity = "0"; ring.style.opacity = "0";
     document.addEventListener("pointermove", function (e) {
+      if (dot.style.opacity === "0") { dot.style.opacity = ""; ring.style.opacity = ""; }
       mx = e.clientX; my = e.clientY;
       dot.style.transform = "translate(" + mx + "px," + my + "px)";
     }, { passive: true });
