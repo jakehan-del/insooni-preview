@@ -585,7 +585,10 @@
             '<span class="fr-date">' + esc(v.date) + "</span>" +
             '<span class="fr-title">' + esc(title) + "</span>" +
             '<span class="fr-ch">' + esc(v.channel) + "</span>";
-          b.addEventListener("click", function () { openLightbox(v.id, title, b); });
+          b.addEventListener("click", function () {
+            if (window.INSOONI_DECK) window.INSOONI_DECK.pause();
+            openLightbox(v.id, title, b);
+          });
           box.appendChild(b);
         });
       })
@@ -628,6 +631,8 @@
     if (recapOpener) { recapOpener.focus(); recapOpener = null; }
   }
   function openRecap(r, opener) {
+    /* 무대 영상이 열리면 흐르던 믹스를 멈춘다 — 소리가 겹치지 않게 */
+    if (window.INSOONI_DECK) window.INSOONI_DECK.pause();
     var box = ensureRecapPanel();
     recapOpener = opener || null;
     box.setAttribute("aria-label", tr(r, "title") + " " + t("recap.label", "리캡"));
@@ -811,6 +816,7 @@
     return lightboxEl;
   }
   function openLightbox(videoId, title, opener) {
+    if (window.INSOONI_DECK) window.INSOONI_DECK.pause();
     var box = ensureLightbox();
     box.dataset.mode = "video";
     $(".lb-prev", box).hidden = true;

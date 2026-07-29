@@ -11,8 +11,15 @@
   var KEY = "insooni_deck";
   var TRACKS = null, queue = [], pos = 0, shuffled = false;
   var ctx = null, decks = [], cur = 0, analyser = null, raf = null;
-  var XFADE = 3.2;          /* 겹쳐 넘기는 시간(초) */
-  var loaded = false, armed = false;
+  var XFADE = 3.2;          /* 기본 겹침(초) — 템포를 알면 한 마디 길이로 맞춘다 */
+  function xfadeLen(d) {
+    if (d && d.period) {
+      var bar = d.period * 4;                 /* 4박 = 한 마디 */
+      return Math.max(2.2, Math.min(5.2, bar));
+    }
+    return XFADE;
+  }
+  var loaded = false, armed = false, busy = false, xfTimer = null;
 
   function isEN() { return document.documentElement.getAttribute("lang") === "en"; }
   function T(ko, en) { return isEN() ? en : ko; }
@@ -42,6 +49,9 @@
       d.bass.type = "lowshelf";
       d.bass.frequency.value = 190;
       d.bass.gain.value = 0;
+      /* 트림: 곡마다 다른 녹음 음량을 같은 크기로 맞춘다 (스포티파이식 라우드니스 정규화) */
+      d.trim = ctx.createGain();
+      d.trim.gain.value = 1;
       d.gain = ctx.createGain();
       d.gain.gain.value = 0;
       /* 데크별 분석기: 나가는 곡의 비트를 읽어 전환 시점을 잡는다 */
@@ -49,7 +59,8 @@
       d.an.fftSize = 256;
       d.an.smoothingTimeConstant = 0.1;
       d.src.connect(d.bass);
-      d.bass.connect(d.gain);
+      d.bass.connect(d.trim);
+      d.trim.connect(d.gain);
       d.gain.connect(d.an);
       d.an.connect(analyser);
       d.beats = [];        /* 최근 비트 시각 */
@@ -59,6 +70,69 @@
       d.bins = new Uint8Array(d.an.frequencyBinCount);
       d.el.addEventListener("error", function () { next(); });
     });
+  }
+
+  /* ---------- 곡 분석: 음량·템포·첫 박을 미리 읽는다 ----------
+     한 번 읽은 곡은 캐시한다. 다음 곡은 재생 중에 미리 분석해 두어
+     전환 순간에 음량과 박자가 이미 맞춰져 있게 한다. */
+  var ANALYSIS = {};
+  var TARGET_RMS = 0.085;      /* 목표 라우드니스 (경험적으로 고른 기준) */
+
+  function analyze(url) {
+    if (ANALYSIS[url]) return Promise.resolve(ANALYSIS[url]);
+    if (!ctx) return Promise.resolve(null);
+    return fetch(url)
+      .then(function (r) { return r.arrayBuffer(); })
+      .then(function (ab) {
+        return new Promise(function (res, rej) {
+          ctx.decodeAudioData(ab, res, rej);
+        });
+      })
+      .then(function (buf) {
+        var ch = buf.getChannelData(0);
+        var sr = buf.sampleRate;
+        /* (a) 라우드니스: 무음을 뺀 구간의 RMS */
+        var sum = 0, n = 0;
+        for (var i = 0; i < ch.length; i += 8) {
+          var v = ch[i];
+          if (v > 0.004 || v < -0.004) { sum += v * v; n++; }
+        }
+        var rms = n ? Math.sqrt(sum / n) : TARGET_RMS;
+        /* (b) 온셋 포락선 */
+        var HOP = 512, W = 1024;
+        var env = [];
+        for (var p2 = 0; p2 + W < ch.length; p2 += HOP) {
+          var e = 0;
+          for (var k = 0; k < W; k += 2) { var x = ch[p2 + k]; e += x * x; }
+          env.push(Math.sqrt(e / (W / 2)));
+        }
+        var onset = [];
+        for (var j = 1; j < env.length; j++) onset.push(Math.max(0, env[j] - env[j - 1]));
+        /* (c) 자기상관으로 템포 추정 (60~180 BPM) */
+        var fps = sr / HOP;
+        var lagMin = Math.floor(fps * 60 / 200), lagMax = Math.ceil(fps * 60 / 40);
+        var best = 0, bestLag = 0;
+        for (var lag = lagMin; lag <= lagMax && lag < onset.length / 2; lag++) {
+          var acc = 0;
+          for (var m = 0; m + lag < onset.length; m++) acc += onset[m] * onset[m + lag];
+          if (acc > best) { best = acc; bestLag = lag; }
+        }
+        var period = bestLag ? bestLag / fps : 0;
+        /* (d) 첫 박: 앞 6초에서 가장 센 온셋 */
+        var lim = Math.min(onset.length, Math.floor(fps * 6));
+        var top = 0, topI = 0;
+        for (var q = 0; q < lim; q++) if (onset[q] > top) { top = onset[q]; topI = q; }
+        var a = {
+          rms: rms,
+          trim: Math.max(0.45, Math.min(2.2, TARGET_RMS / (rms || TARGET_RMS))),
+          period: period > 0.25 && period < 1.55 ? period : 0,
+          firstBeat: topI / fps,
+          dur: buf.duration
+        };
+        ANALYSIS[url] = a;
+        return a;
+      })
+      .catch(function () { return null; });
   }
 
   /* ---------- 비트 추적: 저역 에너지의 급상승을 박으로 본다 ---------- */
@@ -158,35 +232,92 @@
   function build(k) {
     var list = k === "today" ? todayFilter(TRACKS) : TRACKS.filter(LISTS[k].f);
     if (!list.length) list = TRACKS;
-    return shuffled ? shuffleArr(list) : list;
+    if (shuffled) return shuffleArr(list);
+    /* 이미 분석된 곡들은 템포가 가까운 순으로 이어 붙인다 (DJ 셋의 흐름) */
+    var known = list.filter(function (t) { return ANALYSIS[t.u] && ANALYSIS[t.u].period; });
+    if (known.length < 4) return list;
+    var rest = list.filter(function (t) { return known.indexOf(t) < 0; });
+    var chain = [known.shift()];
+    while (known.length) {
+      var last = ANALYSIS[chain[chain.length - 1].u].period;
+      var bi = 0, bd = Infinity;
+      known.forEach(function (t, i) {
+        var d2 = Math.abs(ANALYSIS[t.u].period - last);
+        if (d2 < bd) { bd = d2; bi = i; }
+      });
+      chain.push(known.splice(bi, 1)[0]);
+    }
+    return chain.concat(rest);
   }
 
   /* ---------- 재생 ---------- */
   function other() { return cur === 0 ? 1 : 0; }
 
-  function playAt(i, fade, at) {
+  /* 두 데크를 완전히 멈춘다 — 새 믹스를 걸기 전에 반드시 호출한다 */
+  function stopAll() {
+    clearTimeout(xfTimer); xfTimer = null;
+    busy = false; armed = false;
+    decks.forEach(function (d) {
+      try { d.el.pause(); } catch (e) {}
+      d.live = false;
+      if (ctx && d.gain) {
+        d.gain.gain.cancelScheduledValues(ctx.currentTime);
+        d.gain.gain.setValueAtTime(0, ctx.currentTime);
+      }
+      if (ctx && d.bass) {
+        d.bass.gain.cancelScheduledValues(ctx.currentTime);
+        d.bass.gain.setValueAtTime(0, ctx.currentTime);
+      }
+      d.beats = []; d.period = 0; d.lastPeak = 0; d.energy = 0;
+    });
+  }
+
+  function playAt(i, fade, at, xf) {
     if (!queue.length) return;
     pos = (i + queue.length) % queue.length;
     var track = queue[pos];
     var d = decks[cur];
     d.el.src = track.u;
-    d.el.currentTime = 0;
+    /* 들어오는 곡의 앞 무음을 건너뛰어 첫 박이 바로 얹히게 한다 */
+    var inA = ANALYSIS[track.u];
+    var skip = (fade && inA && inA.firstBeat > 0.35 && inA.firstBeat < 4) ? inA.firstBeat - 0.12 : 0;
+    d.el.currentTime = skip;
+    d.el.addEventListener("loadedmetadata", function once() {
+      d.el.removeEventListener("loadedmetadata", once);
+      if (skip && d.el.currentTime < skip - 0.05) { try { d.el.currentTime = skip; } catch (e) {} }
+    });
     d.beats = []; d.period = 0; d.lastPeak = 0; d.energy = 0;
     var now = at && at > ctx.currentTime ? at : ctx.currentTime;
     d.gain.gain.cancelScheduledValues(ctx.currentTime);
     d.bass.gain.cancelScheduledValues(ctx.currentTime);
     if (fade) {
       d.gain.gain.setValueAtTime(0, ctx.currentTime);
-      d.gain.gain.setValueCurveAtTime(equalPower(true), now, XFADE);
+      var XF2 = xf || XFADE;
+      d.gain.gain.setValueCurveAtTime(equalPower(true), now, XF2);
       /* 들어오는 곡의 저역을 눌렀다가 절반 지점부터 되살린다 (베이스 스왑) */
       d.bass.gain.setValueAtTime(-16, ctx.currentTime);
-      d.bass.gain.setValueAtTime(-16, now + XFADE * 0.45);
-      d.bass.gain.linearRampToValueAtTime(0, now + XFADE);
+      d.bass.gain.setValueAtTime(-16, now + XF2 * 0.45);
+      d.bass.gain.linearRampToValueAtTime(0, now + XF2);
     } else {
       d.gain.gain.setValueAtTime(1, ctx.currentTime);
       d.bass.gain.setValueAtTime(0, ctx.currentTime);
     }
     d.live = true;
+    /* 분석된 음량 보정을 즉시 적용 (미분석이면 1.0으로 시작하고 곧 보정된다) */
+    var an = ANALYSIS[track.u];
+    if (d.trim) d.trim.gain.setValueAtTime(an ? an.trim : 1, ctx.currentTime);
+    if (an && an.period) d.period = an.period;
+    if (!an) {
+      analyze(track.u).then(function (a2) {
+        if (a2 && d.el.src === track.u && d.trim) {
+          d.trim.gain.linearRampToValueAtTime(a2.trim, ctx.currentTime + 0.6);
+          if (a2.period) d.period = a2.period;
+        }
+      });
+    }
+    /* 다음 곡을 미리 분석해 둔다 — 전환 때 이미 준비된 상태 */
+    var nx = queue[(pos + 1) % queue.length];
+    if (nx && !ANALYSIS[nx.u]) setTimeout(function () { analyze(nx.u); }, 1200);
     var p = d.el.play();
     if (p && p.catch) p.catch(function () {});
     paint(track);
@@ -197,28 +328,33 @@
 
   function next(onBeat) {
     var from = decks[cur];
-    if (!ctx) return;
+    if (!ctx || busy) return;      /* 전환 중 중복 호출 차단 */
+    busy = true;
     /* 박자에 걸어 전환한다 — 박을 못 읽었으면 즉시 */
     var at = onBeat ? nextBeatTime(from) : ctx.currentTime;
     from.gain.gain.cancelScheduledValues(ctx.currentTime);
     from.gain.gain.setValueAtTime(from.gain.gain.value, ctx.currentTime);
-    from.gain.gain.setValueCurveAtTime(equalPower(false), at, XFADE);
+    var XF = xfadeLen(from);
+    from.gain.gain.setValueCurveAtTime(equalPower(false), at, XF);
     /* 나가는 곡의 저역을 먼저 빼서 자리를 비워 준다 */
     from.bass.gain.cancelScheduledValues(ctx.currentTime);
     from.bass.gain.setValueAtTime(from.bass.gain.value, ctx.currentTime);
-    from.bass.gain.linearRampToValueAtTime(-16, at + XFADE * 0.5);
-    setTimeout(function () { try { from.el.pause(); } catch (e) {} from.live = false; },
-               (at - ctx.currentTime + XFADE) * 1000 + 150);
+    from.bass.gain.linearRampToValueAtTime(-16, at + XF * 0.5);
+    clearTimeout(xfTimer);
+    xfTimer = setTimeout(function () {
+      try { from.el.pause(); } catch (e) {}
+      from.live = false;
+      busy = false;                /* 겹침이 끝나야 다음 전환을 허용한다 */
+    }, (at - ctx.currentTime + XF) * 1000 + 150);
     cur = other();
-    playAt(pos + 1, true, at);
+    playAt(pos + 1, true, at, XF);
   }
   function prev() {
-    var from = decks[cur];
-    try { from.el.pause(); } catch (e) {}
-    from.live = false;
-    if (ctx) { from.gain.gain.cancelScheduledValues(ctx.currentTime); from.gain.gain.value = 0; }
+    if (!ctx) return;
+    var here = pos;
+    stopAll();                     /* 이전 곡은 겹치지 않고 딱 끊어 간다 */
     cur = other();
-    playAt(pos - 1, false);
+    playAt(here - 1, false);
   }
 
   function tick() {
@@ -227,7 +363,7 @@
     trackBeat(d);
     /* 끝나기 전 여유를 두고, 다음 박에 맞춰 겹쳐 넘긴다 */
     if (!armed && d.el.duration && d.el.currentTime > 0 && !d.el.paused &&
-        d.el.duration - d.el.currentTime <= XFADE + 0.9) {
+        d.el.duration - d.el.currentTime <= xfadeLen(d) + 0.9) {
       armed = true;
       next(true);
     }
@@ -365,7 +501,7 @@
     canvas = document.getElementById("dk-viz");
     cctx = canvas.getContext("2d");
     document.getElementById("dk-play").addEventListener("click", toggle);
-    document.getElementById("dk-next").addEventListener("click", function () { next(); });
+    document.getElementById("dk-next").addEventListener("click", function () { next(true); });
     document.getElementById("dk-prev").addEventListener("click", prev);
     document.getElementById("dk-close").addEventListener("click", close);
     document.getElementById("dk-shuffle").addEventListener("click", function () {
@@ -461,6 +597,7 @@
     Promise.all([load(), waitToday(kind)]).then(function () {
       ensureAudio();
       if (ctx.state === "suspended") ctx.resume();
+      stopAll();                   /* 다른 믹스를 누르면 돌던 판을 먼저 내린다 */
       queue = build(kind);
       var i = 0;
       if (resumeTitle) {
@@ -483,14 +620,44 @@
     var box = document.getElementById("deck-launch") || document.getElementById("radio-launch");
     if (!box || box.dataset.bound) return;
     box.dataset.bound = "1";
-    Object.keys(LISTS).forEach(function (k) {
-      var b = document.createElement("button");
-      b.type = "button";
-      b.textContent = isEN() ? LISTS[k].en : LISTS[k].ko;
-      b.addEventListener("click", function () { start(k); });
-      box.appendChild(b);
-    });
+    /* 실제 재생 가능한 곡이 3곡 미만인 목록은 내보내지 않는다 (빈 목록 금지) */
+    load().then(function () {
+      Object.keys(LISTS).forEach(function (k) {
+        var n = k === "today" ? TRACKS.length : TRACKS.filter(LISTS[k].f).length;
+        if (n < 3) return;
+        var b = document.createElement("button");
+        b.type = "button";
+        b.textContent = (isEN() ? LISTS[k].en : LISTS[k].ko) + (k === "today" ? "" : "  " + n);
+        b.addEventListener("click", function () { start(k); });
+        box.appendChild(b);
+      });
+    }).catch(function () {});
   }
+  /* 영상이 시작되면 믹스를 멈춘다 (소리 겹침 방지) */
+  window.INSOONI_DECK = {
+    pause: function () {
+      if (!ctx || !decks.length) return false;
+      var any = decks.some(function (d) { return !d.el.paused; });
+      if (!any) return false;
+      decks.forEach(function (d) { try { d.el.pause(); } catch (e) {} });
+      document.body.classList.remove("deck-playing");
+      var pb = document.getElementById("dk-play");
+      if (pb) pb.textContent = "\u25B6";
+      var pw = document.getElementById("bt-power");
+      if (pw) pw.querySelector(".btp-icon").textContent = "\u25B6";
+      return true;
+    },
+    debug: function () {
+      var k = Object.keys(ANALYSIS);
+      return { analyzed: k.length, sample: k.length ? ANALYSIS[k[0]] : null,
+               curPeriod: decks[cur] ? decks[cur].period : null,
+               curTrim: decks[cur] && decks[cur].trim ? decks[cur].trim.gain.value : null };
+    },
+    isPlaying: function () {
+      return !!(ctx && decks.length && decks.some(function (d) { return !d.el.paused; }));
+    }
+  };
+
   window.INSOONI_PAGE_INIT = window.INSOONI_PAGE_INIT || [];
   window.INSOONI_PAGE_INIT.push(bindLauncher);
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bindLauncher);
