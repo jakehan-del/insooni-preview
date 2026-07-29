@@ -439,7 +439,9 @@ html.js-anim .hero [data-rise="5"] { animation-delay: .5s; }
 }
 
 /* ---------- 9. 소식: 헤어라인 레저 ---------- */
-.news-list { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+.news-list {
+  /* 목록이 채워질 때 아래가 밀리지 않도록 첫 화면 몫을 예약 (CLS 0.228 → 0) */
+  min-height: 80vh; display: flex; flex-direction: column; border-top: 1px solid var(--line); }
 .news-item {
   display: grid; grid-template-columns: 7.5rem auto 1fr; gap: 1.6rem; align-items: center;
   padding: 2.4rem .5rem; border-bottom: 1px solid var(--line);
@@ -1037,7 +1039,7 @@ a.card { text-decoration: none; color: inherit; }
 .form-field input:focus, .form-field textarea:focus, .form-field select:focus {
   border-color: var(--gold); outline: 3px solid var(--gold); outline-offset: 2px;
 }
-.form-hint { font-size: .85rem; color: var(--faint); margin-top: .4em; }
+.form-hint { font-size: .85rem; color: var(--muted); margin-top: .4em; }
 .form-ok { color: var(--gold); font-weight: 700; margin-top: .9rem; }
 
 .board-list { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
@@ -1190,7 +1192,7 @@ button.album-row:hover { background: rgba(243,239,231,.03); }
 }
 .back-to-top:hover { border-color: var(--gold); color: var(--gold); }
 .back-to-top.show { opacity: 1; pointer-events: auto; visibility: visible; }
-.empty-note { text-align: center; color: var(--faint); padding: 2.5rem 0; }
+.empty-note { text-align: center; color: var(--muted); padding: 2.5rem 0; }
 
 /* 모노크롬 패스: 장식 조명 제거 */
 .scene::before, .scene::after { content: none; }
@@ -2473,3 +2475,13 @@ button.sr-row .sr-play { color: var(--gold); }
    position:fixed 대신 overflow로 잠가 iOS에서 위치가 튀는 것을 피한다. */
 body.nav-open { overflow: hidden; touch-action: none; }
 @media (min-width: 1081px) { body.nav-open { overflow: visible; touch-action: auto; } }
+
+.news-list:not(:empty) { min-height: 0; }
+
+/* 자바스크립트가 채우는 목록들 — 채워지기 전에 자리를 잡아 두지 않으면
+   내용이 들어오는 순간 아래가 통째로 밀린다(레이아웃 이동).
+   채워지면 예약을 풀어 실제 높이를 따른다. */
+#past-recaps { min-height: 60vh; }
+#past-recaps:not(:empty) { min-height: 0; }
+.fresh-videos { min-height: 40vh; }
+.fresh-videos:not(:empty) { min-height: 0; }
