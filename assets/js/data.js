@@ -208,8 +208,9 @@ window.SITE_DATA = {
       recap: { desc: "김구 탄생 150주년 특집 무대. KBS 공식 클립.", en: { desc: "Kim Koo 150th anniversary special - official KBS clip." },
         clips: [{ id: "Djq4n3j6Vv0", title: "친구여 (with Rap.D.Y)", en: { title: "Chinguyeo (with Rap.D.Y)" } }] } },
     { date: "2026-06-05", city: "경주", venue: "봉황대 광장 특설무대", title: "봉황대 뮤직스퀘어 개막공연", en: { title: "Bonghwangdae Music Square opening", city: "Gyeongju" },
-      recap: { desc: "경주 봉황대 아래에서 열린 개막 무대. 현장 관객의 기록 영상.", en: { desc: "Opening night beneath Gyeongju's Bonghwangdae mound - fan videos from the crowd." },
+      recap: { desc: "경주 봉황대 아래에서 김태우와 함께 연 개막 무대. 공식 뉴스 리포트와 현장 기록.", en: { desc: "Opening night beneath Gyeongju's Bonghwangdae mound, opened with Kim Tae-woo - official news report and fan videos." },
         clips: [
+          { id: "kaPBHZMMSpw", title: "개막 뉴스 리포트 (헬로tv뉴스)", en: { title: "Opening news report (HelloTV News)" } },
           { id: "MB_yMYiURN4", title: "거위의 꿈", en: { title: "A Goose's Dream" } },
           { id: "7pTvvV8YhIk", title: "밤이면 밤마다", en: { title: "Night After Night" } },
           { id: "A5nEuLnfPy0", title: "행복", en: { title: "Happiness" } },
@@ -245,7 +246,10 @@ window.SITE_DATA = {
     { date: "2025-09-27", city: "경산", venue: "DYC 특설무대", title: "DYC 음악회 — 교향악단 협연", en: { title: "DYC Concert with symphony orchestra", city: "Gyeongsan" } },
     { date: "2025-09-26", city: "울주", venue: "영남알프스 웰컴센터", title: "울주세계산악영화제 개막 축하공연", en: { title: "Ulju Mountain Film Festival opening", city: "Ulju" },
       recap: { desc: "영남알프스 아래 개막 축하 무대. 현장 관객의 기록 영상.", en: { desc: "Opening celebration beneath the Yeongnam Alps - fan video." },
-        clips: [{ id: "mxRGpqyy-yE", title: "개막 축하 무대 (현장 기록)", en: { title: "Opening stage (fan video)" } }] } },
+        clips: [
+          { id: "mxRGpqyy-yE", title: "개막 축하 무대 (현장 기록)", en: { title: "Opening stage (fan video)" } },
+          { id: "Pq3OJR_hen8", title: "인순이 인사 영상 (영화제 공식)", en: { title: "Greeting video (festival official)" } }
+        ] } },
     { date: "2025-09-21", city: "서울", venue: "마루공원", title: "국악한마당 — 인순이×유지숙 '지음'", en: { title: "KBS Gugak Hanmadang with Yoo Ji-sook", city: "Seoul" },
       recap: { desc: "서도민요 명창 유지숙과의 '지음' 무대 (10월 25일 방송). KBS 공식 클립.", en: { desc: "With master singer Yoo Ji-sook, aired October 25 - official KBS clips." },
         clips: [
@@ -256,6 +260,7 @@ window.SITE_DATA = {
     { date: "2025-09-14", city: "인천", venue: "송도 트라이보울", title: "송도 재즈 페스티벌 피날레", en: { title: "Songdo Jazz Festival finale", city: "Incheon" },
       recap: { desc: "재즈 쿼텟과 함께한 피날레. 현장 관객의 기록 영상.", en: { desc: "Festival finale with a jazz quartet - fan videos." },
         clips: [
+          { id: "LpkGaVPA2d4", title: "공식 애프터무비 (인천문화재단)", en: { title: "Official aftermovie (IFAC)" } },
           { id: "IgIIVNg8sP8", title: "Mr. Saturday Night" },
           { id: "kAk1C7MoVWk", title: "Besame Mucho" },
           { id: "GumUiPNx6Hw", title: "거위의 꿈", en: { title: "A Goose's Dream" } }

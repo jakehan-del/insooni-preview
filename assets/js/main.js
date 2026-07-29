@@ -253,6 +253,7 @@
   function renderEventList() {
     var list = $("#event-list");
     if (!list || !D.events) return;
+    list.innerHTML = "";
     /* 진행 중인 것만: 지난 날짜는 숨기고(지난 공연 그리드가 담당), 상시 방송은 유지 */
     var now = new Date();
     var todayStr = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
@@ -280,7 +281,9 @@
       var row = el("div", "event-row");
       row.innerHTML =
         dateHtml +
-        '<div class="event-info"><span class="badge badge--' + (ev.kind === "공연" ? "gold" : "wine") + '">' + esc(kindLabel(ev.kind)) + "</span> <h3>" + esc(tr(ev, "title")) + '</h3><p class="where">' + esc(tr(ev, "place")) + (ev.note ? " · " + esc(ev.note) : "") + "</p></div>" +
+        '<div class="event-info"><span class="badge badge--' + (ev.kind === "공연" ? "gold" : "wine") + '">' + esc(kindLabel(ev.kind)) + "</span> " +
+        (ev.verified === false ? "" : '<span class="badge badge--verify" title="' + t("vf.tip", "소속사 소솝이 직접 확인한 정보입니다") + '">' + t("vf.badge", "소솝 확인") + "</span> ") +
+        "<h3>" + esc(tr(ev, "title")) + '</h3><p class="where">' + esc(tr(ev, "place")) + (ev.note ? " · " + esc(ev.note) : "") + "</p></div>" +
         eventCta(ev);
       list.appendChild(row);
     });
@@ -335,7 +338,12 @@
       var artistQ = ((a.kind || "") + (a.title || "")).indexOf("희자매") >= 0 || a.kind === "그룹" ? "희자매" : (a.kind === "골든걸스" ? "골든걸스" : "인순이");
       var tracksHtml = (a.tracks && a.tracks.length)
         ? '<ol class="a-tracks">' + a.tracks.map(function (trk) {
-            var q = "https://www.youtube.com/results?search_query=" + encodeURIComponent(artistQ + " " + trk.replace(/\s*\((Inst\.|경음악|MR)\)$/, ""));
+            var base = trk.replace(/\s*\((Inst\.|경음악|MR)\)$/, "");
+            /* 공식 음원 직결 (- Topic 아트 트랙, oEmbed 검증) — 없으면 검색 폴백 */
+            var direct = (window.TRACK_LINKS || {})[artistQ + "|" + base];
+            var q = direct
+              ? "https://www.youtube.com/watch?v=" + direct
+              : "https://www.youtube.com/results?search_query=" + encodeURIComponent(artistQ + " " + base);
             return '<li><a class="tr-link" href="' + esc(q) + '" target="_blank" rel="noopener"><span class="tr-name">' + esc(trk) + '</span><span class="tr-play" aria-hidden="true">듣기 ▶</span></a></li>';
           }).join("") + "</ol>"
         : "<p>" + t("rel.tbd", "공식 자료 확인 중입니다.") + "</p>";
@@ -431,11 +439,13 @@
     fetch("assets/data/live-shows.json?" + Date.now())
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (d) {
-        if (!d || !d.items || !d.items.length) {
-          box.appendChild(el("p", "empty-note", t("dyn.freshEmpty", "공식 채널에 새 영상이 올라오면 이곳에 표시됩니다.")));
-          return;
-        }
-        d.items.slice(0, 8).forEach(function (v) {
+        var wrap = $("#fresh-wrap");
+        var cut = new Date(); cut.setFullYear(cut.getFullYear() - 1);
+        var cutStr = cut.toISOString().slice(0, 10);
+        var items = ((d && d.items) || []).filter(function (v) { return v.date >= cutStr; });
+        if (!items.length) return; /* 신선한 게 없으면 섹션 자체를 숨긴 채 둔다 */
+        if (wrap) wrap.hidden = false;
+        items.slice(0, 8).forEach(function (v) {
           var title = v.title.replace(/#\S+/g, "").replace(/\s+/g, " ").trim() || v.title;
           var b = el("button", "fresh-row");
           b.type = "button";
@@ -546,6 +556,9 @@
       });
       inner.appendChild(grid);
     }
+    var mem = el("p", "recap-mem");
+    mem.innerHTML = '<a class="btn btn--ghost btn--sm" href="community.html#letter">' + t("recap.mem", "이 공연에 다녀오셨나요? 추억을 보내주세요") + "</a>";
+    inner.appendChild(mem);
     box.hidden = false;
     document.body.style.overflow = "hidden";
     $(".recap-close", box).focus();
@@ -928,6 +941,180 @@
     }
   }
 
+  /* ---------- 9.7 거위의 꿈 응원 카드 (Canvas — 가사 원문 미사용, 자체 작문 문구) ---------- */
+  function initCheerCard() {
+    var canvas = $("#cc-canvas");
+    if (!canvas) return;
+    var SITS = [
+      { key: "dream", ko: "꿈을 향해 가는 분께", en: "Chasing a dream" },
+      { key: "start", ko: "새 출발 하는 분께", en: "A fresh start" },
+      { key: "heal", ko: "회복 중인 분께", en: "On the mend" },
+      { key: "tired", ko: "오늘 지친 분께", en: "A long day" },
+      { key: "birth", ko: "생일 맞은 분께", en: "A birthday" }
+    ];
+    var PHRASES = {
+      dream: [
+        "남들이 늦었다 말해도, 당신의 계절은 지금 오고 있어요.",
+        "벽 앞에 선 오늘도, 날개는 조용히 자라고 있습니다.",
+        "그 꿈, 혼자 꾸게 두지 않을게요. 우리가 곁에서 부를게요.",
+        "높이 나는 날보다, 포기하지 않은 오늘이 더 빛납니다."
+      ],
+      start: [
+        "처음이라 떨리는 그 길, 첫걸음이 이미 절반입니다.",
+        "새 문 앞에 선 당신에게, 바람이 등을 밀어주기를.",
+        "어제의 용기가 오늘의 시작을 만들었어요. 잘하고 있어요."
+      ],
+      heal: [
+        "서두르지 않아도 괜찮아요. 쉬어 가는 것도 나는 법이니까.",
+        "비 온 뒤 하늘이 맑게 개듯, 좋은 날이 오고 있습니다.",
+        "오늘 하루를 버틴 당신이, 이미 충분히 강한 사람입니다."
+      ],
+      tired: [
+        "오늘 하루, 정말 수고 많았어요. 내일은 조금 더 가벼울 거예요.",
+        "지친 어깨 위에도 별은 뜹니다. 푹 쉬어요, 우리.",
+        "잠시 멈춰도 꿈은 어디 가지 않아요. 오늘은 쉬어 가요."
+      ],
+      birth: [
+        "태어나 줘서 고마워요. 당신의 새해가 노래처럼 흐르기를.",
+        "오늘만큼은 주인공! 촛불보다 환하게 웃는 하루 되세요.",
+        "한 살의 무게만큼 더 단단해진 당신을 축하합니다."
+      ]
+    };
+    var state = { sit: "dream", name: "", phrase: null };
+    var chipsBox = $("#cc-situations");
+    var isEN = document.documentElement.getAttribute("lang") === "en";
+    SITS.forEach(function (s2, i) {
+      var b = el("button", i === 0 ? "is-on" : "", isEN ? s2.en : s2.ko);
+      b.type = "button";
+      b.addEventListener("click", function () {
+        chipsBox.querySelectorAll(".is-on").forEach(function (x) { x.classList.remove("is-on"); });
+        b.classList.add("is-on");
+        state.sit = s2.key;
+      });
+      chipsBox.appendChild(b);
+    });
+    function pickPhrase() {
+      var pool = PHRASES[state.sit];
+      var next = pool[Math.floor(Math.random() * pool.length)];
+      if (pool.length > 1) { while (next === state.phrase) { next = pool[Math.floor(Math.random() * pool.length)]; } }
+      return next;
+    }
+    function wrapText(ctx, text, maxW) {
+      var words = text.split(" "), lines = [], line = "";
+      words.forEach(function (w) {
+        var trial = line ? line + " " + w : w;
+        if (ctx.measureText(trial).width > maxW && line) { lines.push(line); line = w; }
+        else { line = trial; }
+      });
+      if (line) lines.push(line);
+      return lines;
+    }
+    function drawGoose(ctx, x, y, w, color) {
+      var sc = w / 120;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(sc, sc);
+      ctx.fillStyle = color; ctx.strokeStyle = color;
+      ctx.save(); ctx.translate(48, 46); ctx.rotate(-7 * Math.PI / 180);
+      ctx.beginPath(); ctx.ellipse(0, 0, 27, 11.5, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+      ctx.lineWidth = 8; ctx.lineCap = "round";
+      ctx.beginPath(); ctx.moveTo(66, 41); ctx.bezierCurveTo(78, 36, 87, 30, 94, 23); ctx.stroke();
+      ctx.beginPath(); ctx.arc(96, 21, 5.4, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(100, 18.5); ctx.lineTo(111, 21); ctx.lineTo(100, 24.5); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(45, 38); ctx.bezierCurveTo(36, 24, 34, 13, 41, 6);
+      ctx.bezierCurveTo(48, 12, 55, 27, 57, 37); ctx.bezierCurveTo(53, 38.5, 49, 38.7, 45, 38); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(24, 42); ctx.lineTo(10, 37); ctx.lineTo(22, 50); ctx.closePath(); ctx.fill();
+      ctx.restore();
+    }
+    function draw() {
+      var ctx = canvas.getContext("2d");
+      var W = canvas.width, H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = "#0a0a0a"; ctx.fillRect(0, 0, W, H);
+      /* 금색 이중 프레임 */
+      ctx.strokeStyle = "rgba(212,175,55,.85)"; ctx.lineWidth = 3;
+      ctx.strokeRect(46, 46, W - 92, H - 92);
+      ctx.strokeStyle = "rgba(212,175,55,.28)"; ctx.lineWidth = 1;
+      ctx.strokeRect(64, 64, W - 128, H - 128);
+      drawGoose(ctx, W / 2 - 90, 150, 180, "#e8d9a0");
+      var koFont = '"Pretendard Variable", "Apple SD Gothic Neo", sans-serif';
+      /* 받는 분 */
+      ctx.textAlign = "center"; ctx.fillStyle = "#f3efe7";
+      if (state.name) {
+        ctx.font = "600 52px " + koFont;
+        ctx.fillText(state.name + (isEN ? "" : " 님께"), W / 2, 380);
+      }
+      /* 응원 문구 */
+      ctx.font = "500 58px " + koFont;
+      var lines = wrapText(ctx, state.phrase, W - 260);
+      var y = 560;
+      lines.forEach(function (ln) { ctx.fillText(ln, W / 2, y); y += 92; });
+      /* 하단 서명 */
+      ctx.fillStyle = "rgba(212,175,55,.95)";
+      ctx.font = "44px 'Nanum Pen Script', cursive";
+      ctx.fillText(t("cc.sign", "거위의 꿈을 아는, 인순이 사랑방 드림"), W / 2, H - 210);
+      ctx.fillStyle = "rgba(243,239,231,.45)";
+      ctx.font = "600 24px " + koFont;
+      ctx.fillText("I N S O O N I · O F F I C I A L · F A N · P L A T F O R M", W / 2, H - 130);
+    }
+    function make() {
+      state.name = ($("#cc-name").value || "").trim();
+      state.phrase = pickPhrase();
+      document.fonts && document.fonts.ready
+        ? document.fonts.ready.then(draw)
+        : draw();
+      draw();
+      $("#cc-actions").hidden = false;
+      canvas.classList.add("is-ready");
+    }
+    $("#cc-make").addEventListener("click", make);
+    $("#cc-again").addEventListener("click", make);
+    $("#cc-save").addEventListener("click", function () {
+      canvas.toBlob(function (blob) {
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "insooni-cheer-card.png";
+        a.click();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+      }, "image/png");
+    });
+    $("#cc-share").addEventListener("click", function () {
+      canvas.toBlob(function (blob) {
+        var file = new File([blob], "insooni-cheer-card.png", { type: "image/png" });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          navigator.share({ files: [file], title: t("cc.t", "거위의 꿈 응원 카드") }).catch(function () {});
+        } else {
+          $("#cc-save").click();
+        }
+      }, "image/png");
+    });
+  }
+
+  /* ---------- 9.8 인순이가 답합니다: 질문 보내기 → 팬레터 폼 '질문' 분류 선택 ---------- */
+  function initQna() {
+    var ask = $("#qna-ask");
+    if (!ask) return;
+    ask.addEventListener("click", function () {
+      var sel = $("#letter-cat");
+      if (sel) sel.value = "질문";
+      var body = $("#letter-body");
+      if (body) setTimeout(function () { body.focus(); }, 400);
+    });
+  }
+
+  /* ---------- 9.9 스크롤 리빌 (시네마틱 등장) ---------- */
+  function initRise() {
+    if (!("IntersectionObserver" in window)) return;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var targets = $all("main .section > .container, main .section-head, .letter-corner, .qna-item");
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+    targets.forEach(function (el2) { el2.classList.add("rise"); io.observe(el2); });
+  }
+
   /* ---------- 10. 구독 폼 (데모) ---------- */
   function initSubscribe() {
     $all(".subscribe form").forEach(function (form) {
@@ -1091,7 +1278,7 @@
         clearInterval(iv);
         /* 피날레: 거위가 날갯짓하며 잠시 머문 뒤 화면이 사방으로 갈라지며 열린다 */
         setTimeout(function () { box.classList.add("split"); }, 620);
-        setTimeout(function () { if (box.parentNode) box.remove(); }, 1650);
+        setTimeout(function () { if (box.parentNode) box.remove(); }, 1800);
       }
     }, 300);
     }
@@ -1228,6 +1415,27 @@
     renderArchive();
     renderPastRecaps();
     initFreshVideos();
+    /* 자동 수집 예정 공연(플레이DB 일일 수집) 병합 — 도착 시 일정 재렌더 */
+    fetch("assets/data/live-events.json?" + Date.now())
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!d || !d.items || !d.items.length) return;
+        var have = {};
+        (D.events || []).forEach(function (ev) { have[(ev.date || "") + (ev.title || "")] = 1; });
+        var added = 0;
+        d.items.forEach(function (it) {
+          if (have[it.start + it.title]) return;
+          D.events.push({
+            date: it.start, kind: "공연", status: "onsale", verified: false,
+            title: it.title, place: it.place,
+            note: t("dyn.autoSrc", "자동 수집") + " · " + it.src,
+            link: it.url
+          });
+          added++;
+        });
+        if (added) renderEventList();
+      })
+      .catch(function () {});
     initVideoButtons();
     initNav();
     initScrollState();
@@ -1240,6 +1448,9 @@
     initBoard();
     initPoll();
     initSarangbang();
+    initCheerCard();
+    initQna();
+    initRise();
     initSubscribe();
     initAdmin();
   });

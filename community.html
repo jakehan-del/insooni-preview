@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Space+Mono:wght@400;700&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v46">
+<link rel="stylesheet" href="assets/css/style.css?v47">
 </head>
 <body>
 <a class="skip-link" href="#main" data-i18n="nav.skip">본문 바로가기</a>
@@ -97,6 +97,52 @@
     </div>
   </section>
 
+  <!-- 거위의 꿈 응원 카드: 밖으로 공유되는 참여 장치 (가사 원문 미사용 — 자체 작문) -->
+  <section class="section" id="cheercard" aria-labelledby="h-cheercard">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="h-cheercard" data-i18n="cc.t">거위의 꿈 응원 카드</h2>
+      </div>
+      <p class="card-desc" style="max-width:46em;margin-bottom:1.8rem" data-i18n="cc.lead">꿈을 향해 걷는 소중한 사람에게, 인순이 사랑방의 응원 카드를 만들어 보내세요. 이름을 적고 상황을 고르면 카드가 완성됩니다.</p>
+      <div class="grid grid--2 grid--start">
+        <div class="form-panel">
+          <div class="form-field">
+            <label for="cc-name" data-i18n="cc.name">받는 분 이름 (별명도 좋아요)</label>
+            <input id="cc-name" type="text" maxlength="12" placeholder="예) 우리 딸 지현" data-i18n-ph="cc.namePh">
+          </div>
+          <p class="form-field" style="margin-bottom:.5rem"><span style="font-weight:700" data-i18n="cc.sit">어떤 응원인가요?</span></p>
+          <div class="cheer-chips" id="cc-situations" aria-label="응원 상황 고르기"></div>
+          <button type="button" class="btn btn--gold greet-stamp mt-1" id="cc-make" data-i18n="cc.make">응원 카드 만들기</button>
+          <p class="form-hint" data-i18n="cc.hint">'거위의 꿈'의 마음을 담아 사랑방이 쓴 응원 문구가 담깁니다. 만든 카드는 이미지로 저장해 카카오톡으로 전할 수 있어요.</p>
+        </div>
+        <div class="cc-preview">
+          <canvas id="cc-canvas" width="1080" height="1350" role="img" aria-label="응원 카드 미리보기"></canvas>
+          <div class="cc-actions" hidden id="cc-actions">
+            <button type="button" class="btn btn--gold" id="cc-save" data-i18n="cc.save">이미지로 저장</button>
+            <button type="button" class="btn btn--ghost" id="cc-share" data-i18n="cc.share">공유하기</button>
+            <button type="button" class="btn btn--ghost" id="cc-again" data-i18n="cc.again">다른 문구로</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 인순이가 답합니다: 월간 팬 Q&A (Paul McCartney 'You Gave Me The Answer' 문법) -->
+  <section class="section section--band" id="qna" aria-labelledby="h-qna">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="h-qna" data-i18n="qna.t">인순이가 답합니다</h2>
+      </div>
+      <p class="card-desc" style="max-width:46em;margin-bottom:1.8rem" data-i18n="qna.lead">팬 여러분이 남긴 질문 가운데 몇 가지를 골라, 매달 인순이 님이 직접 답합니다. 답변은 이 자리에 차곡차곡 쌓입니다.</p>
+      <article class="qna-item">
+        <p class="qna-q"><span class="qna-mark" aria-hidden="true">Q</span><span data-i18n="qna.exQ">무대에 오르기 전, 꼭 하시는 것이 있나요?</span></p>
+        <p class="qna-a"><span class="qna-mark qna-mark--a" aria-hidden="true">A</span><span class="qna-a-body" data-i18n="qna.exA">이 자리에 인순이 님의 답변이 실립니다.</span></p>
+        <p class="form-hint" data-i18n="qna.demo">운영 예시 화면입니다. 실제 답변은 인순이 님이 직접 작성해 게재됩니다.</p>
+      </article>
+      <a class="btn btn--gold mt-1" href="#letter" id="qna-ask" data-i18n="qna.ask">질문 보내기</a>
+    </div>
+  </section>
+
   <!-- 소통 시스템: 남기기 → 검수 → 게재 -->
   <section class="section" aria-label="사랑방 운영 방식">
     <div class="container">
@@ -127,6 +173,7 @@
               <option value="팬레터" data-i18n="opt.letter">팬레터</option>
               <option value="응원" data-i18n="opt.cheer">응원 한마디</option>
               <option value="추억" data-i18n="opt.memory">공연의 추억</option>
+              <option value="질문" data-i18n="opt.question">인순이에게 질문</option>
             </select>
             <textarea id="letter-body" required maxlength="1000" placeholder="인순이 님께 전하고 싶은 마음을 적어주세요." data-i18n-ph="form.lbodyPh"></textarea>
             <p class="form-hint">따뜻한 마음은 검수 후 게시되며, 일부 편지는 인순이 님께 직접 전달됩니다.</p>
@@ -247,8 +294,8 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동">↑</button>
-<script src="assets/js/i18n.js?v46"></script>
-<script src="assets/js/data.js?v46"></script>
-<script src="assets/js/main.js?v46"></script>
+<script src="assets/js/i18n.js?v47"></script>
+<script src="assets/js/data.js?v47"></script>
+<script src="assets/js/main.js?v47"></script>
 </body>
 </html>

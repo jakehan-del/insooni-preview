@@ -1441,9 +1441,51 @@ main h3 { font-family: var(--font-mono); font-weight: 400; font-size: .85rem; le
 @keyframes goose-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 @keyframes goose-flap { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-26deg); } }
 .loader-finale .loader-mark { position: static; display: block; font-size: clamp(1rem, 1.6vw, 1.35rem); text-shadow: none; }
-/* 갈라짐과 함께 거위가 날아오르며 화면 밖으로 이륙 */
-.loader.split .loader-goose { animation: none; transform: translate(16vw, -24vh) rotate(-8deg) scale(1.18); opacity: 0; }
-.loader.split .loader-finale { transform: scale(1.25); opacity: 0; }
+/* 피날레 연출: 거위가 곡선을 그리며 활공 이륙 — 금빛 잔상을 남기고,
+   거위가 지나간 자리에서 화면이 사방으로 갈라진다 (거위가 무대의 막을 여는 인과) */
+.loader.split .lq { transition-delay: .12s; }
+.loader.split .goose-wing { animation-duration: .26s; }
+.loader.split .loader-goose {
+  offset-path: path("M 0 0 C 90 -30, 240 -110, 460 -300 S 820 -680, 1080 -900");
+  offset-rotate: auto;
+  animation: goose-soar 1.05s cubic-bezier(.45, 0, .3, 1) forwards;
+}
+@keyframes goose-soar {
+  0% { offset-distance: 0%; opacity: 1; filter: none; }
+  35% { filter: drop-shadow(-16px 12px 10px rgba(212, 175, 55, .38)) drop-shadow(-34px 26px 18px rgba(212, 175, 55, .18)); }
+  75% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; filter: drop-shadow(-16px 12px 10px rgba(212, 175, 55, .25)) drop-shadow(-34px 26px 18px rgba(212, 175, 55, .1)); }
+}
+.loader.split .loader-finale { transform: scale(1.12); opacity: 0; transition-delay: .18s; }
+/* offset-path 미지원 브라우저: 기존 대각 이륙으로 대체 */
+@supports not (offset-path: path("M0 0 L1 1")) {
+  .loader.split .loader-goose {
+    animation: none; transition: transform .9s cubic-bezier(.5, 0, .2, 1), opacity .8s ease;
+    transform: translate(16vw, -24vh) rotate(-8deg) scale(1.18); opacity: 0;
+  }
+}
+
+/* 거위의 꿈 응원 카드 */
+.cc-preview canvas {
+  width: 100%; max-width: 420px; height: auto; display: block;
+  border: 1px solid var(--line); border-radius: 2px; background: #0a0a0a;
+}
+.cc-preview canvas.is-ready { border-color: var(--gold-deep); }
+.cc-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
+#cc-situations button.is-on { border-color: var(--gold); color: var(--gold); }
+
+/* 인순이가 답합니다 */
+.qna-item { border: 1px solid var(--line); border-radius: var(--r-panel); background: var(--panel); padding: 1.8rem clamp(1.2rem, 3vw, 2.4rem); max-width: 52em; }
+.qna-q, .qna-a { display: flex; gap: 1em; align-items: baseline; margin: 0 0 1em; font-size: 1.05rem; }
+.qna-q { font-weight: 700; }
+.qna-mark { font-family: var(--font-mono); color: var(--gold); font-size: .95rem; }
+.qna-mark--a { color: var(--faint); }
+
+/* 소솝 확인 배지 */
+.badge--verify { border: 1px solid var(--gold-deep); color: var(--gold); background: transparent; cursor: help; }
+
+/* 리캡: 공연의 기억 보내기 */
+.recap-mem { margin-top: 2rem; text-align: center; }
 
 /* 최근 공식 영상 (자동 갱신 목록) */
 .fresh-videos { border-top: 1px solid var(--line); }
@@ -1482,3 +1524,46 @@ body.home .footer-min a:hover { color: #fff; }
 
 .strip-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
 a.strip-item--video { position: relative; display: block; background: #0d0d0d; }
+
+/* ============ 시네마틱 프리미엄 패스 (v47) ============ */
+/* 필름 그레인 + 비네트: 홈 스트립을 필름 룩으로 */
+body.home .strip::after {
+  content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+body.home .strip::before {
+  content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background: radial-gradient(ellipse 120% 90% at 50% 45%, transparent 55%, rgba(0, 0, 0, .42) 100%);
+}
+body.home .strip-caption, body.home .strip-pause { z-index: 4; }
+
+/* 스크롤 리빌: 섹션이 떠오르며 등장 */
+@media (prefers-reduced-motion: no-preference) {
+  .rise { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s cubic-bezier(.22, .8, .36, 1); }
+  .rise.in { opacity: 1; transform: none; }
+}
+
+/* 호버 리프트: 프리미엄 마이크로 인터랙션 */
+.strip-item { overflow: hidden; }
+.strip-item img, .strip-item video { transition: transform .8s cubic-bezier(.22, .8, .36, 1), filter .5s ease; }
+@media (hover: hover) {
+  .strip-item:hover img, .strip-item:hover video { transform: scale(1.035); filter: brightness(1.08); }
+  .show-cell { transition: transform .35s ease, border-color .35s ease; }
+  .show-cell:hover { transform: translateY(-4px); }
+  .arch-item img { transition: transform .7s cubic-bezier(.22, .8, .36, 1), filter .5s ease; }
+  .arch-item:hover img { transform: scale(1.04); filter: brightness(1.08); }
+}
+
+/* 패널·라이트박스 백드롭 블러 */
+.recap-panel, .lightbox { backdrop-filter: blur(18px) saturate(1.1); -webkit-backdrop-filter: blur(18px) saturate(1.1); }
+
+/* 디스플레이 타이포: 페이지 히어로를 프리미엄 세리프 디스플레이로 */
+.page-hero h1 {
+  font-family: "Cormorant Garamond", serif; font-weight: 600;
+  font-size: clamp(3rem, 7vw, 5.4rem); letter-spacing: .01em; line-height: 1.05;
+}
+
+/* 골드 셀렉션 + 다크 스크롤바 */
+::selection { background: rgba(212, 175, 55, .32); }
+html { scrollbar-color: #2a2a2a #0a0a0a; }

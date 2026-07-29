@@ -18,6 +18,8 @@ CHANNELS = [
     ("INSOONI 인순이 (공식)", "UCYxEvZRnhUrGOhHv5fMCh5Q"),
     ("KBS 레전드 케이팝", "UCR5cyf8hncN_AaQPfmvmlgA"),
     ("MBN MUSIC", "UCsxbX6QnOLal_qzzMK9AR9g"),
+    ("tvN Joy", "UC78PMQprrZTbU0IlMDsYZPw"),
+    ("TVCHOSUN", "UCuw1hxBo5mDVUhgMzRDk3aw"),
 ]
 NS = {"a": "http://www.w3.org/2005/Atom", "yt": "http://www.youtube.com/xml/schemas/2015",
       "m": "http://search.yahoo.com/mrss/"}
@@ -30,9 +32,8 @@ def fetch(url):
 
 
 def known_ids():
+    """자체 수집분만 중복 제거 대상 — 리캡과의 공존은 허용(관점이 다른 두 목록)"""
     ids = set()
-    src = open(DATA_JS, encoding="utf-8").read()
-    ids |= set(re.findall(r'(?:youtubeId|id): "([A-Za-z0-9_-]{11})"', src))
     if os.path.exists(OUT):
         for item in json.load(open(OUT, encoding="utf-8")).get("items", []):
             ids.add(item["id"])
@@ -61,6 +62,14 @@ def main():
             # Shorts 제외 (세로 릴스는 사이트 문법에 안 맞음)
             if "#shorts" in title.lower():
                 continue
+            # 1년 넘은 항목은 '최근' 목록의 취지에 안 맞음
+            from datetime import date, timedelta
+            try:
+                y, m, dd = map(int, published.split("-"))
+                if date(y, m, dd) < date.today() - timedelta(days=365):
+                    continue
+            except ValueError:
+                pass
             seen.add(vid)
             new_items.append({
                 "id": vid,
