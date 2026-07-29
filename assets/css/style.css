@@ -1567,3 +1567,101 @@ body.home .strip-caption, body.home .strip-pause { z-index: 4; }
 /* 골드 셀렉션 + 다크 스크롤바 */
 ::selection { background: rgba(212, 175, 55, .32); }
 html { scrollbar-color: #2a2a2a #0a0a0a; }
+
+/* ============ 곡 찾기 & 오늘의 노래 (v50) ============ */
+.today-line {
+  font-family: var(--font-mono); font-size: .8rem; letter-spacing: .16em;
+  color: var(--gold); margin-bottom: 1.6rem;
+}
+.today-list { border-top: 1px solid var(--line); margin-bottom: 1rem; }
+.ts-row {
+  display: grid; grid-template-columns: minmax(9em, 15em) 1fr auto; gap: 1.4em; align-items: baseline;
+  padding: 1.3rem .3rem; border-bottom: 1px solid var(--line);
+  text-decoration: none; color: var(--ivory); transition: color .25s ease;
+}
+.ts-row .ts-title { font-size: 1.12rem; font-weight: 600; transition: color .25s ease; }
+.ts-row .ts-why { color: var(--muted); font-size: .98rem; }
+.ts-row .ts-play { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .14em; color: var(--faint); white-space: nowrap; }
+.ts-row:hover .ts-title, .ts-row:hover .ts-play { color: var(--gold); }
+@media (max-width: 700px) {
+  .ts-row { grid-template-columns: 1fr auto; gap: .3em 1em; }
+  .ts-row .ts-why { grid-column: 1 / -1; }
+}
+
+.song-search { max-width: 62em; }
+#song-q {
+  width: 100%; padding: 1.05em 1.2em; font-size: 1.15rem; font-family: inherit;
+  background: var(--void); color: var(--ivory);
+  border: 1px solid var(--line-strong); border-radius: var(--r-panel);
+}
+#song-q::placeholder { color: var(--faint); }
+#song-q:focus { border-color: var(--gold); outline: 3px solid var(--gold); outline-offset: 2px; }
+.song-count { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .12em; color: var(--faint); margin: .9rem 0 1rem; min-height: 1.2em; }
+#song-chips { margin-bottom: 1.4rem; }
+#song-chips button { font-size: .9rem; min-height: 44px; }
+.song-results { border-top: 1px solid var(--line); max-height: 30em; overflow-y: auto; }
+.song-results:empty { border-top: 0; }
+.sr-row {
+  display: grid; grid-template-columns: 1fr auto auto; gap: 1.2em; align-items: baseline;
+  padding: .95rem .3rem; border-bottom: 1px solid var(--line);
+  text-decoration: none; color: var(--ivory); transition: color .2s ease;
+}
+.sr-row .sr-title { font-size: 1.02rem; }
+.sr-row .sr-meta { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .1em; color: var(--faint); }
+.sr-row .sr-play { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .12em; color: var(--faint); white-space: nowrap; }
+.sr-row:hover { color: var(--gold); }
+.sr-row:hover .sr-play { color: var(--gold); }
+@media (max-width: 640px) {
+  .sr-row { grid-template-columns: 1fr auto; }
+  .sr-row .sr-meta { grid-column: 1 / -1; }
+}
+
+/* ============ 앨범 월 + 시네마틱 페이지 전환 (v50) ============ */
+.album-wall {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  gap: 3px; margin-bottom: 3.4rem;
+}
+.aw-cell {
+  position: relative; aspect-ratio: 1; padding: 0; border: 0; background: #0d0d0d;
+  cursor: pointer; overflow: hidden; display: block;
+}
+.aw-cell img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  filter: grayscale(38%) brightness(.82);
+  transition: transform .75s cubic-bezier(.22,.8,.36,1), filter .5s ease;
+}
+.aw-cell .aw-no {
+  position: absolute; top: 8px; left: 10px; z-index: 2;
+  font-family: var(--font-mono); font-size: .62rem; letter-spacing: .1em;
+  color: #fff; mix-blend-mode: difference;
+}
+.aw-cell .aw-cap {
+  position: absolute; inset: auto 0 0 0; z-index: 2; padding: .8em .7em .7em;
+  display: grid; gap: .15em; text-align: left;
+  background: linear-gradient(to top, rgba(0,0,0,.88), transparent);
+  opacity: 0; transform: translateY(6px); transition: opacity .35s ease, transform .35s ease;
+}
+.aw-cell .aw-cap em { font-style: normal; font-size: .78rem; color: var(--ivory); line-height: 1.25; }
+.aw-cell .aw-cap i { font-style: normal; font-family: var(--font-mono); font-size: .58rem; letter-spacing: .1em; color: var(--gold); }
+@media (hover: hover) {
+  .aw-cell:hover img { transform: scale(1.06); filter: grayscale(0%) brightness(1); }
+  .aw-cell:hover .aw-cap { opacity: 1; transform: none; }
+}
+.aw-cell:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+.aw-cell:focus-visible .aw-cap { opacity: 1; transform: none; }
+@media (hover: none) { .aw-cell .aw-cap { opacity: 1; transform: none; } .aw-cell img { filter: none; } }
+
+/* 페이지 간 시네마틱 전환 (지원 브라우저에서만, 미지원은 즉시 이동) */
+@view-transition { navigation: auto; }
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) { animation: vt-out .32s cubic-bezier(.4,0,1,1) both; }
+  ::view-transition-new(root) { animation: vt-in .46s cubic-bezier(0,0,.2,1) both; }
+}
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; } }
+
+/* 홈: 사진 위를 떠다니는 거위 마크는 배경에 따라 스스로 반전한다
+   (beyonce.com의 고정 별이 쓰는 mix-blend-difference 기법 — 어떤 사진 위에서도 항상 읽힌다) */
+@supports (mix-blend-mode: difference) {
+  body.home .nav-mark svg { mix-blend-mode: difference; }
+}

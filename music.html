@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v49">
+<link rel="stylesheet" href="assets/css/style.css?v50">
 </head>
 <body>
 <a class="skip-link" href="#main" data-i18n="nav.skip">본문 바로가기</a>
@@ -77,12 +77,48 @@
     </div>
   </section>
 
+  <!-- 오늘, 이 노래 (날씨·계절 연동) -->
+  <section class="section" id="today-song" aria-labelledby="h-today" hidden>
+    <div class="container">
+      <div class="section-head">
+        <h2 id="h-today" data-i18n="disc.todayT">오늘, 이 노래</h2>
+      </div>
+      <p class="today-line" id="today-line"></p>
+      <div class="today-list" id="today-list"></div>
+      <p class="form-hint" data-i18n="disc.todayHint">서울의 날씨와 계절, 시간에 맞춰 매일 달라집니다.</p>
+    </div>
+  </section>
+
+  <!-- 곡 찾기 -->
+  <section class="section section--band" id="find" aria-labelledby="h-find">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="h-find" data-i18n="disc.findT">곡 찾기</h2>
+      </div>
+      <div class="song-search">
+        <label class="sr-only" for="song-q" data-i18n="disc.findLabel">곡 제목으로 찾기</label>
+        <input id="song-q" type="search" autocomplete="off" placeholder="제목을 입력하세요 — 초성도 됩니다 (ㄱㅇㅇㄲ)" data-i18n-ph="disc.findPh">
+        <p class="song-count" id="song-count" role="status"></p>
+        <div class="cheer-chips" id="song-chips" aria-label="빠른 검색">
+          <button type="button" data-q="거위의 꿈">거위의 꿈</button>
+          <button type="button" data-q="밤이면">밤이면 밤마다</button>
+          <button type="button" data-q="아버지">아버지</button>
+          <button type="button" data-q="친구여">친구여</button>
+          <button type="button" data-q="1983">1983년</button>
+          <button type="button" data-q="Jazz">재즈</button>
+        </div>
+        <div class="song-results" id="song-results"></div>
+      </div>
+    </div>
+  </section>
+
   <!-- 디스코그래피 -->
   <section class="section section--band" aria-labelledby="h-disco">
     <div class="container">
       <div class="section-head">
         <h2 id="h-reg" data-i18n="music.regular">정규 앨범 — 1집부터 18집, 그리고 2025</h2>
       </div>
+      <div id="album-wall" class="album-wall" role="list" aria-label="정규 앨범 자켓 — 누르면 해당 앨범으로 이동합니다"></div>
       <div id="disco-regular" class="album-list"></div>
 
       <div class="section-head mt-3">
@@ -144,10 +180,12 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동">↑</button>
-<script src="assets/js/i18n.js?v49"></script>
-<script src="assets/js/tracklinks.js?v49"></script>
-<script src="assets/js/albums-full.js?v49"></script>
-<script src="assets/js/data.js?v49"></script>
-<script src="assets/js/main.js?v49"></script>
+<script src="assets/js/i18n.js?v50"></script>
+<script src="assets/js/tracklinks.js?v50"></script>
+<script src="assets/js/albums-full.js?v50"></script>
+<script src="assets/js/data.js?v50"></script>
+<script src="assets/js/song-moods.js?v50"></script>
+<script src="assets/js/main.js?v50"></script>
+<script src="assets/js/discover.js?v50"></script>
 </body>
 </html>

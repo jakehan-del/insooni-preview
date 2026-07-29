@@ -1,4 +1,4 @@
-/* 자동 해석된 공식 음원 직결 링크 (본인 명의 Topic 채널만 · oEmbed 전량 검증) */
+/* 자동 해석된 공식 음원 직결 링크 (본인 명의 Topic·공식 채널만 · oEmbed 전량 검증) */
 window.TRACK_LINKS = {
 "희자매|실버들": "0gmnZF7KKsE",
 "희자매|우리는 사랑해요": "ytTpWBAM2Dk",
@@ -142,5 +142,9 @@ window.TRACK_LINKS = {
 "인순이|우산": "4HJpynnqDTU",
 "인순이|밤이면 밤마다 (Remake)": "0z-PmQk_Q8M",
 "인순이|아버지 (Remake)": "80y5qNDRJvw",
-"인순이|사랑가 (Remake)": "CB_nxMWQm3Q"
+"인순이|사랑가 (Remake)": "CB_nxMWQm3Q",
+"인순이|토닥토닥": "gKa18cHnOnM",
+"인순이|행복": "rdnFoIYhaiY",
+"인순이|바보 멍청이 똥개": "L87u3r_MtDo",
+"인순이|너의 이름을 세상이 부를 때": "JgXKEnLizCE"
 };

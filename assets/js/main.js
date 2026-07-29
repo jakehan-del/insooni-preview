@@ -395,8 +395,38 @@
         row.setAttribute("aria-expanded", String(open));
       });
       var target = (regBox && isReg(a)) ? regBox : box;
+      if (regBox && isReg(a)) { row.id = "alb-" + (regNo(a) || a.year); }
       target.appendChild(row);
       target.appendChild(detail);
+    });
+    buildAlbumWall(regs, regNo);
+  }
+
+  /* 앨범 월: 정규 자켓을 한눈에 — 누르면 해당 앨범이 열린다 */
+  function buildAlbumWall(regs, regNo) {
+    var wall = $("#album-wall");
+    if (!wall || !regs || !regs.length) return;
+    regs.forEach(function (a) {
+      if (!a.art) return;
+      var b = el("button", "aw-cell");
+      b.type = "button";
+      b.setAttribute("role", "listitem");
+      var no = regNo(a);
+      var label = (no ? no + "집" : a.year) + " " + a.title;
+      b.setAttribute("aria-label", label);
+      b.innerHTML =
+        '<img src="' + esc(a.art) + '" alt="" loading="lazy">' +
+        '<span class="aw-no">' + esc(no ? String(no) : a.year) + "</span>" +
+        '<span class="aw-cap"><em>' + esc(a.title) + "</em><i>" + esc(a.year) + "</i></span>";
+      b.addEventListener("click", function () {
+        var row = document.getElementById("alb-" + (no || a.year));
+        if (!row) return;
+        var detail = row.nextElementSibling;
+        if (detail && detail.hidden) { row.click(); }
+        row.scrollIntoView({ behavior: "smooth", block: "center" });
+        row.focus({ preventScroll: true });
+      });
+      wall.appendChild(b);
     });
   }
   /* 지난 무대 리캡: 타일 → VIEW RECAP 패널 (사진 갤러리 + 영상) */
@@ -1143,6 +1173,8 @@
       });
     }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
     targets.forEach(function (el2) { el2.classList.add("rise"); io.observe(el2); });
+    /* 안전망: 관측기가 어떤 이유로든 못 돌면 콘텐츠가 영영 안 보이므로 강제 노출 */
+    setTimeout(function () { targets.forEach(function (el2) { el2.classList.add("in"); }); }, 4000);
   }
 
   /* ---------- 10. 구독 폼 (데모) ---------- */
