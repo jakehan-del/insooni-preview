@@ -1763,12 +1763,22 @@
     function pickSource() {
       var src = v.querySelector("source");
       if (!src || v.dataset.picked || !src.getAttribute("data-src")) return;
-      v.dataset.picked = "1";
       var conn = navigator.connection || {};
       var small = window.matchMedia && window.matchMedia("(max-width: 760px)").matches;
-      var saver = conn.saveData === true || /(^|-)2g$/.test(conn.effectiveType || "");
-      var lite = src.getAttribute("data-lite");
-      src.setAttribute("src", (lite && (small || saver)) ? lite : src.getAttribute("data-src"));
+      var saver = conn.saveData === true || /(^|-)?[23]g$/.test(conn.effectiveType || "");
+      /* 작은 화면·데이터 절약 모드에서는 배경 영상을 아예 받지 않는다.
+         1MB짜리 영상을 알리지도 않고 내려받는 것은 휴대폰 데이터를 쓰는 분들께
+         할 일이 아니고, 대표 이미지가 뜨는 시각도 그만큼 늦어진다.
+         같은 장면의 포스터가 이미 떠 있고, 바로 옆에 공식 MV 버튼이 있다. */
+      if (small || saver) {
+        v.remove();
+        /* 영상이 없으면 일시정지 버튼도 있을 이유가 없다 (눌러도 아무 일 없는 버튼) */
+        var pb = $(".strip-pause");
+        if (pb) pb.remove();
+        return;
+      }
+      v.dataset.picked = "1";
+      src.setAttribute("src", src.getAttribute("data-src"));
       v.load();
       tryPlay();
     }
