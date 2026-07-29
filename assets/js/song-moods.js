@@ -1,98 +1,315 @@
 /* ============================================================
    오늘의 날씨·계절 → 인순이 곡 큐레이션
    ------------------------------------------------------------
-   제목은 사이트 곡 색인과 정확히 일치해야 한다 (직결 재생 연결).
+   18개 상황 × 3곡 = 54곡, 중복 없이 배치 (2026.7 리서치).
+   제목은 곡 색인과 정확히 일치해야 직결 재생으로 연결된다.
    reason은 가사 인용 없이 곡의 정서와 날씨를 잇는 한 문장.
    ============================================================ */
 window.SONG_MOODS = {
-  rain: [
-    { title: "우산", reason: "비 오는 날의 노래. 누군가 씌워 준 우산 아래의 마음을 부릅니다.",
-      en: "A song made for rainy days - the feeling of someone holding an umbrella over you." },
-    { title: "비에 스친 날들", reason: "창밖에 비가 그을 때, 지나온 날들이 함께 스쳐 갑니다.",
-      en: "As the rain streaks the window, the days you've walked through pass by with it." },
-    { title: "무지개", reason: "비 갠 뒤를 기다리는 마음으로 듣기 좋은 곡입니다.",
-      en: "For the heart that waits for what comes after the rain." }
-  ],
-  monsoon: [
-    { title: "우산", reason: "장맛비가 길어지는 날, 낮은 목소리가 방 안을 채웁니다.",
-      en: "When the monsoon settles in, this low voice fills the room." },
-    { title: "Lullaby Birdland", reason: "빗소리와 함께 듣는 재즈 한 곡. 15집 《Jazz》의 밤입니다.",
-      en: "Jazz to pair with the rain - a night from the 2003 album 'Jazz'." }
-  ],
-  storm: [
-    { title: "일어나", reason: "천둥이 지나가는 하늘 아래, 다시 일어서라 말해 주는 노래.",
-      en: "Under a thundering sky, a song that tells you to rise again." },
-    { title: "거위의 꿈", reason: "거센 날씨에도 꿈은 흔들리지 않는다고, 이 노래가 대신 말해 줍니다.",
-      en: "Even in rough weather, this song insists the dream still stands." }
-  ],
-  snow: [
-    { title: "Merry Merry", reason: "눈이 내리면 어울리는 17집의 겨울 곡입니다.",
-      en: "A winter song from the 2009 album, made for falling snow." },
-    { title: "향수", reason: "눈 쌓인 창가에서 고향을 떠올리게 하는 노래.",
-      en: "By a snow-covered window, a song that turns your mind toward home." }
-  ],
-  fog: [
-    { title: "Smile", reason: "안개처럼 흐릿한 아침, 그래도 웃어 보자는 재즈 넘버.",
-      en: "On a morning as hazy as fog, a jazz number that still asks you to smile." },
-    { title: "흔들리는 갈대", reason: "뿌옇게 잠긴 풍경 속, 흔들리면서도 꺾이지 않는 노래.",
-      en: "In a blurred landscape, a song that sways but never breaks." }
-  ],
-  hot: [
-    { title: "Caravan", reason: "더운 날엔 오히려 뜨거운 재즈로. 15집의 열기입니다.",
-      en: "On a hot day, meet it with hotter jazz - the heat of the 2003 album." },
-    { title: "밤이면 밤마다", reason: "한낮의 열기가 식으면, 이 노래의 밤이 시작됩니다.",
-      en: "When the day's heat fades, this song's night begins." }
-  ],
-  "cold-winter": [
-    { title: "아버지", reason: "추운 날일수록 더 사무치는, 아버지를 부르는 노래.",
-      en: "The colder the day, the deeper this song for a father cuts." },
-    { title: "토닥토닥", reason: "언 손을 녹이듯 어깨를 두드려 주는 곡입니다.",
-      en: "Like warming frozen hands - a song that pats you on the shoulder." }
-  ],
-  cloudy: [
-    { title: "행복", reason: "흐린 하늘 아래에서도 행복을 이야기하는 노래.",
-      en: "A song that speaks of happiness even under a grey sky." },
-    { title: "또", reason: "구름이 낮게 깔린 날, 소울의 여왕이라 불리게 한 그 목소리로.",
-      en: "On a low-clouded day, the voice that earned her the title Queen of Soul." }
-  ],
-  dawn: [
-    { title: "내게 강같은 평화", reason: "아직 어두운 새벽, 12집 가스펠이 조용히 하루를 엽니다.",
-      en: "In the dark before dawn, the 1997 gospel album opens the day quietly." },
-    { title: "나의 기도", reason: "새벽에 어울리는 기도 같은 노래입니다.",
-      en: "A song like a prayer, made for the earliest hours." }
-  ],
-  morning: [
-    { title: "아침이 오면", reason: "아침에 듣기 좋은 14집 《My Turn》의 곡.",
-      en: "A morning song from the 2001 album 'My Turn'." },
-    { title: "그래도 꿈은 흐른다", reason: "새 하루의 시작에, 가장 최근의 노래로.",
-      en: "For the start of a new day - her most recent song." }
-  ],
-  night: [
-    { title: "밤이면 밤마다", reason: "밤이 오면 이 노래. 디바의 시대를 연 곡입니다.",
-      en: "When night falls, this one - the song that opened the diva's era." },
-    { title: "Lullaby Birdland", reason: "재즈로 마무리하는 밤. 15집 《Jazz》 수록곡.",
-      en: "A night that ends in jazz, from the 2003 album." }
-  ],
-  "clear-spring": [
-    { title: "실버들", reason: "봄버들이 늘어지는 계절, 1978년 데뷔곡을 다시 부른 버전입니다.",
-      en: "As spring willows droop - her 1978 debut song, sung again." },
-    { title: "길섶에 핀꽃", reason: "길가에 꽃이 피는 날 듣기 좋은 5집의 곡.",
-      en: "For the days flowers open by the roadside - from the 1984 album." },
-    { title: "나무", reason: "새잎이 돋는 계절에 어울리는, 뿌리내림에 대한 노래.",
-      en: "A song about taking root, for the season of new leaves." }
-  ],
-  "clear-summer": [
-    { title: "Higher", reason: "환한 여름날, 목소리가 그대로 높이 올라가는 곡입니다.",
-      en: "On a bright summer day, a song that climbs as high as her voice." },
-    { title: "바보 멍청이 똥개", reason: "여름의 유쾌함에 어울리는 최근 싱글.",
-      en: "A recent single that matches summer's mischief." }
-  ],
-  "clear-autumn": [
-    { title: "Autumn Leaves", reason: "가을엔 역시 이 곡. 15집 《Jazz》의 대표 트랙입니다.",
-      en: "Autumn calls for this one - the signature track of the 2003 jazz album." },
-    { title: "친구여", reason: "선선한 바람이 불면 친구가 떠오릅니다.",
-      en: "When the cool wind starts, you think of a friend." },
-    { title: "향수", reason: "가을 저녁, 고향 쪽으로 마음이 기우는 노래.",
-      en: "An autumn evening song that leans toward home." }
-  ]
+ "rain": [
+  {
+   "title": "우산",
+   "reason": "창밖으로 빗줄기가 내리는 날, 누군가 조용히 우산을 씌워주는 듯한 이 노래가 어깨를 감싸줍니다.",
+   "en": "On a day the rain streaks the window, this song feels like someone quietly holding an umbrella over you."
+  },
+  {
+   "title": "비에 스친 날들",
+   "reason": "비에 젖은 거리를 바라보다 보면 지나온 날들이 함께 떠오르는, 딱 그런 오후를 위한 곡입니다.",
+   "en": "Watching the wet street, the days you've walked through come back with the rain."
+  },
+  {
+   "title": "이별연습",
+   "reason": "빗소리가 커질수록 마음도 낮아지는 날, 담담하게 흘러가는 이 발라드가 위로가 되어줍니다.",
+   "en": "As the rain grows louder and the heart sinks lower, this calm ballad sits beside you."
+  }
+ ],
+ "snow": [
+  {
+   "title": "토닥토닥",
+   "reason": "눈이 소복이 쌓이는 날, 등을 가만히 두드려주는 듯한 목소리가 마음을 데워줍니다.",
+   "en": "As snow piles up softly, a voice that pats you gently on the back warms the room."
+  },
+  {
+   "title": "하늘을 바라보소",
+   "reason": "눈송이가 내려오는 하늘을 올려다보게 되는 날, 이 노래의 넉넉한 시선이 잘 어울립니다.",
+   "en": "On a day you look up to watch the snow come down, this song's generous gaze fits perfectly."
+  },
+  {
+   "title": "내게 강같은 평화",
+   "reason": "세상 소리가 눈에 덮여 조용해진 날, 고요하고 평온한 이 찬양 한 곡이면 충분합니다.",
+   "en": "When the world falls quiet under snow, one still hymn is all you need."
+  }
+ ],
+ "clear-spring": [
+  {
+   "title": "실버들",
+   "reason": "물오른 버들가지가 흔들리는 봄날, 옛 정취가 살아 있는 이 노래가 계절과 꼭 맞습니다.",
+   "en": "As spring willows sway, this song carries the old feeling of the season."
+  },
+  {
+   "title": "웃어주세요",
+   "reason": "햇살이 부드러워진 봄 아침, 제목 그대로 저절로 미소가 지어지는 초창기의 밝은 곡입니다.",
+   "en": "On a soft spring morning, an early bright song that makes you smile without trying."
+  },
+  {
+   "title": "너의 곁에 나",
+   "reason": "바람이 순해진 봄날, 곁에 있는 사람의 소중함을 다시 느끼게 해주는 따뜻한 발라드입니다.",
+   "en": "When the wind turns gentle, a warm ballad about the person beside you."
+  }
+ ],
+ "clear-summer": [
+  {
+   "title": "Swing My Baby",
+   "reason": "햇빛이 쨍한 여름날, 어깨가 절로 들썩이는 이 흥겨운 리듬이 하루를 경쾌하게 만들어줍니다.",
+   "en": "Under a blazing summer sun, a rhythm that gets your shoulders moving."
+  },
+  {
+   "title": "춤을 춰요(I Was Made For Dancing)",
+   "reason": "파란 하늘이 시원하게 열린 날에는 데뷔 시절의 발랄한 이 곡이 제격입니다.",
+   "en": "When the sky opens wide and blue, this playful debut-era song is exactly right."
+  },
+  {
+   "title": "Lullaby Birdland",
+   "reason": "여름 저녁 바람이 불어오는 시간, 재즈 앨범의 이 스윙이 낮의 열기를 부드럽게 식혀줍니다.",
+   "en": "As the evening breeze arrives, this jazz swing cools the day's heat."
+  }
+ ],
+ "hot": [
+  {
+   "title": "Caravan",
+   "reason": "열기가 아지랑이처럼 피어오르는 날, 사막을 건너는 듯한 이 재즈 연주가 더위를 오히려 즐겁게 만듭니다.",
+   "en": "When heat shimmers off the ground, a jazz caravan turns the swelter into pleasure."
+  },
+  {
+   "title": "욕망",
+   "reason": "푹푹 찌는 한낮, 뜨거운 에너지를 그대로 밀어붙이는 이 곡이 더위와 정면으로 맞섭니다.",
+   "en": "In the thick of a scorching afternoon, this song meets the heat head-on."
+  },
+  {
+   "title": "바보 멍청이 똥개",
+   "reason": "땀이 흐르는 폭염의 날, 강렬한 기타와 시원하게 뻗는 고음이 답답한 속을 뚫어줍니다.",
+   "en": "On a sweltering day, a sharp guitar and soaring high notes clear the air."
+  }
+ ],
+ "clear-autumn": [
+  {
+   "title": "Autumn Leaves",
+   "reason": "높고 맑은 가을 하늘 아래, 낙엽을 노래한 이 재즈 명곡만큼 계절에 어울리는 선택은 드뭅니다.",
+   "en": "Under a high clear autumn sky, few songs belong to the season like this jazz standard."
+  },
+  {
+   "title": "향수",
+   "reason": "공기가 서늘해진 가을날, 고향 풍경이 눈앞에 그려지는 이 곡이 마음을 아득하게 만듭니다.",
+   "en": "As the air turns cool, this song draws the landscape of home before your eyes."
+  },
+  {
+   "title": "긴 편지",
+   "reason": "편지 한 장 쓰고 싶어지는 가을 오후, 오래 눌러 담은 마음이 천천히 풀리는 노래입니다.",
+   "en": "On an autumn afternoon that makes you want to write a letter, long-held feelings unfold slowly."
+  }
+ ],
+ "cold-winter": [
+  {
+   "title": "아버지",
+   "reason": "찬바람이 매서운 날, 문득 아버지 생각이 나는 분들의 마음을 대신 울어주는 곡입니다.",
+   "en": "On a bitter cold day, a song that weeps for anyone who suddenly thinks of their father."
+  },
+  {
+   "title": "나무",
+   "reason": "잎을 다 떨군 겨울나무처럼, 묵묵히 자리를 지키는 사람의 마음을 담은 노래입니다.",
+   "en": "Like a winter tree that has dropped every leaf, a song for those who quietly hold their ground."
+  },
+  {
+   "title": "그래도 꿈은 흐른다",
+   "reason": "추위가 깊어질수록 더 필요한, 그럼에도 계속 나아가자는 이야기가 담긴 최근의 곡입니다.",
+   "en": "The deeper the cold, the more you need this recent song about going on anyway."
+  }
+ ],
+ "cloudy": [
+  {
+   "title": "어느날의 방황과 인생",
+   "reason": "하늘이 잔뜩 내려앉은 날, 마음도 함께 흐려질 때 곁에 두기 좋은 노래입니다.",
+   "en": "When the sky presses low and the heart clouds over, keep this one close."
+  },
+  {
+   "title": "조용한 이별",
+   "reason": "해가 구름에 가려진 오후, 조용하고 낮은 이 곡의 결이 흐린 하늘과 잘 어울립니다.",
+   "en": "On an afternoon with the sun behind clouds, the low grain of this song matches the grey."
+  },
+  {
+   "title": "고독",
+   "reason": "흐린 날 혼자 있는 시간이 길어질 때, 그 마음을 있는 그대로 받아주는 곡입니다.",
+   "en": "When solitude stretches long on an overcast day, this song takes it as it is."
+  }
+ ],
+ "fog": [
+  {
+   "title": "최면",
+   "reason": "안개가 자욱해 앞이 흐릿한 아침, 몽롱하게 감기는 이 노래가 그 풍경과 겹쳐집니다.",
+   "en": "On a morning lost in fog, this hypnotic song blurs into the same landscape."
+  },
+  {
+   "title": "꿈이였나봐",
+   "reason": "안개 속을 걷다 보면 지난 일이 꿈처럼 느껴지는데, 그 감각을 그대로 옮겨놓은 곡입니다.",
+   "en": "Walking through fog makes the past feel like a dream - this song captures that exactly."
+  },
+  {
+   "title": "내영혼의 그윽히 깊은데서",
+   "reason": "세상이 안개에 잠겨 고요한 시간, 마음 가장 깊은 곳을 어루만지는 찬양입니다.",
+   "en": "In the hush of a fog-drowned world, a hymn that reaches the deepest place."
+  }
+ ],
+ "windy": [
+  {
+   "title": "흔들리는 갈대",
+   "reason": "바람이 세게 부는 날, 흔들리면서도 꺾이지 않는 갈대의 모습이 그대로 담긴 노래입니다.",
+   "en": "On a windy day, the reed that bends but never breaks lives inside this song."
+  },
+  {
+   "title": "비상",
+   "reason": "바람을 타고 높이 올라가는 상상을 하게 만드는, 가슴이 확 트이는 곡입니다.",
+   "en": "A song that makes you imagine rising on the wind - it opens the chest wide."
+  },
+  {
+   "title": "너의 이름을 세상이 부를 때",
+   "reason": "바람이 등을 밀어주는 날, 누군가의 이름이 불릴 그날을 응원하는 마음이 담겼습니다.",
+   "en": "On a day the wind is at your back, a song cheering for the day your name is called."
+  }
+ ],
+ "night": [
+  {
+   "title": "밤이면 밤마다",
+   "reason": "밤이 깊어지는 시간, 인순이라는 이름을 떠올리면 가장 먼저 생각나는 바로 그 목소리입니다.",
+   "en": "As night deepens, the very voice that comes to mind at the name Insooni."
+  },
+  {
+   "title": "한밤중",
+   "reason": "잠이 오지 않는 한밤, 제목 그대로 이 시간을 위해 만들어진 듯한 곡입니다.",
+   "en": "For a sleepless midnight - a song that seems built for exactly this hour."
+  },
+  {
+   "title": "밀애",
+   "reason": "불을 낮춘 밤, 나른하고 농익은 이 노래가 방 안의 공기를 천천히 채웁니다.",
+   "en": "With the lights turned low, this song fills the room slowly and richly."
+  }
+ ],
+ "dawn": [
+  {
+   "title": "아침이 오면",
+   "reason": "어둠이 걷히기 직전의 새벽, 곧 밝아올 아침을 기다리는 마음이 그대로 담긴 곡입니다.",
+   "en": "In the dark just before dawn, the waiting for morning is already in this song."
+  },
+  {
+   "title": "나의 기도",
+   "reason": "세상이 아직 잠든 새벽, 조용히 두 손을 모으고 싶어지는 시간에 어울리는 찬양입니다.",
+   "en": "While the world still sleeps, a hymn for the hour you want to fold your hands."
+  },
+  {
+   "title": "날마다 숨쉬는 순간마다",
+   "reason": "새로운 하루가 시작되는 새벽, 숨 한 번마다 감사를 얹어주는 노래입니다.",
+   "en": "At the start of a new day, a song that lays gratitude on every breath."
+  }
+ ],
+ "morning": [
+  {
+   "title": "거위의 꿈",
+   "reason": "하루를 여는 아침, 오래 품어온 꿈을 다시 꺼내보게 만드는 인순이의 대표곡입니다.",
+   "en": "To open the morning - the signature song that makes you take out a long-held dream again."
+  },
+  {
+   "title": "일어나",
+   "reason": "이불을 걷고 하루를 시작하는 순간, 등을 힘차게 밀어주는 응원 같은 곡입니다.",
+   "en": "The moment you push back the covers, a song that pushes firmly at your back."
+  },
+  {
+   "title": "행복",
+   "reason": "아침 햇살이 드는 창가에서 듣기 좋은, 담백하고 환한 마음의 노래입니다.",
+   "en": "By a window with morning light, a plain and bright-hearted song."
+  }
+ ],
+ "lunar-new-year": [
+  {
+   "title": "인연",
+   "reason": "온 가족이 모이는 설날, 사람과 사람의 만남을 노래한 데뷔 시절의 이 곡이 잘 어울립니다.",
+   "en": "On a day the whole family gathers, this early song about how people meet fits beautifully."
+  },
+  {
+   "title": "손모아 마음모아",
+   "reason": "새해 첫날 서로의 안녕을 빌어주는 마음을 그대로 담아낸 노래입니다.",
+   "en": "A song that holds the wish we make for one another at the start of a year."
+  },
+  {
+   "title": "아름다운 우리나라",
+   "reason": "설 연휴에 온 가족이 함께 들으면 좋은, 넉넉하고 정겨운 곡입니다.",
+   "en": "Generous and familiar - good for the whole family to hear together on a holiday."
+  }
+ ],
+ "chuseok": [
+  {
+   "title": "내 고향집",
+   "reason": "보름달이 뜨는 추석, 고향집 마당이 눈앞에 그려지는 노래입니다.",
+   "en": "Under a full harvest moon, the yard of your childhood house appears before you."
+  },
+  {
+   "title": "친구여",
+   "reason": "오랜만에 만난 얼굴들과 함께 부르기 좋은, 세월이 묻어나는 곡입니다.",
+   "en": "A song worn smooth by years, made for singing with faces you haven't seen in a while."
+  },
+  {
+   "title": "연락선은 떠나가네",
+   "reason": "고향을 떠나고 다시 돌아오는 명절의 마음이 고스란히 실린 옛 노래입니다.",
+   "en": "The old feeling of leaving home and returning again, carried in one song."
+  }
+ ],
+ "christmas": [
+  {
+   "title": "Merry Merry",
+   "reason": "트리에 불이 켜지는 성탄 저녁, 들뜬 마음을 그대로 담아낸 곡입니다.",
+   "en": "As the tree lights come on, a song that holds all that Christmas-evening excitement."
+  },
+  {
+   "title": "주 하나님 지으신 모든 세계",
+   "reason": "성탄의 밤, 웅장하면서도 경건한 이 찬양이 마음을 크게 열어줍니다.",
+   "en": "On Christmas night, a hymn both grand and reverent opens the heart wide."
+  },
+  {
+   "title": "Smile",
+   "reason": "한 해의 끝자락에서 서로에게 미소를 건네고 싶을 때, 잔잔한 재즈 한 곡이면 충분합니다.",
+   "en": "At the end of a year, when you want to offer each other a smile - one quiet jazz song is enough."
+  }
+ ],
+ "spring-flower": [
+  {
+   "title": "이름없는꽃다발",
+   "reason": "꽃이 한창인 계절, 이름 없는 꽃 한 다발 같은 마음을 노래한 곡입니다.",
+   "en": "In the height of blossom season, a song about a heart like a bouquet with no name."
+  },
+  {
+   "title": "길섶에 핀꽃",
+   "reason": "길가에 작은 꽃들이 피어나는 시기, 그 소박한 풍경을 그대로 담은 노래입니다.",
+   "en": "When small flowers open along the roadside, this song holds that humble view."
+  },
+  {
+   "title": "사랑가",
+   "reason": "꽃놀이 가는 길에 흐르면 좋을, 넉넉하고 다정한 사랑의 노래입니다.",
+   "en": "A generous, tender love song for the walk to see the blossoms."
+  }
+ ],
+ "monsoon": [
+  {
+   "title": "S.O.S",
+   "reason": "장맛비가 며칠째 이어질 때, 답답한 마음을 시원하게 터뜨려주는 곡입니다.",
+   "en": "When the monsoon has gone on for days, this song bursts the stuffiness open."
+  },
+  {
+   "title": "또",
+   "reason": "비가 또 내리는 장마철, 반복되는 마음의 결을 정확히 짚어주는 90년대의 명곡입니다.",
+   "en": "On a rainy monsoon day, a 90s classic that names the loop of feeling precisely."
+  },
+  {
+   "title": "무지개",
+   "reason": "긴 비가 그친 뒤 하늘을 살피게 되는 순간, 무지개를 기다리는 마음 같은 노래입니다.",
+   "en": "The moment the long rain stops and you scan the sky - a song like waiting for a rainbow."
+  }
+ ]
 };

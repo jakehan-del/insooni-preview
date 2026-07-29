@@ -375,10 +375,10 @@
               : "https://www.youtube.com/results?search_query=" + encodeURIComponent(artistQ + " " + base);
             return '<li><a class="tr-link" href="' + esc(q) + '" target="_blank" rel="noopener"><span class="tr-name">' + esc(trk) + '</span><span class="tr-play" aria-hidden="true">듣기 ▶</span></a></li>';
           }).join("") + "</ol>"
-        : "<p>" + t("rel.tbd", "공식 자료 확인 중입니다.") + "</p>";
+        : "<p>" + t("rel.tbd", "수록곡은 곧 더해집니다.") + "</p>";
       var creditsHtml = a.credits
         ? '<p class="a-credits">' + esc(a.credits) + "</p>"
-        : "<p>" + t("rel.tbd", "공식 자료 확인 중입니다.") + "</p>";
+        : "<p>" + t("rel.tbd", "수록곡은 곧 더해집니다.") + "</p>";
       var searchUrl = "https://www.youtube.com/results?search_query=" + encodeURIComponent("인순이 " + a.title.replace(/\s*\(.*\)$/, ""));
       var linksHtml = (a.links && a.links.length)
         ? '<p class="a-links">' + a.links.map(function (l) {
@@ -472,6 +472,7 @@
     }
     shows.forEach(function (sh) { sh._k = sk(sh.recap && sh.recap.date ? sh.recap.date : sh.date); });
     shows.sort(function (a, b) { return b._k - a._k; });
+    initStageBg(box);
     shows.forEach(function (sh) {
       var c;
       if (sh.recap) {
@@ -488,8 +489,78 @@
         '<span class="show-city">' + esc(sh.title) + (sh.city ? " · " + esc(sh.city) : "") + "</span>" +
         (sh.recap ? '<span class="show-cta">VIEW RECAP</span>' : "");
       if (sh.recap) c.addEventListener("click", function () { openRecap(sh.recap, c); });
+      /* 대표 사진이 있으면 호버 시 전체 화면 배경으로 떠오른다 */
+      /* 포스터는 밝고 그래픽이 강해 배경으로 쓰면 글자를 덮는다 — 실제 무대 사진만 쓴다 */
+      var bgSrc = sh.recap && sh.recap.bg;
+      if (bgSrc) {
+        c.setAttribute("data-bg", bgSrc);
+        c.setAttribute("data-name", sh.title);
+        c.setAttribute("data-when", sh.date || "");
+        if (sh.recap.video) c.setAttribute("data-video", sh.recap.video);
+      }
       box.appendChild(c);
     });
+  }
+
+  /* 공연 그리드 포커스 연출: 한 공연에 머무르면 그 밤이 화면 전체로 떠오른다
+     (사진 또는 실황 영상 + 대형 제목. 요소는 각 1개만 두고 소스만 교체한다) */
+  function initStageBg(grid) {
+    if (!window.matchMedia || !window.matchMedia("(hover: hover)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var bg = el("div", "stage-bg");
+    bg.setAttribute("aria-hidden", "true");
+    bg.innerHTML = '<video class="sbg-video" muted loop playsinline preload="none"></video><div class="sbg-scrim"></div>';
+    var cap = el("div", "stage-title");
+    cap.setAttribute("aria-hidden", "true");
+    cap.innerHTML = '<span class="st-when"></span><span class="st-name"></span>';
+    document.body.appendChild(bg);
+    document.body.appendChild(cap);
+    var vid = bg.querySelector(".sbg-video");
+    var timer = null, curKey = "";
+
+    function show(cell) {
+      var src = cell && cell.getAttribute("data-bg");
+      if (!src) return;
+      var vsrc = cell.getAttribute("data-video") || "";
+      var key = src + "|" + vsrc;
+      clearTimeout(timer);
+      if (key !== curKey) {
+        curKey = key;
+        bg.style.backgroundImage = 'url("' + src + '")';
+        if (vsrc) {
+          if (vid.getAttribute("src") !== vsrc) { vid.setAttribute("src", vsrc); vid.load(); }
+          vid.classList.add("is-on");
+          var pr = vid.play();
+          if (pr && pr.catch) pr.catch(function () {});
+        } else {
+          vid.classList.remove("is-on");
+          vid.removeAttribute("src");
+        }
+        cap.querySelector(".st-when").textContent = cell.getAttribute("data-when") || "";
+        cap.querySelector(".st-name").textContent = cell.getAttribute("data-name") || "";
+      }
+      grid.classList.add("is-focusing");
+      bg.classList.add("is-on");
+      cap.classList.add("is-on");
+    }
+    function hide() {
+      grid.classList.remove("is-focusing");
+      cap.classList.remove("is-on");
+      timer = setTimeout(function () {
+        bg.classList.remove("is-on");
+        if (!vid.paused) vid.pause();
+      }, 140);
+    }
+    grid.addEventListener("pointerover", function (e) {
+      var c = e.target.closest ? e.target.closest(".show-cell") : null;
+      if (c) show(c);
+    });
+    grid.addEventListener("pointerleave", hide);
+    grid.addEventListener("focusin", function (e) {
+      var c = e.target.closest ? e.target.closest(".show-cell") : null;
+      if (c) show(c);
+    });
+    grid.addEventListener("focusout", hide);
   }
 
   /* ---------- 최근 공식 영상 (자동 수집 live-shows.json — GitHub Actions 일일 갱신) ---------- */

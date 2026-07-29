@@ -1665,3 +1665,90 @@ html { scrollbar-color: #2a2a2a #0a0a0a; }
 @supports (mix-blend-mode: difference) {
   body.home .nav-mark svg { mix-blend-mode: difference; }
 }
+
+/* ============ 공연 그리드: 한 밤이 화면 전체로 떠오르는 연출 (v52) ============
+   목록 위에 그날의 사진·실황이 깔리고 제목이 크게 뜬다.
+   나머지 셀은 지우지 않고 낮추기만 한다 — 40~70대 사용자가 맥락을 잃지 않도록. */
+.stage-bg {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+  background-size: cover; background-position: center;
+  opacity: 0; transform: scale(1.04);
+  transition: opacity .8s cubic-bezier(.22,.8,.36,1), transform 1.6s cubic-bezier(.22,.8,.36,1);
+}
+.stage-bg.is-on { opacity: .34; transform: scale(1); }
+.stage-bg .sbg-video {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; transition: opacity .6s ease;
+}
+.stage-bg .sbg-video.is-on { opacity: 1; }
+.stage-bg .sbg-scrim {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(8,8,8,.78), rgba(8,8,8,.55) 42%, rgba(8,8,8,.8)),
+    radial-gradient(ellipse 110% 70% at 50% 50%, transparent 22%, rgba(8,8,8,.82) 100%);
+}
+.stage-title {
+  position: fixed; left: 50%; top: 50%; z-index: 0; pointer-events: none;
+  transform: translate(-50%, -46%); width: min(52rem, 88vw); text-align: center;
+  display: grid; gap: .5rem; justify-items: center;
+  opacity: 0; transition: opacity .55s ease, transform .8s cubic-bezier(.22,.8,.36,1);
+}
+.stage-title.is-on { opacity: 1; transform: translate(-50%, -50%); }
+.stage-title .st-when {
+  font-family: var(--font-mono); font-size: .68rem; letter-spacing: .34em; color: var(--gold);
+}
+.stage-title .st-name {
+  font-family: "Cormorant Garamond", serif; font-weight: 600; line-height: 1.08;
+  font-size: clamp(2.2rem, 5.4vw, 4.6rem); color: #fff;
+  text-shadow: 0 2px 40px rgba(8,8,8,.8);
+}
+body > main, body > header, body > footer { position: relative; z-index: 1; }
+.shows-grid.is-focusing .show-cell:not(:hover):not(:focus-within) { opacity: .22; }
+.shows-grid.is-focusing .show-cell:hover, .shows-grid.is-focusing .show-cell:focus-within { opacity: 1; }
+.show-cell { transition: opacity .45s ease, transform .35s ease, border-color .35s ease; }
+@media (hover: none) { .shows-grid.is-focusing .show-cell { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .stage-bg, .stage-title { display: none; } .show-cell { transition: none; } }
+
+/* ============ INSOONI RADIO (v51) ============ */
+.radio-launch button { font-size: .95rem; min-height: 48px; }
+.radio {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+  background: rgba(10, 10, 10, .93);
+  backdrop-filter: blur(22px) saturate(1.15); -webkit-backdrop-filter: blur(22px) saturate(1.15);
+  border-top: 1px solid var(--line-strong);
+  animation: rd-up .45s cubic-bezier(.22,.8,.36,1) both;
+}
+@keyframes rd-up { from { transform: translateY(100%); } }
+.rd-inner {
+  max-width: 1400px; margin: 0 auto; padding: .7rem clamp(.8rem, 3vw, 2rem);
+  display: grid; grid-template-columns: auto 1fr auto auto; gap: clamp(.8rem, 2vw, 1.8rem); align-items: center;
+}
+.rd-screen { width: 132px; aspect-ratio: 16/9; background: #000; border-radius: 2px; overflow: hidden; flex: 0 0 auto; }
+.rd-screen iframe { width: 100%; height: 100%; border: 0; display: block; }
+.rd-now { min-width: 0; display: grid; gap: .18rem; }
+.rd-kicker { font-family: var(--font-mono); font-size: .58rem; letter-spacing: .2em; color: var(--faint); }
+.rd-kicker b { color: var(--gold); font-weight: 400; }
+.rd-title { font-size: 1.02rem; font-weight: 600; color: var(--ivory); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rd-meta { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .1em; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rd-controls { display: flex; align-items: center; gap: .35rem; }
+.rd-controls button {
+  min-width: 44px; min-height: 44px; padding: 0 .6em; background: transparent; border: 1px solid transparent;
+  color: var(--muted); font-family: var(--font-mono); font-size: .78rem; cursor: pointer; border-radius: 2px;
+  transition: color .2s ease, border-color .2s ease;
+}
+.rd-controls button:hover { color: var(--gold); }
+.rd-controls .rd-play { border-color: var(--line-strong); color: var(--ivory); font-size: .95rem; min-width: 54px; }
+.rd-controls .rd-play:hover { border-color: var(--gold); }
+.rd-controls [aria-pressed="true"] { color: var(--gold); border-color: var(--gold-deep); }
+.rd-close { min-width: 44px; min-height: 44px; background: transparent; border: 0; color: var(--faint); font-size: 1.3rem; cursor: pointer; }
+.rd-close:hover { color: var(--ivory); }
+body.has-radio { padding-bottom: 96px; }
+body.has-radio .back-to-top { bottom: calc(96px + 1.2rem); }
+@media (max-width: 760px) {
+  .rd-inner { grid-template-columns: auto 1fr auto; gap: .7rem; padding: .6rem .8rem; }
+  .rd-screen { width: 74px; }
+  .rd-close { position: absolute; top: .2rem; right: .3rem; min-height: 32px; min-width: 32px; font-size: 1rem; }
+  .rd-controls button { min-width: 40px; padding: 0 .3em; }
+  body.has-radio { padding-bottom: 78px; }
+}
+@media (prefers-reduced-motion: reduce) { .radio { animation: none; } }

@@ -18,7 +18,7 @@ window.REG_ALBUMS = [
 "빨간 마후라 [군가]"
 ],
 "art": "assets/img/photos/album01.jpg",
-"credits": "정규 1집 · 발매 1980. 10. · 현대음향 · 수록곡 12곡 (maniadb 대조)"
+"credits": "정규 1집 · 발매 1980. 10. · 현대음향 · 12곡 수록"
 },
 {
 "no": 2,
@@ -37,7 +37,7 @@ window.REG_ALBUMS = [
 "산마을 [건전가요]"
 ],
 "art": "assets/img/photos/album02.jpg",
-"credits": "정규 2집 · 발매 1981. 5. 7. · Jigu · 수록곡 11곡 (maniadb 대조)"
+"credits": "정규 2집 · 발매 1981. 5. 7. · Jigu · 11곡 수록"
 },
 {
 "no": 3,
@@ -58,7 +58,7 @@ window.REG_ALBUMS = [
 "산울림 [건전가요]"
 ],
 "art": "assets/img/covers/reg03.jpg",
-"credits": "정규 3집 · 발매 1982. 4. · Jigu · 수록곡 13곡 (maniadb 대조)"
+"credits": "정규 3집 · 발매 1982. 4. · Jigu · 13곡 수록"
 },
 {
 "no": 4,
@@ -78,7 +78,7 @@ window.REG_ALBUMS = [
 "고독 (경음악)"
 ],
 "art": "assets/img/photos/album04.jpg",
-"credits": "정규 4집 · 발매 1983 (연도 추정) · 수록곡 12곡 (maniadb 대조)"
+"credits": "정규 4집 · 발매 1983 · 12곡 수록"
 },
 {
 "no": 5,
@@ -98,7 +98,7 @@ window.REG_ALBUMS = [
 "시장에 가면 [건전가요]"
 ],
 "art": "assets/img/covers/reg05.jpg",
-"credits": "정규 5집 · 발매 1984. 4. · HKR · 수록곡 12곡 (maniadb 대조)"
+"credits": "정규 5집 · 발매 1984. 4. · HKR · 12곡 수록"
 },
 {
 "no": 6,
@@ -118,7 +118,7 @@ window.REG_ALBUMS = [
 "시장에 가면 [건전가요]"
 ],
 "art": "assets/img/covers/reg06.jpg",
-"credits": "정규 6집 · 발매 1985. 6. 15. · HKR · 수록곡 12곡 (maniadb 대조)"
+"credits": "정규 6집 · 발매 1985. 6. 15. · HKR · 12곡 수록"
 },
 {
 "no": 7,
@@ -137,7 +137,7 @@ window.REG_ALBUMS = [
 "이세상의 어린이 [건전가요]"
 ],
 "art": "assets/img/photos/album07.jpg",
-"credits": "정규 7집 · 발매 1987. 4. · Jigu · 수록곡 11곡 (maniadb 대조)"
+"credits": "정규 7집 · 발매 1987. 4. · Jigu · 11곡 수록"
 },
 {
 "no": 8,
@@ -155,7 +155,7 @@ window.REG_ALBUMS = [
 "서로 믿는 우리마음 [건전가요]"
 ],
 "art": "assets/img/covers/reg08.jpg",
-"credits": "정규 8집 · 발매 1988 (연도 추정) · 수록곡 10곡 (maniadb 대조)"
+"credits": "정규 8집 · 발매 1988 · 10곡 수록"
 },
 {
 "no": 9,
@@ -173,7 +173,7 @@ window.REG_ALBUMS = [
 "와인"
 ],
 "art": "assets/img/photos/album09.jpg",
-"credits": "정규 9집 · 발매 1989 (연도 추정) · 수록곡 10곡 (maniadb 대조)"
+"credits": "정규 9집 · 발매 1989 · 10곡 수록"
 },
 {
 "no": 10,
@@ -191,7 +191,7 @@ window.REG_ALBUMS = [
 "이별 연습"
 ],
 "art": "assets/img/photos/album10.jpg",
-"credits": "정규 10집 · 발매 1991 (연도 추정) · 수록곡 10곡 (maniadb 대조)"
+"credits": "정규 10집 · 발매 1991 · 10곡 수록"
 },
 {
 "no": 11,
@@ -207,7 +207,7 @@ window.REG_ALBUMS = [
 "나의 겨울"
 ],
 "art": "assets/img/photos/album11.jpg",
-"credits": "정규 11집 · 발매 1996. 5. · 세원음반 · 수록곡 8곡 (maniadb 대조)"
+"credits": "정규 11집 · 발매 1996. 5. · 세원음반 · 8곡 수록"
 },
 {
 "no": 12,
@@ -227,7 +227,7 @@ window.REG_ALBUMS = [
 "찬양해 Jesus (찬양해 주를 기뻐해)"
 ],
 "art": "assets/img/covers/reg12.jpg",
-"credits": "정규 12집 · 발매 1997 (연도 추정) · 수록곡 12곡 (maniadb 대조)"
+"credits": "정규 12집 · 발매 1997 · 12곡 수록"
 },
 {
 "no": 13,
@@ -247,7 +247,7 @@ window.REG_ALBUMS = [
 "Epilogue"
 ],
 "art": "assets/img/photos/album13.jpg",
-"credits": "정규 13집 · 발매 1997 (연도 추정) · 수록곡 12곡 (maniadb 대조)"
+"credits": "정규 13집 · 발매 1997 · 12곡 수록"
 },
 {
 "no": 14,
@@ -265,7 +265,7 @@ window.REG_ALBUMS = [
 "All For Us"
 ],
 "art": "assets/img/photos/album15.jpg",
-"credits": "정규 14집 · 발매 2001. 6. 25. · CREAM · 수록곡 10곡 (maniadb 대조)"
+"credits": "정규 14집 · 발매 2001. 6. 25. · CREAM · 10곡 수록"
 },
 {
 "no": 15,
@@ -287,7 +287,7 @@ window.REG_ALBUMS = [
 "Love"
 ],
 "art": "assets/img/photos/jazz-album.jpg",
-"credits": "정규 15집 · 발매 2003. 9. 24. · C&C Media · 수록곡 14곡 (maniadb 대조)"
+"credits": "정규 15집 · 발매 2003. 9. 24. · C&C Media · 14곡 수록"
 },
 {
 "no": 16,
@@ -309,7 +309,7 @@ window.REG_ALBUMS = [
 "비상"
 ],
 "art": "assets/img/photos/album16.jpg",
-"credits": "정규 16집 · 발매 2004. 9. 9. · BES · 수록곡 14곡 (maniadb 대조)"
+"credits": "정규 16집 · 발매 2004. 9. 9. · BES · 14곡 수록"
 },
 {
 "no": 17,
@@ -329,7 +329,7 @@ window.REG_ALBUMS = [
 "Fantasia (Inst.)"
 ],
 "art": "assets/img/photos/album17.jpg",
-"credits": "정규 17집 · 발매 2009. 5. 8. · 지앤지프로덕션(주) · 수록곡 12곡 (maniadb 대조)"
+"credits": "정규 17집 · 발매 2009. 5. 8. · 지앤지프로덕션(주) · 12곡 수록"
 },
 {
 "no": 18,
@@ -351,6 +351,6 @@ window.REG_ALBUMS = [
 "아름다운 Girl (Inst.)"
 ],
 "art": "assets/img/photos/album18.jpg",
-"credits": "정규 18집 · 발매 2013. 9. 25. · Sony · 수록곡 14곡 (maniadb 대조)"
+"credits": "정규 18집 · 발매 2013. 9. 25. · Sony · 14곡 수록"
 }
 ];

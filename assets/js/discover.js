@@ -152,13 +152,21 @@
     storm: [95, 96, 99],
     cloudy: [2, 3]
   };
-  function weatherKey(code, temp, isDay, month, hour) {
+  function specialKey(month, day) {
+    if (month === 12 && day >= 20 && day <= 26) return "christmas";
+    if (month === 4) return "spring-flower";
+    return null;
+  }
+  function weatherKey(code, temp, isDay, month, hour, wind, day) {
     if (WMO.snow.indexOf(code) >= 0) return "snow";
-    if (WMO.storm.indexOf(code) >= 0) return "storm";
+    if (WMO.storm.indexOf(code) >= 0) return "windy";
     if (WMO.rain.indexOf(code) >= 0) return (month >= 6 && month <= 7) ? "monsoon" : "rain";
     if (WMO.fog.indexOf(code) >= 0) return "fog";
     if (temp >= 31) return "hot";
     if (temp <= 0) return "cold-winter";
+    if (wind >= 28) return "windy";
+    var sp = specialKey(month, day);
+    if (sp && isDay) return sp;
     if (WMO.cloudy.indexOf(code) >= 0) return "cloudy";
     if (!isDay) return hour >= 4 && hour < 6 ? "dawn" : "night";
     if (hour < 11) return "morning";
@@ -224,23 +232,25 @@
     var now = new Date();
     var month = now.getMonth() + 1, hour = now.getHours();
     var LABEL = isEN
-      ? { snow: "Snow over Seoul", storm: "A stormy sky", rain: "Rain today", monsoon: "Monsoon rain", fog: "Morning fog",
+      ? { snow: "Snow over Seoul", windy: "A windy day", rain: "Rain today", monsoon: "Monsoon rain", fog: "Morning fog",
+          christmas: "The Christmas season", "spring-flower": "April, in bloom",
           hot: "A hot day", "cold-winter": "A cold day", cloudy: "An overcast sky", dawn: "Before dawn", night: "Tonight",
           morning: "This morning", "clear-spring": "A clear spring day", "clear-summer": "A bright summer day", "clear-autumn": "A clear autumn day" }
-      : { snow: "눈 내리는 오늘", storm: "천둥 치는 하늘", rain: "비 오는 오늘", monsoon: "장맛비 내리는 오늘", fog: "안개 낀 아침",
+      : { snow: "눈 내리는 오늘", windy: "바람 부는 오늘", rain: "비 오는 오늘", monsoon: "장맛비 내리는 오늘", fog: "안개 낀 아침",
+          christmas: "성탄의 계절", "spring-flower": "꽃 피는 사월",
           hot: "무더운 오늘", "cold-winter": "추운 오늘", cloudy: "흐린 하늘", dawn: "새벽녘", night: "오늘 밤",
           morning: "오늘 아침", "clear-spring": "맑은 봄날", "clear-summer": "환한 여름날", "clear-autumn": "맑은 가을날" };
 
     /* 날씨를 못 받아도 계절 추천은 반드시 뜬다 */
-    var fallbackKey = seasonKey(month, hour, hour >= 6 && hour < 20);
+    var fallbackKey = specialKey(month, now.getDate()) || seasonKey(month, hour, hour >= 6 && hour < 20);
     paint(fallbackKey, LABEL[fallbackKey] || "");
 
-    fetch("https://api.open-meteo.com/v1/forecast?latitude=37.5665&longitude=126.978&current=temperature_2m,weather_code,is_day&timezone=Asia%2FSeoul")
+    fetch("https://api.open-meteo.com/v1/forecast?latitude=37.5665&longitude=126.978&current=temperature_2m,weather_code,is_day,wind_speed_10m&timezone=Asia%2FSeoul")
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (d) {
         if (!d || !d.current) return;
         var c = d.current;
-        var key = weatherKey(c.weather_code, c.temperature_2m, c.is_day === 1, month, hour);
+        var key = weatherKey(c.weather_code, c.temperature_2m, c.is_day === 1, month, hour, c.wind_speed_10m || 0, now.getDate());
         var temp = Math.round(c.temperature_2m);
         var head = (LABEL[key] || "") + (isEN ? " · Seoul " + temp + "°C" : " · 서울 " + temp + "°C");
         paint(key, head);
