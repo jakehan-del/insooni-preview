@@ -1,13 +1,13 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS, 매일). 부정 키워드 제외·중복 병합.",
- "updated": "2026-07-29",
+ "updated": "2026-07-30",
  "items": [
   {
    "date": "2026-07-27",
    "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
    "source": "v.daum.net",
    "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1GX3hoUzdOcG1SMngyNXBGVmF4YUlMTmdMZkJyZXV4a3RXRHpwVnlFT3NfWHMxTzhmWHFlRTF4MHV0ODNjTFNVRG9KWEtxWlE?oc=5",
+   "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE52cFRPVGYyaTNTdl8xRlFaRUdicmFpOWo5aW03WUhjcHYxekVGckRYbTNnSk1hTTJkS01iRURPOVpuRlFzcnc?oc=5",
    "type": "공연",
    "auto": true
   },
@@ -32,9 +32,9 @@
   {
    "date": "2026-07-24",
    "title": "‘불꽃야구’ 동국대전, 경수진 시구·인순이 애국가 출격",
-   "source": "v.daum.net",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBDaVVRbUhxdkowNTVmaE44UzF1RV9KbG1uc211TmFRM0ZMRjF1bnA4NU5leE9XLXpBZ3pFZlhPazNBeVpyQUlyQ3hXN1pNVW8?oc=5",
+   "source": "bntnews.co.kr",
+   "sourceSite": "https://www.bntnews.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE9PM3ctV3dsZEhwY0JlTnV5OUVnZHZHNDE1d25uWm5HMnR2X094NXFoa2pUZXpGNXZ4R2NCNDZuU29Ta0Z6aklNaVNieGdjMEtld1hOOFBoWWg0c0lqQlcteGtxenQ?oc=5",
    "type": "공연",
    "auto": true
   },
@@ -44,15 +44,6 @@
    "source": "스포츠경향",
    "sourceSite": "https://sports.khan.co.kr",
    "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTFA1X0VxTzh0WGVNdFZ2MXNJNUlXcHJBcVVHVk5Gb3ZzakdMb1RoajY1VndwNXRBZlU5aTJSNWlIaVh5Zk5iOE9mUzR3QmZDQVJvRTh6dXFFNDlaS1FxWkHSAWNBVV95cUxQSWVGSnRuYkx1TTJqSmZWUTUxU283cTJmRm9yM3k5Wkh5T2tMcDRtc0VTTzBZcDJLdG1nWnEtZEJxeHlEUjhKNmpCaDVKaDVLbjB0dGZibjhSUVpKOC1FdG1rXzg?oc=5",
-   "type": "공연",
-   "auto": true
-  },
-  {
-   "date": "2026-07-24",
-   "title": "인순이·경수진, ‘특집 불꽃야구’ 애국가·시구로 고척돔 달군다",
-   "source": "톱스타뉴스",
-   "sourceSite": "https://www.topstarnews.net",
-   "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE04SXRKYjRGblVjVTRBRWxTdU90VU1zVUhJUmUwYkYwdjlCQ2twU0k1NEpZUHFqblMtSXVGN0liVTBPUURwZjhjbVNNRDY5dW1vQmQ3RXM2RGp5R2hwUFp4aUtRVzFFdkNwV040bml6anlzZw?oc=5",
    "type": "공연",
    "auto": true
   },
@@ -68,7 +59,7 @@
   {
    "date": "2026-06-30",
    "title": "애국가 부르는 가수 인순이",
-   "source": "뉴시스",
+   "source": "newsis.com",
    "sourceSite": "https://www.newsis.com",
    "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9qd09CNUJrVUUwVG9jbGxKMXBGSXRHQTd3Y1Q4QnA4WnppbVJrU0NHYWYzcDBLZnNYM1RVREdUN0t5TzFqOWEybTJ5aEo3cE1BNDhXakRWZk9Dc2lWc1gwVw?oc=5",
    "type": "공연",
@@ -116,6 +107,15 @@
    "source": "K채널",
    "sourceSite": "https://www.kchannel.kr",
    "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE8zbkRNWlBGMzN1QWV4aGZ6N0puSFZzNlo1MERPTDBFVWxDZjBPZktod0dEcUtUQXFOc2FfRUxEQzBVb2FKSGxxWHNkel94OWFRa2RXVXV6UFJzek5CRXVwMlVHRWVYYkt6ekE?oc=5",
+   "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-05-21",
+   "title": "경주 고분 콘서트 '봉황대 뮤직스퀘어' 내달 5일 개막…인순이·김태우 등",
+   "source": "newsis.com",
+   "sourceSite": "https://www.newsis.com",
+   "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE1JbG9NZElJeVhQOEJURTZrT0ZzT3Z1NFRNeEowdEJFcDE5Y3hGYndJR3RvVnpudzRGVVpJRjdSYWhZNkdvbE1xaVVkM2FaMlFzRzBzV0FEdzZ5Z2xaYmJxQdIBeEFVX3lxTE5Kek82MVdOdUljaEpOYXZjdHNzR25kbkhRRVlacms0aWw5MXphM0FLMXJzUHFCVjhiZDJkWVdfc2pSSW9TUnU2d2J5VmxGMmp1bE41Tk5YZVctMnN5NUhSZE5aaU1mN1RBbEhfbFdDZVRidnBTd3EyWQ?oc=5",
    "type": "공연",
    "auto": true
   },
