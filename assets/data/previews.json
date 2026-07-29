@@ -1,4 +1,5 @@
 {
+"note": "애플이 공식 제공하는 30초 프리뷰. g=라우드니스 보정, p=한 박 길이(초), b=첫 박, s=앞 무음, e=에너지, set=믹스 묶음. 분석은 배포 전에 미리 계산해 둔다.",
 "tracks": [
 {
 "t": "꿈이였나봐",
@@ -6,7 +7,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/a3/00/43/a3004382-32f9-8b2b-90b9-c80b0227b70e/8809704623506_cover.jpg/400x400bb.jpg",
 "al": "인연",
 "y": "1980",
-"no": 1
+"no": 1,
+"g": 1.514,
+"p": 0.4296,
+"b": 0.197,
+"s": 0.0,
+"e": -0.74,
+"set": "calm"
 },
 {
 "t": "내마음 흔들려",
@@ -14,7 +21,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/a3/00/43/a3004382-32f9-8b2b-90b9-c80b0227b70e/8809704623506_cover.jpg/400x400bb.jpg",
 "al": "인연",
 "y": "1980",
-"no": 1
+"no": 1,
+"g": 1.547,
+"p": 0.6153,
+"b": 0.104,
+"s": 0.0,
+"e": -0.69,
+"set": "calm"
 },
 {
 "t": "복돌이",
@@ -22,7 +35,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/a3/00/43/a3004382-32f9-8b2b-90b9-c80b0227b70e/8809704623506_cover.jpg/400x400bb.jpg",
 "al": "인연",
 "y": "1980",
-"no": 1
+"no": 1,
+"g": 1.318,
+"p": 0.5341,
+"b": 0.232,
+"s": 0.0,
+"e": -0.27,
+"set": "calm"
 },
 {
 "t": "빨간 마후라",
@@ -30,7 +49,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/a3/00/43/a3004382-32f9-8b2b-90b9-c80b0227b70e/8809704623506_cover.jpg/400x400bb.jpg",
 "al": "인연",
 "y": "1980",
-"no": 1
+"no": 1,
+"g": 1.553,
+"p": 0.5457,
+"b": 0.522,
+"s": 0.0,
+"e": -0.42,
+"set": "calm"
 },
 {
 "t": "웃어주세요",
@@ -38,7 +63,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/a3/00/43/a3004382-32f9-8b2b-90b9-c80b0227b70e/8809704623506_cover.jpg/400x400bb.jpg",
 "al": "인연",
 "y": "1980",
-"no": 1
+"no": 1,
+"g": 1.379,
+"p": 0.4992,
+"b": 0.383,
+"s": 0.0,
+"e": 0.24,
+"set": "bright"
 },
 {
 "t": "인연",
@@ -46,7 +77,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/a3/00/43/a3004382-32f9-8b2b-90b9-c80b0227b70e/8809704623506_cover.jpg/400x400bb.jpg",
 "al": "인연",
 "y": "1980",
-"no": 1
+"no": 1,
+"g": 1.365,
+"p": 0.8243,
+"b": 0.453,
+"s": 0.0,
+"e": -0.34,
+"set": "calm"
 },
 {
 "t": "재수생",
@@ -54,7 +91,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/a3/00/43/a3004382-32f9-8b2b-90b9-c80b0227b70e/8809704623506_cover.jpg/400x400bb.jpg",
 "al": "인연",
 "y": "1980",
-"no": 1
+"no": 1,
+"g": 1.445,
+"p": 0.5689,
+"b": 0.383,
+"s": 0.0,
+"e": 0.52,
+"set": "bright"
 },
 {
 "t": "정말로 모르시나",
@@ -62,7 +105,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/a3/00/43/a3004382-32f9-8b2b-90b9-c80b0227b70e/8809704623506_cover.jpg/400x400bb.jpg",
 "al": "인연",
 "y": "1980",
-"no": 1
+"no": 1,
+"g": 1.383,
+"p": 0.685,
+"b": 0.488,
+"s": 0.0,
+"e": -0.21,
+"set": "calm"
 },
 {
 "t": "조용한 이별",
@@ -70,7 +119,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/a3/00/43/a3004382-32f9-8b2b-90b9-c80b0227b70e/8809704623506_cover.jpg/400x400bb.jpg",
 "al": "인연",
 "y": "1980",
-"no": 1
+"no": 1,
+"g": 1.641,
+"p": 0.4876,
+"b": 0.035,
+"s": 0.0,
+"e": -0.03,
+"set": "calm"
 },
 {
 "t": "가야지",
@@ -78,7 +133,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music/34/1b/72/mzi.vwbeaist.jpg/400x400bb.jpg",
 "al": "인순이 - 신중현작곡집",
 "y": "1981",
-"no": 2
+"no": 2,
+"g": 0.741,
+"p": 0.4818,
+"b": 0.128,
+"s": 0.0,
+"e": -0.02,
+"set": "bright"
 },
 {
 "t": "누가",
@@ -86,7 +147,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music/34/1b/72/mzi.vwbeaist.jpg/400x400bb.jpg",
 "al": "인순이 - 신중현작곡집",
 "y": "1981",
-"no": 2
+"no": 2,
+"g": 0.966,
+"p": 0.4528,
+"b": 0.186,
+"s": 0.0,
+"e": -0.55,
+"set": "calm"
 },
 {
 "t": "다시 말해요",
@@ -94,7 +161,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music/34/1b/72/mzi.vwbeaist.jpg/400x400bb.jpg",
 "al": "인순이 - 신중현작곡집",
 "y": "1981",
-"no": 2
+"no": 2,
+"g": 1.001,
+"p": 0.476,
+"b": 0.372,
+"s": 0.0,
+"e": -0.39,
+"set": "calm"
 },
 {
 "t": "달님아",
@@ -102,7 +175,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music/34/1b/72/mzi.vwbeaist.jpg/400x400bb.jpg",
 "al": "인순이 - 신중현작곡집",
 "y": "1981",
-"no": 2
+"no": 2,
+"g": 0.75,
+"p": 0.5341,
+"b": 0.43,
+"s": 0.0,
+"e": 0.54,
+"set": "bright"
 },
 {
 "t": "떠나야할 그사람",
@@ -110,7 +189,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music/69/f5/33/mzi.ympbynvk.jpg/400x400bb.jpg",
 "al": "한국가요사19집",
 "y": "1981",
-"no": 2
+"no": 2,
+"g": 1.189,
+"p": 0.4528,
+"b": 0.43,
+"s": 0.0,
+"e": 0.21,
+"set": "bright"
 },
 {
 "t": "봄비",
@@ -118,7 +203,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music/34/1b/72/mzi.vwbeaist.jpg/400x400bb.jpg",
 "al": "인순이 - 신중현작곡집",
 "y": "1981",
-"no": 2
+"no": 2,
+"g": 1.011,
+"p": 0.418,
+"b": 0.313,
+"s": 0.0,
+"e": -1.04,
+"set": "calm"
 },
 {
 "t": "빗방울",
@@ -126,7 +217,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music/34/1b/72/mzi.vwbeaist.jpg/400x400bb.jpg",
 "al": "인순이 - 신중현작곡집",
 "y": "1981",
-"no": 2
+"no": 2,
+"g": 0.794,
+"p": 0.5689,
+"b": 0.221,
+"s": 0.0,
+"e": -0.05,
+"set": "calm"
 },
 {
 "t": "석양",
@@ -134,7 +231,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music/34/1b/72/mzi.vwbeaist.jpg/400x400bb.jpg",
 "al": "인순이 - 신중현작곡집",
 "y": "1981",
-"no": 2
+"no": 2,
+"g": 0.785,
+"p": 0.4876,
+"b": 0.151,
+"s": 0.0,
+"e": 0.32,
+"set": "bright"
 },
 {
 "t": "오솔길을 따라서",
@@ -142,7 +245,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music/34/1b/72/mzi.vwbeaist.jpg/400x400bb.jpg",
 "al": "인순이 - 신중현작곡집",
 "y": "1981",
-"no": 2
+"no": 2,
+"g": 0.851,
+"p": 0.4644,
+"b": 0.197,
+"s": 0.0,
+"e": 0.15,
+"set": "bright"
 },
 {
 "t": "추억",
@@ -150,7 +259,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music/34/1b/72/mzi.vwbeaist.jpg/400x400bb.jpg",
 "al": "인순이 - 신중현작곡집",
 "y": "1981",
-"no": 2
+"no": 2,
+"g": 0.861,
+"p": 0.4644,
+"b": 0.337,
+"s": 0.0,
+"e": -0.32,
+"set": "calm"
 },
 {
 "t": "가신 님 그리워",
@@ -158,7 +273,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/75/b3/4d/75b34d88-00fd-3394-96b3-0bf35878f614/8800309390596_cover.jpg/400x400bb.jpg",
 "al": "인순이 2집",
 "y": "1982",
-"no": 3
+"no": 3,
+"g": 1.66,
+"p": 0.4876,
+"b": 0.36,
+"s": 0.0,
+"e": 0.07,
+"set": "bright"
 },
 {
 "t": "너와 나의 사랑 노래",
@@ -166,7 +287,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/75/b3/4d/75b34d88-00fd-3394-96b3-0bf35878f614/8800309390596_cover.jpg/400x400bb.jpg",
 "al": "인순이 2집",
 "y": "1982",
-"no": 3
+"no": 3,
+"g": 2.213,
+"p": 0.8707,
+"b": 0.65,
+"s": 0.0,
+"e": -0.35,
+"set": "calm"
 },
 {
 "t": "말없이",
@@ -174,7 +301,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/75/b3/4d/75b34d88-00fd-3394-96b3-0bf35878f614/8800309390596_cover.jpg/400x400bb.jpg",
 "al": "인순이 2집",
 "y": "1982",
-"no": 3
+"no": 3,
+"g": 1.636,
+"p": 0.4876,
+"b": 0.174,
+"s": 0.0,
+"e": -0.27,
+"set": "calm"
 },
 {
 "t": "미워 미워 미워",
@@ -182,7 +315,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/75/b3/4d/75b34d88-00fd-3394-96b3-0bf35878f614/8800309390596_cover.jpg/400x400bb.jpg",
 "al": "인순이 2집",
 "y": "1982",
-"no": 3
+"no": 3,
+"g": 1.585,
+"p": 0.7314,
+"b": 0.546,
+"s": 0.0,
+"e": 1.23,
+"set": "bright"
 },
 {
 "t": "바보같은 내 마음",
@@ -190,7 +329,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/75/b3/4d/75b34d88-00fd-3394-96b3-0bf35878f614/8800309390596_cover.jpg/400x400bb.jpg",
 "al": "인순이 2집",
 "y": "1982",
-"no": 3
+"no": 3,
+"g": 1.629,
+"p": 0.6734,
+"b": 0.534,
+"s": 0.0,
+"e": -0.82,
+"set": "calm"
 },
 {
 "t": "슬픔만 남아 있어요",
@@ -198,7 +343,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music/23/77/ab/mzi.zpmyewny.jpg/400x400bb.jpg",
 "al": "한국가요사 21집",
 "y": "1982",
-"no": 3
+"no": 3,
+"g": 1.109,
+"p": 0.476,
+"b": 0.197,
+"s": 0.0,
+"e": -0.13,
+"set": "calm"
 },
 {
 "t": "연락선은 떠나가네",
@@ -206,7 +357,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/75/b3/4d/75b34d88-00fd-3394-96b3-0bf35878f614/8800309390596_cover.jpg/400x400bb.jpg",
 "al": "인순이 2집",
 "y": "1982",
-"no": 3
+"no": 3,
+"g": 1.718,
+"p": 0.5108,
+"b": 0.313,
+"s": 0.0,
+"e": 0.2,
+"set": "bright"
 },
 {
 "t": "울지도 못합니다",
@@ -214,7 +371,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/75/b3/4d/75b34d88-00fd-3394-96b3-0bf35878f614/8800309390596_cover.jpg/400x400bb.jpg",
 "al": "인순이 2집",
 "y": "1982",
-"no": 3
+"no": 3,
+"g": 1.66,
+"p": 0.5108,
+"b": 0.081,
+"s": 0.0,
+"e": 1.48,
+"set": "bright"
 },
 {
 "t": "이 몸이 늙어",
@@ -222,7 +385,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/75/b3/4d/75b34d88-00fd-3394-96b3-0bf35878f614/8800309390596_cover.jpg/400x400bb.jpg",
 "al": "인순이 2집",
 "y": "1982",
-"no": 3
+"no": 3,
+"g": 1.514,
+"p": 0.8243,
+"b": 0.522,
+"s": 0.0,
+"e": 0.23,
+"set": "bright"
 },
 {
 "t": "이젠",
@@ -230,7 +399,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/75/b3/4d/75b34d88-00fd-3394-96b3-0bf35878f614/8800309390596_cover.jpg/400x400bb.jpg",
 "al": "인순이 2집",
 "y": "1982",
-"no": 3
+"no": 3,
+"g": 1.677,
+"p": 0.476,
+"b": 0.151,
+"s": 0.0,
+"e": 0.36,
+"set": "bright"
 },
 {
 "t": "잊으려네 잊으려네",
@@ -238,7 +413,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/75/b3/4d/75b34d88-00fd-3394-96b3-0bf35878f614/8800309390596_cover.jpg/400x400bb.jpg",
 "al": "인순이 2집",
 "y": "1982",
-"no": 3
+"no": 3,
+"g": 1.995,
+"p": 0.4296,
+"b": 0.232,
+"s": 0.0,
+"e": 0.44,
+"set": "bright"
 },
 {
 "t": "잊을 수 없어",
@@ -246,7 +427,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/75/b3/4d/75b34d88-00fd-3394-96b3-0bf35878f614/8800309390596_cover.jpg/400x400bb.jpg",
 "al": "인순이 2집",
 "y": "1982",
-"no": 3
+"no": 3,
+"g": 1.82,
+"p": 0.4992,
+"b": 0.267,
+"s": 0.0,
+"e": 0.2,
+"set": "bright"
 },
 {
 "t": "고독",
@@ -254,7 +441,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/e6/7a/81/e67a813a-f725-ae96-fac2-2a528ccdc5e4/8809856821591.jpg/400x400bb.jpg",
 "al": "인순이 골든 앨범",
 "y": "1983",
-"no": 4
+"no": 4,
+"g": 1.202,
+"p": 0.8359,
+"b": 0.163,
+"s": 0.0,
+"e": -0.82,
+"set": "calm"
 },
 {
 "t": "그리운 내사랑아",
@@ -262,7 +455,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/1d/33/6c/1d336c1c-d8f8-915f-79b1-e9f32d030fa3/8809788344205.jpg/400x400bb.jpg",
 "al": "인순이 히트곡 선집 제1집",
 "y": "1983",
-"no": 4
+"no": 4,
+"g": 2.6,
+"p": 0.5689,
+"b": 0.337,
+"s": 0.0,
+"e": -0.79,
+"set": "calm"
 },
 {
 "t": "내 고향집",
@@ -270,7 +469,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/e6/7a/81/e67a813a-f725-ae96-fac2-2a528ccdc5e4/8809856821591.jpg/400x400bb.jpg",
 "al": "인순이 골든 앨범",
 "y": "1983",
-"no": 4
+"no": 4,
+"g": 0.668,
+"p": 0.8011,
+"b": 0.104,
+"s": 0.0,
+"e": -0.31,
+"set": "calm"
 },
 {
 "t": "다른 사람 말처럼 들리네",
@@ -278,7 +483,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/1d/33/6c/1d336c1c-d8f8-915f-79b1-e9f32d030fa3/8809788344205.jpg/400x400bb.jpg",
 "al": "인순이 히트곡 선집 제1집",
 "y": "1983",
-"no": 4
+"no": 4,
+"g": 1.175,
+"p": 0.4876,
+"b": 0.313,
+"s": 0.0,
+"e": 0.76,
+"set": "bright"
 },
 {
 "t": "밤이면 밤마다",
@@ -286,7 +497,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/43/41/d4/4341d4f8-7266-eb81-b7a2-0d30449446ca/8806384512847_cover.jpg/400x400bb.jpg",
 "al": "노래스케치 2집 - EP",
 "y": "1983",
-"no": 4
+"no": 4,
+"g": 1.096,
+"p": 0.3947,
+"b": 0.035,
+"s": 0.0,
+"e": 0.44,
+"set": "bright"
 },
 {
 "t": "손모아 마음모아",
@@ -294,7 +511,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/3e/b1/7c/3eb17cc0-0373-1c78-92e5-fa4d65237a39/8800309390589_cover.jpg/400x400bb.jpg",
 "al": "인순이 4집",
 "y": "1983",
-"no": 4
+"no": 4,
+"g": 1.496,
+"p": 0.476,
+"b": 0.012,
+"s": 0.0,
+"e": -0.04,
+"set": "calm"
 },
 {
 "t": "슬픈 아침",
@@ -302,7 +525,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/1d/33/6c/1d336c1c-d8f8-915f-79b1-e9f32d030fa3/8809788344205.jpg/400x400bb.jpg",
 "al": "인순이 히트곡 선집 제1집",
 "y": "1983",
-"no": 4
+"no": 4,
+"g": 2.188,
+"p": 0.7779,
+"b": 0.604,
+"s": 0.0,
+"e": -0.31,
+"set": "calm"
 },
 {
 "t": "왜 나를 떠나셨나요",
@@ -310,7 +539,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/ba/32/5a/ba325abb-a21e-3f7c-70f5-a7c36e26f53b/8806184706361.jpg/400x400bb.jpg",
 "al": "골든앨범",
 "y": "1983",
-"no": 4
+"no": 4,
+"g": 2.6,
+"p": 0.6618,
+"b": 0.395,
+"s": 0.0,
+"e": -0.78,
+"set": "calm"
 },
 {
 "t": "욕망",
@@ -318,7 +553,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/ba/32/5a/ba325abb-a21e-3f7c-70f5-a7c36e26f53b/8806184706361.jpg/400x400bb.jpg",
 "al": "골든앨범",
 "y": "1983",
-"no": 4
+"no": 4,
+"g": 1.365,
+"p": 0.5341,
+"b": 0.476,
+"s": 0.0,
+"e": 0.19,
+"set": "bright"
 },
 {
 "t": "한밤중",
@@ -326,7 +567,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/e6/7a/81/e67a813a-f725-ae96-fac2-2a528ccdc5e4/8809856821591.jpg/400x400bb.jpg",
 "al": "인순이 골든 앨범",
 "y": "1983",
-"no": 4
+"no": 4,
+"g": 0.638,
+"p": 0.4296,
+"b": 0.383,
+"s": 0.0,
+"e": 0.8,
+"set": "bright"
 },
 {
 "t": "길섶에 핀꽃",
@@ -334,7 +581,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/1d/33/6c/1d336c1c-d8f8-915f-79b1-e9f32d030fa3/8809788344205.jpg/400x400bb.jpg",
 "al": "인순이 히트곡 선집 제1집",
 "y": "1984",
-"no": 5
+"no": 5,
+"g": 1.059,
+"p": 0.8359,
+"b": 0.093,
+"s": 0.0,
+"e": -0.01,
+"set": "bright"
 },
 {
 "t": "너와 나",
@@ -342,7 +595,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/ba/32/5a/ba325abb-a21e-3f7c-70f5-a7c36e26f53b/8806184706361.jpg/400x400bb.jpg",
 "al": "골든앨범",
 "y": "1984",
-"no": 5
+"no": 5,
+"g": 0.989,
+"p": 0.4876,
+"b": 0.29,
+"s": 0.0,
+"e": 0.17,
+"set": "bright"
 },
 {
 "t": "아름다운 우리나라",
@@ -350,7 +609,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/1d/33/6c/1d336c1c-d8f8-915f-79b1-e9f32d030fa3/8809788344205.jpg/400x400bb.jpg",
 "al": "인순이 히트곡 선집 제1집",
 "y": "1984",
-"no": 5
+"no": 5,
+"g": 1.303,
+"p": 0.5224,
+"b": 0.464,
+"s": 0.0,
+"e": -0.15,
+"set": "calm"
 },
 {
 "t": "야속한 내님",
@@ -358,7 +623,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/1d/33/6c/1d336c1c-d8f8-915f-79b1-e9f32d030fa3/8809788344205.jpg/400x400bb.jpg",
 "al": "인순이 히트곡 선집 제1집",
 "y": "1984",
-"no": 5
+"no": 5,
+"g": 1.259,
+"p": 0.8591,
+"b": 0.139,
+"s": 0.0,
+"e": 0.18,
+"set": "bright"
 },
 {
 "t": "여기가 어디냐",
@@ -366,7 +637,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/ba/32/5a/ba325abb-a21e-3f7c-70f5-a7c36e26f53b/8806184706361.jpg/400x400bb.jpg",
 "al": "골든앨범",
 "y": "1984",
-"no": 5
+"no": 5,
+"g": 1.303,
+"p": 0.5224,
+"b": 0.43,
+"s": 0.0,
+"e": -0.04,
+"set": "calm"
 },
 {
 "t": "이별의 눈동자",
@@ -374,7 +651,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/1d/33/6c/1d336c1c-d8f8-915f-79b1-e9f32d030fa3/8809788344205.jpg/400x400bb.jpg",
 "al": "인순이 히트곡 선집 제1집",
 "y": "1984",
-"no": 5
+"no": 5,
+"g": 1.479,
+"p": 0.5921,
+"b": 0.012,
+"s": 0.0,
+"e": -0.49,
+"set": "calm"
 },
 {
 "t": "흔들리는 갈대",
@@ -382,7 +665,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/1d/33/6c/1d336c1c-d8f8-915f-79b1-e9f32d030fa3/8809788344205.jpg/400x400bb.jpg",
 "al": "인순이 히트곡 선집 제1집",
 "y": "1984",
-"no": 5
+"no": 5,
+"g": 1.202,
+"p": 0.418,
+"b": 0.313,
+"s": 0.0,
+"e": -0.38,
+"set": "calm"
 },
 {
 "t": "Miss나비를 찾아서",
@@ -390,7 +679,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/67/d0/54/67d054c7-22f8-f25c-b123-d213892d31e1/8800323546368_cover.jpg/400x400bb.jpg",
 "al": "에레나라 불리운 여인",
 "y": "1987",
-"no": 7
+"no": 7,
+"g": 0.767,
+"p": 0.6966,
+"b": 0.488,
+"s": 0.0,
+"e": -0.16,
+"set": "calm"
 },
 {
 "t": "겨울 찬가",
@@ -398,7 +693,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/67/d0/54/67d054c7-22f8-f25c-b123-d213892d31e1/8800323546368_cover.jpg/400x400bb.jpg",
 "al": "에레나라 불리운 여인",
 "y": "1987",
-"no": 7
+"no": 7,
+"g": 0.724,
+"p": 0.6734,
+"b": 0.406,
+"s": 0.0,
+"e": -0.36,
+"set": "calm"
 },
 {
 "t": "밤은 모든 것을 기억한다",
@@ -406,7 +707,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/67/d0/54/67d054c7-22f8-f25c-b123-d213892d31e1/8800323546368_cover.jpg/400x400bb.jpg",
 "al": "에레나라 불리운 여인",
 "y": "1987",
-"no": 7
+"no": 7,
+"g": 0.495,
+"p": 0.418,
+"b": 0.07,
+"s": 0.0,
+"e": 0.88,
+"set": "bright"
 },
 {
 "t": "비닐장판위의 딱정벌레",
@@ -414,7 +721,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/67/d0/54/67d054c7-22f8-f25c-b123-d213892d31e1/8800323546368_cover.jpg/400x400bb.jpg",
 "al": "에레나라 불리운 여인",
 "y": "1987",
-"no": 7
+"no": 7,
+"g": 0.507,
+"p": 0.5108,
+"b": 0.43,
+"s": 0.0,
+"e": 0.18,
+"set": "bright"
 },
 {
 "t": "비와 개구리",
@@ -422,7 +735,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/67/d0/54/67d054c7-22f8-f25c-b123-d213892d31e1/8800323546368_cover.jpg/400x400bb.jpg",
 "al": "에레나라 불리운 여인",
 "y": "1987",
-"no": 7
+"no": 7,
+"g": 0.569,
+"p": 0.8475,
+"b": 0.476,
+"s": 0.0,
+"e": -0.28,
+"set": "calm"
 },
 {
 "t": "사랑, 그 에필로그",
@@ -430,7 +749,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/67/d0/54/67d054c7-22f8-f25c-b123-d213892d31e1/8800323546368_cover.jpg/400x400bb.jpg",
 "al": "에레나라 불리운 여인",
 "y": "1987",
-"no": 7
+"no": 7,
+"g": 0.61,
+"p": 0.7082,
+"b": 0.058,
+"s": 0.0,
+"e": -0.02,
+"set": "bright"
 },
 {
 "t": "에레나라 불리운 여인",
@@ -438,7 +763,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/67/d0/54/67d054c7-22f8-f25c-b123-d213892d31e1/8800323546368_cover.jpg/400x400bb.jpg",
 "al": "에레나라 불리운 여인",
 "y": "1987",
-"no": 7
+"no": 7,
+"g": 0.646,
+"p": 0.7779,
+"b": 0.72,
+"s": 0.0,
+"e": -0.05,
+"set": "calm"
 },
 {
 "t": "장미들의 합창",
@@ -446,7 +777,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/67/d0/54/67d054c7-22f8-f25c-b123-d213892d31e1/8800323546368_cover.jpg/400x400bb.jpg",
 "al": "에레나라 불리운 여인",
 "y": "1987",
-"no": 7
+"no": 7,
+"g": 0.617,
+"p": 0.5108,
+"b": 0.348,
+"s": 0.0,
+"e": 0.09,
+"set": "bright"
 },
 {
 "t": "혼자 사는 여자",
@@ -454,7 +791,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/67/d0/54/67d054c7-22f8-f25c-b123-d213892d31e1/8800323546368_cover.jpg/400x400bb.jpg",
 "al": "에레나라 불리운 여인",
 "y": "1987",
-"no": 7
+"no": 7,
+"g": 0.708,
+"p": 0.7314,
+"b": 0.07,
+"s": 0.0,
+"e": 0.04,
+"set": "bright"
 },
 {
 "t": "Last Night In My Dream",
@@ -462,7 +805,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/1b/b7/6f/1bb76f56-a9ab-e272-0d8f-c2a285954e36/8809500381570_cover.jpg/400x400bb.jpg",
 "al": "On Some Street",
 "y": "1988",
-"no": 8
+"no": 8,
+"g": 1.778,
+"p": 0.8824,
+"b": 0.731,
+"s": 0.06,
+"e": -1.27,
+"set": "calm"
 },
 {
 "t": "이별연습",
@@ -470,7 +819,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/95/73/fa/9573faf5-d391-b9b1-34a3-db2588c4fce9/024543053293_cover.jpg/400x400bb.jpg",
 "al": "The Queen Of Soul",
 "y": "1989",
-"no": 9
+"no": 9,
+"g": 1.022,
+"p": 0.4412,
+"b": 0.313,
+"s": 1.36,
+"e": -0.89,
+"set": "calm"
 },
 {
 "t": "잠깐",
@@ -478,7 +833,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/30/7e/2c/307e2c9e-8bf3-77d9-b991-868a56e8e360/16_A_TO_Z_1_1500.png/400x400bb.jpg",
 "al": "16집 A TO Z",
 "y": "1991",
-"no": 10
+"no": 10,
+"g": 0.603,
+"p": 0.4412,
+"b": 0.221,
+"s": 0.37,
+"e": 0.52,
+"set": "bright"
 },
 {
 "t": "그대가 말하는 사랑",
@@ -486,7 +847,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/95/73/fa/9573faf5-d391-b9b1-34a3-db2588c4fce9/024543053293_cover.jpg/400x400bb.jpg",
 "al": "The Queen Of Soul",
 "y": "1996",
-"no": 11
+"no": 11,
+"g": 0.955,
+"p": 0.7895,
+"b": 0.743,
+"s": 0.0,
+"e": -0.15,
+"set": "calm"
 },
 {
 "t": "너의 곁에 나",
@@ -494,7 +861,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/95/73/fa/9573faf5-d391-b9b1-34a3-db2588c4fce9/024543053293_cover.jpg/400x400bb.jpg",
 "al": "The Queen Of Soul",
 "y": "1996",
-"no": 11
+"no": 11,
+"g": 1.034,
+"p": 0.5108,
+"b": 0.267,
+"s": 0.48,
+"e": -1.1,
+"set": "calm"
 },
 {
 "t": "또",
@@ -502,7 +875,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/95/73/fa/9573faf5-d391-b9b1-34a3-db2588c4fce9/024543053293_cover.jpg/400x400bb.jpg",
 "al": "The Queen Of Soul",
 "y": "1996",
-"no": 11
+"no": 11,
+"g": 0.716,
+"p": 0.4528,
+"b": 0.325,
+"s": 0.0,
+"e": 1.3,
+"set": "bright"
 },
 {
 "t": "밀애",
@@ -510,7 +889,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/95/73/fa/9573faf5-d391-b9b1-34a3-db2588c4fce9/024543053293_cover.jpg/400x400bb.jpg",
 "al": "The Queen Of Soul",
 "y": "1996",
-"no": 11
+"no": 11,
+"g": 0.596,
+"p": 0.6502,
+"b": 0.546,
+"s": 0.0,
+"e": 1.54,
+"set": "bright"
 },
 {
 "t": "이별을 준비할꺼야",
@@ -518,7 +903,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/95/73/fa/9573faf5-d391-b9b1-34a3-db2588c4fce9/024543053293_cover.jpg/400x400bb.jpg",
 "al": "The Queen Of Soul",
 "y": "1996",
-"no": 11
+"no": 11,
+"g": 0.589,
+"p": 0.4412,
+"b": 0.325,
+"s": 0.0,
+"e": 1.09,
+"set": "bright"
 },
 {
 "t": "혼자가 아닌 나",
@@ -526,7 +917,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/95/73/fa/9573faf5-d391-b9b1-34a3-db2588c4fce9/024543053293_cover.jpg/400x400bb.jpg",
 "al": "The Queen Of Soul",
 "y": "1996",
-"no": 11
+"no": 11,
+"g": 1.049,
+"p": 0.4412,
+"b": 0.43,
+"s": 0.0,
+"e": -0.86,
+"set": "calm"
 },
 {
 "t": "실버들",
@@ -534,7 +931,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/c6/d7/0f/c6d70f01-cb36-45be-1e3f-d77d0d3ff058/8809985874192_cover.jpg/400x400bb.jpg",
 "al": "인순이와 희자매",
 "y": "1997",
-"no": 13
+"no": 13,
+"g": 0.38,
+"p": 0.6269,
+"b": 0.116,
+"s": 0.0,
+"e": 1.68,
+"set": "bright"
 },
 {
 "t": "친구여",
@@ -542,7 +945,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/30/7e/2c/307e2c9e-8bf3-77d9-b991-868a56e8e360/16_A_TO_Z_1_1500.png/400x400bb.jpg",
 "al": "16집 A TO Z",
 "y": "1997",
-"no": 13
+"no": 13,
+"g": 0.589,
+"p": 0.476,
+"b": 0.0,
+"s": 0.35,
+"e": 0.36,
+"set": "bright"
 },
 {
 "t": "사랑가",
@@ -550,7 +959,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/8c/67/b8/8c67b8a7-fc71-c96f-585b-f0cd9b2e8ecd/77728091.jpg/400x400bb.jpg",
 "al": "인순이",
 "y": "2001",
-"no": 14
+"no": 14,
+"g": 1.905,
+"p": 0.4992,
+"b": 0.035,
+"s": 0.0,
+"e": -0.98,
+"set": "calm"
 },
 {
 "t": "All The Things You Are",
@@ -558,7 +973,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/4d/26/0f/4d260f97-b059-4095-d90e-72c375715586/8809477286755_cover.jpg/400x400bb.jpg",
 "al": "JAZZ",
 "y": "2003",
-"no": 15
+"no": 15,
+"g": 1.0,
+"p": 0.7082,
+"b": 0.29,
+"s": 0.29,
+"e": -1.04,
+"set": "calm"
 },
 {
 "t": "Autumn Leaves",
@@ -566,7 +987,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/4d/26/0f/4d260f97-b059-4095-d90e-72c375715586/8809477286755_cover.jpg/400x400bb.jpg",
 "al": "JAZZ",
 "y": "2003",
-"no": 15
+"no": 15,
+"g": 1.585,
+"p": 0.4876,
+"b": 0.255,
+"s": 0.0,
+"e": -1.33,
+"set": "calm"
 },
 {
 "t": "Caravan",
@@ -574,15 +1001,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/4d/26/0f/4d260f97-b059-4095-d90e-72c375715586/8809477286755_cover.jpg/400x400bb.jpg",
 "al": "JAZZ",
 "y": "2003",
-"no": 15
-},
-{
-"t": "Life",
-"u": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/f9/49/79/f94979f0-5a8d-3033-f8bb-c2dab7bd9c70/mzaf_8149501299251989865.plus.aac.p.m4a",
-"art": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/30/7e/2c/307e2c9e-8bf3-77d9-b991-868a56e8e360/16_A_TO_Z_1_1500.png/400x400bb.jpg",
-"al": "16집 A TO Z",
-"y": "2003",
-"no": 15
+"no": 15,
+"g": 0.776,
+"p": 0.5108,
+"b": 0.372,
+"s": 0.0,
+"e": 0.0,
+"set": "bright"
 },
 {
 "t": "Love",
@@ -590,7 +1015,12 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/a8/d0/fb/a8d0fbac-d0be-37c3-2ebd-630cfb3f2c53/8809038582128_cover.jpg/400x400bb.jpg",
 "al": "A To Z",
 "y": "2003",
-"no": 15
+"g": 1.295,
+"p": 0.4412,
+"b": 0.348,
+"s": 0.0,
+"e": -0.74,
+"set": "calm"
 },
 {
 "t": "Lullaby Birdland",
@@ -598,7 +1028,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/4d/26/0f/4d260f97-b059-4095-d90e-72c375715586/8809477286755_cover.jpg/400x400bb.jpg",
 "al": "JAZZ",
 "y": "2003",
-"no": 15
+"no": 15,
+"g": 0.794,
+"p": 0.4876,
+"b": 0.302,
+"s": 0.0,
+"e": -0.27,
+"set": "calm"
 },
 {
 "t": "My Love",
@@ -606,7 +1042,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/4d/26/0f/4d260f97-b059-4095-d90e-72c375715586/8809477286755_cover.jpg/400x400bb.jpg",
 "al": "JAZZ",
 "y": "2003",
-"no": 15
+"no": 15,
+"g": 0.804,
+"p": 0.5921,
+"b": 0.534,
+"s": 0.0,
+"e": -1.36,
+"set": "calm"
 },
 {
 "t": "Sasul Nanbong Ga",
@@ -614,7 +1056,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/4d/26/0f/4d260f97-b059-4095-d90e-72c375715586/8809477286755_cover.jpg/400x400bb.jpg",
 "al": "JAZZ",
 "y": "2003",
-"no": 15
+"no": 15,
+"g": 0.759,
+"p": 0.418,
+"b": 0.255,
+"s": 0.0,
+"e": 0.17,
+"set": "bright"
 },
 {
 "t": "Smile",
@@ -622,7 +1070,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/4d/26/0f/4d260f97-b059-4095-d90e-72c375715586/8809477286755_cover.jpg/400x400bb.jpg",
 "al": "JAZZ",
 "y": "2003",
-"no": 15
+"no": 15,
+"g": 0.794,
+"p": 0.3947,
+"b": 0.255,
+"s": 0.24,
+"e": -0.64,
+"set": "calm"
 },
 {
 "t": "Higher",
@@ -630,7 +1084,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/30/7e/2c/307e2c9e-8bf3-77d9-b991-868a56e8e360/16_A_TO_Z_1_1500.png/400x400bb.jpg",
 "al": "16집 A TO Z",
 "y": "2004",
-"no": 16
+"no": 16,
+"g": 0.403,
+"p": 0.5341,
+"b": 0.36,
+"s": 0.33,
+"e": 1.42,
+"set": "bright"
 },
 {
 "t": "My Life",
@@ -638,7 +1098,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/30/7e/2c/307e2c9e-8bf3-77d9-b991-868a56e8e360/16_A_TO_Z_1_1500.png/400x400bb.jpg",
 "al": "16집 A TO Z",
 "y": "2004",
-"no": 16
+"no": 16,
+"g": 0.457,
+"p": 0.4412,
+"b": 0.406,
+"s": 0.3,
+"e": 1.26,
+"set": "bright"
 },
 {
 "t": "Swing My Baby",
@@ -646,7 +1112,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/30/7e/2c/307e2c9e-8bf3-77d9-b991-868a56e8e360/16_A_TO_Z_1_1500.png/400x400bb.jpg",
 "al": "16집 A TO Z",
 "y": "2004",
-"no": 16
+"no": 16,
+"g": 0.631,
+"p": 0.6269,
+"b": 0.337,
+"s": 0.34,
+"e": 0.26,
+"set": "bright"
 },
 {
 "t": "Tonight",
@@ -654,7 +1126,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/30/7e/2c/307e2c9e-8bf3-77d9-b991-868a56e8e360/16_A_TO_Z_1_1500.png/400x400bb.jpg",
 "al": "16집 A TO Z",
 "y": "2004",
-"no": 16
+"no": 16,
+"g": 0.668,
+"p": 0.4876,
+"b": 0.279,
+"s": 1.34,
+"e": 0.13,
+"set": "bright"
 },
 {
 "t": "비상",
@@ -662,7 +1140,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/30/7e/2c/307e2c9e-8bf3-77d9-b991-868a56e8e360/16_A_TO_Z_1_1500.png/400x400bb.jpg",
 "al": "16집 A TO Z",
 "y": "2004",
-"no": 16
+"no": 16,
+"g": 0.881,
+"p": 0.4644,
+"b": 0.023,
+"s": 1.27,
+"e": 0.35,
+"set": "bright"
 },
 {
 "t": "비에 스친 날들",
@@ -670,7 +1154,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/30/7e/2c/307e2c9e-8bf3-77d9-b991-868a56e8e360/16_A_TO_Z_1_1500.png/400x400bb.jpg",
 "al": "16집 A TO Z",
 "y": "2004",
-"no": 16
+"no": 16,
+"g": 0.776,
+"p": 0.3831,
+"b": 0.313,
+"s": 0.37,
+"e": 0.81,
+"set": "bright"
 },
 {
 "t": "여자이니까",
@@ -678,7 +1168,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/30/7e/2c/307e2c9e-8bf3-77d9-b991-868a56e8e360/16_A_TO_Z_1_1500.png/400x400bb.jpg",
 "al": "16집 A TO Z",
 "y": "2004",
-"no": 16
+"no": 16,
+"g": 0.462,
+"p": 0.4296,
+"b": 0.337,
+"s": 0.37,
+"e": 0.55,
+"set": "bright"
 },
 {
 "t": "여정",
@@ -686,7 +1182,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/30/7e/2c/307e2c9e-8bf3-77d9-b991-868a56e8e360/16_A_TO_Z_1_1500.png/400x400bb.jpg",
 "al": "16집 A TO Z",
 "y": "2004",
-"no": 16
+"no": 16,
+"g": 1.698,
+"p": 0.4644,
+"b": 0.232,
+"s": 0.37,
+"e": -1.22,
+"set": "calm"
 },
 {
 "t": "연가",
@@ -694,7 +1196,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/30/7e/2c/307e2c9e-8bf3-77d9-b991-868a56e8e360/16_A_TO_Z_1_1500.png/400x400bb.jpg",
 "al": "16집 A TO Z",
 "y": "2004",
-"no": 16
+"no": 16,
+"g": 2.458,
+"p": 0.4412,
+"b": 0.36,
+"s": 0.35,
+"e": -1.53,
+"set": "calm"
 },
 {
 "t": "연인",
@@ -702,7 +1210,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/30/7e/2c/307e2c9e-8bf3-77d9-b991-868a56e8e360/16_A_TO_Z_1_1500.png/400x400bb.jpg",
 "al": "16집 A TO Z",
 "y": "2004",
-"no": 16
+"no": 16,
+"g": 0.569,
+"p": 0.4296,
+"b": 0.36,
+"s": 0.31,
+"e": 0.49,
+"set": "bright"
 },
 {
 "t": "웃고 있지만",
@@ -710,15 +1224,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/30/7e/2c/307e2c9e-8bf3-77d9-b991-868a56e8e360/16_A_TO_Z_1_1500.png/400x400bb.jpg",
 "al": "16집 A TO Z",
 "y": "2004",
-"no": 16
-},
-{
-"t": "첫사랑",
-"u": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/0b/2c/ef/0b2cefe5-4ca3-7e73-b7fe-983b34b88987/mzaf_14606064816974735907.plus.aac.p.m4a",
-"art": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/30/7e/2c/307e2c9e-8bf3-77d9-b991-868a56e8e360/16_A_TO_Z_1_1500.png/400x400bb.jpg",
-"al": "16집 A TO Z",
-"y": "2004",
-"no": 16
+"no": 16,
+"g": 0.638,
+"p": 0.6966,
+"b": 0.453,
+"s": 1.27,
+"e": 0.25,
+"set": "bright"
 },
 {
 "t": "Cry",
@@ -726,7 +1238,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/8c/67/b8/8c67b8a7-fc71-c96f-585b-f0cd9b2e8ecd/77728091.jpg/400x400bb.jpg",
 "al": "인순이",
 "y": "2009",
-"no": 17
+"no": 17,
+"g": 1.084,
+"p": 0.894,
+"b": 0.348,
+"s": 0.0,
+"e": -0.78,
+"set": "calm"
 },
 {
 "t": "Fantasia",
@@ -734,7 +1252,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/8c/67/b8/8c67b8a7-fc71-c96f-585b-f0cd9b2e8ecd/77728091.jpg/400x400bb.jpg",
 "al": "인순이",
 "y": "2009",
-"no": 17
+"no": 17,
+"g": 0.417,
+"p": 0.476,
+"b": 0.197,
+"s": 0.0,
+"e": 0.51,
+"set": "bright"
 },
 {
 "t": "Merry Merry",
@@ -742,7 +1266,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/8c/67/b8/8c67b8a7-fc71-c96f-585b-f0cd9b2e8ecd/77728091.jpg/400x400bb.jpg",
 "al": "인순이",
 "y": "2009",
-"no": 17
+"no": 17,
+"g": 0.473,
+"p": 0.4876,
+"b": 0.279,
+"s": 0.0,
+"e": 0.36,
+"set": "bright"
 },
 {
 "t": "기회",
@@ -750,7 +1280,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/8c/67/b8/8c67b8a7-fc71-c96f-585b-f0cd9b2e8ecd/77728091.jpg/400x400bb.jpg",
 "al": "인순이",
 "y": "2009",
-"no": 17
+"no": 17,
+"g": 0.394,
+"p": 0.4528,
+"b": 0.232,
+"s": 0.0,
+"e": 2.0,
+"set": "bright"
 },
 {
 "t": "나무",
@@ -758,7 +1294,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/8c/67/b8/8c67b8a7-fc71-c96f-585b-f0cd9b2e8ecd/77728091.jpg/400x400bb.jpg",
 "al": "인순이",
 "y": "2009",
-"no": 17
+"no": 17,
+"g": 0.944,
+"p": 0.4063,
+"b": 0.093,
+"s": 0.0,
+"e": 0.19,
+"set": "bright"
 },
 {
 "t": "딸에게",
@@ -766,7 +1308,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/8c/67/b8/8c67b8a7-fc71-c96f-585b-f0cd9b2e8ecd/77728091.jpg/400x400bb.jpg",
 "al": "인순이",
 "y": "2009",
-"no": 17
+"no": 17,
+"g": 0.624,
+"p": 0.4818,
+"b": 0.139,
+"s": 0.0,
+"e": -0.1,
+"set": "calm"
 },
 {
 "t": "아버지",
@@ -774,7 +1322,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/8c/67/b8/8c67b8a7-fc71-c96f-585b-f0cd9b2e8ecd/77728091.jpg/400x400bb.jpg",
 "al": "인순이",
 "y": "2009",
-"no": 17
+"no": 17,
+"g": 0.638,
+"p": 0.4412,
+"b": 0.104,
+"s": 0.0,
+"e": -0.03,
+"set": "bright"
 },
 {
 "t": "일어나",
@@ -782,7 +1336,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/8c/67/b8/8c67b8a7-fc71-c96f-585b-f0cd9b2e8ecd/77728091.jpg/400x400bb.jpg",
 "al": "인순이",
 "y": "2009",
-"no": 17
+"no": 17,
+"g": 0.347,
+"p": 0.4412,
+"b": 0.406,
+"s": 0.0,
+"e": 2.01,
+"set": "bright"
 },
 {
 "t": "향수",
@@ -790,7 +1350,13 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/8c/67/b8/8c67b8a7-fc71-c96f-585b-f0cd9b2e8ecd/77728091.jpg/400x400bb.jpg",
 "al": "인순이",
 "y": "2009",
-"no": 17
+"no": 17,
+"g": 0.708,
+"p": 0.8824,
+"b": 0.302,
+"s": 0.0,
+"e": -0.74,
+"set": "calm"
 },
 {
 "t": "거위의 꿈",
@@ -798,7 +1364,12 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/b4/18/ee/b418eedb-c3cd-0a44-9898-aa5f12077021/115673_1.jpg/400x400bb.jpg",
 "al": "거위의 꿈: 꿈을 꾸는 모든 이들에게 - EP",
 "y": "",
-"no": null
+"g": 1.303,
+"p": 0.4412,
+"b": 0.325,
+"s": 0.21,
+"e": -1.29,
+"set": "calm"
 },
 {
 "t": "그래도 꿈은 흐른다",
@@ -806,7 +1377,12 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/b3/a1/46/b3a1469b-e368-30d2-02d7-1d9cc508dc3e/191953495897.jpg/400x400bb.jpg",
 "al": "그래도 꿈은 흐른다 - Single",
 "y": "",
-"no": null
+"g": 0.653,
+"p": 0.8359,
+"b": 0.534,
+"s": 0.0,
+"e": -0.58,
+"set": "calm"
 },
 {
 "t": "너의 이름을 세상이 부를 때",
@@ -814,7 +1390,12 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/45/ca/28/45ca2842-3133-ddfe-2578-1bed74f6ad85/191953390994.jpg/400x400bb.jpg",
 "al": "너의 이름을 세상이 부를 때 - Single",
 "y": "",
-"no": null
+"g": 0.437,
+"p": 0.5224,
+"b": 0.36,
+"s": 0.0,
+"e": 0.72,
+"set": "bright"
 },
 {
 "t": "바보 멍청이 똥개",
@@ -822,7 +1403,12 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/00/81/06/00810603-8ba5-090f-23a5-7b64b537c597/191953443294.jpg/400x400bb.jpg",
 "al": "바보 멍청이 똥개 - Single",
 "y": "",
-"no": null
+"g": 0.519,
+"p": 0.7779,
+"b": 0.755,
+"s": 0.0,
+"e": -0.05,
+"set": "calm"
 },
 {
 "t": "토닥토닥",
@@ -830,7 +1416,12 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/6d/12/4f/6d124f79-d4e7-052f-69f1-4d0f67865ef4/191953408408.jpg/400x400bb.jpg",
 "al": "토닥토닥 - Single",
 "y": "",
-"no": null
+"g": 0.519,
+"p": 0.4063,
+"b": 0.244,
+"s": 0.0,
+"e": -0.07,
+"set": "calm"
 },
 {
 "t": "행복",
@@ -838,7 +1429,12 @@
 "art": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/42/71/87/42718718-d5c5-0b06-d8bd-4e529250fb47/8809658319654_Cover.jpg/400x400bb.jpg",
 "al": "행복 - Single",
 "y": "",
-"no": null
+"g": 0.432,
+"p": 0.418,
+"b": 0.151,
+"s": 0.0,
+"e": 0.75,
+"set": "bright"
 }
 ]
 }

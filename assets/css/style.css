@@ -1721,7 +1721,13 @@ body > main, body > header, body > footer { position: relative; z-index: 1; }
 @media (prefers-reduced-motion: reduce) { .stage-bg, .stage-title { display: none; } .show-cell { transition: none; } }
 
 /* ============ INSOONI RADIO (v51) ============ */
-.radio-launch button { font-size: .95rem; min-height: 48px; }
+.radio-launch { gap: .7rem; }
+.radio-launch button { font-size: .95rem; min-height: 48px; padding-inline: 1.5rem; letter-spacing: .02em; }
+/* 지금 돌고 있는 결을 금색으로 못박아 둔다 — 셋이라 한눈에 들어온다 */
+.radio-launch button[aria-pressed="true"] {
+  border-color: var(--gold); color: #0b0b0b; background: var(--gold);
+}
+.radio-launch button[aria-pressed="true"]:hover { color: #0b0b0b; }
 .radio {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
   background: rgba(10, 10, 10, .93);

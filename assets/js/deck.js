@@ -11,13 +11,18 @@
   var KEY = "insooni_deck";
   var TRACKS = null, queue = [], pos = 0, shuffled = false;
   var ctx = null, decks = [], cur = 0, analyser = null, raf = null;
-  var XFADE = 3.2;          /* 기본 겹침(초) — 템포를 알면 한 마디 길이로 맞춘다 */
+  var XFADE = 4.0;
+  /* 겹치는 길이는 곡의 결을 따른다.
+     느린 곡은 길게 풀어 안개처럼 스미고, 힘찬 곡은 짧게 끊어 치고 나간다.
+     길이를 정한 뒤에는 박의 정수배로 맞춰, 겹치는 동안 두 곡의 박이 어긋나지 않게 한다. */
   function xfadeLen(d) {
-    if (d && d.period) {
-      var bar = d.period * 4;                 /* 4박 = 한 마디 */
-      return Math.max(2.2, Math.min(5.2, bar));
+    var e = d && typeof d.e === "number" ? d.e : 0;
+    var want = e > 0.6 ? 2.8 : e > 0.1 ? 3.6 : e > -0.5 ? 4.8 : 5.8;
+    if (d && d.p) {
+      var beats = Math.max(4, Math.round(want / d.p));
+      want = beats * d.p;
     }
-    return XFADE;
+    return Math.max(2.4, Math.min(6.6, want));
   }
   var loaded = false, armed = false, busy = false, xfTimer = null;
 
@@ -54,120 +59,29 @@
       d.trim.gain.value = 1;
       d.gain = ctx.createGain();
       d.gain.gain.value = 0;
-      /* 데크별 분석기: 나가는 곡의 비트를 읽어 전환 시점을 잡는다 */
-      d.an = ctx.createAnalyser();
-      d.an.fftSize = 256;
-      d.an.smoothingTimeConstant = 0.1;
       d.src.connect(d.bass);
       d.bass.connect(d.trim);
       d.trim.connect(d.gain);
-      d.gain.connect(d.an);
-      d.an.connect(analyser);
-      d.beats = [];        /* 최근 비트 시각 */
-      d.period = 0;        /* 추정된 한 박 길이(초) */
-      d.lastPeak = 0;
-      d.energy = 0;
-      d.bins = new Uint8Array(d.an.frequencyBinCount);
+      d.gain.connect(analyser);
+      d.p = 0;             /* 한 박 길이(초) */
+      d.b = 0;             /* 첫 박이 오는 지점(초) */
+      d.e = 0;             /* 곡의 에너지 */
       d.el.addEventListener("error", function () { next(); });
     });
   }
 
-  /* ---------- 곡 분석: 음량·템포·첫 박을 미리 읽는다 ----------
-     한 번 읽은 곡은 캐시한다. 다음 곡은 재생 중에 미리 분석해 두어
-     전환 순간에 음량과 박자가 이미 맞춰져 있게 한다. */
-  var ANALYSIS = {};
-  var TARGET_RMS = 0.085;      /* 목표 라우드니스 (경험적으로 고른 기준) */
-
-  function analyze(url) {
-    if (ANALYSIS[url]) return Promise.resolve(ANALYSIS[url]);
-    if (!ctx) return Promise.resolve(null);
-    return fetch(url)
-      .then(function (r) { return r.arrayBuffer(); })
-      .then(function (ab) {
-        return new Promise(function (res, rej) {
-          ctx.decodeAudioData(ab, res, rej);
-        });
-      })
-      .then(function (buf) {
-        var ch = buf.getChannelData(0);
-        var sr = buf.sampleRate;
-        /* (a) 라우드니스: 무음을 뺀 구간의 RMS */
-        var sum = 0, n = 0;
-        for (var i = 0; i < ch.length; i += 8) {
-          var v = ch[i];
-          if (v > 0.004 || v < -0.004) { sum += v * v; n++; }
-        }
-        var rms = n ? Math.sqrt(sum / n) : TARGET_RMS;
-        /* (b) 온셋 포락선 */
-        var HOP = 512, W = 1024;
-        var env = [];
-        for (var p2 = 0; p2 + W < ch.length; p2 += HOP) {
-          var e = 0;
-          for (var k = 0; k < W; k += 2) { var x = ch[p2 + k]; e += x * x; }
-          env.push(Math.sqrt(e / (W / 2)));
-        }
-        var onset = [];
-        for (var j = 1; j < env.length; j++) onset.push(Math.max(0, env[j] - env[j - 1]));
-        /* (c) 자기상관으로 템포 추정 (60~180 BPM) */
-        var fps = sr / HOP;
-        var lagMin = Math.floor(fps * 60 / 200), lagMax = Math.ceil(fps * 60 / 40);
-        var best = 0, bestLag = 0;
-        for (var lag = lagMin; lag <= lagMax && lag < onset.length / 2; lag++) {
-          var acc = 0;
-          for (var m = 0; m + lag < onset.length; m++) acc += onset[m] * onset[m + lag];
-          if (acc > best) { best = acc; bestLag = lag; }
-        }
-        var period = bestLag ? bestLag / fps : 0;
-        /* (d) 첫 박: 앞 6초에서 가장 센 온셋 */
-        var lim = Math.min(onset.length, Math.floor(fps * 6));
-        var top = 0, topI = 0;
-        for (var q = 0; q < lim; q++) if (onset[q] > top) { top = onset[q]; topI = q; }
-        var a = {
-          rms: rms,
-          trim: Math.max(0.45, Math.min(2.2, TARGET_RMS / (rms || TARGET_RMS))),
-          period: period > 0.25 && period < 1.55 ? period : 0,
-          firstBeat: topI / fps,
-          dur: buf.duration
-        };
-        ANALYSIS[url] = a;
-        return a;
-      })
-      .catch(function () { return null; });
-  }
-
-  /* ---------- 비트 추적: 저역 에너지의 급상승을 박으로 본다 ---------- */
-  function trackBeat(d) {
-    if (!d.an || d.el.paused) return;
-    d.an.getByteFrequencyData(d.bins);
-    var e = 0;
-    for (var i = 1; i < 6; i++) e += d.bins[i];      /* 킥이 사는 대역 */
-    e /= 5;
-    var avg = d.energy = d.energy * 0.92 + e * 0.08;
-    var now = ctx.currentTime;
-    if (e > avg * 1.38 && e > 26 && now - d.lastPeak > 0.26) {
-      d.lastPeak = now;
-      d.beats.push(now);
-      if (d.beats.length > 14) d.beats.shift();
-      if (d.beats.length >= 6) {
-        var gaps = [];
-        for (var j = 1; j < d.beats.length; j++) {
-          var g = d.beats[j] - d.beats[j - 1];
-          if (g > 0.28 && g < 1.2) gaps.push(g);      /* 50~210 BPM 범위 */
-        }
-        if (gaps.length >= 4) {
-          gaps.sort(function (a, b) { return a - b; });
-          d.period = gaps[Math.floor(gaps.length / 2)];   /* 중앙값이 흔들림에 강하다 */
-        }
-      }
-    }
-  }
-
-  /* 다음 박이 오는 시각 (박을 못 읽었으면 지금) */
+  /* ---------- 박자표 ----------
+     곡마다 한 박 길이와 첫 박 위치를 미리 재 두었다(assets/data/previews.json).
+     그래서 재생 중인 지점만 읽으면 다음 박이 언제 오는지 정확히 계산된다.
+     소리를 실시간으로 뜯어 박을 추측하던 방식보다 어긋남이 없다. */
   function nextBeatTime(d) {
-    if (!d.period || !d.lastPeak) return ctx.currentTime;
-    var t = d.lastPeak, now = ctx.currentTime;
-    while (t < now + 0.06) t += d.period;
-    return t;
+    if (!d.p || d.el.paused) return ctx.currentTime;
+    var mt = d.el.currentTime;
+    if (!(mt > 0)) return ctx.currentTime;
+    var k = Math.ceil((mt - d.b) / d.p + 0.06);       /* 너무 코앞의 박은 건너뛴다 */
+    var wait = (d.b + k * d.p) - mt;
+    if (!(wait > 0) || wait > 2.4) return ctx.currentTime;
+    return ctx.currentTime + wait;
   }
 
   /* 등파워 곡선: 선형으로 섞으면 가운데서 소리가 꺼진 듯 얇아진다 */
@@ -180,17 +94,16 @@
     return arr;
   }
 
-  /* ---------- 목록 ---------- */
+  /* ---------- 세 개의 결 ----------
+     연도나 앨범으로 나누면 숫자만 다를 뿐 소리가 섞이지 않는다.
+     실제 DJ가 하듯 곡의 결로 나눈다 — 오늘의 흐름, 힘찬 무대, 조용한 밤.
+     묶음이 셋뿐이라 각각이 50곡 넘게 깊고, 한 묶음 안에서는 템포가 이어진다. */
   var LISTS = {
-    all: { ko: "전곡 믹스", en: "Full mix", f: function () { return true; } },
-    d80: { ko: "1980년대", en: "The 1980s", f: function (s) { return s.y >= "1980" && s.y < "1990"; } },
-    d90: { ko: "1990년대", en: "The 1990s", f: function (s) { return s.y >= "1990" && s.y < "2000"; } },
-    d00: { ko: "2000년 이후", en: "2000 onward", f: function (s) { return s.y >= "2000"; } },
-    jazz: { ko: "재즈 15집", en: "The Jazz album", f: function (s) { return s.no === 15; } },
-    gospel: { ko: "가스펠 12집", en: "The gospel album", f: function (s) { return s.no === 12; } },
-    today: { ko: "오늘의 날씨", en: "Today's weather", f: null }
+    today:  { ko: "오늘의 믹스",  en: "Today's Mix",  f: null },
+    bright: { ko: "뜨거운 무대",  en: "On Stage",     f: function (s) { return s.set === "bright"; } },
+    calm:   { ko: "고요한 밤",    en: "Quiet Night",  f: function (s) { return s.set === "calm"; } }
   };
-  var kind = "all";
+  var kind = "today";
 
   function norm(s) { return String(s).toLowerCase().replace(/[\s'"`·.,!?()[\]/-]/g, ""); }
   /* 오늘의 믹스: 지금 서울 날씨에 맞는 곡을 앞에 세우고, 계절 곡으로 이어 붙인다.
@@ -229,25 +142,51 @@
     for (var i = r.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = r[i]; r[i] = r[j]; r[j] = t; }
     return r;
   }
-  function build(k) {
-    var list = k === "today" ? todayFilter(TRACKS) : TRACKS.filter(LISTS[k].f);
-    if (!list.length) list = TRACKS;
-    if (shuffled) return shuffleArr(list);
-    /* 이미 분석된 곡들은 템포가 가까운 순으로 이어 붙인다 (DJ 셋의 흐름) */
-    var known = list.filter(function (t) { return ANALYSIS[t.u] && ANALYSIS[t.u].period; });
-    if (known.length < 4) return list;
-    var rest = list.filter(function (t) { return known.indexOf(t) < 0; });
-    var chain = [known.shift()];
-    while (known.length) {
-      var last = ANALYSIS[chain[chain.length - 1].u].period;
-      var bi = 0, bd = Infinity;
-      known.forEach(function (t, i) {
-        var d2 = Math.abs(ANALYSIS[t.u].period - last);
-        if (d2 < bd) { bd = d2; bi = i; }
-      });
-      chain.push(known.splice(bi, 1)[0]);
+
+  /* 한 구간 안에서는 템포가 가까운 곡끼리 이어 붙인다.
+     에너지 폭이 좁은 구간이라 사실상 템포가 순서를 정하고, 그래서 박이 매끄럽게 넘어간다. */
+  function chain(seg, from) {
+    if (seg.length < 3) return seg.slice();
+    var pool = seg.slice(), out = [pool.splice(from % pool.length, 1)[0]];
+    while (pool.length) {
+      var last = out[out.length - 1], bi = 0, bd = Infinity;
+      for (var i = 0; i < pool.length; i++) {
+        var dp = Math.abs((pool[i].p || 0.5) - (last.p || 0.5));
+        var de = Math.abs((pool[i].e || 0) - (last.e || 0));
+        var cost = dp * 2.2 + de * 0.6;
+        if (cost < bd) { bd = cost; bi = i; }
+      }
+      out.push(pool.splice(bi, 1)[0]);
     }
-    return chain.concat(rest);
+    return out;
+  }
+
+  /* DJ 셋의 모양: 중간에서 열고, 밀어 올려 정점을 찍고, 가장 조용한 곡으로 내려놓는다.
+     날짜를 씨앗으로 써서 시작 지점이 매일 달라진다 — 같은 날은 늘 같은 흐름. */
+  function arc(list) {
+    if (list.length < 8) return list.slice();
+    var d = new Date();
+    var seed = d.getFullYear() * 372 + d.getMonth() * 31 + d.getDate();
+    var s = list.slice().sort(function (a, b) { return (a.e || 0) - (b.e || 0); });
+    var n = s.length;
+    var lo = Math.round(n * 0.40), mid = Math.round(n * 0.65);
+    var open = s.slice(lo, mid);          /* 중간 에너지 — 문을 연다 */
+    var peak = s.slice(mid);              /* 위쪽 — 밀어 올린다 */
+    var close = s.slice(0, lo).reverse(); /* 아래쪽 — 천천히 내려놓는다 */
+    return chain(open, seed).concat(chain(peak, seed >> 2), chain(close, seed >> 4));
+  }
+
+  function build(k) {
+    var base = LISTS[k] && LISTS[k].f ? TRACKS.filter(LISTS[k].f) : TRACKS;
+    if (base.length < 3) base = TRACKS;
+    if (shuffled) return shuffleArr(base);
+    if (k !== "today") return arc(base);
+    /* 오늘의 믹스는 날씨·계절 곡을 앞에 세우고, 나머지를 셋의 모양대로 잇는다.
+       앞머리도 조용한 곡부터 차오르게 세워 문이 부드럽게 열리도록 한다. */
+    var ordered = todayFilter(base);
+    var head = ordered.slice(0, 6).sort(function (a, b) { return (a.e || 0) - (b.e || 0); });
+    var rest = ordered.filter(function (t) { return head.indexOf(t) < 0; });
+    return head.concat(arc(rest));
   }
 
   /* ---------- 재생 ---------- */
@@ -268,7 +207,7 @@
         d.bass.gain.cancelScheduledValues(ctx.currentTime);
         d.bass.gain.setValueAtTime(0, ctx.currentTime);
       }
-      d.beats = []; d.period = 0; d.lastPeak = 0; d.energy = 0;
+      d.p = 0; d.b = 0; d.e = 0;
     });
   }
 
@@ -278,15 +217,22 @@
     var track = queue[pos];
     var d = decks[cur];
     d.el.src = track.u;
-    /* 들어오는 곡의 앞 무음을 건너뛰어 첫 박이 바로 얹히게 한다 */
-    var inA = ANALYSIS[track.u];
-    var skip = (fade && inA && inA.firstBeat > 0.35 && inA.firstBeat < 4) ? inA.firstBeat - 0.12 : 0;
+    /* 들어오는 곡의 앞 무음을 건너뛴다. 첫 박 위치를 알고 있으므로
+       바로 그 박에 맞춰 얹혀 들어가 앞머리가 비어 들리지 않는다. */
+    var skip = 0;
+    if (fade) {
+      if (track.b > 0.25 && track.b < 4) skip = track.b;
+      else if (track.s > 0.35) skip = track.s;
+    }
     d.el.currentTime = skip;
     d.el.addEventListener("loadedmetadata", function once() {
       d.el.removeEventListener("loadedmetadata", once);
       if (skip && d.el.currentTime < skip - 0.05) { try { d.el.currentTime = skip; } catch (e) {} }
     });
-    d.beats = []; d.period = 0; d.lastPeak = 0; d.energy = 0;
+    /* 이 곡의 박자표와 결을 데크에 옮겨 둔다 */
+    d.p = track.p || 0;
+    d.b = track.b || 0;
+    d.e = typeof track.e === "number" ? track.e : 0;
     var now = at && at > ctx.currentTime ? at : ctx.currentTime;
     d.gain.gain.cancelScheduledValues(ctx.currentTime);
     d.bass.gain.cancelScheduledValues(ctx.currentTime);
@@ -303,21 +249,17 @@
       d.bass.gain.setValueAtTime(0, ctx.currentTime);
     }
     d.live = true;
-    /* 분석된 음량 보정을 즉시 적용 (미분석이면 1.0으로 시작하고 곧 보정된다) */
-    var an = ANALYSIS[track.u];
-    if (d.trim) d.trim.gain.setValueAtTime(an ? an.trim : 1, ctx.currentTime);
-    if (an && an.period) d.period = an.period;
-    if (!an) {
-      analyze(track.u).then(function (a2) {
-        if (a2 && d.el.src === track.u && d.trim) {
-          d.trim.gain.linearRampToValueAtTime(a2.trim, ctx.currentTime + 0.6);
-          if (a2.period) d.period = a2.period;
-        }
-      });
-    }
-    /* 다음 곡을 미리 분석해 둔다 — 전환 때 이미 준비된 상태 */
+    /* 음량 보정 — 녹음 시대가 40년에 걸쳐 있어 곡마다 크기가 17dB까지 벌어진다.
+       미리 재 둔 값으로 모두 같은 크기(-14 LUFS)에 맞춘다. */
+    if (d.trim) d.trim.gain.setValueAtTime(track.g || 1, ctx.currentTime);
+    /* 다음 곡을 미리 받아 둔다 — 전환 순간에 버퍼링으로 끊기지 않게 */
     var nx = queue[(pos + 1) % queue.length];
-    if (nx && !ANALYSIS[nx.u]) setTimeout(function () { analyze(nx.u); }, 1200);
+    if (nx) {
+      var pre = decks[other()];
+      if (pre && pre.el.paused && pre.el.src !== nx.u) {
+        setTimeout(function () { if (pre.el.paused) { pre.el.src = nx.u; pre.el.load(); } }, 900);
+      }
+    }
     var p = d.el.play();
     if (p && p.catch) p.catch(function () {});
     paint(track);
@@ -360,7 +302,6 @@
   function tick() {
     raf = requestAnimationFrame(tick);
     var d = decks[cur];
-    trackBeat(d);
     /* 끝나기 전 여유를 두고, 다음 박에 맞춰 겹쳐 넘긴다 */
     if (!armed && d.el.duration && d.el.currentTime > 0 && !d.el.paused &&
         d.el.duration - d.el.currentTime <= xfadeLen(d) + 0.9) {
@@ -412,7 +353,7 @@
       el.classList.toggle("is-live", !!live);
       var plate = el.querySelector(".bt-platter");
       /* 실제 박자에 맞춰 판이 도는 속도를 맞춘다 (한 바퀴 = 4박) */
-      if (plate) plate.style.animationDuration = (d.period ? (d.period * 4).toFixed(2) : "2.4") + "s";
+      if (plate) plate.style.animationDuration = (d.p ? (d.p * 4).toFixed(2) : "2.4") + "s";
     }
     if (btKnob) {
       var g0 = decks[0].gain ? Math.max(0, decks[0].gain.gain.value) : 0;
@@ -420,9 +361,18 @@
       var ratio = (g0 + g1) > 0.02 ? g1 / (g0 + g1) : (cur === 0 ? 0 : 1);
       btKnob.style.left = (ratio * 100).toFixed(1) + "%";
     }
+    /* 템포 숫자는 걸지 않는다 — 자동 추정은 두 배·절반으로 어긋나는 일이 잦아,
+       공식 사이트에 사실처럼 내걸 수 없다. 대신 확실한 것을 보여 준다. */
     if (btBpm) {
-      var p = decks[cur].period;
-      btBpm.textContent = p ? String(Math.round(60 / p)) : "—";
+      var blending = decks[0].live && decks[1].live;
+      var lab = document.getElementById("bt-bpm-label");
+      if (blending) {
+        btBpm.textContent = "";
+        if (lab) lab.textContent = T("두 곡이 겹치는 중", "BLENDING");
+      } else {
+        btBpm.textContent = queue.length ? (pos + 1) + " / " + queue.length : "—";
+        if (lab) lab.textContent = T("번째 곡", "IN SET");
+      }
     }
   }
   function idleBooth() {
@@ -612,7 +562,7 @@
   }
 
   function start(k, resumeTitle) {
-    kind = k || "all";
+    kind = LISTS[k] ? k : "today";
     Promise.all([load(), waitToday(kind)]).then(function () {
       ensureAudio();
       if (ctx.state === "suspended") ctx.resume();
@@ -742,16 +692,22 @@
     var box = document.getElementById("deck-launch") || document.getElementById("radio-launch");
     if (!box || box.dataset.bound) return;
     box.dataset.bound = "1";
-    /* 실제 재생 가능한 곡이 3곡 미만인 목록은 내보내지 않는다 (빈 목록 금지) */
     load().then(function () {
+      box.textContent = "";
       Object.keys(LISTS).forEach(function (k) {
-        var n = k === "today" ? TRACKS.length : TRACKS.filter(LISTS[k].f).length;
+        var n = LISTS[k].f ? TRACKS.filter(LISTS[k].f).length : TRACKS.length;
         if (n < 3) return;
         var b = document.createElement("button");
         b.type = "button";
-        b.textContent = (isEN() ? LISTS[k].en : LISTS[k].ko) + (k === "today" ? "" : "  " + n);
+        b.dataset.list = k;
+        b.setAttribute("aria-pressed", String(k === kind));
+        b.textContent = (isEN() ? LISTS[k].en : LISTS[k].ko) + "  " + n;
         b.addEventListener("click", function () {
           kind = k;
+          /* 지금 고른 결이 어느 것인지 눈에 보이게 한다 */
+          Array.prototype.forEach.call(box.children, function (el) {
+            el.setAttribute("aria-pressed", String(el.dataset.list === k));
+          });
           if (MODE === "full") { load().then(function () { queue = build(k); startFull(); }); }
           else start(k);
         });
@@ -776,10 +732,16 @@
       return true;
     },
     debug: function () {
-      var k = Object.keys(ANALYSIS);
-      return { analyzed: k.length, sample: k.length ? ANALYSIS[k[0]] : null,
-               curPeriod: decks[cur] ? decks[cur].period : null,
-               curTrim: decks[cur] && decks[cur].trim ? decks[cur].trim.gain.value : null };
+      var d = decks[cur];
+      return {
+        kind: kind, queue: queue.length, pos: pos,
+        now: queue[pos] ? queue[pos].t : null,
+        beat: d ? d.p : null, energy: d ? d.e : null,
+        xfade: d ? +xfadeLen(d).toFixed(2) : null,
+        trim: d && d.trim ? +d.trim.gain.value.toFixed(3) : null,
+        live: decks.filter(function (x) { return x.live && !x.el.paused; }).length,
+        order: queue.slice(0, 12).map(function (t) { return t.t + "(" + t.e + ")"; })
+      };
     },
     isPlaying: function () {
       return !!(ctx && decks.length && decks.some(function (d) { return !d.el.paused; }));
