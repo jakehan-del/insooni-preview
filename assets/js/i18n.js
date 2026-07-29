@@ -155,6 +155,15 @@ window.I18N_EN = {
   "alt.35": "Single cover for '그래도 꿈은 흐른다'",
 
   "form.lcat": "Category",
+  "mc.t": "Fan Room Membership Card",
+  "mc.lead": "Write your name and we'll welcome you as one of the fan room, with a card to keep or share.",
+  "mc.name": "Name or nickname",
+  "mc.namePh": "e.g. A 40-year fan from Seoul",
+  "mc.make": "Make my card",
+  "mc.save": "Save as image",
+  "mc.share": "Share",
+  "mc.hint": "The card is a keepsake stored only on this device. Come back and we'll greet you by name.",
+  "mc.previewAria": "Fan card preview",
   "arch.fan1d": "Old concert tickets, photographs taken from the floor, keepsakes held on to for decades - what you have kept is Insooni's history. Share it in the Fan Room and it will be reviewed and added to the archive.",
   "arch.fan2d": "Tell us the story you carry with one of Insooni's songs. Selected stories are published alongside the song, so that each one gathers the memories of the people who heard it.",
 

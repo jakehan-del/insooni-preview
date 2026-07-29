@@ -290,6 +290,59 @@
   }
 
   /* ---------- 6. 아카이브: 타임라인 / 디스코그래피 / 영상 ---------- */
+  /* ---------- 오늘의 기념일 ----------
+     검증된 연대기에서 오늘 날짜에 걸리는 일이 있으면 'N년 전 오늘'로 비추고,
+     없으면 다음 기념일까지 남은 날을 센다. 팬에게 이 방이 살아 있는 달력처럼
+     느껴지게 하는 장치 — 모든 날짜는 앨범 크레딧·보도로 확인된 것이다. */
+  function renderAnniversary() {
+    var sec = $("#anniv"), card = $("#anniv-card");
+    if (!sec || !card || !D.milestones || !D.milestones.length) return;
+    var isEN = document.documentElement.getAttribute("lang") === "en";
+    var now = new Date();
+    var mm = String(now.getMonth() + 1).padStart(2, "0");
+    var dd = String(now.getDate()).padStart(2, "0");
+    var todayKey = mm + "-" + dd;
+    var thisYear = now.getFullYear();
+
+    var todays = D.milestones.filter(function (m) { return m.d === todayKey; });
+    if (todays.length) {
+      /* 오늘이 기념일 — 가장 오래된(가장 뜻깊은) 것을 앞세운다 */
+      todays.sort(function (a, b) { return a.y - b.y; });
+      var m = todays[0];
+      var years = thisYear - m.y;
+      var head = isEN ? (years + " year" + (years === 1 ? "" : "s") + " ago today")
+                        : (years + "년 전 오늘");
+      card.innerHTML =
+        '<span class="anniv-kicker">' + esc(isEN ? "ON THIS DAY" : "오늘의 기념일") + "</span>" +
+        '<p class="anniv-head">' + esc(head) + "</p>" +
+        '<p class="anniv-body">' + esc(tr(m, "ko")) + "</p>";
+      sec.hidden = false;
+      return;
+    }
+
+    /* 오늘이 아니면 다음 기념일까지 카운트다운 */
+    function nextDate(m) {
+      var parts = m.d.split("-");
+      var d = new Date(thisYear, +parts[0] - 1, +parts[1]);
+      if (d < new Date(thisYear, now.getMonth(), now.getDate())) d.setFullYear(thisYear + 1);
+      return d;
+    }
+    var upcoming = D.milestones.map(function (m) { return { m: m, when: nextDate(m) }; })
+      .sort(function (a, b) { return a.when - b.when; })[0];
+    if (!upcoming) return;
+    var days = Math.round((upcoming.when - new Date(thisYear, now.getMonth(), now.getDate())) / 86400000);
+    var willBe = upcoming.when.getFullYear() - upcoming.m.y;
+    var countLabel = isEN
+      ? (days === 0 ? "today" : days + " day" + (days === 1 ? "" : "s") + " to go")
+      : (days === 0 ? "오늘" : days + "일 남음");
+    var anniLabel = isEN ? (willBe + "th anniversary") : (willBe + "주년");
+    card.innerHTML =
+      '<span class="anniv-kicker">' + esc(isEN ? "COMING UP" : "다가오는 기념일") + "</span>" +
+      '<p class="anniv-head">' + esc(tr(upcoming.m, "ko")) + "</p>" +
+      '<p class="anniv-body"><b>' + esc(countLabel) + "</b> · " + esc(anniLabel) + "</p>";
+    sec.hidden = false;
+  }
+
   function renderTimeline() {
     var box = $("#timeline");
     if (!box || !D.timeline) return;
@@ -665,7 +718,7 @@
       "</header>";
     if (r.clips && r.clips.length) {
       /* 무대별 유튜브 클립 여러 개: 첫 클립 재생 + 곡 선택 버튼 */
-      html += '<div class="recap-video recap-video--embed"><iframe id="recap-clip-frame" src="https://www.youtube-nocookie.com/embed/' + esc(r.clips[0].id) + '?rel=0&modestbranding=1" title="' + esc(tr(r.clips[0], "title") || r.title) + '" allow="autoplay; encrypted-media; fullscreen" allowfullscreen loading="lazy"></iframe></div>';
+      html += '<div class="recap-video recap-video--embed" id="recap-clip-host"></div>';
       if (r.clips.length > 1) {
         html += '<div class="recap-clips" role="group" aria-label="' + t("recap.clips", "무대 클립 선택") + '">';
         r.clips.forEach(function (cl, ci) {
@@ -674,21 +727,25 @@
         html += "</div>";
       }
     } else if (r.youtubeId) {
-      html += '<div class="recap-video recap-video--embed"><iframe src="https://www.youtube-nocookie.com/embed/' + esc(r.youtubeId) + '?rel=0&modestbranding=1" title="' + esc(r.title) + '" allow="encrypted-media; fullscreen" allowfullscreen loading="lazy"></iframe></div>';
+      html += '<div class="recap-video recap-video--embed" id="recap-clip-host"></div>';
     } else if (r.video) {
       html += '<div class="recap-video"><video src="' + esc(r.video) + '"' + (r.poster ? ' poster="' + esc(r.poster) + '"' : "") + " controls playsinline preload=\"metadata\"></video></div>";
     }
     inner.innerHTML = html;
-    /* 클립 선택 → 임베드 교체 */
+    /* 첫 클립을 HD로 붙인다 (자동재생 없이 — 사용자가 눌러 재생) */
+    var clipHost = inner.querySelector("#recap-clip-host");
+    if (clipHost) {
+      var first = (r.clips && r.clips[0]) || (r.youtubeId ? { id: r.youtubeId, title: r.title } : null);
+      if (first) mountHDVideo(clipHost, first.id, tr(first, "title") || r.title, false);
+    }
+    /* 클립 선택 → HD 임베드 교체 (자동재생) */
     var clipBtns = inner.querySelectorAll(".recap-clip");
-    if (clipBtns.length) {
-      var clipFrame = inner.querySelector("#recap-clip-frame");
+    if (clipBtns.length && clipHost) {
       clipBtns.forEach(function (b) {
         b.addEventListener("click", function () {
           inner.querySelectorAll(".recap-clip.is-on").forEach(function (x) { x.classList.remove("is-on"); });
           b.classList.add("is-on");
-          clipFrame.src = "https://www.youtube-nocookie.com/embed/" + b.getAttribute("data-cid") + "?rel=0&modestbranding=1&autoplay=1";
-          clipFrame.title = b.getAttribute("data-ct");
+          mountHDVideo(clipHost, b.getAttribute("data-cid"), b.getAttribute("data-ct"), true);
         });
       });
     }
@@ -809,7 +866,7 @@
     document.body.appendChild(lightboxEl);
     function close() {
       lightboxEl.hidden = true;
-      $(".lightbox-frame", lightboxEl).innerHTML = "";
+      $(".lightbox-frame", lightboxEl).innerHTML = "";   /* iframe 제거 = 재생 정지 */
       /* 리캡 패널이 아래에 열려 있으면 배경 스크롤 잠금 유지 */
       document.body.style.overflow = (recapEl && !recapEl.hidden) ? "hidden" : "";
       if (lightboxOpener) { lightboxOpener.focus(); lightboxOpener = null; }
@@ -835,6 +892,50 @@
     applyLang(curLang());
     return lightboxEl;
   }
+  /* ---------- 유튜브 HD 임베드 (파사드 방식) ----------
+     유튜브 화질 API(setPlaybackQuality·vq=hd1080)는 2019년 이후 동작하지 않는다.
+     선명해 보이게 하는 진짜 방법은 세 가지다:
+       ① 클릭 전에는 원본 고해상 썸네일(maxresdefault)을 보여 준다 — 즉시 '고화질'로 읽힌다
+       ② 플레이어를 크게(≥720px) 띄우면 유튜브가 알아서 높은 화질을 고른다
+       ③ 유튜브 껍데기(빨간 로고·추천영상)를 벗겨 우리 영상처럼 보이게 한다
+     그래서 iframe을 미리 심지 않고, 썸네일을 깔았다가 누르면 그때 크게 붙인다. */
+  var YT_PARAMS = "rel=0&playsinline=1&color=white&iv_load_policy=3&modestbranding=1";
+  function ytIframe(videoId, title, extra) {
+    return '<iframe src="https://www.youtube-nocookie.com/embed/' + esc(videoId) +
+      "?" + YT_PARAMS + (extra || "") +
+      '" title="' + esc(title) + '" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>';
+  }
+  /* maxresdefault가 없는 영상이 있어 로드 실패 시 hqdefault로 되돌린다 */
+  function ytPoster(videoId) {
+    return "https://i.ytimg.com/vi/" + videoId + "/maxresdefault.jpg";
+  }
+  /* host에 파사드를 심는다. autoplay=true면 바로 큰 플레이어를 붙인다(이미 사용자가
+     한 번 눌러 들어온 라이트박스 등). false면 썸네일→클릭→재생. */
+  function mountHDVideo(host, videoId, title, autoplay) {
+    host._hd = (host._hd || 0) + 1;
+    if (autoplay) { host.innerHTML = ytIframe(videoId, title, "&autoplay=1&controls=1"); return; }
+    var btn = el("button", "yt-facade");
+    btn.type = "button";
+    btn.setAttribute("aria-label", title + t("aria.lbVideoSuffix", " 영상 재생"));
+    var img = new Image();
+    img.className = "yt-facade-poster";
+    img.alt = "";
+    img.loading = "lazy";
+    img.onerror = function () { if (img.src.indexOf("maxres") >= 0) img.src = "https://i.ytimg.com/vi/" + videoId + "/hqdefault.jpg"; };
+    img.src = ytPoster(videoId);
+    btn.appendChild(img);
+    var play = el("span", "yt-facade-play");
+    play.setAttribute("aria-hidden", "true");
+    play.innerHTML = "&#9658;";
+    btn.appendChild(play);
+    btn.addEventListener("click", function () {
+      if (window.INSOONI_DECK) window.INSOONI_DECK.pause();
+      host.innerHTML = ytIframe(videoId, title, "&autoplay=1&controls=1");
+    });
+    host.innerHTML = "";
+    host.appendChild(btn);
+  }
+
   function openLightbox(videoId, title, opener) {
     if (window.INSOONI_DECK) window.INSOONI_DECK.pause();
     var box = ensureLightbox();
@@ -844,8 +945,7 @@
     lightboxOpener = opener || null;
     box.setAttribute("aria-label", title + t("aria.lbVideoSuffix", " 영상 재생"));
     $(".lightbox-caption", box).textContent = title + " · INSOONI OFFICIAL";
-    $(".lightbox-frame", box).innerHTML =
-      '<iframe src="https://www.youtube-nocookie.com/embed/' + esc(videoId) + '?autoplay=1&rel=0&modestbranding=1" title="' + esc(title) + '" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>';
+    mountHDVideo($(".lightbox-frame", box), videoId, title, true);
     box.hidden = false;
     document.body.style.overflow = "hidden";
     $(".lightbox-close", box).focus();
@@ -1111,12 +1211,21 @@
         var n = new Date(); n.setDate(n.getDate() - 1);
         return n.getFullYear() + "-" + (n.getMonth() + 1) + "-" + n.getDate();
       }
+      /* 꾸준함을 조용히 알아봐 준다 — 순위·점수 없이 따뜻한 인사만.
+         지긋한 팬층에 맞춰 경쟁이 아니라 '알아봐 드림'으로 다가간다. */
+      function milestone(streak) {
+        var en = document.documentElement.getAttribute("lang") === "en";
+        if (streak >= 100) return en ? "  A hundred days — thank you for being here." : "  백 일째예요. 곁에 계셔 주셔서 고맙습니다.";
+        if (streak >= 30) return en ? "  A whole month of visits. It means the world." : "  한 달 내내 찾아주셨네요. 큰 힘이 됩니다.";
+        if (streak >= 7) return en ? "  A week straight — we noticed." : "  일주일 내내 함께해 주셨어요.";
+        return "";
+      }
       function drawStamp() {
         var s = store(SKEY);
         if (s && s.last === today()) {
           stampBtn.disabled = true;
           stampBtn.textContent = t("comm.stampDone", "오늘 문안 인사를 드렸습니다");
-          stampState.textContent = t("dyn.streakA", "연속 ") + s.streak + t("dyn.streakB", "일째 · 지금까지 ") + s.total + t("dyn.streakC", "번 다녀가셨어요");
+          stampState.textContent = t("dyn.streakA", "연속 ") + s.streak + t("dyn.streakB", "일째 · 지금까지 ") + s.total + t("dyn.streakC", "번 다녀가셨어요") + milestone(s.streak);
         } else {
           stampBtn.disabled = false;
           stampBtn.textContent = t("comm.stampBtn", "오늘 도장 찍기");
@@ -1174,6 +1283,123 @@
   }
 
   /* ---------- 9.7 거위의 꿈 응원 카드 (Canvas — 가사 원문 미사용, 자체 작문 문구) ---------- */
+  /* 거위 엠블럼을 캔버스에 그린다 (번호증·응원카드 공용) */
+  function drawGooseEmblem(ctx, x, y, size, color) {
+    ctx.save();
+    ctx.translate(x, y); ctx.scale(size / 120, size / 120);
+    ctx.fillStyle = color; ctx.strokeStyle = color;
+    ctx.save(); ctx.translate(48, 46); ctx.rotate(-7 * Math.PI / 180);
+    ctx.beginPath(); ctx.ellipse(0, 0, 27, 11.5, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+    ctx.lineWidth = 8; ctx.lineCap = "round";
+    ctx.beginPath(); ctx.moveTo(66, 41); ctx.bezierCurveTo(78, 36, 87, 30, 94, 23); ctx.stroke();
+    ctx.beginPath(); ctx.arc(96, 21, 5.4, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(100, 18.5); ctx.lineTo(111, 21); ctx.lineTo(100, 24.5); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(45, 38); ctx.bezierCurveTo(36, 24, 34, 13, 41, 6);
+    ctx.bezierCurveTo(48, 12, 55, 27, 57, 37); ctx.bezierCurveTo(53, 38.5, 49, 38.7, 45, 38); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(24, 42); ctx.lineTo(10, 37); ctx.lineTo(22, 50); ctx.closePath(); ctx.fill();
+    ctx.restore();
+  }
+
+  /* ---------- 9.4 사랑방: 팬 번호증 ----------
+     방문자를 '사랑방의 한 사람'으로 맞이하는 소장용 카드. 이름·번호·가입일이
+     이 기기에만 저장되고, 다시 오면 이름으로 반긴다. 실제 회원 DB가 아니라
+     간직하는 기념물임을 문구로 분명히 한다(가짜 시스템 아님). */
+  function initMemberCard() {
+    var canvas = $("#mc-canvas"), nameIn = $("#mc-name"), makeBtn = $("#mc-make");
+    if (!canvas || !nameIn || !makeBtn) return;
+    var MKEY = "insooni_member";
+    var en = document.documentElement.getAttribute("lang") === "en";
+
+    /* 이름에서 늘 같은 번호를 만든다 (안정적 해시) */
+    function serial(name) {
+      var h = 5381;
+      for (var i = 0; i < name.length; i++) h = ((h << 5) + h + name.charCodeAt(i)) >>> 0;
+      var base = (h % 90000 + 10000);          /* 5자리 */
+      return "IS-" + base;
+    }
+    function fmtDate(iso) {
+      var p = iso.split("-");
+      return en ? (p[0] + ". " + p[1] + ". " + p[2]) : (p[0] + ". " + p[1] + ". " + p[2] + ".");
+    }
+
+    function draw(m) {
+      var ctx = canvas.getContext("2d");
+      var W = canvas.width, H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+      /* 배경 — 웜 블랙 + 미세한 세로 그라디언트 */
+      var g = ctx.createLinearGradient(0, 0, 0, H);
+      g.addColorStop(0, "#111"); g.addColorStop(1, "#080808");
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      ctx.strokeStyle = "rgba(212,175,55,.85)"; ctx.lineWidth = 3; ctx.strokeRect(40, 40, W - 80, H - 80);
+      ctx.strokeStyle = "rgba(212,175,55,.26)"; ctx.lineWidth = 1; ctx.strokeRect(56, 56, W - 112, H - 112);
+      var mono = "'Space Mono', monospace";
+      var ko = '"Pretendard Variable", "Apple SD Gothic Neo", sans-serif';
+      /* 상단 라벨 */
+      ctx.textAlign = "left"; ctx.fillStyle = "rgba(212,175,55,.95)";
+      ctx.font = "700 26px " + mono;
+      ctx.fillText(en ? "INSOONI  ·  SARANGBANG" : "인순이 공식 팬  ·  사랑방", 96, 128);
+      drawGooseEmblem(ctx, W - 220, 84, 120, "#e8d9a0");
+      /* 이름 */
+      ctx.fillStyle = "#f3efe7"; ctx.font = "600 78px " + ko;
+      ctx.fillText(m.name, 96, 380);
+      ctx.fillStyle = "rgba(243,239,231,.5)"; ctx.font = "500 26px " + ko;
+      ctx.fillText(en ? "MEMBER OF THE FAN ROOM" : "사랑방의 한 사람", 98, 428);
+      /* 번호 + 가입일 */
+      ctx.fillStyle = "rgba(243,239,231,.9)"; ctx.font = "700 40px " + mono;
+      ctx.fillText((en ? "FAN No. " : "회원번호  ") + m.serial, 96, 560);
+      ctx.fillStyle = "rgba(243,239,231,.55)"; ctx.font = "500 28px " + mono;
+      ctx.fillText((en ? "SINCE  " : "함께한 날  ") + fmtDate(m.since), 96, 612);
+      /* 하단 서명 */
+      ctx.fillStyle = "rgba(212,175,55,.9)"; ctx.font = "40px 'Nanum Pen Script', cursive";
+      ctx.textAlign = "right";
+      ctx.fillText(en ? "With love, Insooni" : "인순이 사랑방 드림", W - 96, H - 110);
+    }
+
+    function ready(m) {
+      (document.fonts && document.fonts.ready) ? document.fonts.ready.then(function () { draw(m); }) : draw(m);
+      draw(m);
+      $("#mc-actions").hidden = false;
+      canvas.classList.add("is-ready");
+    }
+
+    var stored = store(MKEY);
+    if (stored && stored.name) {
+      nameIn.value = stored.name;
+      $("#mc-welcome").textContent = (en ? "Welcome back, " : "다시 오셨네요, ") + stored.name + (en ? "." : " 님.");
+      ready(stored);
+    }
+
+    makeBtn.addEventListener("click", function () {
+      var nm2 = (nameIn.value || "").trim();
+      if (!nm2) { nameIn.focus(); return; }
+      var prev = store(MKEY);
+      var since = (prev && prev.name === nm2 && prev.since) ? prev.since
+                : new Date().toISOString().slice(0, 10);
+      var m = { name: nm2, serial: serial(nm2), since: since };
+      store(MKEY, m);
+      $("#mc-welcome").textContent = (en ? "Welcome to the fan room, " : "사랑방에 오신 것을 환영합니다, ") + nm2 + (en ? "." : " 님.");
+      ready(m);
+    });
+
+    $("#mc-save").addEventListener("click", function () {
+      canvas.toBlob(function (blob) {
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "insooni-fan-card.png";
+        a.click();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+      }, "image/png");
+    });
+    $("#mc-share").addEventListener("click", function () {
+      canvas.toBlob(function (blob) {
+        var file = new File([blob], "insooni-fan-card.png", { type: "image/png" });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          navigator.share({ files: [file], title: t("mc.t", "사랑방 팬 번호증") }).catch(function () {});
+        } else { $("#mc-save").click(); }
+      }, "image/png");
+    });
+  }
+
   function initCheerCard() {
     var canvas = $("#cc-canvas");
     if (!canvas) return;
@@ -1490,6 +1716,23 @@
       if (pb) pb.remove();
       return;
     }
+    /* 화질과 데이터 사이의 균형. 소스를 HTML에 박아 두면 preload가 큰 파일을
+       먼저 받아 버리므로, 여기서 화면·연결을 보고 골라 넣는다.
+       큰 화면·좋은 연결은 1080p, 작은 화면이나 데이터 절약 모드는 720p 경량본. */
+    (function pickSource() {
+      var src = v.querySelector("source");
+      if (!src || v.dataset.picked || !src.getAttribute("data-src")) return;
+      v.dataset.picked = "1";
+      var conn = navigator.connection || {};
+      var small = window.matchMedia && window.matchMedia("(max-width: 760px)").matches;
+      var saver = conn.saveData === true || /(^|-)2g$/.test(conn.effectiveType || "");
+      var lite = src.getAttribute("data-lite");
+      src.setAttribute("src", (lite && (small || saver)) ? lite : src.getAttribute("data-src"));
+      v.load();
+    })();
+    /* 실제 프레임이 흐르기 시작하면 포스터 위로 영상이 피어난다 */
+    var stage = v.closest(".strip-item--video") || v.parentNode;
+    v.addEventListener("playing", function () { if (stage) stage.classList.add("is-playing"); });
     function tryPlay() {
       var p = v.play();
       if (p && p.catch) p.catch(function () { /* 자동재생 차단 시 포스터 유지 */ });
@@ -1676,38 +1919,50 @@
      헤더·전역 리스너에 붙는 것들은 최초 1회만 실행한다. */
   var GLOBAL_DONE = false;
 
+  /* 상단 진행선: 문서를 얼마나 읽었는지 얇은 금선으로 보여 준다.
+     고급 사이트의 절제된 신호 — 헤더에 한 번만 붙이고 스크롤에 맞춰 채운다. */
+  function initScrollProgress() {
+    if (document.getElementById("scroll-progress")) return;
+    var bar = el("div", "");
+    bar.id = "scroll-progress";
+    bar.setAttribute("aria-hidden", "true");
+    document.body.appendChild(bar);
+    var ticking = false;
+    function paint() {
+      ticking = false;
+      var h = document.documentElement;
+      var max = (h.scrollHeight - h.clientHeight) || 1;
+      var p = Math.min(1, Math.max(0, (h.scrollTop || window.pageYOffset) / max));
+      bar.style.transform = "scaleX(" + p.toFixed(4) + ")";
+    }
+    window.addEventListener("scroll", function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(paint); }
+    }, { passive: true });
+    paint();
+  }
+
   function globalInit() {
     if (GLOBAL_DONE) return;
     GLOBAL_DONE = true;
     initLang();
     initNav();
     initScrollState();
+    initScrollProgress();
     initLoader();
     initIntro();
   }
 
+  /* 렌더러 하나가 예외를 던져도 나머지가 멈추지 않게 각각 격리해 실행한다.
+     (한 함수의 오류가 페이지 전체를 비우던 사고를 막는다) */
+  function safe(fn) {
+    try { fn(); } catch (e) { if (window.console) console.error("[pageInit]", e); }
+  }
   function pageInit() {
-    renderEventList();
-    initStrip();
-    initVhero();
-    renderArchive();
-    renderPastRecaps();
-    initFreshVideos();
-    initVideoButtons();
-    initReveal();
-    renderNewsPage();
-    renderCalendar();
-    renderTimeline();
-    renderDiscography();
-    initLetters();
-    initBoard();
-    initPoll();
-    initSarangbang();
-    initCheerCard();
-    initQna();
-    initRise();
-    initSubscribe();
-    initAdmin();
+    [renderEventList, initStrip, initVhero, renderArchive, renderPastRecaps,
+     initFreshVideos, initVideoButtons, initReveal, renderNewsPage, renderCalendar,
+     renderTimeline, renderAnniversary, renderDiscography, initLetters, initBoard,
+     initPoll, initSarangbang, initMemberCard, initCheerCard, initQna, initRise,
+     initSubscribe, initAdmin].forEach(safe);
     /* 마지막에 번역을 건다 — 위 렌더러들이 만들어 낸 요소까지 함께 잡기 위해서.
        라우터로 페이지를 옮겨도 새 <main>이 영어로 칠해진다. */
     applyLang(curLang());

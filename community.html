@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Nanum+Myeongjo:wght@400;700;800&family=Space+Mono:wght@400;700&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v74">
+<link rel="stylesheet" href="assets/css/style.css?v80">
 </head>
 <body>
 <a class="skip-link" href="#main" data-i18n="nav.skip">본문 바로가기</a>
@@ -53,6 +53,13 @@
     </div>
   </section>
 
+  <!-- 오늘의 기념일: 검증된 연대기에서 오늘 날짜를 비춘다 -->
+  <section class="anniv" id="anniv" hidden aria-live="polite">
+    <div class="container">
+      <div class="anniv-card" id="anniv-card"></div>
+    </div>
+  </section>
+
   <!-- 인순이의 편지: 아티스트 → 팬 방향 소통 (위버스 모먼트·손편지 문법) -->
   <section class="section" id="artist-letter" aria-labelledby="h-artist-letter">
     <div class="container">
@@ -75,6 +82,34 @@
           <p class="form-hint" data-i18n="comm.alNote">운영 예시 화면입니다. 실제 운영 시 인순이 님이 직접 쓴 편지와 음성 메시지가 이 자리에 게재됩니다.</p>
         </div>
       </article>
+    </div>
+  </section>
+
+  <!-- 팬 번호증: 방문자를 '사랑방의 한 사람'으로 맞이하는 소장용 카드 -->
+  <section class="section" id="membership" aria-labelledby="h-membership">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="h-membership" data-i18n="mc.t">사랑방 팬 번호증</h2>
+      </div>
+      <p class="card-desc" style="max-width:46em;margin-bottom:1.8rem" data-i18n="mc.lead">이름을 적으면, 인순이 사랑방의 한 사람으로 맞이하는 번호증을 만들어 드립니다. 소장용 이미지로 간직하거나 나눠 보세요.</p>
+      <div class="grid grid--2 grid--start">
+        <div class="form-panel">
+          <div class="form-field">
+            <label for="mc-name" data-i18n="mc.name">이름 또는 별명</label>
+            <input id="mc-name" type="text" maxlength="16" placeholder="예) 서울에서 40년 팬" data-i18n-ph="mc.namePh">
+          </div>
+          <button type="button" class="btn btn--gold greet-stamp" id="mc-make" data-i18n="mc.make">내 번호증 만들기</button>
+          <p class="greet-state" id="mc-welcome" role="status"></p>
+          <div class="cc-actions" hidden id="mc-actions">
+            <button type="button" class="btn btn--sm" id="mc-save" data-i18n="mc.save">이미지로 저장</button>
+            <button type="button" class="btn btn--sm" id="mc-share" data-i18n="mc.share">공유하기</button>
+          </div>
+          <p class="form-hint" data-i18n="mc.hint">번호증은 이 기기에만 저장되는 기념용 카드입니다. 다시 오시면 이름으로 반겨 드립니다.</p>
+        </div>
+        <div class="mc-preview">
+          <canvas id="mc-canvas" width="1200" height="760" role="img" aria-label="팬 번호증 미리보기" data-i18n-aria="mc.previewAria"></canvas>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -303,15 +338,15 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동" data-i18n-aria="aria.toTop">↑</button>
-<script src="assets/js/i18n.js?v74"></script>
-<script src="assets/js/data.js?v74"></script>
-<script src="assets/js/tracklinks.js?v74"></script>
-<script src="assets/js/albums-full.js?v74"></script>
-<script src="assets/js/albums-en.js?v74"></script>
-<script src="assets/js/song-moods.js?v74"></script>
-<script src="assets/js/main.js?v74"></script>
-<script src="assets/js/motion.js?v74"></script>
-<script src="assets/js/router.js?v74" defer></script>
-<script src="assets/js/deck.js?v74"></script>
+<script src="assets/js/i18n.js?v80"></script>
+<script src="assets/js/data.js?v80"></script>
+<script src="assets/js/tracklinks.js?v80"></script>
+<script src="assets/js/albums-full.js?v80"></script>
+<script src="assets/js/albums-en.js?v80"></script>
+<script src="assets/js/song-moods.js?v80"></script>
+<script src="assets/js/main.js?v80"></script>
+<script src="assets/js/motion.js?v80"></script>
+<script src="assets/js/router.js?v80" defer></script>
+<script src="assets/js/deck.js?v80"></script>
 </body>
 </html>

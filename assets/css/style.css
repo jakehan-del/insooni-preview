@@ -62,6 +62,14 @@ body {
   -webkit-font-smoothing: antialiased;
   word-break: keep-all;
 }
+/* 상단 스크롤 진행선 — 헤더 위 얇은 금선 */
+#scroll-progress {
+  position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 120;
+  background: linear-gradient(90deg, var(--gold, #d4a54a), rgba(212,165,74,.35));
+  transform: scaleX(0); transform-origin: 0 50%; pointer-events: none;
+  transition: transform .08s linear;
+}
+@media (prefers-reduced-motion: reduce) { #scroll-progress { transition: none; } }
 /* 필름 그레인: 고정 오버레이 (포인터 통과) */
 body::after {
   content: ""; position: fixed; inset: 0; z-index: 90; pointer-events: none;
@@ -333,7 +341,11 @@ html.js-anim .vhero-poster { animation: vhero-fade 1.8s ease both; }
 .vhero-video {
   position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: cover; object-position: center 30%; pointer-events: none;
+  /* 정지 사진이 움직임으로 '숨을 쉬며' 피어나게: 재생이 시작되면 서서히 겹쳐 든다 */
+  opacity: 0; transform: scale(1.02);
+  transition: opacity .7s ease, transform 1.2s cubic-bezier(.22,.8,.36,1);
 }
+.strip-item--video.is-playing .vhero-video { opacity: 1; transform: scale(1); }
 @media (prefers-reduced-motion: reduce) { .vhero-video { display: none; } }
 .vhero-scrim {
   position: absolute; inset: 0; pointer-events: none;
@@ -554,6 +566,26 @@ html.js-anim .hero [data-rise="5"] { animation-delay: .5s; }
 .recap-video--embed { aspect-ratio: 16 / 9; }
 .recap-video iframe { display: block; width: 100%; height: 100%; border: 0; }
 .recap-video video { display: block; width: 100%; max-height: 74vh; background: var(--void); }
+/* 유튜브 파사드: 누르기 전에는 원본 고해상 썸네일 + 재생 글리프 */
+.yt-facade {
+  position: relative; display: block; width: 100%; height: 100%; padding: 0;
+  border: 0; background: var(--void); cursor: pointer; overflow: hidden;
+}
+.yt-facade-poster {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform .9s cubic-bezier(.22,.8,.36,1), opacity .4s ease;
+}
+.yt-facade:hover .yt-facade-poster { transform: scale(1.035); opacity: .82; }
+.yt-facade-play {
+  position: absolute; inset: 0; margin: auto; width: 74px; height: 74px;
+  display: grid; place-items: center; border-radius: 50%;
+  background: rgba(10,10,10,.42); border: 1.5px solid rgba(243,239,231,.85);
+  color: var(--paper, #F3EFE7); font-size: 1.5rem; padding-left: 5px;
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  transition: background .25s ease, transform .25s cubic-bezier(.22,.8,.36,1);
+}
+.yt-facade:hover .yt-facade-play { background: rgba(212,175,55,.9); color: #0b0b0b; transform: scale(1.08); border-color: transparent; }
+.lightbox-frame .yt-facade-play { width: 88px; height: 88px; font-size: 1.9rem; }
 .recap-sub { font-size: 1.02rem; letter-spacing: .05em; margin: 0 0 1rem; }
 .recap-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 4px; }
 .recap-item { margin: 0; }
@@ -1250,6 +1282,23 @@ button.strip-item:focus-visible { outline: 3px solid var(--ivory); outline-offse
 /* 사랑방: 운영 시스템 3단계 */
 /* 사랑방: 인순이의 편지 · 오늘의 문안 인사 (시니어 퍼스트 — 큰 타깃, 라벨 있는 버튼, 선택형 참여) */
 .grid--start { align-items: start; }
+/* 오늘의 기념일 — 이 방이 살아 있는 달력처럼 느껴지게 하는 조용한 배너 */
+.anniv { padding: clamp(2rem, 5vh, 3.4rem) 0 0; }
+.anniv-card {
+  border: 1px solid var(--line-strong); border-radius: var(--r-panel);
+  background: linear-gradient(180deg, rgba(212,175,55,.06), rgba(255,255,255,0));
+  padding: clamp(1.6rem, 4vw, 2.6rem) clamp(1.4rem, 5vw, 3rem); text-align: center;
+}
+.anniv-kicker {
+  display: inline-block; font-family: var(--font-mono); font-size: .68rem;
+  letter-spacing: .28em; text-transform: uppercase; color: var(--gold); margin-bottom: .9rem;
+}
+.anniv-head {
+  font-family: var(--font-display); font-size: clamp(1.5rem, 4vw, 2.3rem);
+  line-height: 1.25; margin: 0 0 .5rem; color: var(--paper, #F3EFE7); word-break: keep-all;
+}
+.anniv-body { margin: 0; font-size: 1.02rem; line-height: 1.6; color: var(--muted, rgba(243,239,231,.66)); }
+.anniv-body b { color: var(--gold); font-weight: 700; }
 .letter-corner { border: 1px solid var(--line); border-radius: var(--r-panel); background: var(--panel); overflow: hidden; }
 .letter-paper { padding: 3rem clamp(1.4rem, 5vw, 4rem) 2.2rem; text-align: center; }
 .letter-goose { width: 54px; height: auto; color: var(--gold); margin-bottom: 1.4rem; }
@@ -1475,6 +1524,15 @@ main h3 { font-family: var(--font-mono); font-weight: 400; font-size: .85rem; le
     transform: translate(16vw, -24vh) rotate(-8deg) scale(1.18); opacity: 0;
   }
 }
+
+/* 사랑방 팬 번호증 */
+.mc-preview canvas {
+  width: 100%; max-width: 520px; height: auto; display: block;
+  border: 1px solid var(--line); border-radius: 6px; background: #0a0a0a;
+  box-shadow: 0 18px 48px rgba(0,0,0,.45);
+}
+.mc-preview canvas.is-ready { border-color: var(--gold-deep); }
+#mc-welcome { min-height: 1.4em; }
 
 /* 거위의 꿈 응원 카드 */
 .cc-preview canvas {

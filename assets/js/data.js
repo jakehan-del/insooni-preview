@@ -526,6 +526,23 @@ window.SITE_DATA = {
       sign: "With love, Insooni"
     }
   },
+  /* ---------- 인순이 연대기 (검증된 날짜만) ----------
+     '오늘의 기념일 / N년 전 오늘'과 다음 기념일 카운트다운에 쓴다.
+     date는 MM-DD, since는 연도. 전부 앨범 크레딧·보도로 확인된 날짜다. */
+  milestones: [
+    { d: "04-05", y: 1957, ko: "인순이 탄생", en: "Insooni was born" },
+    { d: "10-01", y: 1980, ko: "솔로 1집 《인연》 발매 — 홀로서기의 시작", en: "Solo debut album '인연' — the start of her own path" },
+    { d: "05-07", y: 1981, ko: "정규 2집 발매", en: "2nd studio album released" },
+    { d: "06-15", y: 1985, ko: "정규 6집 발매", en: "6th studio album released" },
+    { d: "06-25", y: 2001, ko: "정규 14집 《My Turn》 발매", en: "14th album 'My Turn' released" },
+    { d: "09-24", y: 2003, ko: "재즈 앨범 《Jazz》 발매", en: "The jazz album 'Jazz' released" },
+    { d: "09-09", y: 2004, ko: "정규 16집 《A To Z》 발매 — '친구여'", en: "16th album 'A To Z' — 'My Friend'" },
+    { d: "02-01", y: 2007, ko: "《거위의 꿈》 — 위로가 된 노래", en: "'A Goose's Dream' — the song that became comfort" },
+    { d: "05-08", y: 2009, ko: "정규 17집 《인순이》 발매 — 'Fantasia'·'아버지'", en: "17th album released — 'Fantasia', 'Father'" },
+    { d: "09-25", y: 2013, ko: "정규 18집 《Umbrella》 발매", en: "18th album 'Umbrella' released" },
+    { d: "02-19", y: 2025, ko: "《인순이, 아름다운 우리나라》 발매", en: "'Insooni, Our Beautiful Country' released" },
+    { d: "11-28", y: 2025, ko: "싱글 《그래도 꿈은 흐른다》 발매", en: "Single '그래도 꿈은 흐른다' released" }
+  ],
   cheerPresets: [
     { ko: "오늘도 응원합니다", en: "Cheering for you today" },
     { ko: "거위의 꿈 듣고 갑니다", en: "Listened to A Goose's Dream today" },
