@@ -303,10 +303,36 @@
   function renderDiscography() {
     var box = $("#discography");
     if (!box || !D.albums) return;
+    /* 정규 1~18집 전체 수록곡 병합 (albums-full.js — maniadb 전수 파싱) */
+    function regNo(a) {
+      var m = (a.kind || "").match(/정규\s*(\d+)집/);
+      if (m) return +m[1];
+      if (a.kind === "솔로 1집") return 1;
+      if (a.kind === "정규" && a.year === "2009") return 17;
+      return null;
+    }
+    (window.REG_ALBUMS || []).forEach(function (r) {
+      var hit = null;
+      D.albums.forEach(function (a) { if (regNo(a) === r.no) hit = a; });
+      if (!hit) return;
+      if (!hit.tracks || !hit.tracks.length) hit.tracks = r.tracks;
+      if (!hit.art) hit.art = r.art;
+      if (!hit.credits) hit.credits = r.credits;
+    });
     /* 전체 인덱스: 상세 자료 없는 릴리즈는 타이포 한 줄로 */
     var idx = $("#disco-index");
-    var rich = [], plain = [];
-    D.albums.forEach(function (a) { (a.tracks && a.tracks.length ? rich : plain).push(a); });
+    var regBox = $("#disco-regular");
+    function isReg(a) { return /정규|솔로 1집/.test(a.kind || ""); }
+    var regs = [], rich = [], plain = [];
+    D.albums.forEach(function (a) {
+      if (regBox && isReg(a)) { regs.push(a); return; }
+      (a.tracks && a.tracks.length ? rich : plain).push(a);
+    });
+    /* 정규는 최신 → 1집 순으로 전부 상세 행 (수록곡 없는 앨범도 앨범으로 보이게) */
+    regs.sort(function (a, b) {
+      var y = String(b.year).localeCompare(String(a.year));
+      return y !== 0 ? y : (regNo(b) || 0) - (regNo(a) || 0);
+    });
     if (idx) {
       plain.forEach(function (a) {
         var r = el("p", "di-row");
@@ -323,7 +349,7 @@
         idx.appendChild(r);
       });
     }
-    var list = idx ? rich : D.albums;
+    var list = idx ? regs.concat(rich) : D.albums;
     list.forEach(function (a, i) {
       var row = el("button", "album-row");
       row.type = "button";
@@ -338,7 +364,7 @@
       var artistQ = ((a.kind || "") + (a.title || "")).indexOf("희자매") >= 0 || a.kind === "그룹" ? "희자매" : (a.kind === "골든걸스" ? "골든걸스" : "인순이");
       var tracksHtml = (a.tracks && a.tracks.length)
         ? '<ol class="a-tracks">' + a.tracks.map(function (trk) {
-            var base = trk.replace(/\s*\((Inst\.|경음악|MR)\)$/, "");
+            var base = trk.replace(/\s*\((Inst\.|경음악|MR)\)$/, "").replace(/\s*\[[^\]]+\]$/, "");
             /* 공식 음원 직결 (- Topic 아트 트랙, oEmbed 검증) — 없으면 검색 폴백 */
             var direct = (window.TRACK_LINKS || {})[artistQ + "|" + base];
             var q = direct
@@ -365,8 +391,9 @@
         detail.hidden = !open;
         row.setAttribute("aria-expanded", String(open));
       });
-      box.appendChild(row);
-      box.appendChild(detail);
+      var target = (regBox && isReg(a)) ? regBox : box;
+      target.appendChild(row);
+      target.appendChild(detail);
     });
   }
   /* 지난 무대 리캡: 타일 → VIEW RECAP 패널 (사진 갤러리 + 영상) */
