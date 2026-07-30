@@ -10,6 +10,25 @@ import io, os, re, glob, sys
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 
+# ============================================================
+# 배포 주소 — 도메인을 옮길 때 이 한 줄만 바꾸면 됩니다.
+#
+#   지금:   https://jakehan-del.github.io/insooni-preview
+#   나중에: https://insooni.com
+#
+# canonical / og:url / og:image / 구조화 데이터 / sitemap.xml / robots.txt 가
+# 전부 이 값으로 다시 쓰입니다. 한 곳이라도 옛 주소가 남으면 검색엔진에
+# "진짜 페이지는 옛 주소다"라고 알려 주는 셈이 되어 새 도메인이 손해를 봅니다.
+# ============================================================
+SITE_URL = "https://jakehan-del.github.io/insooni-preview"
+
+# 과거에 쓴 적 있는 주소들. 어느 것이 남아 있어도 SITE_URL로 바꾼다(여러 번 실행해도 안전).
+KNOWN_BASES = [
+    "https://jakehan-del.github.io/insooni-preview",
+    "https://insooni.com",
+    "https://www.insooni.com",
+]
+
 
 def minify_css(s):
     s = re.sub(r"/\*.*?\*/", "", s, flags=re.S)          # 주석
@@ -80,7 +99,32 @@ def split_fonts():
         print("  %-26s %6.1f KB  (%d faces)" % (name, os.path.getsize(out) / 1024, len(blocks)))
 
 
+def restamp_site_url():
+    """모든 절대 주소를 SITE_URL로 다시 쓴다.
+
+    HTML에 박힌 canonical·og·구조화 데이터, sitemap.xml, robots.txt를 한 번에 맞춘다.
+    도메인 이전에서 가장 흔한 사고가 "일부만 바꾸는 것"이라 통째로 다시 쓴다.
+    """
+    base = SITE_URL.rstrip("/")
+    targets = sorted(glob.glob(os.path.join(ROOT, "*.html")))
+    targets += [os.path.join(ROOT, "sitemap.xml"), os.path.join(ROOT, "robots.txt")]
+    changed = 0
+    for f in targets:
+        if not os.path.exists(f):
+            continue
+        src = io.open(f, encoding="utf-8").read()
+        out = src
+        for old in KNOWN_BASES:
+            if old.rstrip("/") != base:
+                out = out.replace(old.rstrip("/"), base)
+        if out != src:
+            io.open(f, "w", encoding="utf-8").write(out)
+            changed += 1
+    print("  배포 주소 %s (%d개 파일 갱신)" % (base, changed))
+
+
 def run():
+    restamp_site_url()
     split_fonts()
     made = []
     css = os.path.join(ROOT, "assets/css/style.css")
