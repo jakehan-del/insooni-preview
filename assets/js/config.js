@@ -23,7 +23,7 @@
 window.INSOONI_CONFIG = window.INSOONI_CONFIG || {};
 
 if (!window.INSOONI_CONFIG.url) {
-  window.INSOONI_CONFIG.url = "";        // 예: "https://abcdefghijklm.supabase.co"
+  window.INSOONI_CONFIG.url = "https://vxrazyiqvdwgvgpkkitm.supabase.co";
 }
 if (!window.INSOONI_CONFIG.anonKey) {
   window.INSOONI_CONFIG.anonKey = "";    // 예: "eyJhbGciOi..." (anon / public 키)

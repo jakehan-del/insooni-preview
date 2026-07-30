@@ -15,6 +15,14 @@
    '이미지로 저장' 버튼이 떠 있었다. */
 [hidden] { display: none !important; }
 
+/* Cormorant Garamond는 기본이 옛날식 숫자(oldstyle)라 1957·1978 같은 연도가
+   위아래로 들쭉날쭉해진다. 약력·음반 연도를 다루는 사이트에서는 읽기 방해가 되므로
+   숫자는 줄맞춰 세운다(lining). */
+.lede, #h-profile + p, .about-lede,
+h1, h2, h3, h4, .brand-en, [class*="-year"], .a-note, .card-meta {
+  font-variant-numeric: lining-nums;
+}
+
 /* ---------- 1. 토큰 ---------- */
 :root {
   --void: #080808;           /* 페이지 배경: 웜 니어블랙 */
@@ -44,7 +52,11 @@
 
   --font-display: "Pretendard Variable", Pretendard, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
   --font-latin: "Cormorant Garamond", "Noto Serif KR", serif;
-  --font-mono: "Space Mono", "IBM Plex Mono", "SF Mono", monospace;
+  /* 라벨·연도·캡션용. 라틴과 숫자는 고정폭의 절제된 인상을 쓰고,
+     한글은 Pretendard로 받는다. 이 스택에 한글 폰트가 없으면 한글 라벨이
+     기기마다 OS가 고른 다른 글꼴로 떠서 인상이 흔들린다. */
+  --font-mono: "Space Mono", "IBM Plex Mono", "SF Mono",
+               "Pretendard Variable", Pretendard, "Apple SD Gothic Neo", monospace;
   --font-body: "Pretendard Variable", Pretendard, "Apple SD Gothic Neo",
                "Noto Sans KR", system-ui, sans-serif;
 
@@ -56,7 +68,7 @@
 }
 
 /* 글자 크기 3단계 (헤더 [가] 버튼 연동) */
-html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; font-size: 17px; scroll-padding-top: 6rem; background: var(--void); scrollbar-color: var(--hairline) #080808; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; font-optical-sizing: auto; font-size: 17px; scroll-padding-top: 6rem; background: var(--void); scrollbar-color: var(--hairline) #080808; }
 ::-webkit-scrollbar { width: 12px; }
 ::-webkit-scrollbar-track { background: var(--void); }
 ::-webkit-scrollbar-thumb { background: var(--hairline); border-radius: 6px; border: 3px solid var(--void); }
@@ -2162,7 +2174,10 @@ body.has-deck .back-to-top { bottom: calc(92px + 1.2rem); }
   word-break: keep-all;
 }
 .page-hero p {
-  font-size: clamp(1rem, 1.35vw, 1.2rem); letter-spacing: .01em;
+  /* 위쪽 규칙에서 물려받은 고정폭을 본문 서체로 돌려놓는다.
+     산문 한 문단을 라벨용 글꼴로 조판하고 있었다. */
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.2vw, 1.14rem); letter-spacing: 0;
   max-width: 34em; color: var(--muted); word-break: keep-all;
 }
 .page-hero { padding-block: clamp(6rem, 13vh, 10rem) clamp(3rem, 6vh, 5rem); }
@@ -2174,8 +2189,11 @@ body.has-deck .back-to-top { bottom: calc(92px + 1.2rem); }
   word-break: keep-all;
 }
 #h-profile {
+  /* 이야기 페이지의 이름 제목. h1(48px)과 거의 같은 46px까지 커져 있었다 —
+     두 제목이 같은 크기면 무엇이 상위인지 알 수 없다. 한 단계 아래로 내린다. */
   font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(1.8rem, 3.2vw, 2.9rem); letter-spacing: 0; margin-bottom: 1.2rem;
+  font-size: clamp(1.6rem, 2.2vw, 2.1rem); line-height: 1.24;
+  letter-spacing: -.012em; margin-bottom: 1.1rem;
 }
 .qna-q, .letter-body { word-break: keep-all; }
 
@@ -2462,13 +2480,37 @@ button.sr-row .sr-play { color: var(--gold); }
    제목의 상한을 낮추고, 본문에는 읽기 폭을 줘 줄 길이를 범위 안에 넣는다.
    ============================================================ */
 @media (min-width: 721px) {
-  /* 제목: 1440에서 66px, 1920 이상에서도 68px를 넘지 않는다 */
-  .page-hero h1 { font-size: clamp(2.2rem, 4.6vw, 4rem); line-height: 1.1; }
-  h1 { font-size: clamp(2.2rem, 4.4vw, 4rem); }
+  /* ── 제목 ──
+     이전: 1440에서 66px. 그 아래 섹션 라벨이 13.9px이라 4.8배 격차가 났다.
+     중간 단계가 없으면 제목만 거대하게 튀고 나머지는 잔글씨로 보인다.
+     제목을 낮추고 h2·h3를 세워 계단을 만든다.
+       1280 → 43px · 1440 → 48px · 1920 → 52px */
+  .page-hero h1 {
+    font-size: clamp(2.3rem, 3.35vw, 3.05rem);
+    line-height: 1.14;          /* 한글은 글자 높이가 커서 1.1은 답답하다 */
+    letter-spacing: -.018em;    /* 큰 활자는 조금 조여야 단단해 보인다 */
+  }
+  h1 { font-size: clamp(2.2rem, 3.2vw, 2.9rem); line-height: 1.16; letter-spacing: -.018em; }
 
-  /* 서두 문단: 27~32px는 과했다 */
+  /* h2·h3 — 비어 있던 중간 단계 */
+  h2 { font-size: clamp(1.5rem, 2.05vw, 2rem); line-height: 1.24; letter-spacing: -.012em; }
+  h3 { font-size: clamp(1.12rem, 1.35vw, 1.3rem); line-height: 1.35; letter-spacing: -.006em; }
+
+  /* 섹션 머리 라벨은 라벨답게 두되, 너무 작아 묻히지 않을 만큼만 세운다 */
+  .section-head h2 { font-size: .85rem; letter-spacing: .26em; line-height: 1.5; }
+
+  /* 서두 문단 — 본문(17px)과 구분이 되어야 '서두'다. 18.4px까지 줄였더니
+     본문과 거의 같아져 편집물의 인상이 사라졌다. 21px 선으로 되돌린다. */
   .lede, #h-profile + p, .about-lede {
-    font-size: clamp(1.15rem, 1.45vw, 1.42rem); line-height: 1.68;
+    font-size: clamp(1.15rem, 1.45vw, 1.35rem); line-height: 1.66;
+  }
+
+  /* 내비는 12.9px로 너무 잦아들어 있었다 */
+  .main-nav a { font-size: .8rem; }
+
+  /* 연도·트랙 번호가 세로로 줄맞춤되게 (음반 목록에서 눈에 띈다) */
+  .a-year, .rk-no, .rk-n, .ts-year, .card-meta time, .fr-date {
+    font-variant-numeric: tabular-nums;
   }
 
   /* 읽기 폭 — 한 줄이 45~75자에 들어오게 한다.
