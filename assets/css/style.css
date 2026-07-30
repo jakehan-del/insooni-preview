@@ -1245,25 +1245,69 @@ body.home .footer-min { position: fixed; left: 0; right: 0; bottom: 0; z-index: 
 body.home .footer-min nav { justify-content: center; padding-bottom: .6rem; padding-top: 2.2rem; }
 body.home .footer-min a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 .3em; color: var(--muted); }
 
-.loader { position: fixed; inset: 0; z-index: 300; background: transparent; pointer-events: none; animation: loader-safety 4.6s ease forwards; }
-.loader img {
-  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-  /* 천천히 밀려드는 화면 + 위에서 아래로 걷히는 컷 전환 */
-  animation: ld-drift 3.4s ease-out both;
-  transition: opacity .34s ease, clip-path .46s cubic-bezier(.65,0,.35,1), transform .6s ease;
+.loader { position: fixed; inset: 0; z-index: 300; background: transparent; pointer-events: none; animation: loader-safety 6.6s ease forwards; }
+/* ── 입장 액션: 사진을 잘라내지 않는다 ──
+   여덟 장 중 네 장이 세로 사진이다. 가로 화면에서 cover로 채우면 위아래가
+   크게 잘려 얼굴이 날아간다. 그래서 한 장을 두 겹으로 쓴다.
+
+     뒤 겹(::before) — 같은 사진을 흐리고 어둡게 깔아 화면을 메운다
+     앞 겹(img)      — 사진 전체를 잘림 없이 보여 준다 (contain)
+
+   음악 앱이 앨범 재킷을 배경으로 쓰는 방식과 같다.
+   비어 보이지 않으면서 원본을 한 픽셀도 잘라내지 않는다. */
+.ld-shot {
+  position: absolute; inset: 0; overflow: hidden;
+  /* 넘김 간격(500ms)보다 전환이 길면 여러 장이 늘 겹쳐 있어 어느 사진도
+     제대로 보이지 않는다. 전환을 간격보다 짧게 두어 한 장씩 눈에 들어오게 한다. */
+  transition: clip-path .36s cubic-bezier(.55,.02,.3,1), opacity .36s ease;
   clip-path: inset(0 0 0 0);
-  will-change: transform, clip-path, opacity;
+  will-change: clip-path, opacity;
 }
-@keyframes ld-drift { from { transform: scale(1.09); } to { transform: scale(1); } }
-.loader img:nth-child(1) { z-index: 18; }
-.loader img:nth-child(2) { z-index: 17; }
-.loader img:nth-child(3) { z-index: 16; }
-.loader img:nth-child(4) { z-index: 15; }
-.loader img:nth-child(5) { z-index: 14; }
-.loader img:nth-child(6) { z-index: 13; }
-.loader img:nth-child(7) { z-index: 12; }
-.loader img:nth-child(8) { z-index: 11; }
-.loader img.gone { opacity: 0; clip-path: inset(0 0 100% 0); transform: scale(1.02); }
+/* 여백이 생기는 경우에만 쓰이는 흐린 배경.
+   주소를 CSS 변수로 넘기면 상대 경로가 '스타일시트 위치' 기준으로 해석되어
+   경로가 어긋난다(assets/css/assets/img/... 404). 그래서 자바스크립트가
+   필요한 순간에만 요소에 직접 붙인다 — 평소에는 내려받지도 않는다. */
+.ld-blur {
+  position: absolute; inset: -10%; display: none;
+  background-position: center; background-size: cover; background-repeat: no-repeat;
+  filter: blur(46px) saturate(.62) brightness(.3);
+  transform: scale(1.06);
+}
+.ld-shot.is-contain .ld-blur { display: block; }
+.ld-shot::after {
+  /* 가장자리를 어둠에 잠기게 — 사진이 화면에 '놓여 있다'는 인상 */
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, transparent 42%, rgba(8,8,8,.62) 100%);
+}
+.ld-shot img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  /* 기본은 화면을 꽉 채운다. 사진마다 인물이 있는 지점을 style로 지정해 두었으므로
+     배경만 잘려 나가고 인순이는 늘 화면 안에 남는다. */
+  object-fit: cover;
+  animation: ld-drift 2.4s ease-out both;
+  will-change: transform;
+}
+/* 사진 비율과 화면 비율이 너무 달라 채우면 사진의 3분의 1 이상이 날아가는 경우에만
+   전체를 보여 준다(자바스크립트가 판단해 붙인다). 세로 사진을 가로 화면에,
+   가로 사진을 휴대폰 세로 화면에 놓는 경우가 여기 해당한다. */
+.ld-shot.is-contain img { object-fit: contain; }
+/* 여백이 생기는 경우에만 사진 테두리를 살짝 띄워 '놓인 사진'처럼 보이게 한다 */
+.ld-shot.is-contain img { filter: drop-shadow(0 0 60px rgba(0,0,0,.85)); }
+@keyframes ld-drift { from { transform: scale(1.045); } to { transform: scale(1); } }
+
+/* 방향에 맞지 않는 세트는 자바스크립트가 지우므로 남는 장수가 달라진다.
+   nth-child 대신 뒤에서부터 쌓아 순서가 어긋나지 않게 한다. */
+.loader .ld-shot { z-index: 10; }
+.loader .ld-shot:nth-child(1) { z-index: 18; }
+.loader .ld-shot:nth-child(2) { z-index: 17; }
+.loader .ld-shot:nth-child(3) { z-index: 16; }
+.loader .ld-shot:nth-child(4) { z-index: 15; }
+.loader .ld-shot:nth-child(5) { z-index: 14; }
+.loader .ld-shot:nth-child(6) { z-index: 13; }
+.loader .ld-shot:nth-child(7) { z-index: 12; }
+
+/* 위에서 아래로 걷힌다 — 무대의 막이 올라가듯 */
+.loader .ld-shot.gone { clip-path: inset(0 0 100% 0); }
 .loader-mark {
   position: absolute; inset: 0; z-index: 6; display: grid; place-items: center;
   font-family: var(--font-latin); font-weight: 600;
@@ -2544,3 +2588,10 @@ body.nav-open { overflow: hidden; touch-action: none; }
 /* 법률 문서의 목록 — 읽기 폭 안에서 들여쓰기 */
 .legal-body .legal-list { max-width: 34em; margin: .6rem 0 1.2rem 1.2rem; padding: 0; }
 .legal-body .legal-list li { margin: 0 0 .5rem; line-height: 1.7; color: var(--muted); }
+
+/* 좁은 화면에서는 사진 비율과 화면 비율이 크게 달라 여백이 넓어진다.
+   잘라내지 않는 원칙은 지키면서, 사진이 화면을 조금 더 차지하게 한다. */
+@media (max-width: 760px) {
+  .ld-shot img { padding: 0; }
+  .ld-shot::after { background: radial-gradient(ellipse at center, transparent 52%, rgba(8,8,8,.55) 100%); }
+}

@@ -2127,31 +2127,59 @@
     /* 비욘세 문법: 입장 액션은 매 진입마다 재생 (모션 민감 시에만 스킵) */
     var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) { box.remove(); return; }
-    /* 한 세션에 한 번만. 페이지를 옮길 때마다 4초짜리 입장 액션을 다시 보는 것은
-       두 번째부터는 대접이 아니라 방해다. */
-    try {
-      if (sessionStorage.getItem("insooni_entered")) { box.remove(); return; }
-      sessionStorage.setItem("insooni_entered", "1");
-    } catch (e) { /* 저장이 막힌 환경이면 그냥 재생한다 */ }
+    /* 입장 액션은 사이트에 들어올 때마다 재생한다.
+       페이지 사이 이동은 라우터가 <main>만 갈아끼우므로 이 함수가 다시 돌지 않는다.
+       즉 '진짜로 사이트를 새로 열었을 때'만 보인다. */
 
     /* 휴대폰에서는 장수를 줄인다. 2.5초짜리 입장 액션을 위해 전면 사진 여덟 장을
        모바일 데이터로 받게 하는 것은 과하고, 이 사진들이 곧 '가장 큰 그림'으로
        잡혀 체감 로딩까지 늦춘다. 큰 화면에서는 여덟 장 그대로 간다. */
-    var frames = $all("img", box);
-    var wide = !(window.matchMedia && window.matchMedia("(max-width: 760px)").matches);
-    if (wide) {
-      /* 큰 화면에서만 뒷장을 불러온다. HTML에 src로 적어 두면 브라우저의
-         미리읽기 스캐너가 자바스크립트보다 먼저 받아 버려서, 나중에 지워도
-         이미 데이터를 쓴 뒤가 된다. */
-      frames.forEach(function (im) {
-        var d = im.getAttribute("data-src");
-        if (d && !im.getAttribute("src")) im.setAttribute("src", d);
+    /* 한 장이 두 겹(흐린 배경 + 잘리지 않은 사진)이라 벗겨내는 대상은
+       사진이 아니라 겹 전체다. */
+    /* 화면 방향에 맞는 세트만 남긴다.
+       가로 화면에 세로 사진을 채우면 58%가 잘리고, 여백을 두면 42%만 찬다.
+       (둘 다 실측값) 어느 쪽도 좋지 않으니 애초에 맞는 사진만 보여 준다.
+       쓰지 않는 세트는 src를 붙이지 않으므로 내려받지도 않는다. */
+    var portrait = window.innerWidth < window.innerHeight;
+    var want = portrait ? "port" : "land";
+    $all(".ld-shot", box).forEach(function (sh) {
+      if (sh.getAttribute("data-orient") !== want) { sh.remove(); return; }
+      var im = sh.querySelector("img");
+      var d = im && im.getAttribute("data-src");
+      if (d && !im.getAttribute("src")) im.setAttribute("src", d);
+    });
+    var frames = $all(".ld-shot", box);
+
+    /* 안전망: 초광폭 모니터처럼 방향이 맞아도 비율 차가 큰 경우에만 전체를 보여 준다 */
+    function fitShots() {
+      var va = window.innerWidth / window.innerHeight;
+      frames.forEach(function (sh) {
+        var im = sh.querySelector("img");
+        if (!im || !im.naturalWidth) return;
+        var ia = im.naturalWidth / im.naturalHeight;
+        var lost = ia > va ? 1 - va / ia : 1 - ia / va;
+        var needContain = lost > 0.34;
+        sh.classList.toggle("is-contain", needContain);
+        /* 여백이 생기는 경우에만 흐린 배경을 만든다 (그전엔 내려받지 않는다) */
+        if (needContain && !sh.querySelector(".ld-blur")) {
+          var url = sh.getAttribute("data-blur");
+          if (url) {
+            var bl = document.createElement("span");
+            bl.className = "ld-blur";
+            bl.style.backgroundImage = 'url("' + url + '")';
+            sh.insertBefore(bl, sh.firstChild);
+          }
+        }
       });
-    } else {
-      frames.filter(function (im) { return !im.getAttribute("src"); })
-            .forEach(function (im) { im.remove(); });
-      frames = $all("img", box);
     }
+    frames.forEach(function (sh) {
+      var im = sh.querySelector("img");
+      if (!im) return;
+      if (im.complete) fitShots();
+      else im.addEventListener("load", fitShots, { once: true });
+    });
+    fitShots();
+
     var i = 0;
     var started = false;
     function start() {
@@ -2162,8 +2190,9 @@
     /* 첫 두 장만 기다린다. 나머지는 액션이 도는 동안 따라 들어온다 —
        여덟 장을 모두 기다리면 그만큼 화면이 늦게 열린다. */
     var cap = setTimeout(start, 600);
-    Promise.all(frames.slice(0, 2).map(function (im) {
-      return im.decode ? im.decode().catch(function () {}) : Promise.resolve();
+    Promise.all(frames.slice(0, 2).map(function (sh) {
+      var im = sh.querySelector("img");
+      return (im && im.decode) ? im.decode().catch(function () {}) : Promise.resolve();
     })).then(function () { clearTimeout(cap); start(); });
     function run() {
     var iv = setInterval(function () {
@@ -2174,9 +2203,9 @@
         clearInterval(iv);
         /* 피날레: 거위가 날갯짓하며 잠시 머문 뒤 화면이 사방으로 갈라지며 열린다 */
         setTimeout(function () { box.classList.add("split"); }, 420);
-        setTimeout(function () { if (box.parentNode) box.remove(); }, 1300);
+        setTimeout(function () { if (box.parentNode) box.remove(); }, 1350);
       }
-    }, 150);
+    }, 500);   /* 한 장이 머무는 시간. 전환(0.36s)보다 길어야 사진이 보인다 */
     }
   }
 

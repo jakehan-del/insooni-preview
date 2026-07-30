@@ -6,7 +6,8 @@
 <meta name="theme-color" content="#080808">
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
 <link rel="preload" as="image" href="assets/img/hero.webp">
-<link rel="preload" as="image" href="assets/img/photos/dsc0427.webp">
+<link rel="preload" as="image" href="assets/img/photos/dsc0427.webp" media="(orientation: landscape)">
+<link rel="preload" as="image" href="assets/img/photos/dsc0081.webp" media="(orientation: portrait)">
 <title>인순이 INSOONI | 공식 팬 플랫폼</title>
 <meta name="description" content="대한민국 디바 인순이의 공식 팬 플랫폼. 최신 소식, 공연 일정, 음악 아카이브, 그리고 팬들의 사랑방.">
 <meta property="og:title" content="인순이 INSOONI | 공식 팬 플랫폼">
@@ -15,10 +16,10 @@
 <meta name="twitter:card" content="summary_large_image">
 <!-- 본문 글꼴은 먼저 확실히 깐다(미뤄 봤지만 첫 화면이 빨라지지 않았다).
      제목용 서체는 화면이 뜬 뒤 들어온다 — font-display:swap이라 늦어도 글자는 보인다. -->
-<link rel="stylesheet" href="assets/fonts/body.css?v117">
-<link rel="stylesheet" href="assets/fonts/display.css?v117" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/fonts/display.css?v117"></noscript>
-<link rel="stylesheet" href="assets/css/style.min.css?v117">
+<link rel="stylesheet" href="assets/fonts/body.css?v118">
+<link rel="stylesheet" href="assets/fonts/display.css?v118" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?v118"></noscript>
+<link rel="stylesheet" href="assets/css/style.min.css?v118">
 <link rel="canonical" href="https://jakehan-del.github.io/insooni-preview/">
 <meta property="og:url" content="https://jakehan-del.github.io/insooni-preview/">
 <meta property="og:type" content="website">
@@ -38,14 +39,44 @@
 
 <!-- 입장 로더: 시대별 사진이 층층이 벗겨지는 액션 (세션당 1회) -->
 <div class="loader" id="loader" aria-hidden="true">
-  <img src="assets/img/photos/dsc0427.webp" fetchpriority="high" alt="" style="object-position:33% 35%" width="1600" height="1065">
-  <img src="assets/img/photos/kakao23.webp" alt="" style="object-position:38% 28%" width="1600" height="1067">
-  <img src="assets/img/photos/dsc0081.webp" alt="" style="object-position:60% 18%" width="1063" height="1600">
-  <img data-src="assets/img/photos/hinkchi6.webp" alt="" style="object-position:center 16%" width="1067" height="1600">
-  <img data-src="assets/img/stills/s6.webp" alt="" style="object-position:center 30%" width="1280" height="720">
-  <img data-src="assets/img/photos/press-2019.webp" alt="" style="object-position:center 22%" width="640" height="960">
-  <img data-src="assets/img/photos/photo-av3u.webp" alt="" style="object-position:center 30%" width="1600" height="1067">
-  <img data-src="assets/img/photos/seasons-3.webp" alt="" style="object-position:center 18%" width="1263" height="1600">
+  <!-- 화면 방향에 맞는 세트만 자바스크립트가 살린다.
+       가로 화면엔 가로 사진, 세로 화면엔 세로 사진 — 그래야 잘리지도 남지도 않는다. -->
+  <div class="ld-shot" data-orient="land" data-blur="assets/img/photos/dsc0427.webp">
+    <img data-src="assets/img/photos/dsc0427.webp" alt="" style="object-position:33% 40%" width="1600" height="1065">
+  </div>
+  <div class="ld-shot" data-orient="land" data-blur="assets/img/photos/kakao23.webp">
+    <img data-src="assets/img/photos/kakao23.webp" alt="" style="object-position:38% 32%" width="1600" height="1067">
+  </div>
+  <div class="ld-shot" data-orient="land" data-blur="assets/img/photos/photo-av3u.webp">
+    <img data-src="assets/img/photos/photo-av3u.webp" alt="" style="object-position:50% 30%" width="1600" height="1067">
+  </div>
+  <div class="ld-shot" data-orient="land" data-blur="assets/img/photos/img2496.webp">
+    <img data-src="assets/img/photos/img2496.webp" alt="" style="object-position:50% 42%" width="1600" height="1067">
+  </div>
+  <div class="ld-shot" data-orient="land" data-blur="assets/img/photos/kakao26.webp">
+    <img data-src="assets/img/photos/kakao26.webp" alt="" style="object-position:50% 30%" width="1600" height="1067">
+  </div>
+  <div class="ld-shot" data-orient="land" data-blur="assets/img/photos/dsc9427.webp">
+    <img data-src="assets/img/photos/dsc9427.webp" alt="" style="object-position:50% 40%" width="1600" height="1063">
+  </div>
+  <div class="ld-shot" data-orient="port" data-blur="assets/img/photos/dsc0081.webp">
+    <img data-src="assets/img/photos/dsc0081.webp" alt="" style="object-position:50% 30%" width="1063" height="1600">
+  </div>
+  <div class="ld-shot" data-orient="port" data-blur="assets/img/photos/insooni007.webp">
+    <img data-src="assets/img/photos/insooni007.webp" alt="" style="object-position:50% 34%" width="1064" height="1600">
+  </div>
+  <div class="ld-shot" data-orient="port" data-blur="assets/img/photos/hinkchi6.webp">
+    <img data-src="assets/img/photos/hinkchi6.webp" alt="" style="object-position:50% 22%" width="1067" height="1600">
+  </div>
+  <div class="ld-shot" data-orient="port" data-blur="assets/img/photos/hinkchi1.webp">
+    <img data-src="assets/img/photos/hinkchi1.webp" alt="" style="object-position:50% 24%" width="1067" height="1600">
+  </div>
+  <div class="ld-shot" data-orient="port" data-blur="assets/img/photos/hinkchi2.webp">
+    <img data-src="assets/img/photos/hinkchi2.webp" alt="" style="object-position:50% 24%" width="1067" height="1600">
+  </div>
+  <div class="ld-shot" data-orient="port" data-blur="assets/img/photos/hinkchi5.webp">
+    <img data-src="assets/img/photos/hinkchi5.webp" alt="" style="object-position:50% 22%" width="1067" height="1600">
+  </div>
   <div class="lq lq-tl" aria-hidden="true"></div>
   <div class="lq lq-tr" aria-hidden="true"></div>
   <div class="lq lq-bl" aria-hidden="true"></div>
@@ -133,17 +164,17 @@
   </nav>
 </footer>
 
-<script src="assets/js/config.js?v117" defer></script>
-<script src="assets/js/backend.js?v117" defer></script>
-<script src="assets/js/i18n.min.js?v117" defer></script>
-<script src="assets/js/data.min.js?v117" defer></script>
-<script src="assets/js/tracklinks.min.js?v117" defer></script>
-<script src="assets/js/albums-full.min.js?v117" defer></script>
-<script src="assets/js/albums-en.min.js?v117" defer></script>
-<script src="assets/js/song-moods.min.js?v117" defer></script>
-<script src="assets/js/main.min.js?v117" defer></script>
-<script src="assets/js/motion.min.js?v117" defer></script>
-<script src="assets/js/router.min.js?v117" defer></script>
-<script src="assets/js/deck.min.js?v117" defer></script>
+<script src="assets/js/config.js?v118" defer></script>
+<script src="assets/js/backend.js?v118" defer></script>
+<script src="assets/js/i18n.min.js?v118" defer></script>
+<script src="assets/js/data.min.js?v118" defer></script>
+<script src="assets/js/tracklinks.min.js?v118" defer></script>
+<script src="assets/js/albums-full.min.js?v118" defer></script>
+<script src="assets/js/albums-en.min.js?v118" defer></script>
+<script src="assets/js/song-moods.min.js?v118" defer></script>
+<script src="assets/js/main.min.js?v118" defer></script>
+<script src="assets/js/motion.min.js?v118" defer></script>
+<script src="assets/js/router.min.js?v118" defer></script>
+<script src="assets/js/deck.min.js?v118" defer></script>
 </body>
 </html>
