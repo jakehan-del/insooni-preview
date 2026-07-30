@@ -2595,3 +2595,58 @@ body.nav-open { overflow: hidden; touch-action: none; }
   .ld-shot img { padding: 0; }
   .ld-shot::after { background: radial-gradient(ellipse at center, transparent 52%, rgba(8,8,8,.55) 100%); }
 }
+
+/* ============================================================
+   이 노래, 아시죠 — 사랑방의 첫 문
+   ------------------------------------------------------------
+   설계 원칙: 실패할 수 있는 입력을 만들지 않는다.
+   고를 것도, 칠 것도 없다. 큰 버튼 하나가 언제나 하나만 보인다.
+   ============================================================ */
+.ki-lead { max-width: 40em; margin-bottom: 1.8rem; }
+
+.ki-stage {
+  display: grid; grid-template-columns: minmax(0, 260px) 1fr;
+  gap: clamp(1.2rem, 3vw, 2.4rem); align-items: center;
+  background: var(--surface-1); border: 1px solid var(--line);
+  border-radius: var(--r-panel); padding: clamp(1.2rem, 3vw, 2rem);
+}
+@media (max-width: 720px) {
+  .ki-stage { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+}
+
+/* 재킷 자리 — 곡이 밝혀지기 전에는 음표만 */
+.ki-art {
+  position: relative; width: 100%; max-width: 260px; aspect-ratio: 1;
+  background: var(--sink); border: 1px solid var(--line); border-radius: 2px;
+  display: grid; place-items: center; overflow: hidden;
+}
+.ki-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ki-q { font-size: 3.2rem; color: var(--faint); line-height: 1; }
+
+/* 재생 중임을 눈으로 보이게 — 소리가 안 나는 환경(무음 스위치·인앱 브라우저)에서
+   '눌렀는데 아무 일도 없다'가 되지 않도록. */
+.ki-art.is-playing::after {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(243,239,231,.10) 0 38%, transparent 62%);
+  animation: ki-pulse 1.5s ease-in-out infinite;
+}
+@keyframes ki-pulse { 0%,100% { opacity: .25; transform: scale(.94); } 50% { opacity: .8; transform: scale(1.06); } }
+@media (prefers-reduced-motion: reduce) { .ki-art.is-playing::after { animation: none; opacity: .5; } }
+
+/* 진행 막대 — 30초가 얼마나 흘렀는지 */
+.ki-art .ki-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(243,239,231,.14); }
+.ki-art .ki-bar i { display: block; height: 100%; width: 0; background: var(--ivory); transition: width .2s linear; }
+
+.ki-body { min-width: 0; width: 100%; }
+.ki-state { margin: 0 0 1.2rem; font-size: 1.05rem; line-height: 1.6; color: var(--ivory); min-height: 3.2em; }
+.ki-state .ki-title { display: block; font-family: var(--font-latin); font-weight: 600;
+  font-size: clamp(1.4rem, 2.2vw, 1.9rem); line-height: 1.25; margin-bottom: .2em; }
+.ki-state .ki-meta { display: block; font-family: var(--font-mono); font-size: .74rem;
+  letter-spacing: .16em; color: var(--muted); }
+.ki-state .ki-secs { color: var(--muted); }
+
+.ki-actions { display: flex; flex-wrap: wrap; gap: .7rem; }
+@media (max-width: 720px) { .ki-actions { justify-content: center; } }
+/* 어르신도 망설이지 않을 크기 */
+.ki-big { min-height: 56px; padding-inline: 2em; font-size: 1rem; }
+.ki-hint { margin-top: 1rem; }

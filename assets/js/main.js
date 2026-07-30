@@ -1030,6 +1030,176 @@
     return d.getFullYear() + ". " + (d.getMonth() + 1) + ". " + d.getDate() + ".";
   }
 
+  /* ---------- 6.8 이 노래, 아시죠 ----------
+     사랑방의 첫 문. 정답을 고르는 것이 아니라 '언제 알아보셨는지'만 잰다.
+     틀릴 수가 없으므로 누구도 머뭇거리지 않는다.
+
+     지키는 것
+       · 화면에 큰 버튼이 언제나 하나만 보인다
+       · 점수·순위·평균을 만들지 않는다. 남기는 기록도 없다
+       · 곡 정보(제목·앨범·연도)는 previews.json에서만 가져온다.
+         이 연도는 정규 1~18집 자료와 대조해 96곡 전부 일치를 확인했다
+       · 무음 스위치가 켜져 있어도 재생 중임이 눈에 보인다 */
+  function initKnowIt() {
+    var stage = $("#knowit");
+    if (!stage) return;
+    var artBox = $("#ki-art"), stateEl = $("#ki-state");
+    var playBtn = $("#ki-play"), knowBtn = $("#ki-know"), nextBtn = $("#ki-next");
+    var moreLink = $("#ki-more"), hint = $("#ki-hint");
+    if (!artBox || !playBtn) return;
+
+    var tracks = [], audio = null, cur = null, startedAt = 0, timer = null, revealed = false;
+
+    /* 미리듣기 목록은 사랑방에서만 필요하므로 이 자리에서 받는다 */
+    fetch("assets/data/previews.json", { credentials: "same-origin" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) {
+        var list = (j && j.tracks) || [];
+        tracks = list.filter(function (t) { return t && t.u && t.t; });
+        if (!tracks.length) fail();
+      })
+      .catch(fail);
+
+    function fail() {
+      playBtn.disabled = true;
+      stateEl.textContent = t("ki.fail", "지금은 노래를 불러오지 못했습니다. 잠시 뒤 다시 열어 주세요.");
+    }
+
+    function pickTrack() {
+      /* 방금 들은 곡이 연달아 나오지 않게만 한다 */
+      var pool = tracks.filter(function (x) { return !cur || x.u !== cur.u; });
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    function show(el, on) { if (el) el.hidden = !on; }
+
+    function stopAudio() {
+      if (timer) { clearInterval(timer); timer = null; }
+      if (audio) {
+        /* src를 빈 문자열로 비우면 브라우저가 빈 주소를 읽으려다 error를 쏜다.
+           그 error가 방금 띄운 정답 화면을 '재생하지 못했습니다'로 덮어썼다.
+           듣지 않도록 먼저 떼어내고, src는 건드리지 않는다. */
+        audio.onended = null;
+        audio.onerror = null;
+        try { audio.pause(); } catch (e) {}
+        audio = null;
+      }
+      artBox.classList.remove("is-playing");
+      var bar = artBox.querySelector(".ki-bar i");
+      if (bar) bar.style.width = "0";
+    }
+
+    function reveal(byUser) {
+      if (revealed || !cur) return;
+      revealed = true;
+      var secs = byUser ? ((Date.now() - startedAt) / 1000) : null;
+      stopAudio();
+
+      /* 재킷을 드러낸다 */
+      artBox.innerHTML = "";
+      var im = new Image();
+      im.alt = "";
+      im.src = cur.art || "";
+      artBox.appendChild(im);
+
+      var line = document.createElement("span");
+      line.className = "ki-title";
+      line.textContent = cur.t;
+      var meta = document.createElement("span");
+      meta.className = "ki-meta";
+      meta.textContent = [cur.al, cur.y].filter(Boolean).join("  ·  ");
+
+      stateEl.innerHTML = "";
+      stateEl.appendChild(line);
+      stateEl.appendChild(meta);
+      if (secs !== null) {
+        var s2 = document.createElement("span");
+        s2.className = "ki-secs";
+        /* 측정한 값만 적는다. 비교도 순위도 만들지 않는다. */
+        s2.textContent = t("ki.tookA", "") + secs.toFixed(1) + t("ki.tookB", "초 만에 알아보셨어요.");
+        stateEl.appendChild(s2);
+      } else {
+        var s3 = document.createElement("span");
+        s3.className = "ki-secs";
+        s3.textContent = t("ki.wasThis", "이 노래였습니다.");
+        stateEl.appendChild(s3);
+      }
+
+      show(playBtn, false); show(knowBtn, false);
+      show(nextBtn, true); show(moreLink, true); show(hint, false);
+      nextBtn.focus();
+    }
+
+    function play() {
+      cur = pickTrack();
+      if (!cur) return;
+      revealed = false;
+      stopAudio();
+
+      /* 다른 소리가 흐르고 있으면 멈춘다 */
+      if (window.INSOONI_DECK && window.INSOONI_DECK.pause) {
+        try { window.INSOONI_DECK.pause(); } catch (e) {}
+      }
+
+      artBox.innerHTML = '<span class="ki-q" aria-hidden="true">\u266A</span>' +
+                         '<span class="ki-bar"><i></i></span>';
+      artBox.classList.add("is-playing");
+      stateEl.textContent = t("ki.playing", "노래가 흐르고 있습니다. 아는 순간 아래 버튼을 눌러 주세요.");
+      show(playBtn, false); show(nextBtn, false); show(moreLink, false);
+      show(knowBtn, true); show(hint, true);
+      knowBtn.focus();
+
+      audio = new Audio(cur.u);
+      audio.preload = "auto";
+      /* 곡마다 음량이 달라 놀라지 않게 미리 계산해 둔 보정값을 쓴다 */
+      audio.volume = Math.max(0.15, Math.min(1, (cur.g || 1) * 0.55));
+      audio.onended = function () { reveal(false); };
+      audio.onerror = function () {
+        if (revealed) return;        /* 이미 정답을 보여 준 뒤라면 무시한다 */
+        stopAudio();
+        stateEl.textContent = t("ki.audioFail", "이 곡을 재생하지 못했습니다. 다음 곡으로 넘어가 주세요.");
+        show(knowBtn, false); show(nextBtn, true); show(hint, false);
+      };
+
+      /* 곡 앞의 무음만큼 건너뛴다. 배포 전에 미리 재 둔 값(s)이라
+         버튼을 누른 순간 진짜 첫 소리가 난다 — 어르신이 '안 나오나?' 하지 않게. */
+      audio.addEventListener("loadedmetadata", function () {
+        var skip = cur && cur.s ? Number(cur.s) : 0;
+        if (skip > 0.05 && skip < 3) {
+          try { audio.currentTime = skip; } catch (e) {}
+        }
+        startedAt = Date.now();      /* 시간은 소리가 시작된 시점부터 잰다 */
+      }, { once: true });
+
+      var pr = audio.play();
+      if (pr && pr.catch) {
+        pr.catch(function () {
+          /* 브라우저가 자동재생을 막은 경우 — 사실대로 알린다 */
+          stopAudio();
+          stateEl.textContent = t("ki.blocked", "브라우저가 소리를 막았습니다. 버튼을 한 번 더 눌러 주세요.");
+          show(knowBtn, false); show(playBtn, true); show(hint, false);
+        });
+      }
+      startedAt = Date.now();
+
+      var bar = artBox.querySelector(".ki-bar i");
+      timer = setInterval(function () {
+        if (!audio) return;
+        var d = audio.duration || 30;
+        if (bar) bar.style.width = Math.min(100, (audio.currentTime / d) * 100) + "%";
+      }, 200);
+    }
+
+    playBtn.addEventListener("click", play);
+    knowBtn.addEventListener("click", function () { reveal(true); });
+    nextBtn.addEventListener("click", play);
+
+    /* 페이지를 떠나거나 탭이 가려지면 소리를 멈춘다 */
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) stopAudio();
+    });
+  }
+
   /* ---------- 7. 사랑방: 마음 전하기 ----------
      편지는 이 기기의 편지함에만 남는다. 서버가 없으니 그 이상은 할 수 없고,
      할 수 없는 일을 한 것처럼 말하지 않는다. 대신 실제로 닿는 공식 창구로 이어 준다.
@@ -2376,7 +2546,7 @@
   function pageInit() {
     [renderEventList, initStrip, initVhero, renderArchive, renderPastRecaps,
      initFreshVideos, initVideoButtons, initReveal, renderNewsPage, renderCalendar,
-     renderTimeline, renderAnniversary, renderDiscography, initLetters, initBoard, initSubscribe,
+     renderTimeline, renderAnniversary, renderDiscography, initKnowIt, initLetters, initBoard, initSubscribe,
      initPoll, initSarangbang, initMemberCard, initCheerCard, initQna, initRise,
      initAdmin].forEach(safe);
     /* 마지막에 번역을 건다 — 위 렌더러들이 만들어 낸 요소까지 함께 잡기 위해서.
