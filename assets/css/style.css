@@ -2650,3 +2650,113 @@ body.nav-open { overflow: hidden; touch-action: none; }
 /* 어르신도 망설이지 않을 크기 */
 .ki-big { min-height: 56px; padding-inline: 2em; font-size: 1rem; }
 .ki-hint { margin-top: 1rem; }
+
+/* ============================================================
+   꿈의 비행 — 사랑방의 중심
+   색은 쓰지 않는다. 인순이의 발자취와 팬의 꿈은 '밝기'로 갈린다.
+   ============================================================ */
+/* 한글은 1em에 두 자가 들어간다. 46em이면 한 줄 92자가 되어 눈이 되돌아올 자리를
+   잃는다. 34em ≈ 68자로 잡는다 (읽기 좋은 범위는 45~75자). */
+.fl-lede { max-width: 34em; margin-bottom: 2rem; }
+
+.fl-stage {
+  position: relative;
+  border: 1px solid var(--line);
+  background: var(--void);
+  overflow: hidden;
+}
+/* 세로가 너무 낮으면 조작할 공간이 없고, 너무 높으면 화면을 다 먹는다 */
+#fl-canvas {
+  display: block;
+  width: 100%;
+  height: clamp(320px, 52vh, 520px);
+  touch-action: none;              /* 누르고 있어도 페이지가 스크롤되지 않게 */
+  cursor: pointer;
+}
+#fl-canvas:focus-visible { outline: 2px solid var(--gold); outline-offset: -3px; }
+
+/* 시작 화면 — 큰 버튼이 언제나 하나만 보인다 */
+.fl-overlay {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: .9rem; padding: 1.5rem;
+  text-align: center;
+  background: linear-gradient(to bottom, rgba(8,8,8,.55), rgba(8,8,8,.78));
+}
+.fl-sky-note {
+  margin: 0 0 .4rem; max-width: 30em;
+  font-size: .95rem; color: var(--muted); line-height: 1.6;
+}
+.fl-big { min-height: 56px; padding-inline: 2rem; font-size: 1.05rem; }
+.fl-alt { color: var(--muted); }
+.fl-how { margin: .3rem 0 0; font-size: .84rem; color: var(--faint); }
+
+/* 나는 동안의 표시 */
+.fl-hud {
+  position: absolute; top: 0; left: 0; right: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; padding: .7rem .9rem;
+  background: linear-gradient(to bottom, rgba(8,8,8,.72), rgba(8,8,8,0));
+  pointer-events: none;
+}
+.fl-hud .btn { pointer-events: auto; }
+.fl-count {
+  font-family: var(--font-mono); font-size: .82rem; letter-spacing: .04em;
+  color: var(--ivory);
+}
+
+/* 지금 따라 난 꿈 — 캔버스가 아니라 HTML이라 읽고 번역하고 낭독할 수 있다 */
+.fl-caption {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  margin: 0; padding: .85rem 1rem;
+  background: linear-gradient(to top, rgba(8,8,8,.92), rgba(8,8,8,0));
+  color: var(--ivory); font-size: 1rem; line-height: 1.5;
+  opacity: 0; transform: translateY(6px);
+  transition: opacity .3s var(--ease), transform .3s var(--ease);
+  pointer-events: none;
+}
+.fl-caption.on { opacity: 1; transform: none; }
+.fl-cap-tag {
+  display: inline-block; margin-right: .5rem;
+  font-family: var(--font-mono); font-size: .74rem; letter-spacing: .06em;
+  color: var(--faint);
+}
+.fl-cap-tag.is-her { color: var(--ivory); }
+
+/* 착륙 후 — 이번엔 내가 앞에 선다 */
+.fl-end { margin-top: 2rem; max-width: 42em; }
+.fl-end-head { margin: 0 0 .4rem; }
+.fl-end-sub { margin: 0 0 1.4rem; color: var(--muted); }
+.fl-form .form-field { margin-bottom: 1rem; }
+.fl-end-actions { display: flex; flex-wrap: wrap; gap: .7rem; }
+.fl-msg { margin: .9rem 0 0; font-size: .92rem; min-height: 1.2em; color: var(--muted); }
+.fl-msg.is-ok  { color: var(--ok); }
+.fl-msg.is-bad { color: var(--danger-t); }
+
+/* 따라 난 꿈 목록 — 날면서 못 읽었어도 여기서 읽는다 */
+.fl-log { list-style: none; margin: 1.8rem 0 0; padding: 0; }
+.fl-log:empty { margin: 0; }
+.fl-log-item {
+  padding: .7rem 0; border-top: 1px solid var(--line);
+  font-size: .96rem; line-height: 1.6; color: var(--muted);
+}
+.fl-log-tag {
+  display: inline-block; min-width: 4.6em; margin-right: .6rem;
+  font-family: var(--font-mono); font-size: .74rem; letter-spacing: .06em;
+  color: var(--faint);
+}
+.fl-log-tag.is-her { color: var(--ivory); }
+
+/* 나는 동안에는 페이지가 흔들리지 않게 */
+.fl.is-flying { touch-action: pan-y; }
+
+@media (max-width: 720px) {
+  #fl-canvas { height: clamp(300px, 46vh, 400px); }
+  .fl-big { width: 100%; max-width: 20rem; }
+  .fl-caption { font-size: .94rem; padding: .75rem .85rem; }
+}
+
+/* 움직임을 줄이도록 설정한 분께는 저절로 나는 쪽만 권한다 */
+@media (prefers-reduced-motion: reduce) {
+  .fl-caption { transition: none; }
+}

@@ -1,0 +1,51 @@
+name: 자동 갱신 — 공연·일정·소식
+
+# 공식 채널과 언론 보도를 주기적으로 확인해 사이트에 반영한다.
+# 하루 여섯 번(4시간마다) 돈다. 새 소식이 없으면 아무것도 커밋하지 않는다.
+on:
+  schedule:
+    - cron: "0 */4 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-live
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 공식 채널의 새 무대 영상
+        run: python3 scripts/collect-shows.py
+        continue-on-error: true
+
+      - name: 예정된 공연
+        run: python3 scripts/collect-events.py
+        continue-on-error: true
+
+      # ANTHROPIC_API_KEY 가 저장소 secret 에 있으면 AI가 같은 사건의 기사를
+      # 묶고 사진 캡션·곁다리 기사를 걸러낸다. 없으면 키워드 규칙으로 돈다.
+      # 어느 쪽이든 제목과 링크는 원문 그대로다.
+      - name: 좋은 소식 모으기
+        run: python3 scripts/collect-news.py
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        continue-on-error: true
+
+      - name: 바뀐 것이 있으면 커밋
+        run: |
+          git config user.name  "insooni-bot"
+          git config user.email "actions@users.noreply.github.com"
+          if git diff --quiet assets/data/ 2>/dev/null; then
+            echo "바뀐 것 없음"
+          else
+            git add assets/data/
+            git commit -m "chore: 공식 채널·언론 보도 자동 반영"
+            git pull --rebase --autostash
+            git push
+          fi

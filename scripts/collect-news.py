@@ -146,14 +146,46 @@ def main():
         return s2
 
     ranked = sorted(by_key.values(), key=lambda x: (-score(x), -x["_when"].timestamp()))
-    items = ranked[:16]
+
+    # ── AI 큐레이션 ──────────────────────────────────────────
+    # 규칙으로는 같은 사건의 기사 네댓 건을 묶지 못한다. 제목 글자가 겹치지 않기
+    # 때문이다. 실제로 16건 중 절반이 같은 이야기의 중복이었다.
+    # AI는 묶고·버리고·분류만 한다. 문장은 쓰지 않는다.
+    # 키가 없거나 실패하면 아래 규칙 기반 결과가 그대로 쓰인다.
+    candidates = ranked[:40]
+    for x in candidates:
+        x["_ts"] = x["_when"].timestamp()
+    curated = None
+    try:
+        from ai_curate import curate
+        curated = curate([{k: v for k, v in x.items() if not k.startswith("_")} for x in candidates])
+    except ImportError:
+        print("  ai_curate.py 없음 — 규칙 기반 결과를 씁니다")
+    except Exception as e:
+        print("  AI 큐레이션 중 예외 (%s) — 규칙 기반 결과를 씁니다" % type(e).__name__)
+
+    if curated:
+        by_url = {x["url"]: x["_when"] for x in candidates}
+        items = curated[:16]
+        for x in items:
+            x["_when"] = by_url.get(x.get("url"))
+        items = [x for x in items if x["_when"]]
+        mode = "AI 큐레이션"
+    else:
+        items = ranked[:16]
+        mode = "규칙 기반"
+
     items.sort(key=lambda x: x["_when"], reverse=True)   # 화면에는 최신순으로
     for x in items:
         x.pop("_when", None)
+        x.pop("_ts", None)
 
     doc = {
-        "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS, 매일). 부정 키워드 제외·중복 병합.",
-        "updated": now.astimezone(timezone(timedelta(hours=9))).strftime("%Y-%m-%d"),
+        "note": ("인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 "
+                 + mode + "으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. "
+                 "제목과 링크는 원문 그대로입니다."),
+        "mode": mode,
+        "updated": now.astimezone(timezone(timedelta(hours=9))).strftime("%Y-%m-%d %H:%M"),
         "items": items,
     }
     with open(OUT, "w", encoding="utf-8") as f:

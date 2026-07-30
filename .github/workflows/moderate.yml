@@ -1,0 +1,26 @@
+name: 검수 도우미
+
+# 사랑방에 들어온 편지·글·꿈을 AI가 먼저 읽고 소견을 남긴다.
+# 게시는 절대 자동으로 하지 않는다 — status 는 건드리지 않고
+# ai_verdict / ai_reason 칸만 채운다. 최종 승인은 사람이 한다.
+#
+# 필요한 secret 두 개가 없으면 조용히 건너뛴다.
+#   SUPABASE_URL          예) https://xxxx.supabase.co
+#   SUPABASE_SECRET_KEY   sb_secret_... (검수 대기열을 읽고 소견을 쓰기 위해 필요)
+#   ANTHROPIC_API_KEY
+on:
+  schedule:
+    - cron: "0 21,9 * * *"      # 06:00 · 18:00 KST
+  workflow_dispatch: {}
+
+jobs:
+  moderate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 대기열에 소견 달기
+        run: python3 scripts/ai_moderate.py
+        env:
+          SUPABASE_URL:        ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          ANTHROPIC_API_KEY:   ${{ secrets.ANTHROPIC_API_KEY }}

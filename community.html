@@ -13,10 +13,10 @@
 <meta name="description" content="편지를 쓰고, 팬 번호증과 응원 카드를 만들고, 공식 채널로 마음을 전하는 곳. 인순이 공식 사랑방.">
 <!-- 본문 글꼴은 먼저 확실히 깐다(미뤄 봤지만 첫 화면이 빨라지지 않았다).
      제목용 서체는 화면이 뜬 뒤 들어온다 — font-display:swap이라 늦어도 글자는 보인다. -->
-<link rel="stylesheet" href="assets/fonts/body.css?v119">
-<link rel="stylesheet" href="assets/fonts/display.css?v119" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/fonts/display.css?v119"></noscript>
-<link rel="stylesheet" href="assets/css/style.min.css?v119">
+<link rel="stylesheet" href="assets/fonts/body.css?v120">
+<link rel="stylesheet" href="assets/fonts/display.css?v120" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?v120"></noscript>
+<link rel="stylesheet" href="assets/css/style.min.css?v120">
 <link rel="canonical" href="https://jakehan-del.github.io/insooni-preview/community.html">
 <meta property="og:url" content="https://jakehan-del.github.io/insooni-preview/community.html">
 <meta property="og:type" content="website">
@@ -95,6 +95,65 @@
   <!-- 이 노래, 아시죠 — 사랑방의 첫 문.
        정답을 고르는 것이 아니라 '언제 알아보셨는지'만 본다.
        틀릴 수가 없으니 누구도 머뭇거리지 않는다. -->
+  <!-- 꿈의 비행: 한 손으로 하는 게임.
+       기러기가 V자로 나는 이유(앞선 새의 상승기류로 뒤에 선 새가 11~20% 덜 힘들다,
+       그래서 선두는 돌아가며 선다)를 그대로 조작으로 옮겼다.
+       금빛 = 검증된 연혁(data.js timeline). 흰빛 = 검수를 통과한 팬의 꿈(Supabase).
+       가사는 한 줄도 쓰지 않는다. -->
+  <section class="section section--band fl" id="flight" aria-labelledby="h-flight">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="h-flight" data-i18n="fl.t">꿈의 비행</h2>
+      </div>
+      <p class="lede fl-lede" data-i18n="fl.lead">기러기가 V자로 나는 것은, 앞선 새가 만든 바람을 타고 뒤에 선 새가 덜 힘들게 날기 때문입니다. 맨 앞이 가장 힘들어서 선두는 돌아가며 섭니다. 앞서 나는 거위의 비스듬히 뒤로 들어가 보세요. 그 거위가 품은 꿈이 열립니다.</p>
+
+      <div class="fl-stage">
+        <canvas id="fl-canvas" tabindex="0" role="application"
+                aria-label="꿈의 비행. 누르고 있으면 거위가 오르고 놓으면 내려옵니다. 부딪히는 것은 없습니다."
+                data-i18n-aria="fl.canvasAria"></canvas>
+
+        <div class="fl-overlay" id="fl-intro">
+          <p class="fl-sky-note" id="fl-sky-note" data-i18n="fl.skyher">지금 하늘에는 인순이의 발자취가 떠 있습니다.</p>
+          <button type="button" class="btn btn--gold fl-big" id="fl-start" data-i18n="fl.start">거위 한 마리 날리기</button>
+          <button type="button" class="btn btn--ghost btn--sm fl-alt" id="fl-watch" data-i18n="fl.watch">그냥 지켜볼게요</button>
+          <p class="fl-how" data-i18n="fl.how">누르고 있으면 오릅니다. 놓으면 활공합니다.</p>
+        </div>
+
+        <div class="fl-hud" id="fl-hud" hidden>
+          <span class="fl-count" id="fl-count" role="status">0개의 꿈</span>
+          <button type="button" class="btn btn--ghost btn--sm" id="fl-land" data-i18n="fl.land">그만 내려오기</button>
+        </div>
+
+        <p class="fl-caption" id="fl-caption" role="status" aria-live="polite"></p>
+      </div>
+
+      <div class="fl-end" id="fl-end" hidden>
+        <h3 id="fl-end-head" class="fl-end-head"></h3>
+        <p class="fl-end-sub" data-i18n="fl.turn">맨 앞은 돌아가며 섭니다. 이번엔 당신 차례예요.</p>
+        <form id="fl-form" class="fl-form">
+          <div class="form-field">
+            <label for="fl-text" data-i18n="fl.label">당신의 꿈을 한 줄로</label>
+            <input id="fl-text" type="text" maxlength="70" required
+                   placeholder="예) 마흔에 다시 피아노를 배우고 싶어요" data-i18n-ph="fl.ph">
+          </div>
+          <div class="form-field">
+            <label for="fl-name" data-i18n="fl.name">이름 또는 별명 (없어도 됩니다)</label>
+            <input id="fl-name" type="text" maxlength="20"
+                   placeholder="예) 홍천에서" data-i18n-ph="fl.namePh">
+          </div>
+          <div class="fl-end-actions">
+            <button type="submit" class="btn btn--gold" data-i18n="fl.send">밤하늘에 띄우기</button>
+            <button type="button" class="btn btn--ghost" id="fl-again" data-i18n="fl.again">한 번 더 날기</button>
+          </div>
+        </form>
+        <p class="fl-msg" id="fl-msg" role="status"></p>
+        <p class="form-hint" data-i18n="fl.mod">남겨 주신 꿈은 확인을 거친 뒤 밤하늘에 올라갑니다. 바로 보이지 않아도 사라진 것이 아닙니다.</p>
+      </div>
+
+      <ul class="fl-log" id="fl-log" aria-label="따라 난 꿈 목록" data-i18n-aria="fl.logAria"></ul>
+    </div>
+  </section>
+
   <section class="section" id="knowit" aria-labelledby="h-knowit">
     <div class="container">
       <div class="section-head">
@@ -123,85 +182,6 @@
   </section>
 
   <!-- 팬 번호증: 방문자를 '사랑방의 한 사람'으로 맞이하는 소장용 카드 -->
-  <section class="section" id="membership" aria-labelledby="h-membership">
-    <div class="container">
-      <div class="section-head">
-        <h2 id="h-membership" data-i18n="mc.t">사랑방 팬 번호증</h2>
-      </div>
-      <p class="card-desc" style="max-width:46em;margin-bottom:1.8rem" data-i18n="mc.lead">이름을 적으면, 인순이 사랑방의 한 사람으로 맞이하는 번호증을 만들어 드립니다. 소장용 이미지로 간직하거나 나눠 보세요.</p>
-      <div class="grid grid--2 grid--start">
-        <div class="form-panel">
-          <div class="form-field">
-            <label for="mc-name" data-i18n="mc.name">이름 또는 별명</label>
-            <input id="mc-name" type="text" maxlength="16" placeholder="예) 서울에서 40년 팬" data-i18n-ph="mc.namePh">
-          </div>
-          <button type="button" class="btn btn--gold greet-stamp" id="mc-make" data-i18n="mc.make">내 번호증 만들기</button>
-          <p class="greet-state" id="mc-welcome" role="status"></p>
-          <div class="cc-actions" hidden id="mc-actions">
-            <button type="button" class="btn btn--sm" id="mc-save" data-i18n="mc.save">이미지로 저장</button>
-            <button type="button" class="btn btn--sm" id="mc-share" data-i18n="mc.share">공유하기</button>
-          </div>
-          <p class="form-hint" data-i18n="mc.hint">번호증은 이 기기에만 저장되는 기념용 카드입니다. 다시 오시면 이름으로 반겨 드립니다.</p>
-        </div>
-        <div class="mc-preview">
-          <canvas id="mc-canvas" width="1200" height="760" role="img" aria-label="팬 번호증 미리보기" data-i18n-aria="mc.previewAria"></canvas>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 오늘의 문안 인사: 출석 도장 + 선택형 한 줄 응원 (팬카페 출석 문화 + 저부담 참여) -->
-  <section class="section section--band" id="greet" aria-labelledby="h-greet">
-    <div class="container">
-      <div class="section-head">
-        <h2 id="h-greet" data-i18n="comm.greetT">오늘의 문안 인사</h2>
-      </div>
-      <div class="grid grid--2 grid--start">
-        <div class="form-panel greet-panel">
-          <p class="greet-lead" data-i18n="comm.greetLead">하루 한 번, 버튼 한 번이면 충분합니다. 긴 글은 쓰지 않으셔도 돼요.</p>
-          <button type="button" class="btn btn--gold greet-stamp" id="stamp-btn" data-i18n="comm.stampBtn">오늘 도장 찍기</button>
-          <p class="greet-state" id="stamp-state" role="status"></p>
-          <div class="cheer-chips" id="cheer-chips" aria-label="한 줄 응원 고르기" data-i18n-aria="aria.cheerPick"></div>
-          <p class="form-hint" data-i18n="comm.greetHint">응원 문구를 누르면 바로 남겨집니다. 더 긴 이야기는 아래에서 편지로 남겨 보세요.</p>
-        </div>
-        <div>
-          <h3 class="cheer-wall-t" id="comm-cheerwall" data-i18n="comm.cheerWall">내가 남긴 응원</h3>
-          <p class="form-hint" id="comm-cheernote" style="margin:-.6rem 0 1rem" data-i18n="comm.cheerNote">이 기기에만 저장됩니다.</p>
-          <div id="cheer-wall" class="cheer-wall"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 거위의 꿈 응원 카드: 밖으로 공유되는 참여 장치 (가사 원문 미사용 — 자체 작문) -->
-  <section class="section" id="cheercard" aria-labelledby="h-cheercard">
-    <div class="container">
-      <div class="section-head">
-        <h2 id="h-cheercard" data-i18n="cc.t">거위의 꿈 응원 카드</h2>
-      </div>
-      <p class="card-desc" style="max-width:46em;margin-bottom:1.8rem" data-i18n="cc.lead">꿈을 향해 걷는 소중한 사람에게, 인순이 사랑방의 응원 카드를 만들어 보내세요. 이름을 적고 상황을 고르면 카드가 완성됩니다.</p>
-      <div class="grid grid--2 grid--start">
-        <div class="form-panel">
-          <div class="form-field">
-            <label for="cc-name" data-i18n="cc.name">받는 분 이름 (별명도 좋아요)</label>
-            <input id="cc-name" type="text" maxlength="12" placeholder="예) 우리 딸 지현" data-i18n-ph="cc.namePh">
-          </div>
-          <p class="form-field" style="margin-bottom:.5rem"><span style="font-weight:700" data-i18n="cc.sit">어떤 응원인가요?</span></p>
-          <div class="cheer-chips" id="cc-situations" aria-label="응원 상황 고르기" data-i18n-aria="aria.cheerCase"></div>
-          <button type="button" class="btn btn--gold greet-stamp mt-1" id="cc-make" data-i18n="cc.make">응원 카드 만들기</button>
-          <p class="form-hint" data-i18n="cc.hint">'거위의 꿈'의 마음을 담아 사랑방이 쓴 응원 문구가 담깁니다. 만든 카드는 이미지로 저장해 카카오톡으로 전할 수 있어요.</p>
-        </div>
-        <div class="cc-preview">
-          <canvas id="cc-canvas" width="1080" height="1350" role="img" aria-label="응원 카드 미리보기" data-i18n-aria="aria.cheerPreview"></canvas>
-          <div class="cc-actions" hidden id="cc-actions">
-            <button type="button" class="btn btn--gold" id="cc-save" data-i18n="cc.save">이미지로 저장</button>
-            <button type="button" class="btn btn--ghost" id="cc-share" data-i18n="cc.share">공유하기</button>
-            <button type="button" class="btn btn--ghost" id="cc-again" data-i18n="cc.again">다른 문구로</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- 마음 전하기: 이 기기에 보관 + 실제로 닿는 공식 창구로 연결 -->
   <section class="section section--band" id="letter" aria-labelledby="h-letter">
@@ -370,17 +350,17 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동" data-i18n-aria="aria.toTop">↑</button>
-<script src="assets/js/config.js?v119" defer></script>
-<script src="assets/js/backend.js?v119" defer></script>
-<script src="assets/js/i18n.min.js?v119" defer></script>
-<script src="assets/js/data.min.js?v119" defer></script>
-<script src="assets/js/tracklinks.min.js?v119" defer></script>
-<script src="assets/js/albums-full.min.js?v119" defer></script>
-<script src="assets/js/albums-en.min.js?v119" defer></script>
-<script src="assets/js/song-moods.min.js?v119" defer></script>
-<script src="assets/js/main.min.js?v119" defer></script>
-<script src="assets/js/motion.min.js?v119" defer></script>
-<script src="assets/js/router.min.js?v119" defer></script>
-<script src="assets/js/deck.min.js?v119" defer></script>
+<script src="assets/js/config.js?v120" defer></script>
+<script src="assets/js/backend.js?v120" defer></script>
+<script src="assets/js/i18n.min.js?v120" defer></script>
+<script src="assets/js/data.min.js?v120" defer></script>
+<script src="assets/js/tracklinks.min.js?v120" defer></script>
+<script src="assets/js/albums-full.min.js?v120" defer></script>
+<script src="assets/js/albums-en.min.js?v120" defer></script>
+<script src="assets/js/song-moods.min.js?v120" defer></script>
+<script src="assets/js/main.min.js?v120" defer></script>
+<script src="assets/js/motion.min.js?v120" defer></script>
+<script src="assets/js/router.min.js?v120" defer></script>
+<script src="assets/js/deck.min.js?v120" defer></script>
 </body>
 </html>

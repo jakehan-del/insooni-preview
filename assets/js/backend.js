@@ -147,6 +147,15 @@
     requestSong: function (title) { return rpc("request_song", { p_title: title || "" }); },
     songTally: function () { return readView("song_tally"); },
 
+    /* 꿈 — 자유 입력이므로 반드시 검수를 거친다. 서버가 status를 'pending'으로 고정한다. */
+    submitDream: function (o) {
+      return rpc("submit_dream", {
+        p_name: (o && o.name) || null,
+        p_text: (o && o.text) || ""
+      });
+    },
+    listDreams: function () { return readView("public_dreams"); },
+
     /* 소식지 구독 — 서버는 신규든 중복이든 같은 응답을 준다.
        그렇지 않으면 특정 이메일이 구독자인지 확인하는 창구가 되어 버린다. */
     subscribe: function (email) { return rpc("subscribe", { p_email: email || "" }); }

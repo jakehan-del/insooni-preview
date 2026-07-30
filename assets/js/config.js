@@ -24,9 +24,14 @@
    ============================================================ */
 window.INSOONI_CONFIG = window.INSOONI_CONFIG || {};
 
-if (!window.INSOONI_CONFIG.url) {
+/* 이미 정해진 값이 있으면 손대지 않는다.
+   '있다'의 기준은 undefined 인지 아닌지다 — 빈 문자열은 '값 없음'이 아니라
+   "일부러 비워 둔 것"으로 본다. 자동 검사가 백엔드를 끄려고 빈 문자열을
+   넣어 두는데, 이걸 falsy로 판단해 실제 키로 덮어쓰면 검사가 운영 DB에
+   글을 쓰게 된다. 실제로 그런 적이 있어 기준을 바꿨다. */
+if (typeof window.INSOONI_CONFIG.url === "undefined") {
   window.INSOONI_CONFIG.url = "https://vxrazyiqvdwgvgpkkitm.supabase.co";
 }
-if (!window.INSOONI_CONFIG.anonKey) {
+if (typeof window.INSOONI_CONFIG.anonKey === "undefined") {
   window.INSOONI_CONFIG.anonKey = "sb_publishable_HSy_9JL7qeWLRMHt8OZ0dg_Owu_JwwP";
 }

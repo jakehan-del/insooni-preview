@@ -1200,6 +1200,493 @@
     });
   }
 
+  /* ---------- 6.9 꿈의 비행 ----------
+     한 손으로 하는 게임. 누르면 오르고 놓으면 활공한다.
+
+     기러기·거위가 V자로 나는 이유는 앞선 새가 만든 상승기류(upwash) 덕분에
+     뒤에 선 새의 힘이 11~20% 덜 들기 때문이다. 그리고 맨 앞이 가장 힘들어서
+     선두는 돌아가며 선다. 이 사실 하나를 그대로 조작으로 옮겼다.
+
+       · 앞서 나는 거위의 '비스듬히 뒤'에 고도를 맞춰 들어가면 몸이 가벼워진다
+       · 그 자리를 잠깐 지키면 그 거위가 품은 꿈이 열린다
+       · 끝나면 이번엔 내가 앞에 선다 — 내 꿈을 한 줄 남기면 다음 사람이 그 뒤에 붙는다
+
+     지키는 것
+       · 죽지 않는다. 부딪히는 것이 없고 물에 닿아도 튕겨 오른다
+       · 점수·순위·기록을 만들지 않는다. '몇 개를 따라 날았는지'만 센다
+       · 못해도 된다 — '지켜보기'를 누르면 저절로 난다
+       · 하늘에 처음부터 떠 있는 금빛은 인순이의 실제 연혁이다(data.js timeline).
+         팬이 남긴 꿈은 흰빛. 검수를 통과한 것만 올라온다
+       · 가사는 한 줄도 쓰지 않는다 (저작권)
+       · 꿈 글자는 캔버스가 아니라 HTML로 띄운다 — 읽고 번역하고 낭독할 수 있게 */
+  function initFlight() {
+    var stage = $("#flight");
+    if (!stage) return;
+    var canvas = $("#fl-canvas");
+    if (!canvas || !canvas.getContext) return;
+
+    var ctx = canvas.getContext("2d");
+    var elIntro = $("#fl-intro"), elHud = $("#fl-hud"), elEnd = $("#fl-end");
+    var elCaption = $("#fl-caption"), elCount = $("#fl-count"), elLog = $("#fl-log");
+    var btnFly = $("#fl-start"), btnWatch = $("#fl-watch"), btnLand = $("#fl-land");
+    var btnAgain = $("#fl-again");
+    var form = $("#fl-form"), input = $("#fl-text"), nameIn = $("#fl-name"), msg = $("#fl-msg");
+
+    var en = function () { return document.documentElement.getAttribute("lang") === "en"; };
+
+    /* ---- 하늘에 띄울 것 모으기 ---- */
+    /* 금빛 = 검증된 연혁. 흰빛 = 검수를 통과한 팬의 꿈. */
+    function herLights() {
+      var tl = (D && D.timeline) || [];
+      return tl.map(function (r) {
+        var ev = en() && r.en && r.en.event ? r.en.event : r.event;
+        return { kind: "her", label: r.year, text: ev };
+      });
+    }
+    var lights = [];          /* 이번 비행에 등장할 빛 */
+    var dreamsLoaded = false;
+
+    function shuffle(a) {
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1)), t2 = a[i]; a[i] = a[j]; a[j] = t2;
+      }
+      return a;
+    }
+
+    function buildLights(dreams) {
+      var her = herLights();
+      var fan = (dreams || []).map(function (d) {
+        return { kind: "fan", label: d.name ? String(d.name) : t("fl.someone", "어느 팬"), text: d.text };
+      });
+      /* 그의 연혁이 앞에 서고, 팬들의 꿈이 그 사이사이에 붙는다.
+         팬 꿈이 아직 없으면 하늘은 그의 발자취만으로도 가득 찬다. */
+      shuffle(fan);
+      var out = [], hi = 0, fi = 0;
+      while (hi < her.length || fi < fan.length) {
+        if (hi < her.length) out.push(her[hi++]);
+        var take = fan.length > her.length ? Math.ceil(fan.length / her.length) : 1;
+        for (var k = 0; k < take && fi < fan.length; k++) out.push(fan[fi++]);
+      }
+      return out;
+    }
+
+    /* ---- 화면 크기 ---- */
+    /* 물리는 '높이 600'인 가상 공간에서 계산하고, 그릴 때만 실제 크기로 늘린다.
+       그래야 폰이든 데스크톱이든 조작감이 같다. */
+    var VH = 600, VW = 900, scale = 1, dpr = 1;
+    function resize() {
+      var r = canvas.getBoundingClientRect();
+      if (!r.width || !r.height) return false;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(r.width * dpr);
+      canvas.height = Math.round(r.height * dpr);
+      scale = r.height / VH;
+      VW = r.width / scale;
+      return true;
+    }
+
+    /* ---- 상태 ---- */
+    var STATE = "idle";       /* idle | fly | end */
+    var raf = 0, last = 0, acc = 0;
+    var holding = false, watchMode = false;
+    var goose, world, trail, passed, stars, everStarted = false;
+
+    var GRAV = 1500;          /* 아래로 */
+    var LIFT = -3400;         /* 누르는 동안 위로 */
+    var VYMAX = 780;
+    var SCROLL = 210;         /* 세상이 왼쪽으로 흐르는 속도 */
+    var GAP = 330;            /* 빛 사이 간격 */
+    var GX = 0.27;            /* 내 거위의 가로 위치 (화면 비율) */
+    var WATER = VH - 74;      /* 수면 */
+    var SKYTOP = 58;
+
+    function reset() {
+      goose = { y: VH * 0.45, vy: 0, flap: 0, boost: 0 };
+      trail = [];
+      passed = 0;
+      world = lights.map(function (L, i) {
+        return {
+          src: L,
+          x: VW + 260 + i * GAP,
+          /* 고도를 오르내리게 배치해 계속 조작하게 만든다 */
+          y: VH * 0.30 + Math.sin(i * 0.9) * VH * 0.17 + (i % 3) * 14,
+          hold: 0, done: false, flap: Math.random() * 6
+        };
+      });
+      stars = [];
+      for (var i = 0; i < 90; i++) {
+        stars.push({ x: Math.random() * VW, y: Math.random() * (WATER - 20),
+                     r: Math.random() * 1.5 + 0.4, tw: Math.random() * 6, d: 0.25 + Math.random() * 0.6 });
+      }
+      if (elLog) elLog.innerHTML = "";
+      setCount(0);
+      say("");
+    }
+
+    function setCount(n) {
+      if (!elCount) return;
+      elCount.textContent = en()
+        ? (n + (n === 1 ? " dream" : " dreams"))
+        : (n + "개의 꿈");
+    }
+    function say(html) {
+      if (!elCaption) return;
+      elCaption.innerHTML = html || "";
+      elCaption.classList.toggle("on", !!html);
+    }
+
+    /* 따라 난 꿈은 아래 목록에 남는다 — 날면서 못 읽어도 나중에 읽게 */
+    function logDream(L) {
+      if (!elLog) return;
+      var li = el("li", "fl-log-item");
+      li.innerHTML = '<span class="fl-log-tag' + (L.kind === "her" ? " is-her" : "") + '">' +
+        esc(L.label) + "</span> " + esc(L.text);
+      elLog.appendChild(li);
+    }
+
+    /* ---- 조작 ---- */
+    function down(e) {
+      if (STATE !== "fly" || watchMode) return;
+      holding = true;
+      if (e && e.cancelable) e.preventDefault();
+    }
+    function up() { holding = false; }
+
+    canvas.addEventListener("pointerdown", down);
+    window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
+    canvas.addEventListener("keydown", function (e) {
+      if (e.key === " " || e.key === "Enter") { down(e); }
+    });
+    canvas.addEventListener("keyup", function (e) {
+      if (e.key === " " || e.key === "Enter") up();
+    });
+
+    /* ---- 한 걸음 ---- */
+    function step(dt) {
+      /* 자동 비행: 가장 가까운 앞 거위의 상승기류 자리로 고도를 맞춘다.
+         쫓던 거위는 완전히 지나갈 때까지(dx > -30) 놓지 않는다.
+         코앞에서 다음 거위로 목표를 바꾸면 정작 자리에 머무는 순간에 흔들린다.
+         제어는 속도까지 보는 PD식 — 그냥 '위/아래'로만 하면 목표 주변에서 떤다. */
+      if (watchMode) {
+        var tgt = null, best = 1e9;
+        for (var i = 0; i < world.length; i++) {
+          if (world[i].done) continue;
+          var d = world[i].x - VW * GX;
+          if (d > -30 && d < best) { best = d; tgt = world[i]; }
+        }
+        var want = tgt ? tgt.y + 48 : VH * 0.45;
+        holding = (goose.y - want) + goose.vy * 0.28 > 0;
+      }
+
+      goose.vy += (holding ? LIFT + GRAV : GRAV) * dt;
+      /* 상승기류 안에 있으면 몸이 가벼워진다 — 실제 11~20% 절감을 조작으로 */
+      if (goose.boost > 0) { goose.vy -= GRAV * 0.34 * dt; goose.boost -= dt; }
+      if (goose.vy > VYMAX) goose.vy = VYMAX;
+      if (goose.vy < -VYMAX) goose.vy = -VYMAX;
+      goose.y += goose.vy * dt;
+
+      /* 죽지 않는다 — 물에 닿으면 튕기고 천장에서는 눕는다 */
+      if (goose.y > WATER - 16) { goose.y = WATER - 16; if (goose.vy > 0) goose.vy = -goose.vy * 0.45; }
+      if (goose.y < SKYTOP)     { goose.y = SKYTOP;     if (goose.vy < 0) goose.vy = 0; }
+
+      goose.flap += dt * (holding ? 17 : 6);
+
+      /* 세상이 흐른다 */
+      var mx = VW * GX, alive = 0;
+      for (var j = 0; j < world.length; j++) {
+        var w = world[j];
+        w.flap += dt * 7;
+
+        /* 따라잡은 거위는 흘러가지 않는다 — 내 뒤로 붙어 V자를 이룬다.
+           앞선 새 덕분에 뒤가 편해지는 그 대형을, 이번엔 내가 앞에 서서 만든다. */
+        if (w.inTrail) {
+          var k = w.slot;
+          var sx = mx - 56 - k * 42;
+          var sy = goose.y + ((k % 2) ? -1 : 1) * (22 + Math.floor(k / 2) * 17);
+          var ease = Math.min(1, dt * 3.4);
+          w.x += (sx - w.x) * ease;
+          w.y += (sy - w.y) * ease;
+          continue;
+        }
+
+        w.x -= SCROLL * dt;
+        if (w.x > -220) alive++;
+
+        if (!w.done) {
+          /* 상승기류 자리 = 앞서 있고(dx), 정확히 뒤가 아니라 비스듬히(dy).
+             폭을 넉넉히 잡는다 — 210 단위를 흐르는 데 1초쯤 걸리니
+             0.4초를 버티면 열린다. (처음엔 0.63초 창에 0.55초를 요구해
+             사람도 자동비행도 한 번을 못 붙었다) */
+          var dx = w.x - mx, dy = w.y - goose.y;
+          var inZone = dx > 40 && dx < 250 && Math.abs(dy) > 6 && Math.abs(dy) < 92;
+          if (inZone) {
+            w.hold += dt;
+            goose.boost = 0.22;
+            if (w.hold > 0.4) {
+              w.done = true;
+              w.inTrail = true;
+              w.slot = trail.length;
+              trail.push(w);
+              passed++;
+              setCount(passed);
+              logDream(w.src);
+              say('<span class="fl-cap-tag' + (w.src.kind === "her" ? " is-her" : "") + '">' +
+                  esc(w.src.label) + "</span>" + esc(w.src.text));
+            }
+          } else if (w.hold > 0) {
+            w.hold = Math.max(0, w.hold - dt * 1.6);
+          }
+        }
+      }
+      if (!alive) land();
+    }
+
+    /* ---- 그리기 ---- */
+    function gooseShape(c, x, y, size, flap, color, alpha) {
+      c.save();
+      c.globalAlpha = alpha == null ? 1 : alpha;
+      c.translate(x, y);
+      c.scale(size / 120, size / 120);
+      c.fillStyle = color; c.strokeStyle = color;
+      /* 몸통 */
+      c.save(); c.translate(48, 46); c.rotate(-7 * Math.PI / 180);
+      c.beginPath(); c.ellipse(0, 0, 27, 11.5, 0, 0, Math.PI * 2); c.fill(); c.restore();
+      /* 목·머리·부리 */
+      c.lineWidth = 8; c.lineCap = "round";
+      c.beginPath(); c.moveTo(66, 41); c.bezierCurveTo(78, 36, 87, 30, 94, 23); c.stroke();
+      c.beginPath(); c.arc(96, 21, 5.4, 0, Math.PI * 2); c.fill();
+      c.beginPath(); c.moveTo(100, 18.5); c.lineTo(111, 21); c.lineTo(100, 24.5); c.closePath(); c.fill();
+      /* 날개 — 위아래로 접힌다 */
+      var w = Math.sin(flap);
+      c.save(); c.translate(50, 38); c.rotate(w * 0.5 - 0.12); c.translate(-50, -38);
+      c.beginPath(); c.moveTo(45, 38);
+      c.bezierCurveTo(36, 24 - w * 12, 34, 13 - w * 16, 41, 6 - w * 18);
+      c.bezierCurveTo(48, 12 - w * 12, 55, 27 - w * 5, 57, 37);
+      c.bezierCurveTo(53, 38.5, 49, 38.7, 45, 38); c.closePath(); c.fill();
+      c.restore();
+      /* 꼬리 */
+      c.beginPath(); c.moveTo(24, 42); c.lineTo(10, 37); c.lineTo(22, 50); c.closePath(); c.fill();
+      c.restore();
+    }
+
+    function draw(tms) {
+      var W = VW, H = VH;
+      ctx.save();
+      ctx.scale(dpr * scale, dpr * scale);
+
+      /* 밤하늘 */
+      var g = ctx.createLinearGradient(0, 0, 0, H);
+      g.addColorStop(0, "#070707"); g.addColorStop(0.58, "#0e0d0c"); g.addColorStop(1, "#151412");
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+
+      /* 별 — 멀수록 천천히 흐른다 */
+      for (var i = 0; i < stars.length; i++) {
+        var s = stars[i];
+        s.x -= SCROLL * s.d * 0.0166;
+        if (s.x < -4) { s.x = W + 4; s.y = Math.random() * (WATER - 20); }
+        ctx.globalAlpha = 0.35 + Math.abs(Math.sin(tms * 0.0009 + s.tw)) * 0.5;
+        ctx.fillStyle = "#F3EFE7";
+        ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+
+      /* 수면 */
+      var wg = ctx.createLinearGradient(0, WATER, 0, H);
+      wg.addColorStop(0, "rgba(243,239,231,0.10)"); wg.addColorStop(1, "rgba(8,8,8,0)");
+      ctx.fillStyle = wg; ctx.fillRect(0, WATER, W, H - WATER);
+      ctx.strokeStyle = "rgba(243,239,231,0.18)"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(0, WATER); ctx.lineTo(W, WATER); ctx.stroke();
+
+      /* 앞서 나는 거위들 */
+      var mx = W * GX;
+      for (var j = 0; j < world.length; j++) {
+        var w2 = world[j];
+        if (w2.x < -220 || w2.x > W + 240) continue;
+        var her = w2.src.kind === "her";
+        var col = her ? "#F3EFE7" : "#a99f93";
+
+        /* 상승기류 — 자리에 들어가면 눈에 보인다 */
+        if (w2.hold > 0 && !w2.done) {
+          ctx.save();
+          ctx.globalAlpha = Math.min(w2.hold / 0.55, 1) * 0.55;
+          ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.setLineDash([5, 7]);
+          ctx.beginPath(); ctx.moveTo(mx + 16, goose.y); ctx.lineTo(w2.x - 10, w2.y + 6); ctx.stroke();
+          ctx.restore();
+        }
+        /* 빛 — 대형에 붙은 거위는 은은하게. 17마리가 다 환하면 눈이 아프다 */
+        var rad = w2.inTrail ? 12 : (w2.done ? 26 : 17);
+        var lg = ctx.createRadialGradient(w2.x, w2.y, 0, w2.x, w2.y, rad * 2.4);
+        lg.addColorStop(0, her ? "rgba(243,239,231,0.50)" : "rgba(169,159,147,0.42)");
+        lg.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = lg;
+        ctx.beginPath(); ctx.arc(w2.x, w2.y, rad * 2.4, 0, Math.PI * 2); ctx.fill();
+
+        gooseShape(ctx, w2.x - 26, w2.y - 20, 52, w2.flap, col, w2.done ? 1 : 0.78);
+      }
+
+      /* 내 거위 */
+      if (goose.boost > 0) {
+        var bg = ctx.createRadialGradient(mx + 14, goose.y + 4, 0, mx + 14, goose.y + 4, 62);
+        bg.addColorStop(0, "rgba(243,239,231,0.26)"); bg.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = bg;
+        ctx.beginPath(); ctx.arc(mx + 14, goose.y + 4, 62, 0, Math.PI * 2); ctx.fill();
+      }
+      /* 내 거위는 남들보다 크게. 후광 달린 무리 속에서 '나'로 읽혀야 한다 */
+      ctx.save();
+      ctx.translate(mx, goose.y);
+      ctx.rotate(Math.max(-0.34, Math.min(0.42, goose.vy / 1500)));
+      ctx.shadowColor = "rgba(8,8,8,0.9)"; ctx.shadowBlur = 14;
+      gooseShape(ctx, -38, -30, 78, goose.flap, "#ffffff", 1);
+      ctx.restore();
+
+      ctx.restore();
+    }
+
+    /* ---- 회전 ---- */
+    function loop(tms) {
+      /* 라우터가 <main>을 갈아 끼우면 캔버스가 문서에서 떨어진다.
+         그때 멈추지 않으면 보이지 않는 루프가 계속 돈다. */
+      if (!canvas.isConnected) { raf = 0; return; }
+      raf = requestAnimationFrame(loop);
+      if (!last) last = tms;
+      var dt = Math.min((tms - last) / 1000, 0.05);
+      last = tms;
+      if (STATE === "fly") {
+        acc += dt;
+        while (acc > 1 / 120) { step(1 / 120); acc -= 1 / 120; }
+      }
+      draw(tms);
+    }
+    function start(watch) {
+      if (!resize()) return;
+      /* 하늘에 아무것도 없으면 날려 보내지 않는다.
+         (예전에 이 자리가 비면 첫 프레임에 곧바로 착륙해 버렸다 —
+          '아무 일도 안 일어나는' 고장이라 눈에 띄지 않는다) */
+      if (!lights.length) {
+        var note0 = $("#fl-sky-note");
+        if (note0) note0.textContent = t("fl.empty", "지금은 하늘을 띄우지 못했습니다. 새로고침해 주세요.");
+        return;
+      }
+      watchMode = !!watch;
+      everStarted = true;
+      reset();
+      STATE = "fly";
+      last = 0; acc = 0;
+      if (elIntro) elIntro.hidden = true;
+      if (elEnd) elEnd.hidden = true;
+      if (elHud) elHud.hidden = false;
+      stage.classList.add("is-flying");
+      if (!raf) raf = requestAnimationFrame(loop);
+      if (!watchMode) { try { canvas.focus(); } catch (e) {} }
+    }
+    function land() {
+      if (STATE !== "fly") return;
+      STATE = "end";
+      holding = false;
+      stage.classList.remove("is-flying");
+      if (elHud) elHud.hidden = true;
+      if (elEnd) elEnd.hidden = false;
+      say("");
+      var head = $("#fl-end-head");
+      if (head) {
+        head.textContent = passed === 0
+          ? t("fl.none", "이번엔 한 마리도 따라잡지 못했어요. 괜찮습니다.")
+          : (en() ? ("You flew behind " + passed + (passed === 1 ? " dream." : " dreams."))
+                  : ("당신은 " + passed + "개의 꿈을 따라 날았습니다."));
+      }
+    }
+
+    if (btnFly)   btnFly.addEventListener("click", function () { start(false); });
+    if (btnWatch) btnWatch.addEventListener("click", function () { start(true); });
+    if (btnLand)  btnLand.addEventListener("click", land);
+    if (btnAgain) btnAgain.addEventListener("click", function () { start(watchMode); });
+
+    /* ---- 내 꿈 남기기 ---- */
+    if (form) {
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var text = (input && input.value || "").trim();
+        if (!text) { note(t("fl.need", "한 줄만 적어 주세요."), false); return; }
+        var be = BE();
+        if (!be) { note(t("fl.off", "지금은 꿈을 받을 수 없습니다. 잠시 뒤 다시 시도해 주세요."), false); return; }
+        var btn = form.querySelector("button[type=submit]");
+        if (btn) btn.disabled = true;
+        note(t("fl.sending", "보내는 중…"), null);
+        be.submitDream({ name: (nameIn && nameIn.value || "").trim(), text: text })
+          .then(function (res) {
+            if (btn) btn.disabled = false;
+            if (res && res.ok) {
+              if (input) input.value = "";
+              note(t("fl.sent", "받았습니다. 확인을 거쳐 밤하늘에 올라갑니다."), true);
+            } else {
+              note(beWhy(res), false);
+            }
+          });
+      });
+    }
+    function note(text, ok) {
+      if (!msg) return;
+      msg.textContent = text;
+      msg.className = "fl-msg" + (ok === true ? " is-ok" : ok === false ? " is-bad" : "");
+    }
+
+    /* ---- 눈에 안 보이면 멈춘다 (배터리·성능) ---- */
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden && STATE === "fly") land();
+    });
+    if (window.IntersectionObserver) {
+      new IntersectionObserver(function (es) {
+        if (!es[0].isIntersecting && STATE === "fly") land();
+      }, { threshold: 0.15 }).observe(stage);
+    }
+    window.addEventListener("resize", function () { if (everStarted) resize(); });
+
+    /* 움직임을 줄이도록 설정한 분에게는 '지켜보기'를 먼저 권한다.
+       직접 나는 길도 그대로 열어 둔다 — 고르는 것은 본인이다. */
+    try {
+      if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        if (btnWatch && btnFly) {
+          btnWatch.classList.remove("btn--ghost", "btn--sm", "fl-alt");
+          btnWatch.classList.add("btn--gold", "fl-big");
+          btnFly.classList.remove("btn--gold", "fl-big");
+          btnFly.classList.add("btn--ghost", "btn--sm", "fl-alt");
+          elIntro.insertBefore(btnWatch, btnFly);
+        }
+      }
+    } catch (e) {}
+
+    /* 받을 곳이 없으면 꿈을 달라고 하지 않는다 */
+    if (!BE() && form) {
+      form.hidden = true;
+      note(t("fl.off", "지금은 꿈을 받을 수 없습니다. 잠시 뒤 다시 시도해 주세요."), false);
+      if (btnAgain) {
+        form.parentNode.insertBefore(btnAgain, form.nextSibling);
+        btnAgain.hidden = false;
+      }
+    }
+
+    /* ---- 하늘 채우기 ---- */
+    lights = buildLights([]);          /* 먼저 그의 연혁만으로 띄울 준비 */
+    var be0 = BE();
+    if (be0) {
+      be0.listDreams().then(function (res) {
+        dreamsLoaded = true;
+        if (res && res.ok && res.rows && res.rows.length) {
+          lights = buildLights(res.rows);
+        }
+        var n = $("#fl-sky-note");
+        if (n) {
+          var c = (res && res.rows) ? res.rows.length : 0;
+          n.textContent = c
+            ? (en() ? ("Tonight's sky carries " + c + " dreams left by others, and her own record.")
+                    : ("오늘 밤하늘에는 다른 분들이 남긴 꿈 " + c + "개와 인순이의 발자취가 함께 떠 있습니다."))
+            : t("fl.skyher", "지금 하늘에는 인순이의 발자취가 떠 있습니다. 첫 번째 꿈을 남겨 주세요.");
+        }
+      });
+    }
+  }
+
   /* ---------- 7. 사랑방: 마음 전하기 ----------
      편지는 이 기기의 편지함에만 남는다. 서버가 없으니 그 이상은 할 수 없고,
      할 수 없는 일을 한 것처럼 말하지 않는다. 대신 실제로 닿는 공식 창구로 이어 준다.
@@ -1796,273 +2283,9 @@
     }
   }
 
-  /* ---------- 9.7 거위의 꿈 응원 카드 (Canvas — 가사 원문 미사용, 자체 작문 문구) ---------- */
-  /* 거위 엠블럼을 캔버스에 그린다 (번호증·응원카드 공용) */
-  function drawGooseEmblem(ctx, x, y, size, color) {
-    ctx.save();
-    ctx.translate(x, y); ctx.scale(size / 120, size / 120);
-    ctx.fillStyle = color; ctx.strokeStyle = color;
-    ctx.save(); ctx.translate(48, 46); ctx.rotate(-7 * Math.PI / 180);
-    ctx.beginPath(); ctx.ellipse(0, 0, 27, 11.5, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
-    ctx.lineWidth = 8; ctx.lineCap = "round";
-    ctx.beginPath(); ctx.moveTo(66, 41); ctx.bezierCurveTo(78, 36, 87, 30, 94, 23); ctx.stroke();
-    ctx.beginPath(); ctx.arc(96, 21, 5.4, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(100, 18.5); ctx.lineTo(111, 21); ctx.lineTo(100, 24.5); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(45, 38); ctx.bezierCurveTo(36, 24, 34, 13, 41, 6);
-    ctx.bezierCurveTo(48, 12, 55, 27, 57, 37); ctx.bezierCurveTo(53, 38.5, 49, 38.7, 45, 38); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(24, 42); ctx.lineTo(10, 37); ctx.lineTo(22, 50); ctx.closePath(); ctx.fill();
-    ctx.restore();
-  }
-
   /* ---------- 9.4 사랑방: 팬 번호증 ----------
      방문자를 '사랑방의 한 사람'으로 맞이하는 소장용 카드. 이름·번호·가입일이
      이 기기에만 저장되고, 다시 오면 이름으로 반긴다. 실제 회원 DB가 아니라
-     간직하는 기념물임을 문구로 분명히 한다(가짜 시스템 아님). */
-  function initMemberCard() {
-    var canvas = $("#mc-canvas"), nameIn = $("#mc-name"), makeBtn = $("#mc-make");
-    if (!canvas || !nameIn || !makeBtn) return;
-    var MKEY = "insooni_member";
-    var en = document.documentElement.getAttribute("lang") === "en";
-
-    /* 이름에서 늘 같은 번호를 만든다 (안정적 해시) */
-    function serial(name) {
-      var h = 5381;
-      for (var i = 0; i < name.length; i++) h = ((h << 5) + h + name.charCodeAt(i)) >>> 0;
-      var base = (h % 90000 + 10000);          /* 5자리 */
-      return "IS-" + base;
-    }
-    function fmtDate(iso) {
-      var p = iso.split("-");
-      return en ? (p[0] + ". " + p[1] + ". " + p[2]) : (p[0] + ". " + p[1] + ". " + p[2] + ".");
-    }
-
-    function draw(m) {
-      var ctx = canvas.getContext("2d");
-      var W = canvas.width, H = canvas.height;
-      ctx.clearRect(0, 0, W, H);
-      /* 배경 — 웜 블랙 + 미세한 세로 그라디언트 */
-      var g = ctx.createLinearGradient(0, 0, 0, H);
-      g.addColorStop(0, "#111"); g.addColorStop(1, "#080808");
-      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-      ctx.strokeStyle = "rgba(212,175,55,.85)"; ctx.lineWidth = 3; ctx.strokeRect(40, 40, W - 80, H - 80);
-      ctx.strokeStyle = "rgba(212,175,55,.26)"; ctx.lineWidth = 1; ctx.strokeRect(56, 56, W - 112, H - 112);
-      var mono = "'Space Mono', monospace";
-      var ko = '"Pretendard Variable", "Apple SD Gothic Neo", sans-serif';
-      /* 상단 라벨 */
-      ctx.textAlign = "left"; ctx.fillStyle = "rgba(212,175,55,.95)";
-      ctx.font = "700 26px " + mono;
-      ctx.fillText(en ? "INSOONI  ·  SARANGBANG" : "인순이 공식 팬  ·  사랑방", 96, 128);
-      drawGooseEmblem(ctx, W - 220, 84, 120, "#e8d9a0");
-      /* 이름 */
-      ctx.fillStyle = "#f3efe7"; ctx.font = "600 78px " + ko;
-      ctx.fillText(m.name, 96, 380);
-      ctx.fillStyle = "rgba(243,239,231,.5)"; ctx.font = "500 26px " + ko;
-      ctx.fillText(en ? "MEMBER OF THE FAN ROOM" : "사랑방의 한 사람", 98, 428);
-      /* 번호 + 가입일 */
-      ctx.fillStyle = "rgba(243,239,231,.9)"; ctx.font = "700 40px " + mono;
-      ctx.fillText((en ? "FAN No. " : "회원번호  ") + m.serial, 96, 560);
-      ctx.fillStyle = "rgba(243,239,231,.55)"; ctx.font = "500 28px " + mono;
-      ctx.fillText((en ? "SINCE  " : "함께한 날  ") + fmtDate(m.since), 96, 612);
-      /* 하단 서명 */
-      ctx.fillStyle = "rgba(212,175,55,.9)"; ctx.font = "40px 'Nanum Pen Script', cursive";
-      ctx.textAlign = "right";
-      ctx.fillText(en ? "With love, Insooni" : "인순이 사랑방 드림", W - 96, H - 110);
-    }
-
-    function ready(m) {
-      (document.fonts && document.fonts.ready) ? document.fonts.ready.then(function () { draw(m); }) : draw(m);
-      draw(m);
-      $("#mc-actions").hidden = false;
-      canvas.classList.add("is-ready");
-    }
-
-    var stored = store(MKEY);
-    if (stored && stored.name) {
-      nameIn.value = stored.name;
-      $("#mc-welcome").textContent = (en ? "Welcome back, " : "다시 오셨네요, ") + stored.name + (en ? "." : " 님.");
-      ready(stored);
-    }
-
-    makeBtn.addEventListener("click", function () {
-      var nm2 = (nameIn.value || "").trim();
-      if (!nm2) { nameIn.focus(); return; }
-      var prev = store(MKEY);
-      var since = (prev && prev.name === nm2 && prev.since) ? prev.since
-                : new Date().toISOString().slice(0, 10);
-      var m = { name: nm2, serial: serial(nm2), since: since };
-      store(MKEY, m);
-      $("#mc-welcome").textContent = (en ? "Welcome to the fan room, " : "사랑방에 오신 것을 환영합니다, ") + nm2 + (en ? "." : " 님.");
-      ready(m);
-    });
-
-    $("#mc-save").addEventListener("click", function () {
-      canvas.toBlob(function (blob) {
-        var a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "insooni-fan-card.png";
-        a.click();
-        setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
-      }, "image/png");
-    });
-    $("#mc-share").addEventListener("click", function () {
-      canvas.toBlob(function (blob) {
-        var file = new File([blob], "insooni-fan-card.png", { type: "image/png" });
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          navigator.share({ files: [file], title: t("mc.t", "사랑방 팬 번호증") }).catch(function () {});
-        } else { $("#mc-save").click(); }
-      }, "image/png");
-    });
-  }
-
-  function initCheerCard() {
-    var canvas = $("#cc-canvas");
-    if (!canvas) return;
-    var SITS = [
-      { key: "dream", ko: "꿈을 향해 가는 분께", en: "Chasing a dream" },
-      { key: "start", ko: "새 출발 하는 분께", en: "A fresh start" },
-      { key: "heal", ko: "회복 중인 분께", en: "On the mend" },
-      { key: "tired", ko: "오늘 지친 분께", en: "A long day" },
-      { key: "birth", ko: "생일 맞은 분께", en: "A birthday" }
-    ];
-    var PHRASES = {
-      dream: [
-        "남들이 늦었다 말해도, 당신의 계절은 지금 오고 있어요.",
-        "벽 앞에 선 오늘도, 날개는 조용히 자라고 있습니다.",
-        "그 꿈, 혼자 꾸게 두지 않을게요. 우리가 곁에서 부를게요.",
-        "높이 나는 날보다, 포기하지 않은 오늘이 더 빛납니다."
-      ],
-      start: [
-        "처음이라 떨리는 그 길, 첫걸음이 이미 절반입니다.",
-        "새 문 앞에 선 당신에게, 바람이 등을 밀어주기를.",
-        "어제의 용기가 오늘의 시작을 만들었어요. 잘하고 있어요."
-      ],
-      heal: [
-        "서두르지 않아도 괜찮아요. 쉬어 가는 것도 나는 법이니까.",
-        "비 온 뒤 하늘이 맑게 개듯, 좋은 날이 오고 있습니다.",
-        "오늘 하루를 버틴 당신이, 이미 충분히 강한 사람입니다."
-      ],
-      tired: [
-        "오늘 하루, 정말 수고 많았어요. 내일은 조금 더 가벼울 거예요.",
-        "지친 어깨 위에도 별은 뜹니다. 푹 쉬어요, 우리.",
-        "잠시 멈춰도 꿈은 어디 가지 않아요. 오늘은 쉬어 가요."
-      ],
-      birth: [
-        "태어나 줘서 고마워요. 당신의 새해가 노래처럼 흐르기를.",
-        "오늘만큼은 주인공! 촛불보다 환하게 웃는 하루 되세요.",
-        "한 살의 무게만큼 더 단단해진 당신을 축하합니다."
-      ]
-    };
-    var state = { sit: "dream", name: "", phrase: null };
-    var chipsBox = $("#cc-situations");
-    var isEN = document.documentElement.getAttribute("lang") === "en";
-    SITS.forEach(function (s2, i) {
-      var b = el("button", i === 0 ? "is-on" : "", isEN ? s2.en : s2.ko);
-      b.type = "button";
-      b.setAttribute("aria-pressed", String(i === 0));   /* 낭독기가 선택 상태를 읽게 */
-      b.addEventListener("click", function () {
-        chipsBox.querySelectorAll(".is-on").forEach(function (x) { x.classList.remove("is-on"); x.setAttribute("aria-pressed", "false"); });
-        b.classList.add("is-on");
-        b.setAttribute("aria-pressed", "true");
-        state.sit = s2.key;
-      });
-      chipsBox.appendChild(b);
-    });
-    function pickPhrase() {
-      var pool = PHRASES[state.sit];
-      var next = pool[Math.floor(Math.random() * pool.length)];
-      if (pool.length > 1) { while (next === state.phrase) { next = pool[Math.floor(Math.random() * pool.length)]; } }
-      return next;
-    }
-    function wrapText(ctx, text, maxW) {
-      var words = text.split(" "), lines = [], line = "";
-      words.forEach(function (w) {
-        var trial = line ? line + " " + w : w;
-        if (ctx.measureText(trial).width > maxW && line) { lines.push(line); line = w; }
-        else { line = trial; }
-      });
-      if (line) lines.push(line);
-      return lines;
-    }
-    function drawGoose(ctx, x, y, w, color) {
-      var sc = w / 120;
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.scale(sc, sc);
-      ctx.fillStyle = color; ctx.strokeStyle = color;
-      ctx.save(); ctx.translate(48, 46); ctx.rotate(-7 * Math.PI / 180);
-      ctx.beginPath(); ctx.ellipse(0, 0, 27, 11.5, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
-      ctx.lineWidth = 8; ctx.lineCap = "round";
-      ctx.beginPath(); ctx.moveTo(66, 41); ctx.bezierCurveTo(78, 36, 87, 30, 94, 23); ctx.stroke();
-      ctx.beginPath(); ctx.arc(96, 21, 5.4, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath(); ctx.moveTo(100, 18.5); ctx.lineTo(111, 21); ctx.lineTo(100, 24.5); ctx.closePath(); ctx.fill();
-      ctx.beginPath(); ctx.moveTo(45, 38); ctx.bezierCurveTo(36, 24, 34, 13, 41, 6);
-      ctx.bezierCurveTo(48, 12, 55, 27, 57, 37); ctx.bezierCurveTo(53, 38.5, 49, 38.7, 45, 38); ctx.closePath(); ctx.fill();
-      ctx.beginPath(); ctx.moveTo(24, 42); ctx.lineTo(10, 37); ctx.lineTo(22, 50); ctx.closePath(); ctx.fill();
-      ctx.restore();
-    }
-    function draw() {
-      var ctx = canvas.getContext("2d");
-      var W = canvas.width, H = canvas.height;
-      ctx.clearRect(0, 0, W, H);
-      ctx.fillStyle = "#0a0a0a"; ctx.fillRect(0, 0, W, H);
-      /* 금색 이중 프레임 */
-      ctx.strokeStyle = "rgba(212,175,55,.85)"; ctx.lineWidth = 3;
-      ctx.strokeRect(46, 46, W - 92, H - 92);
-      ctx.strokeStyle = "rgba(212,175,55,.28)"; ctx.lineWidth = 1;
-      ctx.strokeRect(64, 64, W - 128, H - 128);
-      drawGoose(ctx, W / 2 - 90, 150, 180, "#e8d9a0");
-      var koFont = '"Pretendard Variable", "Apple SD Gothic Neo", sans-serif';
-      /* 받는 분 */
-      ctx.textAlign = "center"; ctx.fillStyle = "#f3efe7";
-      if (state.name) {
-        ctx.font = "600 52px " + koFont;
-        ctx.fillText(state.name + (isEN ? "" : " 님께"), W / 2, 380);
-      }
-      /* 응원 문구 */
-      ctx.font = "500 58px " + koFont;
-      var lines = wrapText(ctx, state.phrase, W - 260);
-      var y = 560;
-      lines.forEach(function (ln) { ctx.fillText(ln, W / 2, y); y += 92; });
-      /* 하단 서명 */
-      ctx.fillStyle = "rgba(212,175,55,.95)";
-      ctx.font = "44px 'Nanum Pen Script', cursive";
-      ctx.fillText(t("cc.sign", "거위의 꿈을 아는, 인순이 사랑방 드림"), W / 2, H - 210);
-      ctx.fillStyle = "rgba(243,239,231,.45)";
-      ctx.font = "600 24px " + koFont;
-      ctx.fillText("I N S O O N I · O F F I C I A L · F A N · P L A T F O R M", W / 2, H - 130);
-    }
-    function make() {
-      state.name = ($("#cc-name").value || "").trim();
-      state.phrase = pickPhrase();
-      document.fonts && document.fonts.ready
-        ? document.fonts.ready.then(draw)
-        : draw();
-      draw();
-      $("#cc-actions").hidden = false;
-      canvas.classList.add("is-ready");
-    }
-    $("#cc-make").addEventListener("click", make);
-    $("#cc-again").addEventListener("click", make);
-    $("#cc-save").addEventListener("click", function () {
-      canvas.toBlob(function (blob) {
-        var a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "insooni-cheer-card.png";
-        a.click();
-        setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
-      }, "image/png");
-    });
-    $("#cc-share").addEventListener("click", function () {
-      canvas.toBlob(function (blob) {
-        var file = new File([blob], "insooni-cheer-card.png", { type: "image/png" });
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          navigator.share({ files: [file], title: t("cc.t", "거위의 꿈 응원 카드") }).catch(function () {});
-        } else {
-          $("#cc-save").click();
-        }
-      }, "image/png");
-    });
-  }
 
   /* ---------- 9.8 인순이가 답합니다: 질문 보내기 → 팬레터 폼 '질문' 분류 선택 ---------- */
   function initQna() {
@@ -2546,8 +2769,8 @@
   function pageInit() {
     [renderEventList, initStrip, initVhero, renderArchive, renderPastRecaps,
      initFreshVideos, initVideoButtons, initReveal, renderNewsPage, renderCalendar,
-     renderTimeline, renderAnniversary, renderDiscography, initKnowIt, initLetters, initBoard, initSubscribe,
-     initPoll, initSarangbang, initMemberCard, initCheerCard, initQna, initRise,
+     renderTimeline, renderAnniversary, renderDiscography, initFlight, initKnowIt, initLetters, initBoard, initSubscribe,
+     initPoll, initSarangbang, initQna, initRise,
      initAdmin].forEach(safe);
     /* 마지막에 번역을 건다 — 위 렌더러들이 만들어 낸 요소까지 함께 잡기 위해서.
        라우터로 페이지를 옮겨도 새 <main>이 영어로 칠해진다. */
