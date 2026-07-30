@@ -1,17 +1,8 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-07-31 00:23",
+ "updated": "2026-07-31 02:27",
  "items": [
-  {
-   "date": "2026-07-29",
-   "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
-   "source": "세계일보",
-   "sourceSite": "https://www.segye.com",
-   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTFB4ZDNZRUktVU5SZzFFX0hPZDN6MWZ5Rk56OFJLZkNfRjBUZVJDNUpBQXpMY1BNc1VjeGJCQVRSM01yN3EyUE52cXJxRGxKQzN6cWxObDdVNnVMSmF3Ni1YUTNjZFVZY3ZlTE930gFUQVVfeXFMUGpCUHlkZW9QWEZJWUFvN2phdzVwT1kwMWNiazBMb3F1aXVaMGYtS1JkaXdOLVJVSTRLdnN3N2FuaThqZ3pDcDJaSWE0bGtKTU1oYjVy?oc=5",
-   "type": "방송",
-   "auto": true
-  },
   {
    "date": "2026-07-27",
    "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
@@ -60,7 +51,7 @@
   {
    "date": "2026-06-30",
    "title": "미국 독립기념일 행사에서 애국가 부르는 인순이",
-   "source": "koreancenter.or.kr",
+   "source": "연합뉴스 한민족센터",
    "sourceSite": "https://www.koreancenter.or.kr",
    "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1lUFFLT19OWU14SWNZbmNUUVBkUkxJaXp4ekRnWHpjRlFHNkpoMnBqRGZkY3RtODNldmZUenNLVms3Wm1mRm12d2dmRzJpaGhId2V6OF9uSDR2TWhEOHc2cDZFOTFnRkdSODJTcXJYQXhudGNZ?oc=5",
    "type": "공연",
@@ -127,6 +118,15 @@
    "sourceSite": "https://www.newsis.com",
    "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE1JbG9NZElJeVhQOEJURTZrT0ZzT3Z1NFRNeEowdEJFcDE5Y3hGYndJR3RvVnpudzRGVVpJRjdSYWhZNkdvbE1xaVVkM2FaMlFzRzBzV0FEdzZ5Z2xaYmJxQdIBeEFVX3lxTE5Kek82MVdOdUljaEpOYXZjdHNzR25kbkhRRVlacms0aWw5MXphM0FLMXJzUHFCVjhiZDJkWVdfc2pSSW9TUnU2d2J5VmxGMmp1bE41Tk5YZVctMnN5NUhSZE5aaU1mN1RBbEhfbFdDZVRidnBTd3EyWQ?oc=5",
    "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-05-12",
+   "title": "인순이·더 발룬티어스·신인류·서스턴 무어…‘DMZ 피스트레인’, 최종 라인업 공개",
+   "source": "싱글리스트",
+   "sourceSite": "https://www.slist.kr",
+   "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE43cGYzUlpRSmdMN3ZWTy1Wems0cGdMVDY4b3FiWkZqVmlGcFZWQk85d1RkZGJtd1N5TWEyYmIwQlBSd1VBV3d2eXF3b0pmUkI3NnQwOGFsaWFVR25SOTAyUXY2OWdKZw?oc=5",
+   "type": "보도",
    "auto": true
   },
   {
