@@ -1,12 +1,12 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-07-31 23:05",
+ "updated": "2026-08-01 02:28",
  "items": [
   {
    "date": "2026-07-31",
    "title": "정예인부터 인순이까지, SBS 라디오 오늘 출연자 라인업 공개/ 7월 31일",
-   "source": "news.nate.com",
+   "source": "네이트",
    "sourceSite": "https://news.nate.com",
    "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE01WGdaZEROX2o5Rnd2NjRobGlrVjc1bGRLbmdsOHVjY1dwU1ZQekR6d1lxekZ6WmFWTGhBRFpFSWExM0JiX0ZIbC1zNm01ZmdVcnI0?oc=5",
    "type": "방송",
@@ -34,7 +34,7 @@
   {
    "date": "2026-07-24",
    "title": "경수진 시구→인순이 애국가 '특집 불꽃야구 생중계' 고척돔 달군다",
-   "source": "news.nate.com",
+   "source": "네이트",
    "sourceSite": "https://news.nate.com",
    "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1tV0FhNmZMendjUkhqd1VCeGFXNWJzYVJzdXpiaFM2aWNOdk5yMC1FLVVvVm92SVFHRUdEQUNTYVdaSkdWX2NlNTJSenpEV1ZjU3A0?oc=5",
    "type": "공연",
