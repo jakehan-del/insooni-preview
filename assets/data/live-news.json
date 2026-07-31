@@ -1,21 +1,21 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-07-31 06:10",
+ "updated": "2026-07-31 11:47",
  "items": [
   {
    "date": "2026-07-27",
    "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
    "source": "v.daum.net",
    "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE52cFRPVGYyaTNTdl8xRlFaRUdicmFpOWo5aW03WUhjcHYxekVGckRYbTNnSk1hTTJkS01iRURPOVpuRlFzcnc?oc=5",
+   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1GX3hoUzdOcG1SMngyNXBGVmF4YUlMTmdMZkJyZXV4a3RXRHpwVnlFT3NfWHMxTzhmWHFlRTF4MHV0ODNjTFNVRG9KWEtxWlE?oc=5",
    "type": "공연",
    "auto": true
   },
   {
    "date": "2026-07-24",
    "title": "경수진 시구→인순이 애국가 '특집 불꽃야구 생중계' 고척돔 달군다",
-   "source": "네이트",
+   "source": "news.nate.com",
    "sourceSite": "https://news.nate.com",
    "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1tV0FhNmZMendjUkhqd1VCeGFXNWJzYVJzdXpiaFM2aWNOdk5yMC1FLVVvVm92SVFHRUdEQUNTYVdaSkdWX2NlNTJSenpEV1ZjU3A0?oc=5",
    "type": "공연",
@@ -36,6 +36,15 @@
    "source": "bntnews.co.kr",
    "sourceSite": "https://www.bntnews.co.kr",
    "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE9PM3ctV3dsZEhwY0JlTnV5OUVnZHZHNDE1d25uWm5HMnR2X094NXFoa2pUZXpGNXZ4R2NCNDZuU29Ta0Z6aklNaVNieGdjMEtld1hOOFBoWWg0c0lqQlcteGtxenQ?oc=5",
+   "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-07-24",
+   "title": "'불꽃야구 생중계' 고척 빅매치…경수진 시구+인순이 애국가",
+   "source": "네이트",
+   "sourceSite": "https://sports.news.nate.com",
+   "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE50dGtkRGptRUFUd1pibjFyOFM4bTc3OUFHWXZITXgzekFKRlBqNXNtTzhpMG5ZNGQzalozSHJaUlJlenZkQVkybnJpSFhzNEU5UVhwb0l0ekswSVc4?oc=5",
    "type": "공연",
    "auto": true
   },
@@ -87,7 +96,7 @@
   {
    "date": "2026-06-23",
    "title": "'11회 청주시 시민의 날 기념행사' 내달 1일 개최…염유리·인순이 공연",
-   "source": "네이트",
+   "source": "news.nate.com",
    "sourceSite": "https://news.nate.com",
    "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBDVFB1djFpS0ZCRWZOZmVicDJyYjg0UEEwWWNqV2VCMGFZa1BIQ05DM0tUQm5sWl8zQS1VRWtMZ1dJb2I3Rjk4TDZHLXB0ZXZId0xj?oc=5",
    "type": "공연",
@@ -108,15 +117,6 @@
    "source": "K채널",
    "sourceSite": "https://www.kchannel.kr",
    "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE8zbkRNWlBGMzN1QWV4aGZ6N0puSFZzNlo1MERPTDBFVWxDZjBPZktod0dEcUtUQXFOc2FfRUxEQzBVb2FKSGxxWHNkel94OWFRa2RXVXV6UFJzek5CRXVwMlVHRWVYYkt6ekE?oc=5",
-   "type": "공연",
-   "auto": true
-  },
-  {
-   "date": "2026-05-21",
-   "title": "경주 고분 콘서트 '봉황대 뮤직스퀘어' 내달 5일 개막…인순이·김태우 등",
-   "source": "뉴시스",
-   "sourceSite": "https://www.newsis.com",
-   "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE1JbG9NZElJeVhQOEJURTZrT0ZzT3Z1NFRNeEowdEJFcDE5Y3hGYndJR3RvVnpudzRGVVpJRjdSYWhZNkdvbE1xaVVkM2FaMlFzRzBzV0FEdzZ5Z2xaYmJxQdIBeEFVX3lxTE5Kek82MVdOdUljaEpOYXZjdHNzR25kbkhRRVlacms0aWw5MXphM0FLMXJzUHFCVjhiZDJkWVdfc2pSSW9TUnU2d2J5VmxGMmp1bE41Tk5YZVctMnN5NUhSZE5aaU1mN1RBbEhfbFdDZVRidnBTd3EyWQ?oc=5",
    "type": "공연",
    "auto": true
   },
