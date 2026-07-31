@@ -13,10 +13,10 @@
 <meta name="description" content="편지를 쓰고, 팬 번호증과 응원 카드를 만들고, 공식 채널로 마음을 전하는 곳. 인순이 공식 사랑방.">
 <!-- 본문 글꼴은 먼저 확실히 깐다(미뤄 봤지만 첫 화면이 빨라지지 않았다).
      제목용 서체는 화면이 뜬 뒤 들어온다 — font-display:swap이라 늦어도 글자는 보인다. -->
-<link rel="stylesheet" href="assets/fonts/body.css?v120">
-<link rel="stylesheet" href="assets/fonts/display.css?v120" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/fonts/display.css?v120"></noscript>
-<link rel="stylesheet" href="assets/css/style.min.css?v120">
+<link rel="stylesheet" href="assets/fonts/body.css?v121">
+<link rel="stylesheet" href="assets/fonts/display.css?v121" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?v121"></noscript>
+<link rel="stylesheet" href="assets/css/style.min.css?v121">
 <link rel="canonical" href="https://jakehan-del.github.io/insooni-preview/community.html">
 <meta property="og:url" content="https://jakehan-del.github.io/insooni-preview/community.html">
 <meta property="og:type" content="website">
@@ -100,6 +100,94 @@
        그래서 선두는 돌아가며 선다)를 그대로 조작으로 옮겼다.
        금빛 = 검증된 연혁(data.js timeline). 흰빛 = 검수를 통과한 팬의 꿈(Supabase).
        가사는 한 줄도 쓰지 않는다. -->
+  <!-- ── 오늘의 자리 ───────────────────────────────────────────
+       첫 3초에 누를 것 하나. 틀릴 수 있는 것이 화면에 없다.
+       큰 버튼 둘을 처음부터 나란히 둔다 — 순서가 아니라 병렬이라
+       소리가 안 나는 환경에서도 막히지 않는다. -->
+  <section class="section sb-today" id="sb-today" aria-labelledby="h-today">
+    <div class="container">
+      <p class="sb-night" id="sb-night"></p>
+      <h2 id="h-today" class="sr-only" data-i18n="sb.todayH">오늘의 자리</h2>
+
+      <p class="sb-uplifted" id="sb-uplifted" hidden data-i18n="sb.uplifted">남기신 줄이 사랑방에 올라왔습니다. 아래 줄기에서 보실 수 있어요.</p>
+
+      <!-- 오늘의 곡 이미지. 재킷이 있으면 재킷을(잘리지 않게 통째로),
+           없는 4곡만 사진으로 대신한다. 흐린 배경은 같은 이미지라
+           가로 화면을 채우면서도 원본을 자르지 않는다. -->
+      <figure class="sb-art">
+        <span class="sb-art-blur" id="sb-art-blur" aria-hidden="true"></span>
+        <img id="sb-art" alt="" decoding="async">
+        <figcaption id="sb-art-cap"></figcaption>
+      </figure>
+
+      <p class="sb-song" id="sb-song"></p>
+      <p class="sb-why" id="sb-why"></p>
+
+      <div class="sb-acts">
+        <button type="button" class="btn btn--gold sb-big" id="sb-play" data-i18n="sb.play">30초 들어보기</button>
+        <button type="button" class="btn btn--gold sb-big" id="sb-write" data-i18n="sb.write">한 줄 남기기</button>
+      </div>
+      <div class="sb-bar" aria-hidden="true"><span id="sb-bar"></span></div>
+      <p class="sb-play-state" id="sb-play-state" role="status" aria-live="polite"></p>
+
+      <p class="sb-other-wrap">
+        <button type="button" class="sb-link" id="sb-other" data-i18n="sb.other">다른 곡으로 바꾸기</button>
+      </p>
+      <div class="sb-picker" id="sb-picker" hidden>
+        <label class="sr-only" for="sb-q" data-i18n="sb.find">곡 찾기</label>
+        <input id="sb-q" type="search" placeholder="곡 제목이나 연도" data-i18n-ph="sb.findPh" autocomplete="off">
+        <div class="sb-picklist" id="sb-picklist"></div>
+      </div>
+
+      <!-- 사이트 전체의 유일한 자유 입력칸 -->
+      <div class="sb-write-box" id="sb-write-box" hidden>
+        <p class="sb-chips" id="sb-chips" aria-label="문구 고르기" data-i18n-aria="sb.chipsAria"></p>
+        <form id="sb-form" class="sb-form">
+          <div class="form-field">
+            <label for="sb-body" data-i18n="sb.label">이 노래에 한 줄</label>
+            <input id="sb-body" type="text" maxlength="200" required
+                   placeholder="예) 아버지 생각이 나서 한참 들었습니다" data-i18n-ph="sb.ph">
+          </div>
+          <div class="form-field">
+            <label for="sb-name" data-i18n="sb.name">이름 또는 별명 (없어도 됩니다)</label>
+            <input id="sb-name" type="text" maxlength="20" placeholder="예) 홍천에서" data-i18n-ph="sb.namePh">
+          </div>
+          <button type="submit" class="btn btn--gold" data-i18n="sb.send">남기기</button>
+        </form>
+        <p class="sb-msg" id="sb-msg" role="status"></p>
+
+        <!-- 보낸 뒤. 사라지지 않고 그 자리에 남는다. 확인창 대신 '지금 지우기'를 둔다. -->
+        <div class="sb-done" id="sb-done" hidden>
+          <p data-i18n="sb.doneT"><strong>남겨졌습니다.</strong> 사람이 읽고 올립니다 — 며칠 걸릴 수 있어요. 아직 공개 전입니다.</p>
+          <div class="sb-done-acts">
+            <button type="button" class="btn btn--ghost btn--sm" id="sb-cancel" data-i18n="sb.cancel">지금 지우기</button>
+            <button type="button" class="btn btn--ghost btn--sm" id="sb-card" data-i18n="sb.card">내 카드 저장하기</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="form-hint" id="sb-offline" hidden data-i18n="sb.offline">지금은 글을 받을 수 없습니다. 잠시 뒤 다시 시도해 주세요.</p>
+    </div>
+  </section>
+
+  <!-- ── 사랑방의 줄기 ─────────────────────────────────────────
+       연혁 16 + 정규앨범 18 + 승인된 팬의 한 줄이 한 줄기에 선다.
+       팬 줄의 자리는 '남긴 날'이 아니라 그 곡의 연도다 — 그래야
+       팬의 한 줄이 검증된 기록과 같은 자리에 같은 자격으로 선다. -->
+  <section class="section section--band sb-stream" id="sb-stream" aria-labelledby="h-stream">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="h-stream" data-i18n="sb.streamH">사랑방의 줄기</h2>
+      </div>
+      <p class="sb-filled" id="sb-filled"></p>
+      <p class="sb-filled-note" data-i18n="sb.onlyApproved">승인된 것만 셉니다.</p>
+      <ul class="sb-rows" id="sb-rows"></ul>
+      <p class="sb-more-wrap">
+        <button type="button" class="btn btn--ghost btn--sm" id="sb-more" data-i18n="sb.more">더 보기</button>
+      </p>
+    </div>
+  </section>
+
   <section class="section section--band fl" id="flight" aria-labelledby="h-flight">
     <div class="container">
       <div class="section-head">
@@ -130,204 +218,36 @@
       <div class="fl-end" id="fl-end" hidden>
         <h3 id="fl-end-head" class="fl-end-head"></h3>
         <p class="fl-end-sub" data-i18n="fl.turn">맨 앞은 돌아가며 섭니다. 이번엔 당신 차례예요.</p>
-        <form id="fl-form" class="fl-form">
-          <div class="form-field">
-            <label for="fl-text" data-i18n="fl.label">당신의 꿈을 한 줄로</label>
-            <input id="fl-text" type="text" maxlength="70" required
-                   placeholder="예) 마흔에 다시 피아노를 배우고 싶어요" data-i18n-ph="fl.ph">
-          </div>
-          <div class="form-field">
-            <label for="fl-name" data-i18n="fl.name">이름 또는 별명 (없어도 됩니다)</label>
-            <input id="fl-name" type="text" maxlength="20"
-                   placeholder="예) 홍천에서" data-i18n-ph="fl.namePh">
-          </div>
-          <div class="fl-end-actions">
-            <button type="submit" class="btn btn--gold" data-i18n="fl.send">밤하늘에 띄우기</button>
-            <button type="button" class="btn btn--ghost" id="fl-again" data-i18n="fl.again">한 번 더 날기</button>
-          </div>
-        </form>
+        <div class="fl-end-actions">
+          <button type="button" class="btn btn--gold" id="fl-tonote" data-i18n="fl.tonote">사랑방에 한 줄 남기기</button>
+          <button type="button" class="btn btn--ghost" id="fl-again" data-i18n="fl.again">한 번 더 날기</button>
+        </div>
         <p class="fl-msg" id="fl-msg" role="status"></p>
-        <p class="form-hint" data-i18n="fl.mod">남겨 주신 꿈은 확인을 거친 뒤 밤하늘에 올라갑니다. 바로 보이지 않아도 사라진 것이 아닙니다.</p>
       </div>
 
       <ul class="fl-log" id="fl-log" aria-label="따라 난 꿈 목록" data-i18n-aria="fl.logAria"></ul>
     </div>
   </section>
 
-  <section class="section" id="knowit" aria-labelledby="h-knowit">
+  <!-- ── 나가는 문 ─────────────────────────────────────────────
+       방이 아니라 나가는 길이다. 그래서 카드가 아니라 각주로 둔다.
+       이메일 소식지 폼은 계속 숨겨 둔다 — 보낼 도구가 아직 없다. -->
+  <section class="section sb-doors" id="sb-doors" aria-labelledby="h-doors">
     <div class="container">
-      <div class="section-head">
-        <h2 id="h-knowit" data-i18n="ki.t">이 노래, 아시죠</h2>
-      </div>
-      <p class="card-desc ki-lead" data-i18n="ki.lead">노래가 흐르면, 아는 순간 버튼을 눌러 보세요. 맞히는 놀이가 아니라 반가운 순간을 재는 놀이입니다.</p>
-
-      <div class="ki-stage">
-        <div class="ki-art" id="ki-art" aria-hidden="true"><span class="ki-q">♪</span></div>
-
-        <div class="ki-body">
-          <p class="ki-state" id="ki-state" role="status" aria-live="polite" data-i18n="ki.ready">버튼을 누르면 한 곡이 흐릅니다.</p>
-
-          <div class="ki-actions">
-            <button type="button" class="btn btn--gold ki-big" id="ki-play" data-i18n="ki.play">노래 틀어보기</button>
-            <button type="button" class="btn btn--gold ki-big" id="ki-know" hidden data-i18n="ki.know">알겠어요</button>
-            <button type="button" class="btn btn--ghost" id="ki-next" hidden data-i18n="ki.next">다음 곡</button>
-            <a class="btn btn--ghost" id="ki-more" href="music.html" hidden data-i18n="ki.more">음악 페이지에서 더 듣기</a>
-          </div>
-
-          <p class="form-hint ki-hint" id="ki-hint" hidden data-i18n="ki.silent">소리가 들리지 않으면 휴대폰 옆의 무음 스위치와 볼륨을 확인해 주세요.</p>
-        </div>
-      </div>
-      <p class="form-hint" data-i18n="ki.note">애플이 공식 제공하는 30초 미리듣기입니다. 기록은 남기지 않습니다.</p>
-    </div>
-  </section>
-
-  <!-- 팬 번호증: 방문자를 '사랑방의 한 사람'으로 맞이하는 소장용 카드 -->
-
-  <!-- 마음 전하기: 이 기기에 보관 + 실제로 닿는 공식 창구로 연결 -->
-  <section class="section section--band" id="letter" aria-labelledby="h-letter">
-    <div class="container">
-      <div class="section-head">
-        <h2 id="h-letter" data-i18n="comm.letter">마음 전하기</h2>
-      </div>
-      <p class="card-desc" id="comm-letter-lead" style="max-width:46em;margin-bottom:1.8rem" data-i18n="comm.letterLead">여기 쓴 편지는 이 기기의 편지함에 간직됩니다. 다 쓰신 뒤 복사해서 아래 공식 채널에 남기시면 인순이에게 가장 빨리 닿습니다.</p>
-      <div class="grid grid--2 grid--start">
-        <form id="letter-form" class="letter-form" aria-label="팬레터 작성" data-i18n-aria="aria.writeLetter">
-          <div class="form-field">
-            <label for="letter-name" data-i18n="form.lname">이름 (별명도 좋아요)</label>
-            <input id="letter-name" type="text" maxlength="20" placeholder="예) 30년 팬 순이언니" data-i18n-ph="form.lnamePh">
-          </div>
-          <div class="form-field">
-            <label for="letter-body" data-i18n="form.lbody">편지 내용</label>
-            <label for="letter-cat" class="sr-only" data-i18n="form.lcat">분류</label>
-            <select id="letter-cat" style="margin-bottom:.8rem">
-              <option value="팬레터" data-i18n="opt.letter">팬레터</option>
-              <option value="응원" data-i18n="opt.cheer">응원 한마디</option>
-              <option value="추억" data-i18n="opt.memory">공연의 추억</option>
-              <option value="질문" data-i18n="opt.question">인순이에게 질문</option>
-            </select>
-            <textarea id="letter-body" required maxlength="1000" placeholder="인순이 님께 전하고 싶은 마음을 적어주세요." data-i18n-ph="form.lbodyPh"></textarea>
-          </div>
-          <div class="btn-row">
-            <button class="btn btn--gold" type="submit" data-i18n="form.lkeep">편지함에 간직하기</button>
-            <button class="btn btn--ghost" type="button" id="letter-copy" data-i18n="form.lcopy">글 복사하기</button>
-          </div>
-          <p id="letter-ok" class="form-ok" role="status" hidden></p>
-          <p class="form-hint" id="comm-letter-hint" data-i18n="form.lhint">사이트에서 바로 보내는 접수 창구는 아직 열리지 않았습니다. 열리면 이 자리에서 곧바로 보낼 수 있게 됩니다.</p>
-        </form>
-        <div>
-          <h3 id="comm-myletters" style="margin-bottom:.4rem" data-i18n="comm.myLetters">내 편지함</h3>
-          <p class="form-hint" id="comm-myletters-note" style="margin-bottom:1.2rem" data-i18n="comm.myLettersNote">이 기기에만 보관됩니다. 다른 분에게는 보이지 않습니다.</p>
-          <div id="letter-list" class="board-list"></div>
-          <div class="official-send">
-            <h4 data-i18n="comm.sendNow">지금 마음이 닿는 곳</h4>
-            <a class="btn btn--sm" href="https://www.youtube.com/@insooni8081/community" target="_blank" rel="noopener">YouTube</a>
-            <a class="btn btn--sm" href="https://www.instagram.com/ins00ni/" target="_blank" rel="noopener">Instagram</a>
-            <a class="btn btn--sm" href="https://cafe.daum.net/seoulsister" target="_blank" rel="noopener" data-i18n="comm.cafeShort">인순사랑 팬카페</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 팬 게시판: 서버가 연결되면 나타난다. 백엔드 없이 공용 게시판은 만들 수 없다 -->
-  <section class="section" id="board-section" aria-labelledby="h-board" hidden>
-    <div class="container">
-      <div class="section-head">
-        <h2 id="h-board" data-i18n="comm.board">팬 게시판</h2>
-      </div>
-      <p class="card-desc" style="max-width:46em;margin-bottom:1.8rem" data-i18n="comm.boardLead">공연 후기, 응원, 추억. 운영진이 확인한 글이 이곳에 게시됩니다.</p>
-      <div class="grid grid--2 grid--start">
-        <form id="board-form" class="form-panel" aria-label="게시글 작성" data-i18n-aria="aria.writePost">
-          <div class="form-field">
-            <label for="post-name" data-i18n="form.pname">이름 (별명)</label>
-            <input id="post-name" type="text" maxlength="20" placeholder="별명을 입력하세요" data-i18n-ph="form.pnamePh">
-          </div>
-          <div class="form-field">
-            <label for="post-body" data-i18n="form.pbody">하고 싶은 이야기</label>
-            <textarea id="post-body" required maxlength="600" data-i18n-ph="form.pbodyPh" placeholder="공연 후기, 응원, 추억 이야기. 자유롭게 남겨주세요."></textarea>
-          </div>
-          <button class="btn btn--gold" type="submit" data-i18n="form.psend">글 올리기</button>
-          <p id="post-ok" class="form-ok" role="status" hidden></p>
-          <p class="form-hint" data-i18n="form.phint">서로를 존중하는 글 문화를 지켜주세요. 검수를 거쳐 게시됩니다.</p>
-        </form>
-        <div>
-          <h3 style="margin-bottom:1rem" data-i18n="comm.boardList">올라온 이야기</h3>
-          <div id="board-list" class="board-list"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 듣고 싶은 노래: 전곡 검색 + 내 신청 목록(이 기기) -->
-  <section class="section section--band" id="poll-section" aria-labelledby="h-poll">
-    <div class="container">
-      <div class="section-head">
-        <h2 id="h-poll" data-i18n="comm.poll">듣고 싶은 노래</h2>
-      </div>
-      <div class="grid grid--2 grid--start">
-        <div class="form-panel">
-          <h3 data-i18n="comm.pollQ">다음 무대에서 듣고 싶은 노래를 찾아 담아 두세요</h3>
-          <p class="form-hint" style="margin-bottom:1.2rem" data-i18n="comm.pollHint">인순이의 모든 노래를 제목으로 찾을 수 있습니다. 초성으로도 됩니다.</p>
-          <div class="form-field" style="margin-bottom:1rem">
-            <label class="sr-only" for="req-q" data-i18n="comm.reqLabel">신청곡 검색</label>
-            <input id="req-q" type="search" autocomplete="off" placeholder="곡 제목을 입력하세요 — 초성도 됩니다" data-i18n-ph="comm.reqPh">
-          </div>
-          <div id="req-results" class="req-results"></div>
-          <p id="req-note" class="form-hint" role="status"></p>
-        </div>
-        <div class="form-panel">
-          <h3 id="comm-mylist" data-i18n="comm.myList">내가 담은 노래</h3>
-          <p class="form-hint" id="comm-mylist-note" style="margin-top:.6rem" data-i18n="comm.myListNote">이 기기에만 저장됩니다. 공식 집계가 열리면 그대로 신청할 수 있게 이어 드리겠습니다.</p>
-          <div id="req-rank" class="req-rank"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 이웃 팬 공간: 실존 확인된 팬 커뮤니티 (2026.7 교차 검증 — Daum 인물 프로필·위키백과 등재) -->
-  <section class="section" id="bridge" aria-labelledby="h-bridge">
-    <div class="container">
-      <div class="section-head">
-        <h2 id="h-bridge" data-i18n="comm.bridge">이웃 팬 공간</h2>
-      </div>
-      <p class="card-desc" style="max-width:46em;margin-bottom:1.8rem" data-i18n="comm.bridgeLead">공식 사랑방 밖에도 팬들이 오래 가꿔 온 공간들이 있습니다. 서로의 마당을 오가며 함께 응원해요.</p>
-      <div class="grid grid--2">
-        <div class="card">
-          <div class="card-body">
-            <h3 data-i18n="comm.cafe1t">다음 카페 '인순사랑'</h3>
-            <p class="card-desc" data-i18n="comm.cafe1d">2005년부터 이어져 온 대표 팬카페. 공연·방송 소식과 현장 사진이 지금도 꾸준히 오르는 곳입니다.</p>
-            <a class="btn btn--gold btn--sm mt-1" href="https://cafe.daum.net/seoulsister" target="_blank" rel="noopener" data-i18n="comm.cafe1cta">인순사랑 가기</a>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-body">
-            <h3 data-i18n="comm.cafe2t">네이버 카페 '인순이 팬카페'</h3>
-            <p class="card-desc" data-i18n="comm.cafe2d">2007년 문을 연 또 하나의 팬 공간. 지난 시절의 응원 기록이 보관되어 있습니다.</p>
-            <a class="btn btn--gold btn--sm mt-1" href="https://cafe.naver.com/imsoone" target="_blank" rel="noopener" data-i18n="comm.cafe2cta">네이버 카페 가기</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 공식 채널: 실제로 새 소식이 올라오는 곳 -->
-  <section class="subscribe" aria-labelledby="h-subscribe">
-    <div class="subscribe-inner reveal">
-      <h2 id="h-subscribe" data-i18n="sub.h2">소식을 가장 먼저</h2>
-      <p data-i18n="sub.p">새 공연과 방송 소식은 공식 채널에 가장 먼저 올라옵니다. 구독해 두시면 놓치지 않습니다.</p>
-      <!-- 이메일 소식지: 서버가 연결되면 나타난다. 그전까지는 숨어 있다
-           (받을 곳이 없는데 주소를 달라고 하지 않는다) -->
-      <form id="sub-form" hidden>
+      <h2 id="h-doors" class="sb-doors-h" data-i18n="sb.doorsH">여기서 나가는 길</h2>
+      <ul class="sb-door-list">
+        <li><a href="https://www.youtube.com/@insooni8081" target="_blank" rel="noopener">YouTube <span data-i18n="sb.doorYt">공식 채널 — 새 무대 영상이 가장 먼저 올라옵니다</span></a></li>
+        <li><a href="https://www.instagram.com/ins00ni/" target="_blank" rel="noopener">Instagram <span data-i18n="sb.doorIg">공식 계정</span></a></li>
+        <li><a href="https://cafe.daum.net/seoulsister" target="_blank" rel="noopener"><span data-i18n="sb.doorCafe1">다음 카페 '인순사랑'</span> <span data-i18n="sb.doorCafe1d">— 2005년부터 이어져 온 팬 공간</span></a></li>
+        <li><a href="https://cafe.naver.com/imsoone" target="_blank" rel="noopener"><span data-i18n="sb.doorCafe2">네이버 '인순이 팬카페'</span> <span data-i18n="sb.doorCafe2d">— 2007년 문을 연 또 하나의 마당</span></a></li>
+      </ul>
+      <form id="sub-form" class="sb-sub" hidden>
         <label class="sr-only" for="sub-email" data-i18n="sub.label">이메일 주소</label>
         <input id="sub-email" type="email" required placeholder="이메일 주소" data-i18n-ph="sub.ph" autocomplete="email">
-        <button class="btn btn--gold" type="submit" data-i18n="sub.btn">소식지 신청</button>
+        <button class="btn btn--gold btn--sm" type="submit" data-i18n="sub.btn">소식지 신청</button>
       </form>
       <p id="sub-msg" class="form-ok" role="status" hidden></p>
-      <div class="sub-links">
-        <a class="btn btn--gold" href="https://www.youtube.com/@insooni8081?sub_confirmation=1" target="_blank" rel="noopener" data-i18n="sub.yt">YouTube 구독</a>
-        <a class="btn btn--ghost" href="https://www.instagram.com/ins00ni/" target="_blank" rel="noopener" data-i18n="sub.ig">Instagram 팔로우</a>
-      </div>
-      <p class="form-hint" id="sub-note" style="margin-top:1.2rem" data-i18n="sub.note">이메일 소식지는 준비되면 이 자리에서 신청받겠습니다.</p>
+      <p class="form-hint" id="sub-note" data-i18n="sb.mailSoon">이메일 소식지는 보낼 도구가 준비되면 이 자리에서 신청받겠습니다.</p>
     </div>
   </section>
 
@@ -350,17 +270,17 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동" data-i18n-aria="aria.toTop">↑</button>
-<script src="assets/js/config.js?v120" defer></script>
-<script src="assets/js/backend.js?v120" defer></script>
-<script src="assets/js/i18n.min.js?v120" defer></script>
-<script src="assets/js/data.min.js?v120" defer></script>
-<script src="assets/js/tracklinks.min.js?v120" defer></script>
-<script src="assets/js/albums-full.min.js?v120" defer></script>
-<script src="assets/js/albums-en.min.js?v120" defer></script>
-<script src="assets/js/song-moods.min.js?v120" defer></script>
-<script src="assets/js/main.min.js?v120" defer></script>
-<script src="assets/js/motion.min.js?v120" defer></script>
-<script src="assets/js/router.min.js?v120" defer></script>
-<script src="assets/js/deck.min.js?v120" defer></script>
+<script src="assets/js/config.js?v121" defer></script>
+<script src="assets/js/backend.js?v121" defer></script>
+<script src="assets/js/i18n.min.js?v121" defer></script>
+<script src="assets/js/data.min.js?v121" defer></script>
+<script src="assets/js/tracklinks.min.js?v121" defer></script>
+<script src="assets/js/albums-full.min.js?v121" defer></script>
+<script src="assets/js/albums-en.min.js?v121" defer></script>
+<script src="assets/js/song-moods.min.js?v121" defer></script>
+<script src="assets/js/main.min.js?v121" defer></script>
+<script src="assets/js/motion.min.js?v121" defer></script>
+<script src="assets/js/router.min.js?v121" defer></script>
+<script src="assets/js/deck.min.js?v121" defer></script>
 </body>
 </html>

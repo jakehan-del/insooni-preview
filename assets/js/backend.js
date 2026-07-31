@@ -115,37 +115,27 @@
   window.INSOONI_BACKEND = {
     isReady: isReady,
 
-    /* 팬레터 — 언제나 검수 대기로 들어간다. 서버가 status를 고정한다. */
-    submitLetter: function (o) {
-      return rpc("submit_letter", {
-        p_name: (o && o.name) || null,
-        p_category: (o && o.category) || null,
-        p_body: (o && o.body) || ""
+    /* 한 줄 남기기 — 사이트의 유일한 자유 입력칸.
+       서버가 status를 'pending'으로 못박고, 글쓴이에게만 취소용 토큰을 돌려준다.
+       토큰은 어떤 공개 뷰에도 들어 있지 않다. */
+    submitNote: function (o) {
+      return rpc("submit_note", {
+        p_song_key:   (o && o.songKey) || null,
+        p_song_title: (o && o.songTitle) || null,
+        p_song_year:  (o && o.songYear) || null,
+        p_name:       (o && o.name) || null,
+        p_body:       (o && o.body) || ""
       });
     },
-    listLetters: function () { return readView("public_letters"); },
-
-    /* 팬 게시판 */
-    submitPost: function (o) {
-      return rpc("submit_post", {
-        p_name: (o && o.name) || null,
-        p_body: (o && o.body) || ""
-      });
-    },
-    listPosts: function () { return readView("public_posts"); },
-
-    /* 한 줄 응원 — 사이트가 제시한 문구 중 선택이라 바로 공개된다 */
-    submitCheer: function (o) {
-      return rpc("submit_cheer", {
-        p_name: (o && o.name) || null,
-        p_text: (o && o.text) || ""
-      });
-    },
-    listCheers: function () { return readView("public_cheers"); },
-
-    /* 신청곡 */
-    requestSong: function (title) { return rpc("request_song", { p_title: title || "" }); },
-    songTally: function () { return readView("song_tally"); },
+    /* 아직 검수 전인 내 글만 지운다. 이미 올라간 글은 서버가 거절하고
+       그 사실을 사실대로 알려 준다 — 화면이 거짓말을 하지 않게. */
+    cancelNote: function (token) { return rpc("cancel_note", { p_token: token || null }); },
+    /* 상태만 돌려준다. 본문·이름은 돌려주지 않는다. */
+    noteStatus: function (token) { return rpc("note_status", { p_token: token || null }); },
+    listNotes:  function () { return readView("public_notes"); },
+    /* 몇 곡에 기억이 붙었는지. 곡별 개수는 내주지 않는다
+       (로그인이 없어 곡마다 숫자를 보이면 곧 부풀리기 대상이 된다). */
+    notesFilled: function () { return readView("notes_filled"); },
 
     /* 꿈 — 자유 입력이므로 반드시 검수를 거친다. 서버가 status를 'pending'으로 고정한다. */
     submitDream: function (o) {

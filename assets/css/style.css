@@ -73,8 +73,9 @@ html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 ::-webkit-scrollbar-track { background: var(--void); }
 ::-webkit-scrollbar-thumb { background: var(--hairline); border-radius: 6px; border: 3px solid var(--void); }
 ::-webkit-scrollbar-thumb:hover { background: var(--gold-deep); }
-html[data-fs="2"] { font-size: 20px; }
-html[data-fs="3"] { font-size: 22px; }
+/* 큰글씨 모드(data-fs 2·3)는 켤 버튼이 사이트 어디에도 없어 제거했다.
+   전 페이지가 data-fs="1" 로 고정돼 있고 JS 참조도 0건이었다.
+   별도 '큰글씨 모드'는 낙인이 되기 쉬우므로, 필요하면 기본값 자체를 손본다. */
 
 /* ---------- 2. 베이스 ---------- */
 *, *::before, *::after { box-sizing: border-box; }
@@ -2759,4 +2760,161 @@ body.nav-open { overflow: hidden; touch-action: none; }
 /* 움직임을 줄이도록 설정한 분께는 저절로 나는 쪽만 권한다 */
 @media (prefers-reduced-motion: reduce) {
   .fl-caption { transition: none; }
+}
+
+/* ============================================================
+   사랑방 — 오늘의 자리 · 줄기 · 나가는 문
+   색을 쓰지 않는다. 밝기·여백·타이포로만 위계를 만든다.
+   ============================================================ */
+
+/* ── 오늘의 자리 ── */
+.sb-today .container { max-width: 44rem; }
+.sb-night {
+  margin: 0 0 1.6rem;
+  font-family: var(--font-mono); font-size: .8rem; letter-spacing: .1em;
+  color: var(--faint); text-transform: uppercase;
+}
+.sb-uplifted {
+  margin: 0 0 1.4rem; padding: .8rem 1rem;
+  border-left: 2px solid var(--line-strong);
+  color: var(--ivory); font-size: .95rem;
+}
+/* 재킷은 정사각, 이 자리는 가로로 넓다. 흐린 같은 이미지를 깔고
+   그 위에 원본을 통째로 얹어 한 픽셀도 자르지 않는다. */
+/* overflow:hidden 이 없으면 아래 흐린 배경의 scale(1.15)가 틀 밖으로 삐져나가
+   768px에서 페이지 전체가 가로로 6px 벌어진다. 실측으로 잡았다. */
+.sb-art { position: relative; margin: 0 0 1.6rem; overflow: hidden; }
+.sb-art > img, .sb-art-blur {
+  display: block; width: 100%; aspect-ratio: 16 / 9;
+}
+.sb-art-blur {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  filter: blur(38px) saturate(.5) brightness(.42);
+  transform: scale(1.15);
+}
+.sb-art > img {
+  position: relative;
+  object-fit: contain; background: transparent;
+}
+.sb-art > img.is-photo { object-fit: cover; }
+.sb-art figcaption {
+  position: relative; margin-top: .7rem;
+  font-size: .84rem; color: var(--faint); line-height: 1.6;
+}
+.sb-song {
+  margin: 0 0 .5rem;
+  font-family: var(--font-latin); font-size: 1.6rem; line-height: 1.35;
+  color: var(--ivory);
+}
+.sb-why { margin: 0 0 1.8rem; font-size: .88rem; color: var(--faint); }
+
+/* 큰 버튼 둘이 처음부터 나란히. 순서가 아니라 병렬이다 —
+   소리가 안 나는 환경에서도 '남기기'가 막히지 않는다. */
+.sb-acts { display: flex; flex-wrap: wrap; gap: .8rem; }
+.sb-big { min-height: 64px; padding-inline: 1.6rem; font-size: 1rem; flex: 1 1 14rem; }
+.sb-bar { height: 2px; margin-top: 1rem; background: var(--line); overflow: hidden; }
+.sb-bar > span { display: block; height: 100%; width: 0; background: var(--ivory); transition: width .2s linear; }
+.sb-today:not(.is-playing) .sb-bar { opacity: 0; }
+.sb-play-state { margin: .8rem 0 0; min-height: 1.3em; font-size: .9rem; color: var(--muted); }
+.sb-play-state.is-bad { color: var(--danger-t); }
+
+.sb-other-wrap { margin: 1.4rem 0 0; }
+/* 글자 링크처럼 보이지만 누르는 영역은 44px 이상이어야 한다.
+   실측에서 111x32 로 잡혀 손가락이 빗나갔다. */
+.sb-link {
+  display: inline-flex; align-items: center;
+  min-height: 44px; padding: .5rem 0;
+  background: none; border: 0;
+  color: var(--muted); font-size: .88rem; text-decoration: underline;
+  text-underline-offset: 4px; cursor: pointer;
+}
+.sb-link:hover { color: var(--ivory); }
+
+.sb-picker { margin-top: 1rem; }
+.sb-picker input {
+  width: 100%; padding: .8rem .9rem;
+  background: var(--panel); color: var(--ivory);
+  border: 1px solid var(--line); border-radius: var(--r-panel);
+}
+.sb-picklist { max-height: 15rem; overflow-y: auto; margin-top: .6rem; }
+.sb-pick {
+  display: flex; justify-content: space-between; gap: 1rem; width: 100%;
+  padding: .7rem .2rem; background: none; border: 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--ivory); font-size: .95rem; text-align: left; cursor: pointer;
+}
+.sb-pick:hover { background: var(--panel); }
+.sb-pick-y { color: var(--faint); font-family: var(--font-mono); font-size: .78rem; }
+
+/* ── 한 줄 남기기 (사이트 유일의 자유 입력칸) ── */
+.sb-write-box { margin-top: 2rem; padding-top: 1.8rem; border-top: 1px solid var(--line); }
+.sb-chips { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 1.2rem; }
+.sb-chip {
+  padding: .6rem .9rem; min-height: 44px;
+  background: var(--panel); color: var(--muted);
+  border: 1px solid var(--line); border-radius: var(--r-pill);
+  font-size: .88rem; cursor: pointer;
+}
+.sb-chip:hover { background: var(--panel-lift); color: var(--ivory); }
+.sb-form .form-field { margin-bottom: 1rem; }
+.sb-msg { margin: .9rem 0 0; min-height: 1.2em; font-size: .92rem; color: var(--muted); }
+.sb-msg.is-ok { color: var(--ok); }
+.sb-msg.is-bad { color: var(--danger-t); }
+
+/* 보낸 뒤 그 자리에 남는다. 확인창 대신 '지금 지우기'를 둔다. */
+.sb-done {
+  margin-top: 1.4rem; padding: 1.1rem 1.2rem;
+  border: 1px solid var(--line-strong); background: var(--surface-1);
+}
+.sb-done p { margin: 0 0 1rem; font-size: .95rem; line-height: 1.6; color: var(--ivory); }
+.sb-done-acts { display: flex; flex-wrap: wrap; gap: .6rem; }
+
+/* ── 줄기 ── */
+.sb-stream .container { max-width: 48rem; }
+.sb-filled { margin: 0 0 .2rem; font-size: 1rem; color: var(--ivory); }
+.sb-filled-note { margin: 0 0 2rem; font-size: .8rem; color: var(--faint); }
+.sb-rows { list-style: none; margin: 0; padding: 0; }
+.sb-row {
+  display: grid; grid-template-columns: 4.2rem auto 1fr; align-items: start;
+  gap: .9rem; padding: 1rem 0; border-top: 1px solid var(--line);
+}
+.sb-row-y {
+  font-family: var(--font-mono); font-size: .78rem; letter-spacing: .05em;
+  color: var(--faint); padding-top: .2rem;
+}
+.sb-row-art { width: 48px; }
+.sb-row-art img { display: block; width: 48px; height: 48px; object-fit: cover; background: var(--sink); }
+.sb-row:not(.is-album) .sb-row-art { display: none; }
+.sb-row:not(.is-album) { grid-template-columns: 4.2rem 1fr; }
+.sb-row-t { display: block; color: var(--ivory); font-size: 1rem; line-height: 1.55; }
+.sb-row-s { display: block; margin-top: .25rem; font-size: .82rem; color: var(--faint); line-height: 1.5; }
+/* 연혁·앨범은 기록, 팬의 줄은 목소리 — 같은 줄기에 서되 결이 다르다 */
+.sb-row.is-note .sb-row-t { color: var(--muted); }
+.sb-row.is-note .sb-row-y { color: var(--ivory); }
+.sb-more-wrap { margin-top: 1.6rem; }
+
+/* ── 나가는 문 ── */
+.sb-doors .container { max-width: 44rem; }
+.sb-doors-h {
+  margin: 0 0 1.2rem;
+  font-family: var(--font-mono); font-size: .8rem; letter-spacing: .1em;
+  color: var(--faint); text-transform: uppercase; font-weight: 400;
+}
+.sb-door-list { list-style: none; margin: 0 0 1.6rem; padding: 0; }
+.sb-door-list li { border-top: 1px solid var(--line); }
+.sb-door-list a {
+  display: block; padding: .95rem 0; min-height: 44px;
+  color: var(--ivory); text-decoration: none; font-size: .98rem;
+}
+.sb-door-list a span { color: var(--faint); font-size: .86rem; }
+.sb-door-list a:hover { color: var(--gold-hover); }
+.sb-sub { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: .8rem; }
+.sb-sub input { flex: 1 1 14rem; padding: .75rem .9rem; background: var(--panel); color: var(--ivory); border: 1px solid var(--line); }
+
+@media (max-width: 720px) {
+  .sb-song { font-size: 1.35rem; }
+  .sb-big { flex: 1 1 100%; }
+  .sb-row { grid-template-columns: 3.4rem auto 1fr; gap: .7rem; }
+  .sb-row:not(.is-album) { grid-template-columns: 3.4rem 1fr; }
 }

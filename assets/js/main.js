@@ -1039,166 +1039,6 @@
        · 점수·순위·평균을 만들지 않는다. 남기는 기록도 없다
        · 곡 정보(제목·앨범·연도)는 previews.json에서만 가져온다.
          이 연도는 정규 1~18집 자료와 대조해 96곡 전부 일치를 확인했다
-       · 무음 스위치가 켜져 있어도 재생 중임이 눈에 보인다 */
-  function initKnowIt() {
-    var stage = $("#knowit");
-    if (!stage) return;
-    var artBox = $("#ki-art"), stateEl = $("#ki-state");
-    var playBtn = $("#ki-play"), knowBtn = $("#ki-know"), nextBtn = $("#ki-next");
-    var moreLink = $("#ki-more"), hint = $("#ki-hint");
-    if (!artBox || !playBtn) return;
-
-    var tracks = [], audio = null, cur = null, startedAt = 0, timer = null, revealed = false;
-
-    /* 미리듣기 목록은 사랑방에서만 필요하므로 이 자리에서 받는다 */
-    fetch("assets/data/previews.json", { credentials: "same-origin" })
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (j) {
-        var list = (j && j.tracks) || [];
-        tracks = list.filter(function (t) { return t && t.u && t.t; });
-        if (!tracks.length) fail();
-      })
-      .catch(fail);
-
-    function fail() {
-      playBtn.disabled = true;
-      stateEl.textContent = t("ki.fail", "지금은 노래를 불러오지 못했습니다. 잠시 뒤 다시 열어 주세요.");
-    }
-
-    function pickTrack() {
-      /* 방금 들은 곡이 연달아 나오지 않게만 한다 */
-      var pool = tracks.filter(function (x) { return !cur || x.u !== cur.u; });
-      return pool[Math.floor(Math.random() * pool.length)];
-    }
-
-    function show(el, on) { if (el) el.hidden = !on; }
-
-    function stopAudio() {
-      if (timer) { clearInterval(timer); timer = null; }
-      if (audio) {
-        /* src를 빈 문자열로 비우면 브라우저가 빈 주소를 읽으려다 error를 쏜다.
-           그 error가 방금 띄운 정답 화면을 '재생하지 못했습니다'로 덮어썼다.
-           듣지 않도록 먼저 떼어내고, src는 건드리지 않는다. */
-        audio.onended = null;
-        audio.onerror = null;
-        try { audio.pause(); } catch (e) {}
-        audio = null;
-      }
-      artBox.classList.remove("is-playing");
-      var bar = artBox.querySelector(".ki-bar i");
-      if (bar) bar.style.width = "0";
-    }
-
-    function reveal(byUser) {
-      if (revealed || !cur) return;
-      revealed = true;
-      var secs = byUser ? ((Date.now() - startedAt) / 1000) : null;
-      stopAudio();
-
-      /* 재킷을 드러낸다 */
-      artBox.innerHTML = "";
-      var im = new Image();
-      im.alt = "";
-      im.src = cur.art || "";
-      artBox.appendChild(im);
-
-      var line = document.createElement("span");
-      line.className = "ki-title";
-      line.textContent = cur.t;
-      var meta = document.createElement("span");
-      meta.className = "ki-meta";
-      meta.textContent = [cur.al, cur.y].filter(Boolean).join("  ·  ");
-
-      stateEl.innerHTML = "";
-      stateEl.appendChild(line);
-      stateEl.appendChild(meta);
-      if (secs !== null) {
-        var s2 = document.createElement("span");
-        s2.className = "ki-secs";
-        /* 측정한 값만 적는다. 비교도 순위도 만들지 않는다. */
-        s2.textContent = t("ki.tookA", "") + secs.toFixed(1) + t("ki.tookB", "초 만에 알아보셨어요.");
-        stateEl.appendChild(s2);
-      } else {
-        var s3 = document.createElement("span");
-        s3.className = "ki-secs";
-        s3.textContent = t("ki.wasThis", "이 노래였습니다.");
-        stateEl.appendChild(s3);
-      }
-
-      show(playBtn, false); show(knowBtn, false);
-      show(nextBtn, true); show(moreLink, true); show(hint, false);
-      nextBtn.focus();
-    }
-
-    function play() {
-      cur = pickTrack();
-      if (!cur) return;
-      revealed = false;
-      stopAudio();
-
-      /* 다른 소리가 흐르고 있으면 멈춘다 */
-      if (window.INSOONI_DECK && window.INSOONI_DECK.pause) {
-        try { window.INSOONI_DECK.pause(); } catch (e) {}
-      }
-
-      artBox.innerHTML = '<span class="ki-q" aria-hidden="true">\u266A</span>' +
-                         '<span class="ki-bar"><i></i></span>';
-      artBox.classList.add("is-playing");
-      stateEl.textContent = t("ki.playing", "노래가 흐르고 있습니다. 아는 순간 아래 버튼을 눌러 주세요.");
-      show(playBtn, false); show(nextBtn, false); show(moreLink, false);
-      show(knowBtn, true); show(hint, true);
-      knowBtn.focus();
-
-      audio = new Audio(cur.u);
-      audio.preload = "auto";
-      /* 곡마다 음량이 달라 놀라지 않게 미리 계산해 둔 보정값을 쓴다 */
-      audio.volume = Math.max(0.15, Math.min(1, (cur.g || 1) * 0.55));
-      audio.onended = function () { reveal(false); };
-      audio.onerror = function () {
-        if (revealed) return;        /* 이미 정답을 보여 준 뒤라면 무시한다 */
-        stopAudio();
-        stateEl.textContent = t("ki.audioFail", "이 곡을 재생하지 못했습니다. 다음 곡으로 넘어가 주세요.");
-        show(knowBtn, false); show(nextBtn, true); show(hint, false);
-      };
-
-      /* 곡 앞의 무음만큼 건너뛴다. 배포 전에 미리 재 둔 값(s)이라
-         버튼을 누른 순간 진짜 첫 소리가 난다 — 어르신이 '안 나오나?' 하지 않게. */
-      audio.addEventListener("loadedmetadata", function () {
-        var skip = cur && cur.s ? Number(cur.s) : 0;
-        if (skip > 0.05 && skip < 3) {
-          try { audio.currentTime = skip; } catch (e) {}
-        }
-        startedAt = Date.now();      /* 시간은 소리가 시작된 시점부터 잰다 */
-      }, { once: true });
-
-      var pr = audio.play();
-      if (pr && pr.catch) {
-        pr.catch(function () {
-          /* 브라우저가 자동재생을 막은 경우 — 사실대로 알린다 */
-          stopAudio();
-          stateEl.textContent = t("ki.blocked", "브라우저가 소리를 막았습니다. 버튼을 한 번 더 눌러 주세요.");
-          show(knowBtn, false); show(playBtn, true); show(hint, false);
-        });
-      }
-      startedAt = Date.now();
-
-      var bar = artBox.querySelector(".ki-bar i");
-      timer = setInterval(function () {
-        if (!audio) return;
-        var d = audio.duration || 30;
-        if (bar) bar.style.width = Math.min(100, (audio.currentTime / d) * 100) + "%";
-      }, 200);
-    }
-
-    playBtn.addEventListener("click", play);
-    knowBtn.addEventListener("click", function () { reveal(true); });
-    nextBtn.addEventListener("click", play);
-
-    /* 페이지를 떠나거나 탭이 가려지면 소리를 멈춘다 */
-    document.addEventListener("visibilitychange", function () {
-      if (document.hidden) stopAudio();
-    });
-  }
 
   /* ---------- 6.9 꿈의 비행 ----------
      한 손으로 하는 게임. 누르면 오르고 놓으면 활공한다.
@@ -1230,7 +1070,7 @@
     var elCaption = $("#fl-caption"), elCount = $("#fl-count"), elLog = $("#fl-log");
     var btnFly = $("#fl-start"), btnWatch = $("#fl-watch"), btnLand = $("#fl-land");
     var btnAgain = $("#fl-again");
-    var form = $("#fl-form"), input = $("#fl-text"), nameIn = $("#fl-name"), msg = $("#fl-msg");
+    var msg = $("#fl-msg");
 
     var en = function () { return document.documentElement.getAttribute("lang") === "en"; };
 
@@ -1256,7 +1096,7 @@
     function buildLights(dreams) {
       var her = herLights();
       var fan = (dreams || []).map(function (d) {
-        return { kind: "fan", label: d.name ? String(d.name) : t("fl.someone", "어느 팬"), text: d.text };
+        return { kind: "fan", label: d.name ? String(d.name) : t("fl.someone", "어느 팬"), text: d.body };
       });
       /* 그의 연혁이 앞에 서고, 팬들의 꿈이 그 사이사이에 붙는다.
          팬 꿈이 아직 없으면 하늘은 그의 발자취만으로도 가득 찬다. */
@@ -1602,27 +1442,19 @@
     if (btnLand)  btnLand.addEventListener("click", land);
     if (btnAgain) btnAgain.addEventListener("click", function () { start(watchMode); });
 
-    /* ---- 내 꿈 남기기 ---- */
-    if (form) {
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        var text = (input && input.value || "").trim();
-        if (!text) { note(t("fl.need", "한 줄만 적어 주세요."), false); return; }
-        var be = BE();
-        if (!be) { note(t("fl.off", "지금은 꿈을 받을 수 없습니다. 잠시 뒤 다시 시도해 주세요."), false); return; }
-        var btn = form.querySelector("button[type=submit]");
-        if (btn) btn.disabled = true;
-        note(t("fl.sending", "보내는 중…"), null);
-        be.submitDream({ name: (nameIn && nameIn.value || "").trim(), text: text })
-          .then(function (res) {
-            if (btn) btn.disabled = false;
-            if (res && res.ok) {
-              if (input) input.value = "";
-              note(t("fl.sent", "받았습니다. 확인을 거쳐 밤하늘에 올라갑니다."), true);
-            } else {
-              note(beWhy(res), false);
-            }
-          });
+    /* ---- 마무리: 사랑방의 글칸으로 ----
+       사이트의 자유 입력칸은 하나뿐이다. 여기서 또 받지 않고 그 자리로 보낸다. */
+    var btnToNote = $("#fl-tonote");
+    if (btnToNote) {
+      btnToNote.addEventListener("click", function () {
+        var box = $("#sb-write-box"), wr = $("#sb-write");
+        if (wr) wr.click();
+        if (box) {
+          box.hidden = false;
+          box.scrollIntoView({ block: "center", behavior: "smooth" });
+          var i2 = $("#sb-body");
+          if (i2) setTimeout(function () { try { i2.focus(); } catch (e) {} }, 300);
+        }
       });
     }
     function note(text, ok) {
@@ -1656,21 +1488,17 @@
       }
     } catch (e) {}
 
-    /* 받을 곳이 없으면 꿈을 달라고 하지 않는다 */
-    if (!BE() && form) {
-      form.hidden = true;
-      note(t("fl.off", "지금은 꿈을 받을 수 없습니다. 잠시 뒤 다시 시도해 주세요."), false);
-      if (btnAgain) {
-        form.parentNode.insertBefore(btnAgain, form.nextSibling);
-        btnAgain.hidden = false;
-      }
+    /* 받을 곳이 없으면 '한 줄 남기기'를 권하지 않는다 */
+    if (!BE() && btnToNote) {
+      btnToNote.hidden = true;
+      note(t("fl.off", "지금은 글을 받을 수 없습니다. 잠시 뒤 다시 시도해 주세요."), false);
     }
 
     /* ---- 하늘 채우기 ---- */
     lights = buildLights([]);          /* 먼저 그의 연혁만으로 띄울 준비 */
     var be0 = BE();
     if (be0) {
-      be0.listDreams().then(function (res) {
+      be0.listNotes().then(function (res) {
         dreamsLoaded = true;
         if (res && res.ok && res.rows && res.rows.length) {
           lights = buildLights(res.rows);
@@ -1687,253 +1515,560 @@
     }
   }
 
+  /* ---------- 7. 사랑방 ----------
+     사랑방은 인순이의 48년이 한 줄기로 흐르는 방이고,
+     팬이 남긴 한 줄은 그 줄기의 같은 자리에 같은 자격으로 선다.
+
+     전에는 여기에 섹션이 일곱 개 있었다 — 게임·노래 맞히기·편지·게시판·
+     신청곡·이웃 링크·구독. 서로 아무 관계가 없어서 방이 아니라
+     부스가 늘어선 복도였다. 글 쓰는 칸만 셋이라 어디에 무엇을 써야
+     하는지도 알 수 없었다.
+
+     지금은 둘이다.
+       오늘의 자리  — 오늘의 곡 하나, 큰 버튼 두 개 (듣기 / 남기기)
+       줄기        — 연혁 16 + 정규앨범 18 + 승인된 팬의 한 줄
+
+     ── 이 설계에서 가장 중요한 한 줄 ─────────────────────────
+     팬 줄의 정렬 키는 '남긴 날'이 아니라 **그 곡의 연도**다.
+     남긴 날로 잡으면 팬 줄이 전부 맨 위에 몰리고 연혁·앨범이 아래로 밀려
+     결국 '팬 글 목록'과 '아카이브 목록' 두 개로 도로 갈라진다.
+     곡 연도를 키로 쓰면 1957~2026 사이에 팬의 줄이 끼어 들어가고,
+     줄이 늘수록 특정 연도가 두꺼워진다 — 숫자 없이 밀도가 보이고,
+     아무도 부풀릴 수 없다. */
+
+  /* 한국 날짜. 브라우저 시간대와 무관해야 한다.
+     로컬 날짜를 쓰면 "오늘 이 방에 온 모두에게 같은 곡"이 거짓말이 된다. */
+  function kstNow() {
+    var d = new Date();
+    return new Date(d.getTime() + d.getTimezoneOffset() * 60000 + 9 * 3600000);
+  }
+  var NIGHT_ONE = Date.UTC(2026, 6, 31);        /* 2026-07-31 이 제1밤 */
+  function nightNo() {
+    var k = kstNow();
+    var today = Date.UTC(k.getFullYear(), k.getMonth(), k.getDate());
+    return Math.max(1, Math.round((today - NIGHT_ONE) / 86400000) + 1);
+  }
+  function kstLabel() {
+    var k = kstNow();
+    var days = ["일", "월", "화", "수", "목", "금", "토"];
+    if (document.documentElement.getAttribute("lang") === "en") {
+      var mn = ["January","February","March","April","May","June",
+                "July","August","September","October","November","December"];
+      return mn[k.getMonth()] + " " + k.getDate();
+    }
+    return (k.getMonth() + 1) + "월 " + k.getDate() + "일 " + days[k.getDay()] + "요일";
+  }
+
+  var SONGS = null;                              /* songs.json (곡 앵커) */
+  function loadSongs() {
+    if (SONGS) return Promise.resolve(SONGS);
+    return fetch("assets/data/songs.json")
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) { SONGS = (d && d.songs) || []; return SONGS; })
+      .catch(function () { SONGS = []; return SONGS; });
+  }
+
+  /* ---------- 7.1 오늘의 자리 ----------
+     첫 3초에 누를 것 하나. 틀릴 수 있는 것이 화면에 없다.
+
+     버튼 둘을 처음부터 나란히 둔다. 같은 자리 버튼이 '듣기'였다가
+     '남기기'로 변신하는 것은 어르신에게 최악의 패턴이고,
+     소리가 안 나는 환경에서는 30초짜리 관문이 되어 버린다. */
+  function initToday() {
+    var sec = $("#sb-today");
+    if (!sec) return;
+
+    var elNight = $("#sb-night"), elArt = $("#sb-art"), elBlur = $("#sb-art-blur"), elCap = $("#sb-art-cap");
+    var elSong = $("#sb-song"), elWhy = $("#sb-why");
+    var btnPlay = $("#sb-play"), btnWrite = $("#sb-write"), btnOther = $("#sb-other");
+    var elState = $("#sb-play-state"), elBar = $("#sb-bar");
+    var form = $("#sb-form"), input = $("#sb-body"), nameIn = $("#sb-name");
+    var msg = $("#sb-msg"), done = $("#sb-done"), chips = $("#sb-chips");
+    var btnCancel = $("#sb-cancel"), btnCard = $("#sb-card");
+
+    var en = function () { return document.documentElement.getAttribute("lang") === "en"; };
+    var song = null, photo = null;
+    var audio = null, timer = null;
+    var TOKKEY = "insooni_note_token";
+
+    if (elNight) {
+      elNight.textContent = (en() ? ("Night " + nightNo() + " · ") : ("제" + nightNo() + "밤 · ")) + kstLabel();
+    }
+
+    /* 재킷이 없는 4곡을 위한 사진 (가로 사진만 — 세로는 이 자리에서 잘린다) */
+    var wide = (D.archive || []).filter(function (a) { return a.img && a.w > a.h; });
+
+    /* 오늘의 이미지. 곡의 재킷이 있으면 재킷을 쓴다 — 그래야 그림과 노래가
+       따로 놀지 않는다. 재킷은 정사각이고 이 자리는 가로로 넓으므로,
+       같은 이미지를 흐리게 깐 위에 원본을 통째로 얹는다(자르지 않는다).
+       CSS의 상대 경로로 배경을 걸면 assets/css/ 기준이 되어 404가 난다 —
+       실제로 그런 적이 있어 자바스크립트로 직접 넣는다. */
+    function showArt(s2) {
+      if (!elArt) return;
+      var src = s2 && s2.art;
+      var cap = "";
+      if (src) {
+        /* 앨범명은 바로 아래 곡 줄에 이미 있다. 캡션을 또 달면 같은 말이 두 번 나온다. */
+        cap = "";
+        elArt.alt = (s2.t || "") + " 앨범 재킷";
+        elArt.classList.remove("is-photo");
+      } else if (wide.length) {
+        photo = wide[nightNo() % wide.length];
+        src = photo.img;
+        cap = t("sb.todayPhoto", "오늘의 사진") + (tr(photo, "caption") ? (" · " + tr(photo, "caption")) : "");
+        elArt.alt = cap || "인순이";
+        elArt.classList.add("is-photo");
+      }
+      if (!src) return;
+      elArt.src = src;
+      if (elBlur) elBlur.style.backgroundImage = 'url("' + src + '")';
+      if (elCap) elCap.textContent = cap;
+    }
+
+    function songLine(s) {
+      if (!s) return "";
+      var al = "";
+      if (s.alNo && s.alTitle) al = " · " + s.alNo + "집 《" + s.alTitle + "》";
+      else if (s.alTitle) al = " · 《" + s.alTitle + "》";
+      return "「" + s.t + "」" + al + (s.y ? (" · " + s.y) : "");
+    }
+
+    function showSong(s) {
+      song = s;
+      showArt(s);
+      if (elSong) elSong.textContent = songLine(s);
+      if (elWhy) {
+        elWhy.textContent = s && s.amb
+          ? t("sb.whyAmb", "이 곡은 여러 앨범에 실렸습니다. 처음 수록된 앨범을 적었습니다.")
+          : t("sb.whyDay", "오늘 이 방에 온 모두에게 같은 곡이 걸립니다.");
+      }
+      if (btnPlay) btnPlay.disabled = !(s && s.u);
+      say("");
+    }
+
+    function say(text, bad) {
+      if (!elState) return;
+      elState.textContent = text || "";
+      elState.className = "sb-play-state" + (bad ? " is-bad" : "");
+    }
+
+    /* 곡 고르기.
+       ① 인순이가 직접 골라 둔 밤이 있으면 그 곡
+       ② 없으면 날짜에서 뽑는다 — 다만 연표에 못박힌 대표곡(거위의 꿈·아버지·
+          친구여 같은)이 앞쪽에 오게 한다. 처음 온 사람이 이름도 못 들어 본
+          수록곡을 만나면 첫인상이 약하다. 뒤이어 나머지 곡이 돈다. */
+    var rotation = null;
+    function buildRotation(list) {
+      var playable = list.filter(function (s) { return s.u; });
+      var pool = playable.length ? playable : list;
+      var known = pool.filter(function (s) { return s.why === "연표" || s.why === "기념일"; });
+      var rest = pool.filter(function (s) { return !(s.why === "연표" || s.why === "기념일"); });
+      return known.concat(rest);
+    }
+    function pickSong(list) {
+      if (!list.length) return null;
+      if (!rotation) rotation = buildRotation(list);
+      return rotation[(nightNo() - 1) % rotation.length];
+    }
+
+    /* 인순이가 걸어 둔 밤이 있으면 그것이 이긴다. 파일이 없거나 비어도 정상. */
+    function chosenSong(list) {
+      return fetch("assets/data/nights.json")
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) {
+          var k = kstNow();
+          var ymd = k.getFullYear() + "-" +
+                    ("0" + (k.getMonth() + 1)).slice(-2) + "-" + ("0" + k.getDate()).slice(-2);
+          var hit = ((d && d.nights) || []).filter(function (n) { return n.d === ymd; })[0];
+          if (!hit) return null;
+          return list.filter(function (s) { return s.k === hit.k; })[0] || null;
+        })
+        .catch(function () { return null; });
+    }
+
+    /* ---- 30초 듣기 ---- */
+    function stopAudio() {
+      if (timer) { clearInterval(timer); timer = null; }
+      if (audio) {
+        /* 듣기를 멈출 때 남은 이벤트가 뒤늦게 울려 화면을 덮어쓴 적이 있다.
+           반드시 먼저 떼고 멈춘다. src를 ""로 바꾸지 않는다(유령 오류가 난다). */
+        audio.onended = null; audio.onerror = null; audio.ontimeupdate = null;
+        try { audio.pause(); } catch (e) {}
+        audio = null;
+      }
+      if (elBar) elBar.style.width = "0%";
+      sec.classList.remove("is-playing");
+      if (btnPlay) btnPlay.textContent = t("sb.play", "30초 들어보기");
+    }
+
+    function play() {
+      if (audio) { stopAudio(); say(""); return; }
+      if (!song || !song.u) { say(t("sb.noaudio", "이 곡은 지금 소리가 나지 않습니다."), true); return; }
+      audio = new Audio(song.u);
+      audio.preload = "auto";
+      sec.classList.add("is-playing");
+      if (btnPlay) btnPlay.textContent = t("sb.stop", "그만 듣기");
+      say(t("sb.playing", "노래가 흐르고 있습니다. 소리가 들리지 않으면 무음 스위치를 확인해 주세요."));
+      audio.onerror = function () {
+        stopAudio();
+        say(t("sb.failed", "이 곡은 지금 소리가 나지 않습니다. 다른 곡으로 바꿔 보세요."), true);
+      };
+      audio.onended = function () { stopAudio(); say(t("sb.ended", "여기까지가 30초입니다.")); };
+      audio.ontimeupdate = function () {
+        if (!elBar || !audio || !audio.duration) return;
+        elBar.style.width = Math.min(100, (audio.currentTime / audio.duration) * 100) + "%";
+      };
+      var p = audio.play();
+      if (p && p.catch) {
+        p.catch(function () {
+          stopAudio();
+          say(t("sb.blocked", "브라우저가 소리를 막았습니다. 버튼을 한 번 더 눌러 주세요."), true);
+        });
+      }
+    }
+
+    /* ---- 한 줄 남기기 ---- */
+    function note(text, kind) {
+      if (!msg) return;
+      msg.textContent = text || "";
+      msg.className = "sb-msg" + (kind ? " is-" + kind : "");
+    }
+
+    function showDone(token) {
+      if (!done) return;
+      done.hidden = false;
+      if (token) { try { localStorage.setItem(TOKKEY, token); } catch (e) {} }
+      if (btnCancel) btnCancel.hidden = !token;
+      if (btnCard) btnCard.hidden = false;
+    }
+
+    if (chips) {
+      /* 사실 주장이 없는 고정 문구. 누르면 입력칸에 들어가고 커서가 그 뒤에 선다.
+         대체가 아니라 시작이다 — 그대로 보내도 되고, 지우고 다시 써도 된다. */
+      var PRESETS = [
+        ["이 노래를 오래 좋아했습니다.", "I've loved this one for a long time."],
+        ["오늘 처음 들었습니다.", "I heard this for the first time today."],
+        ["다음 무대에서 듣고 싶어요.", "I'd love to hear this live."],
+        ["그냥 인사드리러 왔습니다.", "Just stopping by to say hello."]
+      ];
+      PRESETS.forEach(function (p) {
+        var b = el("button", "sb-chip", esc(en() ? p[1] : p[0]));
+        b.type = "button";
+        b.addEventListener("click", function () {
+          if (!input) return;
+          input.value = en() ? p[1] : p[0];
+          input.focus();
+          try { input.setSelectionRange(input.value.length, input.value.length); } catch (e) {}
+        });
+        chips.appendChild(b);
+      });
+    }
+
+    if (form) {
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var body = (input && input.value || "").trim();
+        if (body.length < 2) { note(t("sb.need", "한 줄만 적어 주세요."), "bad"); return; }
+        var be = BE();
+        if (!be) { note(t("sb.off", "지금은 글을 받을 수 없습니다. 잠시 뒤 다시 시도해 주세요."), "bad"); return; }
+        var btn = form.querySelector("button[type=submit]");
+        if (btn) btn.disabled = true;
+        note(t("sb.sending", "보내는 중…"));
+        be.submitNote({
+          songKey: song && song.k, songTitle: song && song.t, songYear: song && song.y,
+          name: (nameIn && nameIn.value || "").trim(), body: body
+        }).then(function (res) {
+          if (btn) btn.disabled = false;
+          if (res && res.ok) {
+            note("");
+            showDone(res.token);
+            if (input) input.value = "";
+          } else {
+            note(beWhy(res), "bad");
+          }
+        });
+      });
+    }
+
+    if (btnCancel) {
+      btnCancel.addEventListener("click", function () {
+        var be = BE(), tok = null;
+        try { tok = localStorage.getItem(TOKKEY); } catch (e) {}
+        if (!be || !tok) { note(t("sb.nocancel", "지울 글을 찾지 못했습니다."), "bad"); return; }
+        btnCancel.disabled = true;
+        be.cancelNote(tok).then(function (res) {
+          btnCancel.disabled = false;
+          if (res && res.ok) {
+            try { localStorage.removeItem(TOKKEY); } catch (e) {}
+            if (done) done.hidden = true;
+            note(t("sb.cancelled", "지웠습니다."), "ok");
+          } else if (res && res.reason === "already_published") {
+            /* 이미 올라간 뒤다. 지운 척하지 않는다. */
+            note(t("sb.tooLate", "이미 사랑방에 올라간 글입니다. 내리시려면 아래 공식 채널로 알려 주세요."), "bad");
+            btnCancel.hidden = true;
+          } else {
+            note(beWhy(res), "bad");
+          }
+        });
+      });
+    }
+
+    /* ---- 내 카드 저장 ----
+       자체 호스팅 사진만 그린다. 애플 재킷을 캔버스에 그리면
+       CORS로 오염되어 저장 자체가 실패한다. */
+    if (btnCard) {
+      btnCard.addEventListener("click", function () {
+        var body = (input && input.value || "").trim();
+        makeCard(body).then(function (blob) {
+          if (!blob) { note(t("sb.cardFail", "이미지를 만들지 못했습니다."), "bad"); return; }
+          var a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = "insooni-night" + nightNo() + ".png";
+          document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+        });
+      });
+    }
+
+    function makeCard(body) {
+      return new Promise(function (resolve) {
+        var W = 1080, H = 1350;
+        var c = document.createElement("canvas");
+        c.width = W; c.height = H;
+        var x = c.getContext("2d");
+        x.fillStyle = "#080808"; x.fillRect(0, 0, W, H);
+
+        function finish() {
+          x.fillStyle = "#F3EFE7";
+          x.textAlign = "center";
+          x.font = "500 34px 'Pretendard Variable', Pretendard, sans-serif";
+          x.fillText((en() ? "Night " : "제") + nightNo() + (en() ? "" : "밤"), W / 2, 940);
+          x.font = "600 46px 'Pretendard Variable', Pretendard, sans-serif";
+          x.fillText(song ? ("「" + song.t + "」") : "", W / 2, 1010);
+          if (song && song.y) {
+            x.fillStyle = "#b3a99c";
+            x.font = "400 30px 'Pretendard Variable', Pretendard, sans-serif";
+            x.fillText(song.y, W / 2, 1056);
+          }
+          if (body) {
+            x.fillStyle = "#F3EFE7";
+            x.font = "400 36px 'Pretendard Variable', Pretendard, sans-serif";
+            /* 두 줄까지만 — 넘치면 말줄임 */
+            var words = body.split(" "), line = "", lines = [];
+            words.forEach(function (w) {
+              var test = line ? line + " " + w : w;
+              if (x.measureText(test).width > W - 160 && line) { lines.push(line); line = w; }
+              else line = test;
+            });
+            if (line) lines.push(line);
+            lines.slice(0, 2).forEach(function (ln, i) {
+              var out = (i === 1 && lines.length > 2) ? ln + "…" : ln;
+              x.fillText(out, W / 2, 1140 + i * 50);
+            });
+          }
+          x.fillStyle = "#8b8175";
+          x.font = "400 24px 'Pretendard Variable', Pretendard, sans-serif";
+          x.fillText("INSOONI · 사랑방", W / 2, 1290);
+          c.toBlob(resolve, "image/png");
+        }
+
+        if (!photo) { finish(); return; }
+        var im = new Image();
+        im.onload = function () {
+          /* 위 880px을 사진으로 채운다 (잘리지 않게 비율 유지) */
+          var r = Math.max(W / im.width, 880 / im.height);
+          var w = im.width * r, h = im.height * r;
+          x.drawImage(im, (W - w) / 2, (880 - h) / 2, w, h);
+          var g = x.createLinearGradient(0, 600, 0, 900);
+          g.addColorStop(0, "rgba(8,8,8,0)"); g.addColorStop(1, "#080808");
+          x.fillStyle = g; x.fillRect(0, 600, W, 300);
+          finish();
+        };
+        im.onerror = function () { finish(); };
+        im.src = photo.img;
+      });
+    }
+
+    /* ---- 다른 곡으로 바꾸기 ---- */
+    if (btnOther) {
+      btnOther.addEventListener("click", function () {
+        var box = $("#sb-picker");
+        if (!box) return;
+        box.hidden = !box.hidden;
+        if (!box.hidden) {
+          renderPicker("");
+          var q = $("#sb-q"); if (q) q.focus();
+        }
+      });
+    }
+    function renderPicker(q) {
+      var list = $("#sb-picklist");
+      if (!list || !SONGS) return;
+      var qq = (q || "").trim().toLowerCase();
+      var hit = SONGS.filter(function (s) {
+        return !qq || s.t.toLowerCase().indexOf(qq) >= 0 || (s.y || "").indexOf(qq) >= 0;
+      }).slice(0, 40);
+      list.innerHTML = "";
+      hit.forEach(function (s) {
+        var b = el("button", "sb-pick", esc(s.t) + '<span class="sb-pick-y">' + esc(s.y || "") + "</span>");
+        b.type = "button";
+        b.addEventListener("click", function () {
+          stopAudio(); showSong(s);
+          var box = $("#sb-picker"); if (box) box.hidden = true;
+        });
+        list.appendChild(b);
+      });
+      if (!hit.length) list.innerHTML = '<p class="form-hint">' + esc(t("sb.nohit", "그런 제목의 곡을 찾지 못했습니다.")) + "</p>";
+    }
+    var qIn = $("#sb-q");
+    if (qIn) qIn.addEventListener("input", function () { renderPicker(qIn.value); });
+
+    if (btnPlay) btnPlay.addEventListener("click", play);
+    if (btnWrite) {
+      btnWrite.addEventListener("click", function () {
+        var f = $("#sb-write-box");
+        if (!f) return;
+        f.hidden = false;
+        f.scrollIntoView({ block: "center", behavior: "smooth" });
+        if (input) setTimeout(function () { try { input.focus(); } catch (e) {} }, 260);
+      });
+    }
+    document.addEventListener("visibilitychange", function () { if (document.hidden) stopAudio(); });
+
+    /* 받을 곳이 없으면 글을 달라고 하지 않는다 */
+    if (!BE()) {
+      if (btnWrite) btnWrite.hidden = true;
+      var wb = $("#sb-write-box"); if (wb) wb.hidden = true;
+      var offNote = $("#sb-offline"); if (offNote) offNote.hidden = false;
+    }
+
+    loadSongs().then(function (list) {
+      if (!list.length) {
+        if (elSong) elSong.textContent = t("sb.nosongs", "곡 목록을 불러오지 못했습니다.");
+        if (btnPlay) btnPlay.disabled = true;
+        return;
+      }
+      chosenSong(list).then(function (chosen) {
+        showSong(chosen || pickSong(list));
+        if (chosen && elWhy) elWhy.textContent = t("sb.whyHer", "인순이가 이 밤에 걸어 둔 노래입니다.");
+      });
+      /* 어제 남긴 글이 올라왔는지 조용히 확인한다 */
+      var be = BE(), tok = null;
+      try { tok = localStorage.getItem(TOKKEY); } catch (e) {}
+      if (be && tok) {
+        be.noteStatus(tok).then(function (res) {
+          if (!res || !res.ok) {
+            if (res && res.reason === "not_found") { try { localStorage.removeItem(TOKKEY); } catch (e) {} }
+            return;
+          }
+          if (res.status === "approved") {
+            var up = $("#sb-uplifted");
+            if (up) { up.hidden = false; }
+            try { localStorage.removeItem(TOKKEY); } catch (e) {}
+          } else if (res.status === "pending") {
+            showDone(tok);
+          }
+        });
+      }
+    });
+  }
+
+  /* ---------- 7.2 사랑방의 줄기 ----------
+     연혁 16 + 정규앨범 18 + 승인된 팬의 한 줄이 한 줄기에 선다.
+     팬이 0명이어도 34칸이 이미 서 있다 — 빈 화면이 나오지 않는 이유다. */
+  function initStream() {
+    var box = $("#sb-stream");
+    if (!box) return;
+    var list = $("#sb-rows"), more = $("#sb-more"), head = $("#sb-filled");
+    if (!list) return;
+
+    var PAGE = 12, shown = 0, rows = [];
+
+    function addRow(r) {
+      var li = el("li", "sb-row is-" + r.kind);
+      var art = r.art
+        ? '<span class="sb-row-art"><img src="' + esc(r.art) + '" alt="" loading="lazy" decoding="async"></span>'
+        : "";
+      li.innerHTML =
+        '<span class="sb-row-y">' + esc(r.y || "") + "</span>" +
+        art +
+        '<span class="sb-row-b">' +
+          '<span class="sb-row-t">' + esc(r.text) + "</span>" +
+          (r.sub ? '<span class="sb-row-s">' + esc(r.sub) + "</span>" : "") +
+        "</span>";
+      list.appendChild(li);
+    }
+
+    function draw() {
+      var next = rows.slice(shown, shown + PAGE);
+      next.forEach(addRow);
+      shown += next.length;
+      if (more) more.hidden = shown >= rows.length;
+    }
+
+    function build(notes) {
+      rows = [];
+      (D.timeline || []).forEach(function (r) {
+        rows.push({ y: r.year, kind: "life", text: tr(r, "event"), sub: tr(r, "note") || "" });
+      });
+      var titleByYear = {};
+      (D.albums || []).forEach(function (a) { if (a.year && a.title) titleByYear[a.year] = titleByYear[a.year] || a.title; });
+      (window.REG_ALBUMS || []).forEach(function (a) {
+        rows.push({
+          y: String(a.year), kind: "album", art: a.art || null,
+          /* '인순이 (17집)' 처럼 제목에 이미 집 번호가 든 경우가 있다.
+             아래 줄에서 '정규 17집'을 또 말하므로 괄호를 떼어 낸다. */
+          text: (titleByYear[a.year]
+                  ? ("《" + String(titleByYear[a.year]).replace(/\s*\(\s*\d+\s*집\s*\)\s*$/, "") + "》")
+                  : ("정규 " + a.no + "집")),
+          sub: (document.documentElement.getAttribute("lang") === "en"
+                 ? ("Studio album no." + a.no) : ("정규 " + a.no + "집"))
+        });
+      });
+      (notes || []).forEach(function (n) {
+        rows.push({
+          y: n.song_year || "", kind: "note", text: n.body,
+          sub: (n.name ? (n.name + " · ") : "") + (n.song_title ? ("「" + n.song_title + "」") : "")
+        });
+      });
+      /* 최근이 위로. 연도가 없는 줄(곡을 고르지 않은 글)은 맨 위에 둔다. */
+      rows.sort(function (a, b) { return (b.y || "9999").localeCompare(a.y || "9999"); });
+      list.innerHTML = ""; shown = 0;
+      draw();
+    }
+
+    function setFilled(n) {
+      if (!head) return;
+      var total = (SONGS && SONGS.length) || 103;
+      head.textContent = n
+        ? (document.documentElement.getAttribute("lang") === "en"
+            ? (n + " of " + total + " songs carry a memory.")
+            : (total + "곡 중 " + n + "곡에 기억이 붙었습니다."))
+        : t("sb.firstLine", "아직 아무 곡에도 기억이 붙지 않았습니다. 첫 줄을 기다립니다.");
+    }
+
+    if (more) more.addEventListener("click", draw);
+
+    build([]);
+    setFilled(0);
+
+    var be = BE();
+    if (be) {
+      be.listNotes().then(function (res) {
+        if (res && res.ok && res.rows && res.rows.length) build(res.rows);
+      });
+      be.notesFilled().then(function (res) {
+        if (res && res.ok && res.rows && res.rows.length) setFilled(res.rows[0].songs || 0);
+      });
+    }
+  }
+
   /* ---------- 7. 사랑방: 마음 전하기 ----------
      편지는 이 기기의 편지함에만 남는다. 서버가 없으니 그 이상은 할 수 없고,
      할 수 없는 일을 한 것처럼 말하지 않는다. 대신 실제로 닿는 공식 창구로 이어 준다.
-     지울 수 있어야 진짜 '내 편지함'이므로 삭제 버튼을 둔다. */
-  function initLetters() {
-    var form = $("#letter-form"), listBox = $("#letter-list");
-    if (!form) return;
-    var KEY = "insooni_letters";       /* 내가 쓴 글의 사본 (이 기기) */
-    var be = BE();
-
-    /* 제목·안내 문구를 상태에 맞게 바꾼다.
-       서버가 붙으면 '내 편지함'이 아니라 '도착한 편지들'이 된다. */
-    (function relabel() {
-      var h = $("#comm-myletters"), note = $("#comm-myletters-note");
-      var lead = $("#comm-letter-lead"), hint = $("#comm-letter-hint");
-      var keep = form.querySelector("[type=submit]");
-      if (be) {
-        if (h) h.textContent = t("comm.arrived", "도착한 편지들");
-        if (note) note.textContent = t("comm.arrivedNote", "운영진이 확인한 편지가 이곳에 게시됩니다.");
-        if (lead) lead.textContent = t("comm.letterLeadLive",
-          "여기 쓴 편지는 인순이에게 전해집니다. 운영진이 확인한 뒤 아래에 게시됩니다.");
-        if (hint) hint.textContent = t("form.lhintLive",
-          "보내신 편지는 검수를 거쳐 게시됩니다. 게시되지 않아도 마음은 그대로 전해집니다.");
-        if (keep) keep.textContent = t("form.lsend", "편지 보내기");
-      }
-    })();
-
-    /* ---- 목록 ---- */
-    function drawLocal() {
-      if (!listBox) return;
-      listBox.innerHTML = "";
-      var letters = store(KEY) || [];
-      if (!letters.length) {
-        listBox.appendChild(el("p", "empty-note",
-          t("dyn.emptyBox", "아직 간직한 편지가 없습니다. 첫 편지를 써 보세요.")));
-        return;
-      }
-      letters.forEach(function (L, i) {
-        listBox.appendChild(letterCard(L.name, L.body, L.date, i));
-      });
-    }
-
-    function drawRemote() {
-      if (!listBox) return;
-      listBox.innerHTML = "";
-      listBox.appendChild(el("p", "empty-note", t("dyn.loading", "불러오는 중…")));
-      be.listLetters().then(function (res) {
-        listBox.innerHTML = "";
-        if (!res.ok) {
-          listBox.appendChild(el("p", "empty-note",
-            t("dyn.loadFail", "편지를 불러오지 못했습니다. 잠시 뒤 새로고침해 주세요.")));
-          return;
-        }
-        if (!res.rows.length) {
-          listBox.appendChild(el("p", "empty-note",
-            t("dyn.noArrived", "아직 게시된 편지가 없습니다. 첫 편지의 주인공이 되어 주세요.")));
-          return;
-        }
-        res.rows.forEach(function (r) {
-          listBox.appendChild(letterCard(r.name, r.body, beDate(r.created_at), null));
-        });
-      });
-    }
-
-    /* 남이 쓴 글이 내 화면에 그려진다. 태그가 살아나지 않게 전부 esc()를 통과시킨다. */
-    function letterCard(name, body, date, delIndex) {
-      var p = el("article", "post");
-      p.innerHTML =
-        '<div class="post-head"><span class="avatar" aria-hidden="true">' + esc(firstChar(name)) + '</span>' +
-        '<span class="who">' + esc(name || t("dyn.anon", "익명 팬")) + '</span>' +
-        '<span class="when">' + esc(date || "") + "</span></div>" +
-        '<p class="post-body">' + esc(body) + "</p>" +
-        (delIndex === null ? "" :
-          '<div class="post-actions"><button type="button" data-del="' + delIndex + '">' +
-          t("dyn.delLetter", "지우기") + "</button></div>");
-      return p;
-    }
-
-    function draw() { if (be) drawRemote(); else drawLocal(); }
-
-    if (listBox) {
-      listBox.addEventListener("click", function (e) {
-        var b = e.target.closest("[data-del]");
-        if (!b) return;
-        var arr = store(KEY) || [];
-        arr.splice(+b.getAttribute("data-del"), 1);
-        store(KEY, arr);
-        draw();
-      });
-    }
-
-    var okTimer = null;
-    function say(msg) {
-      var okMsg = $("#letter-ok");
-      if (!okMsg) return;
-      okMsg.textContent = msg;
-      okMsg.hidden = false;
-      if (okTimer) clearTimeout(okTimer);
-      okTimer = setTimeout(function () { okMsg.hidden = true; }, 6000);
-    }
-
-    function compose() {
-      return {
-        name: $("#letter-name").value.trim(),
-        cat: $("#letter-cat") ? $("#letter-cat").value : "",
-        body: $("#letter-body").value.trim()
-      };
-    }
-
-    function keepLocal(c) {
-      var letters = store(KEY) || [];
-      var now = new Date();
-      letters.unshift({
-        name: c.name || t("dyn.anon", "익명 팬"), body: c.body,
-        date: now.getFullYear() + ". " + (now.getMonth() + 1) + ". " + now.getDate() + "."
-      });
-      store(KEY, letters);
-    }
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var btn = form.querySelector("[type=submit]");
-      if (btn && btn.disabled) return;
-      var c = compose();
-      if (!c.body) { $("#letter-body").focus(); return; }
-
-      if (!be) {
-        /* 서버가 없다. 있는 그대로 말한다. */
-        if (btn) { btn.disabled = true; setTimeout(function () { btn.disabled = false; }, 800); }
-        keepLocal(c);
-        form.reset();
-        say(t("dyn.kept", "이 기기의 편지함에 간직했습니다."));
-        draw();
-        return;
-      }
-
-      if (btn) { btn.disabled = true; btn.dataset.label = btn.textContent; btn.textContent = t("dyn.sending", "보내는 중…"); }
-      be.submitLetter({ name: c.name, category: c.cat, body: c.body }).then(function (res) {
-        if (btn) { btn.disabled = false; btn.textContent = btn.dataset.label || t("form.lsend", "편지 보내기"); }
-        if (res && res.ok) {
-          keepLocal(c);        /* 내가 무엇을 보냈는지 기억할 수 있게 사본을 남긴다 */
-          form.reset();
-          /* '보냈다'와 '게시됐다'는 다른 말이다. 정확히 구분해 말한다. */
-          say(t("dyn.sentPending", "편지를 보냈습니다. 운영진이 확인한 뒤 이곳에 게시됩니다."));
-        } else {
-          /* 실패했으면 글이라도 잃지 않게 이 기기에 임시 보관한다 */
-          keepLocal(c);
-          say(beWhy(res) + " " + t("dyn.savedDraft", "쓰신 글은 이 기기에 보관해 두었습니다."));
-        }
-      });
-    });
-
-    /* 복사해서 공식 채널에 그대로 붙여 넣을 수 있게 한다 */
-    var copyBtn = $("#letter-copy");
-    if (copyBtn) {
-      copyBtn.addEventListener("click", function () {
-        var c = compose();
-        if (!c.body) { $("#letter-body").focus(); return; }
-        var text = c.body + (c.name ? "\n\n— " + c.name : "");
-        function ok() { say(t("dyn.copied", "복사했습니다. 공식 채널에 붙여 넣어 주세요.")); }
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(text).then(ok, fallback);
-        } else { fallback(); }
-        function fallback() {
-          var ta = document.createElement("textarea");
-          ta.value = text; ta.setAttribute("readonly", "");
-          ta.style.position = "fixed"; ta.style.opacity = "0";
-          document.body.appendChild(ta); ta.select();
-          try { document.execCommand("copy"); ok(); }
-          catch (err) { say(t("dyn.copyFail", "복사가 안 되면 글을 직접 선택해 복사해 주세요.")); }
-          ta.remove();
-        }
-      });
-    }
-
-    draw();
-  }
 
   /* ---------- 8. 팬 게시판 ----------
      서버가 붙어 있을 때만 나타난다. 백엔드 없이 '모두의 게시판'은 만들 수 없고,
-     localStorage를 그렇게 보여 주면 팬을 속이는 일이 된다. */
-  function initBoard() {
-    var sec = $("#board-section"), form = $("#board-form"), listBox = $("#board-list");
-    if (!sec || !form) return;
-    var be = BE();
-    if (!be) return;                 /* 숨은 상태 그대로 둔다 */
-    sec.hidden = false;
-
-    function draw() {
-      if (!listBox) return;
-      listBox.innerHTML = "";
-      listBox.appendChild(el("p", "empty-note", t("dyn.loading", "불러오는 중…")));
-      be.listPosts().then(function (res) {
-        listBox.innerHTML = "";
-        if (!res.ok) {
-          listBox.appendChild(el("p", "empty-note",
-            t("dyn.loadFail", "글을 불러오지 못했습니다. 잠시 뒤 새로고침해 주세요.")));
-          return;
-        }
-        if (!res.rows.length) {
-          listBox.appendChild(el("p", "empty-note",
-            t("dyn.noPosts", "아직 게시된 글이 없습니다.")));
-          return;
-        }
-        res.rows.forEach(function (r) {
-          var a = el("article", "post");
-          /* 남이 쓴 글이다 — 반드시 esc()를 거친다 */
-          a.innerHTML =
-            '<div class="post-head"><span class="avatar" aria-hidden="true">' + esc(firstChar(r.name)) + "</span>" +
-            '<span class="who">' + esc(r.name || t("dyn.anon", "익명 팬")) + "</span>" +
-            '<span class="when">' + esc(beDate(r.created_at)) + "</span></div>" +
-            '<p class="post-body">' + esc(r.body) + "</p>";
-          listBox.appendChild(a);
-        });
-      });
-    }
-
-    var okT = null;
-    function say(msg) {
-      var n = $("#post-ok");
-      if (!n) return;
-      n.textContent = msg; n.hidden = false;
-      if (okT) clearTimeout(okT);
-      okT = setTimeout(function () { n.hidden = true; }, 6000);
-    }
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var btn = form.querySelector("[type=submit]");
-      if (btn && btn.disabled) return;
-      var name = $("#post-name").value.trim();
-      var body = $("#post-body").value.trim();
-      if (!body) { $("#post-body").focus(); return; }
-      if (btn) { btn.disabled = true; btn.dataset.label = btn.textContent; btn.textContent = t("dyn.sending", "보내는 중…"); }
-      be.submitPost({ name: name, body: body }).then(function (res) {
-        if (btn) { btn.disabled = false; btn.textContent = btn.dataset.label || t("form.psend", "글 올리기"); }
-        if (res && res.ok) {
-          form.reset();
-          say(t("dyn.postPending", "글을 올렸습니다. 운영진이 확인한 뒤 게시됩니다."));
-        } else {
-          say(beWhy(res));
-        }
-      });
-    });
-
-    draw();
-  }
 
   /* ---------- 8.5 소식지 구독 ----------
      받을 수단이 있을 때만 주소를 여쭙는다. 서버가 없으면 폼을 숨긴 채 둔다. */
@@ -1976,165 +2111,11 @@
     });
   }
 
-  /* ---------- 9. 사랑방: 투표 ---------- */
-  function initPoll() {
-    /* 신청곡: 258곡 전체에서 검색해 신청하고, 많이 신청된 순으로 보여준다 */
-    var input = $("#req-q");
-    if (!input) return;
-    var out = $("#req-results"), note = $("#req-note"), rank = $("#req-rank");
-    var KEY = "insooni_requests";
-    var CHO = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
-    function toCho(x) {
-      return String(x).replace(/[가-힣]/g, function (c) { return CHO[Math.floor((c.charCodeAt(0) - 0xac00) / 588)]; });
-    }
-    function nm(x) { return String(x).toLowerCase().replace(/[\s'"`·.,!?()\[\]/-]/g, ""); }
-
-    var songs = [];
-    (function build() {
-      var D2 = window.SITE_DATA || {}, seen = {};
-      function add(title, album, year) {
-        var base = String(title).replace(/\s*\((Inst\.|경음악|MR)\)$/, "").replace(/\s*\[[^\]]+\]$/, "");
-        var k = nm(base);
-        if (!k || seen[k]) return;
-        seen[k] = 1;
-        songs.push({ t: base, al: album, y: String(year || ""), c: toCho(base), n: k });
-      }
-      (window.REG_ALBUMS || []).forEach(function (a) {
-        var meta = null;
-        (D2.albums || []).forEach(function (x) {
-          var m = (x.kind || "").match(/정규\s*(\d+)집/);
-          var no = m ? +m[1] : (x.kind === "솔로 1집" ? 1 : ((x.kind === "정규" && x.year === "2009") ? 17 : null));
-          if (no === a.no) meta = x;
-        });
-        (a.tracks || []).forEach(function (t2) { add(t2, meta ? meta.title : a.no + "집", a.year); });
-      });
-      (D2.albums || []).forEach(function (a) {
-        if (a.tracks && a.tracks.length) a.tracks.forEach(function (t2) { add(t2, a.title, a.year); });
-        else add(a.title, a.title, a.year);
-      });
-    })();
-
-    var pbe = BE();
-    /* 서버가 붙으면 진짜 집계가 존재한다. 그때만 '가장 많이 신청된 노래'라고 부른다. */
-    if (pbe) {
-      var lt = $("#comm-mylist"), ln = $("#comm-mylist-note");
-      if (lt) lt.textContent = t("comm.tallyT", "지금 가장 많이 신청된 노래");
-      if (ln) ln.textContent = t("comm.tallyNote", "팬들의 신청이 함께 집계됩니다.");
-    }
-
-    function drawRank() {
-      if (!rank) return;
-      if (pbe) {
-        pbe.songTally().then(function (res) {
-          rank.innerHTML = "";
-          if (!res.ok) {
-            rank.appendChild(el("p", "empty-note",
-              t("dyn.loadFail", "불러오지 못했습니다. 잠시 뒤 새로고침해 주세요.")));
-            return;
-          }
-          if (!res.rows.length) {
-            rank.appendChild(el("p", "empty-note",
-              t("dyn.tallyNone", "아직 신청된 곡이 없습니다. 첫 신청을 남겨 주세요.")));
-            return;
-          }
-          var max = res.rows[0].n || 1;
-          var mine = store(KEY) || {};
-          res.rows.forEach(function (r, i) {
-            var row = el("div", "rk-row" + (mine[r.title] ? " is-mine" : ""));
-            row.innerHTML =
-              '<span class="rk-no">' + (i + 1) + "</span>" +
-              '<span class="rk-name"></span>' +
-              '<span class="rk-bar"><i style="width:' + Math.round(r.n / max * 100) + '%"></i></span>' +
-              '<span class="rk-n">' + (r.n | 0) + "</span>";
-            row.querySelector(".rk-name").textContent = r.title;
-            rank.appendChild(row);
-          });
-        });
-        return;
-      }
-      var mine2 = store(KEY) || {};
-      var list = Object.keys(mine2);
-      rank.innerHTML = "";
-      if (!list.length) {
-        rank.appendChild(el("p", "empty-note", t("dyn.reqEmpty", "아직 담은 노래가 없습니다.")));
-        return;
-      }
-      list.forEach(function (title, i) {
-        var row = el("div", "rk-row is-mine");
-        row.innerHTML =
-          '<span class="rk-no">' + (i + 1) + "</span>" +
-          '<span class="rk-name"></span>' +
-          '<button type="button" class="rk-x" data-drop="' + esc(title) + '">' +
-          t("dyn.reqDrop", "빼기") + "</button>";
-        row.querySelector(".rk-name").textContent = title;
-        rank.appendChild(row);
-      });
-    }
-    function request(title) {
-      var mine = store(KEY) || {};
-      if (mine[title]) {
-        note.textContent = t("dyn.reqDup", "이미 담은 곡입니다.");
-        return;
-      }
-      mine[title] = 1;
-      store(KEY, mine);
-      input.value = "";
-      out.innerHTML = "";
-      if (pbe) {
-        note.textContent = t("dyn.sending", "보내는 중…");
-        pbe.requestSong(title).then(function (res) {
-          if (res && res.ok) {
-            note.textContent = "\u2018" + title + "\u2019 " + t("dyn.reqSent", "신청했습니다.");
-          } else {
-            /* 서버에 못 갔으면 갔다고 하지 않는다. 내 목록에는 남아 있다. */
-            note.textContent = beWhy(res);
-          }
-          drawRank();
-        });
-        return;
-      }
-      note.textContent = "\u2018" + title + "\u2019 " + t("dyn.reqOk", "목록에 담았습니다.");
-      drawRank();
-    }
-    function search() {
-      var raw = input.value.trim();
-      out.innerHTML = "";
-      if (!raw) { note.textContent = ""; return; }
-      var isCho = /^[ㄱ-ㅎ\s]+$/.test(raw) && /[ㄱ-ㅎ]/.test(raw);
-      var q = isCho ? raw.replace(/\s/g, "") : nm(raw);
-      var hits = songs.filter(function (s2) {
-        return isCho ? s2.c.replace(/\s/g, "").indexOf(q) >= 0
-                     : (s2.n.indexOf(q) >= 0 || nm(s2.al).indexOf(q) >= 0);
-      }).slice(0, 8);
-      note.textContent = hits.length ? "" : t("dyn.reqNone", "찾는 곡이 없습니다. 제목 일부로 다시 찾아보세요.");
-      hits.forEach(function (s2) {
-        var b = el("button", "req-hit");
-        b.type = "button";
-        b.innerHTML = '<span class="rh-t"></span><span class="rh-m"></span><span class="rh-go">' + t("dyn.reqBtn", "담기") + "</span>";
-        b.querySelector(".rh-t").textContent = s2.t;
-        b.querySelector(".rh-m").textContent = [s2.al, s2.y].filter(Boolean).join(" · ");
-        b.addEventListener("click", function () { request(s2.t); });
-        out.appendChild(b);
-      });
-    }
-    input.addEventListener("input", search);
-    if (rank) {
-      rank.addEventListener("click", function (e) {
-        var b = e.target.closest("[data-drop]");
-        if (!b) return;
-        var mine = store(KEY) || {};
-        delete mine[b.getAttribute("data-drop")];
-        store(KEY, mine);
-        drawRank();
-      });
-    }
-    drawRank();
-  }
 
   /* ---------- 9.5 사랑방: 인순이의 편지 + 오늘의 문안 인사 ----------
      리서치 근거: 위버스 모먼트(편지 UI)·팬카페 출석 문화·버블의 짧은 답장 구조·토스 시니어 UT
      (타이핑 대신 선택, 라벨 있는 큰 버튼, 행동마다 명확한 완료 피드백) */
-  function initSarangbang() {
+  function initArtistLetter() {
     /* 인순이의 편지 */
     var alBody = $("#al-body");
     var alSec = $("#artist-letter");
@@ -2154,150 +2135,12 @@
         im.src = AL.signature;
       }
     }
-
-    /* 오늘의 문안 인사: 출석 도장 */
-    var stampBtn = $("#stamp-btn"), stampState = $("#stamp-state");
-    if (stampBtn) {
-      var SKEY = "insooni_stamp";
-      function today() {
-        var n = new Date();
-        return n.getFullYear() + "-" + (n.getMonth() + 1) + "-" + n.getDate();
-      }
-      function yesterday() {
-        var n = new Date(); n.setDate(n.getDate() - 1);
-        return n.getFullYear() + "-" + (n.getMonth() + 1) + "-" + n.getDate();
-      }
-      /* 꾸준함을 조용히 알아봐 준다 — 순위·점수 없이 따뜻한 인사만.
-         지긋한 팬층에 맞춰 경쟁이 아니라 '알아봐 드림'으로 다가간다. */
-      function milestone(streak) {
-        var en = document.documentElement.getAttribute("lang") === "en";
-        if (streak >= 100) return en ? "  A hundred days — thank you for being here." : "  백 일째예요. 곁에 계셔 주셔서 고맙습니다.";
-        if (streak >= 30) return en ? "  A whole month of visits. It means the world." : "  한 달 내내 찾아주셨네요. 큰 힘이 됩니다.";
-        if (streak >= 7) return en ? "  A week straight — we noticed." : "  일주일 내내 함께해 주셨어요.";
-        return "";
-      }
-      function drawStamp() {
-        var s = store(SKEY);
-        if (s && s.last === today()) {
-          stampBtn.disabled = true;
-          stampBtn.textContent = t("comm.stampDone", "오늘 문안 인사를 드렸습니다");
-          stampState.textContent = t("dyn.streakA", "연속 ") + s.streak + t("dyn.streakB", "일째 · 지금까지 ") + s.total + t("dyn.streakC", "번 다녀가셨어요") + milestone(s.streak);
-        } else {
-          stampBtn.disabled = false;
-          stampBtn.textContent = t("comm.stampBtn", "오늘 도장 찍기");
-          stampState.textContent = s ? t("dyn.stampBack", "다시 오셨네요. 도장 한 번이면 인사 완료!") : "";
-        }
-      }
-      stampBtn.addEventListener("click", function () {
-        var s = store(SKEY) || { last: "", streak: 0, total: 0 };
-        if (s.last === today()) return;
-        s.streak = (s.last === yesterday()) ? s.streak + 1 : 1;
-        s.total += 1; s.last = today();
-        store(SKEY, s);
-        drawStamp();
-      });
-      drawStamp();
-    }
-
-    /* 한 줄 응원: 선택형 문구 + 응원 벽 */
-    var chipsBox = $("#cheer-chips"), wall = $("#cheer-wall");
-    if (chipsBox && wall && D.cheerPresets) {
-      var CKEY = "insooni_cheers";
-      var isEN = document.documentElement.getAttribute("lang") === "en";
-      var presetEN = {};
-      D.cheerPresets.forEach(function (p) { if (p.en) presetEN[p.ko] = p.en; });
-      var cbe = BE();
-      /* 서버가 붙으면 '내가 남긴 응원'이 아니라 모두의 응원 벽이 된다.
-         제목도 함께 바꿔 준다 — 화면 문구와 실제 내용이 어긋나면 안 된다. */
-      if (cbe) {
-        var wt = $("#comm-cheerwall"), wn = $("#comm-cheernote");
-        if (wt) wt.textContent = t("comm.cheerWallLive", "오늘의 응원");
-        if (wn) wn.textContent = t("comm.cheerNoteLive", "팬들이 남긴 응원이 함께 쌓입니다.");
-      }
-
-      function row(text, who, date) {
-        var r = el("div", "cheer-item");
-        var shown = isEN && presetEN[text] ? presetEN[text] : text;
-        r.innerHTML = "<span>" + esc(shown) + '</span><span class="cw-who">' +
-          esc(who || t("dyn.anon", "익명 팬")) + " · " + esc(date || "") + "</span>";
-        return r;
-      }
-
-      function drawWall() {
-        wall.innerHTML = "";
-        if (cbe) {
-          cbe.listCheers().then(function (res) {
-            wall.innerHTML = "";
-            if (!res.ok) {
-              wall.appendChild(el("p", "empty-note",
-                t("dyn.loadFail", "불러오지 못했습니다. 잠시 뒤 새로고침해 주세요.")));
-              return;
-            }
-            if (!res.rows.length) {
-              wall.appendChild(el("p", "empty-note",
-                t("dyn.cheerNone", "아직 오늘의 응원이 없습니다. 첫 한 줄을 남겨 주세요.")));
-              return;
-            }
-            res.rows.slice(0, 7).forEach(function (c) {
-              wall.appendChild(row(c.text, c.name, beDate(c.created_at)));
-            });
-          });
-          return;
-        }
-        var mine = store(CKEY) || [];
-        if (!mine.length) {
-          wall.appendChild(el("p", "empty-note", t("dyn.cheerEmpty", "아직 남긴 응원이 없습니다. 위에서 한 줄 골라 보세요.")));
-          return;
-        }
-        mine.slice(0, 7).forEach(function (c) { wall.appendChild(row(c.text, c.name, c.date)); });
-      }
-      D.cheerPresets.forEach(function (p) {
-        var b = el("button", "", isEN && p.en ? p.en : p.ko);
-        b.type = "button";
-        b.addEventListener("click", function () {
-          var txt = isEN && p.en ? p.en : p.ko;
-          var prev = b.textContent;
-          function flash(msg) {
-            b.disabled = true; b.textContent = msg;
-            setTimeout(function () { b.disabled = false; b.textContent = prev; }, 1800);
-          }
-          if (cbe) {
-            b.disabled = true; b.textContent = t("dyn.sending", "보내는 중…");
-            cbe.submitCheer({ name: null, text: txt }).then(function (res) {
-              if (res && res.ok) { flash(t("dyn.cheerOk", "남겨졌습니다!")); drawWall(); }
-              else { flash(t("dyn.cheerFail", "보내지 못했어요")); }
-            });
-            return;
-          }
-          var mine = store(CKEY) || [];
-          var n = new Date();
-          mine.unshift({ name: t("dyn.anon", "익명 팬"), text: txt,
-            date: n.getFullYear() + ". " + (n.getMonth() + 1) + ". " + n.getDate() + "." });
-          store(CKEY, mine.slice(0, 20));
-          drawWall();
-          flash(t("dyn.cheerOk", "남겨졌습니다!"));
-        });
-        chipsBox.appendChild(b);
-      });
-      drawWall();
-    }
   }
 
   /* ---------- 9.4 사랑방: 팬 번호증 ----------
      방문자를 '사랑방의 한 사람'으로 맞이하는 소장용 카드. 이름·번호·가입일이
      이 기기에만 저장되고, 다시 오면 이름으로 반긴다. 실제 회원 DB가 아니라
 
-  /* ---------- 9.8 인순이가 답합니다: 질문 보내기 → 팬레터 폼 '질문' 분류 선택 ---------- */
-  function initQna() {
-    var ask = $("#qna-ask");
-    if (!ask) return;
-    ask.addEventListener("click", function () {
-      var sel = $("#letter-cat");
-      if (sel) sel.value = "질문";
-      var body = $("#letter-body");
-      if (body) setTimeout(function () { body.focus(); }, 400);
-    });
-  }
 
   /* ---------- 9.9 스크롤 리빌 (시네마틱 등장) ---------- */
   function initRise() {
@@ -2319,36 +2162,6 @@
      실제로 구독이 되는 곳(공식 유튜브·인스타그램)으로 바로 보낸다. */
 
 
-  /* ---------- 11. 관리자 대시보드 (데모) ---------- */
-  function initAdmin() {
-    if (!$("#admin-root")) return;
-    var letters = (store("insooni_letters") || []).length;
-    var posts = (store("insooni_posts") || []).length;
-    var elLetters = $("#stat-letters"), elPosts = $("#stat-posts");
-    if (elLetters) elLetters.textContent = String(1284 + letters);
-    if (elPosts) elPosts.textContent = String(3492 + posts);
-    function decPending() {
-      var b = $("#pending-badge");
-      if (!b) return;
-      var n = Math.max(0, (parseInt(b.textContent, 10) || 0) - 1);
-      b.textContent = n + "건";
-      if (n === 0) { b.className = "badge badge--ok"; b.textContent = "완료"; }
-    }
-    function resolveRow(btn, cls, rowLabel, doneLabel) {
-      var row = btn.closest("tr");
-      row.querySelector(".badge").outerHTML = '<span class="badge ' + cls + '">' + rowLabel + "</span>";
-      var td = btn.closest("td");
-      td.innerHTML = '<span class="badge ' + cls + '" tabindex="-1">' + doneLabel + "</span>";
-      td.firstChild.focus();
-      decPending();
-    }
-    $all("[data-approve]").forEach(function (btn) {
-      btn.addEventListener("click", function () { resolveRow(btn, "badge--ok", "게시 승인", "처리 완료"); });
-    });
-    $all("[data-reject]").forEach(function (btn) {
-      btn.addEventListener("click", function () { resolveRow(btn, "badge--danger", "숨김 처리", "처리 완료"); });
-    });
-  }
 
   /* ---------- 언어 전환 (한/영) ----------
      번역은 문서마다 한 번이 아니라 **화면이 바뀔 때마다** 다시 걸어야 한다.
@@ -2769,9 +2582,8 @@
   function pageInit() {
     [renderEventList, initStrip, initVhero, renderArchive, renderPastRecaps,
      initFreshVideos, initVideoButtons, initReveal, renderNewsPage, renderCalendar,
-     renderTimeline, renderAnniversary, renderDiscography, initFlight, initKnowIt, initLetters, initBoard, initSubscribe,
-     initPoll, initSarangbang, initQna, initRise,
-     initAdmin].forEach(safe);
+     renderTimeline, renderAnniversary, renderDiscography, initToday, initStream, initFlight, initSubscribe,
+     initArtistLetter, initRise].forEach(safe);
     /* 마지막에 번역을 건다 — 위 렌더러들이 만들어 낸 요소까지 함께 잡기 위해서.
        라우터로 페이지를 옮겨도 새 <main>이 영어로 칠해진다. */
     applyLang(curLang());
