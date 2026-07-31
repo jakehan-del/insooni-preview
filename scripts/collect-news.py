@@ -79,6 +79,148 @@ def clean_title(raw):
     return re.sub(r"\s*[-–]\s*[^-–]{1,20}$", "", raw).strip()
 
 
+# ============================================================
+# 같은 사건의 기사 묶기 — AI 없이
+#
+# 한 사건을 네댓 곳이 각자의 제목으로 쓴다. 제목 글자가 겹치지 않아
+# 통짜 비교로는 절대 안 묶인다. 실제로 16건 중 절반이 중복이었다.
+#
+#   경수진 시구→인순이 애국가 '특집 불꽃야구 생중계' 고척돔 달군다
+#   경수진 시구·인순이 애국가…'불꽃야구' 동국대전 출격
+#   ‘불꽃야구’ 동국대전, 경수진 시구·인순이 애국가 출격
+#
+# 낱말 단위로 쪼개고 조사를 떼면 '경수진·시구·애국가·불꽃야구'가 공통으로 남는다.
+# 날짜가 가깝고 이런 '드문 낱말'을 함께 쓰면 같은 사건이다.
+#
+# 못 묶는 것보다 **엉뚱하게 묶는 쪽이 훨씬 나쁘다** — 서로 다른 소식이
+# 하나로 뭉개지면 소식이 사라진다. 그래서 문턱을 보수적으로 잡았다.
+# ============================================================
+
+# 어느 기사에나 나오는 말은 구별에 쓸 수 없다
+_STOP_BASE = """인순이 가수 공연 무대 콘서트 출격 개최 열린 열려 함께 이번 지난 오는 내달
+                올해 그리고 위해 대한 통해 기념 행사 소식 화제 눈길 모습 현장 사진 포토
+                오늘 내일 어제 관련 대해 라며 라고 밝혀 전해""".split()
+_PARTICLES = ("에서", "으로", "이랑", "에게", "까지", "부터", "이나", "라며", "라고",
+              "은", "는", "이", "가", "을", "를", "에", "의", "도", "와", "과", "로", "만")
+
+
+def _strip_particle(w):
+    for p in _PARTICLES:                        # 조사가 붙어 있으면 같은 낱말이 달라 보인다
+        if len(w) > len(p) + 1 and w.endswith(p):
+            return w[: -len(p)]
+    return w
+
+
+# 불용어도 조사를 떼면 다른 낱말이 된다. '인순이' → '인순'.
+# 이걸 빼먹으면 **모든 기사가 '인순'이라는 낱말 하나를 공유**하게 되어
+# 제목이 짧을수록 서로 다른 소식이 엉뚱하게 묶인다. 실제로 그랬다.
+_STOP = set(_STOP_BASE) | {_strip_particle(w) for w in _STOP_BASE}
+
+
+def story_tokens(title):
+    """제목에서 사건을 구별할 만한 낱말만 뽑는다."""
+    out = set()
+    for w in re.split(r"[^가-힣A-Za-z0-9]+", title or ""):
+        if len(w) < 2 or w in _STOP:
+            continue
+        w = _strip_particle(w)
+        if len(w) >= 2 and w not in _STOP:
+            out.add(w)
+    return out
+
+
+def _day_gap(a, b):
+    try:
+        f = "%Y-%m-%d"
+        return abs((datetime.strptime(a, f) - datetime.strptime(b, f)).days)
+    except Exception:
+        return 999                              # 날짜를 못 읽으면 다른 사건으로 둔다
+
+
+def cluster_stories(items):
+    """같은 사건끼리 묶는다. items 의 인덱스 묶음 목록을 돌려준다."""
+    n = len(items)
+    if n < 2:
+        return [[i] for i in range(n)]
+
+    toks = [story_tokens(it.get("title")) for it in items]
+    rare = {}
+    for t in toks:
+        for w in t:
+            rare[w] = rare.get(w, 0) + 1
+
+    parent = list(range(n))
+
+    def find(i):
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+
+    def union(i, j):
+        a, b = find(i), find(j)
+        if a != b:
+            parent[max(a, b)] = min(a, b)
+
+    for i in range(n):
+        for j in range(i + 1, n):
+            if _day_gap(items[i].get("date", ""), items[j].get("date", "")) > 2:
+                continue
+            ta, tb = toks[i], toks[j]
+            shared = ta & tb
+            if not shared:
+                continue
+            jac = len(shared) / float(len(ta | tb))
+            # 후보 전체에서 드문 낱말(=그 사건에만 나오는 고유명사)을 둘 이상 공유하면 확실하다
+            rare_shared = sum(1 for w in shared if rare.get(w, 0) <= 4)
+            # 낱말 하나만 겹칠 때는 비율이 아무리 높아도 묶지 않는다.
+            # 짧은 제목 둘이 우연히 한 낱말을 공유하면 비율이 1.0이 되어 버린다.
+            if (jac >= 0.34 and len(shared) >= 2) or rare_shared >= 2:
+                union(i, j)
+
+    groups = {}
+    for i in range(n):
+        groups.setdefault(find(i), []).append(i)
+    return list(groups.values())
+
+
+_PHOTO = re.compile(r"^\s*[\[\(【]?\s*(포토|사진|영상|photo)\s*[\]\)】]", re.I)
+_CAPTION = re.compile(r"(는|은)\s*(가수\s*)?인순이\s*$")
+
+
+def is_caption(title):
+    """'[포토] 애국가 부르는 가수 인순이' 같은 사진 설명인가."""
+    t = title or ""
+    return bool(_PHOTO.search(t) or _CAPTION.search(t))
+
+
+def _caption_grade(title):
+    """0 = [포토] 표시가 붙은 것, 1 = 표시는 없지만 캡션 어투, 2 = 보통 기사."""
+    t = title or ""
+    if _PHOTO.search(t):
+        return 0
+    if _CAPTION.search(t):
+        return 1
+    return 2
+
+
+def pick_lead(items, idxs):
+    """묶음의 대표 — 사진 캡션이 아닌 것 중 정보가 가장 많은 제목.
+
+    묶음이 전부 캡션이면 그중 가장 나은 것을 남긴다. 실제로 있었던 일이므로
+    통째로 지우면 소식 하나가 사라진다. 다만 '[포토]' 표시가 붙은 것은
+    같은 캡션끼리라도 가장 나중에 고른다 — 글자 수만 보면 표시가 붙은 쪽이
+    길어서 오히려 대표가 되어 버린다."""
+    if not idxs:
+        return None
+
+    def rank(i):
+        t = items[i].get("title", "")
+        return (_caption_grade(t), len(story_tokens(t)), len(t))
+
+    return max(idxs, key=rank)
+
+
 def main():
     now = datetime.now(timezone.utc)
     cutoff = now - timedelta(days=90)
@@ -147,12 +289,27 @@ def main():
 
     ranked = sorted(by_key.values(), key=lambda x: (-score(x), -x["_when"].timestamp()))
 
-    # ── AI 큐레이션 ──────────────────────────────────────────
-    # 규칙으로는 같은 사건의 기사 네댓 건을 묶지 못한다. 제목 글자가 겹치지 않기
-    # 때문이다. 실제로 16건 중 절반이 같은 이야기의 중복이었다.
-    # AI는 묶고·버리고·분류만 한다. 문장은 쓰지 않는다.
-    # 키가 없거나 실패하면 아래 규칙 기반 결과가 그대로 쓰인다.
-    candidates = ranked[:40]
+    # ── ① 같은 사건 묶기 (규칙, 언제나 실행) ──────────────────
+    # 키가 없어도 여기까지는 된다. 실측: 16건 → 10건, 사람이 매긴 정답과 일치.
+    pool = ranked[:40]
+    groups = cluster_stories(pool)
+    merged = []
+    for g in sorted(groups, key=min):
+        lead = pick_lead(pool, g)
+        it = pool[lead]
+        if len(g) > 1:
+            it["also"] = len(g) - 1          # 몇 곳이 함께 보도했는지는 사실이다
+        merged.append(it)
+    merged.sort(key=lambda x: (-score(x), -x["_when"].timestamp()))
+    if len(merged) < len(pool):
+        print("  같은 사건 묶기: %d건 → %d건" % (len(pool), len(merged)))
+
+    # ── ② AI 큐레이션 (키가 있을 때만) ────────────────────────
+    # 규칙이 못 하는 판단을 맡는다 — 인순이가 주인공인 기사인지,
+    # 공식 사이트에 올려도 좋은 소식인지. 묶기는 위에서 이미 끝났다.
+    # AI는 고르고 분류만 한다. 문장은 쓰지 않는다.
+    # 키가 없거나 실패하면 ①의 결과가 그대로 쓰인다.
+    candidates = merged
     for x in candidates:
         x["_ts"] = x["_when"].timestamp()
     curated = None
@@ -172,7 +329,7 @@ def main():
         items = [x for x in items if x["_when"]]
         mode = "AI 큐레이션"
     else:
-        items = ranked[:16]
+        items = merged[:16]
         mode = "규칙 기반"
 
     items.sort(key=lambda x: x["_when"], reverse=True)   # 화면에는 최신순으로
