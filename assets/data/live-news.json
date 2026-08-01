@@ -1,6 +1,112 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-08-01 22:19",
- "items": []
+ "updated": "2026-08-02 01:59",
+ "items": [
+  {
+   "date": "2026-07-28",
+   "title": "한강 X 문초희, '이제는', 고음과 안무에도 빛난 듀엣 호흡! 인순이 X 서지오 심사평은? [인생은 오디션]",
+   "source": "sbs.co.kr",
+   "sourceSite": "https://programs.sbs.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFAxUHNaU29ORTRFc1VEUVBxQ0Vid2xTY0stTDZFbXVvWUZrUGNOZWxfRlZzcENhU1U4eGxSdFpkc1JCVU50OW9MUUZXdVZodkp5UGROeGpJT1N2YzZMVzZYeHo4Q0U1elpIbXJZQ2VwNXpIeGcxb1Z3?oc=5",
+   "type": "방송",
+   "auto": true,
+   "also": 3
+  },
+  {
+   "date": "2026-07-27",
+   "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1GX3hoUzdOcG1SMngyNXBGVmF4YUlMTmdMZkJyZXV4a3RXRHpwVnlFT3NfWHMxTzhmWHFlRTF4MHV0ODNjTFNVRG9KWEtxWlE?oc=5",
+   "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-07-24",
+   "title": "경수진 시구→인순이 애국가 '특집 불꽃야구 생중계' 고척돔 달군다",
+   "source": "네이트",
+   "sourceSite": "https://news.nate.com",
+   "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1tV0FhNmZMendjUkhqd1VCeGFXNWJzYVJzdXpiaFM2aWNOdk5yMC1FLVVvVm92SVFHRUdEQUNTYVdaSkdWX2NlNTJSenpEV1ZjU3A0?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 4
+  },
+  {
+   "date": "2026-06-30",
+   "title": "미국 독립기념일 행사에서 애국가 부르는 인순이",
+   "source": "연합뉴스 한민족센터",
+   "sourceSite": "https://www.koreancenter.or.kr",
+   "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1lUFFLT19OWU14SWNZbmNUUVBkUkxJaXp4ekRnWHpjRlFHNkpoMnBqRGZkY3RtODNldmZUenNLVms3Wm1mRm12d2dmRzJpaGhId2V6OF9uSDR2TWhEOHc2cDZFOTFnRkdSODJTcXJYQXhudGNZ?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 2
+  },
+  {
+   "date": "2026-06-23",
+   "title": "'11회 청주시 시민의 날 기념행사' 내달 1일 개최…염유리·인순이 공연",
+   "source": "네이트",
+   "sourceSite": "https://news.nate.com",
+   "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBDVFB1djFpS0ZCRWZOZmVicDJyYjg0UEEwWWNqV2VCMGFZa1BIQ05DM0tUQm5sWl8zQS1VRWtMZ1dJb2I3Rjk4TDZHLXB0ZXZId0xj?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 1
+  },
+  {
+   "date": "2026-06-17",
+   "title": "\"왜 이렇게 눈물이 날까요\" 인순이가 완성한 축제의 대미",
+   "source": "오마이스타",
+   "sourceSite": "https://star.ohmynews.com",
+   "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTFBLMEJuXy1BejFxbDJZYmQ3X3ljWE9jamdaU2tlSlhRem5CMXJGLXNlRDA2S0p4UmI0dkh5Wmdqb1N5VWdGd000NldvamFxWERpZk9FMXdpOWxGTExlN1htR2tZVTVVU2ViQ2hjZUpXYjRFS01ZdlRUdHRRR1lyQQ?oc=5",
+   "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-06-11",
+   "title": "뉴욕 브랜드 '노아' 가수 인순이 만났다… 다양성·공존 담은 화보 선봬",
+   "source": "패션비즈",
+   "sourceSite": "https://fashionbiz.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5tV2hkSzFRelFoWEY3OHhKaWd1Z0N0MUh2M0V1VThxcDJKWUNZZ3pPM3BlUU5UU1oxV01VUGp0NEpvNk1UeDFPdVlPMGhNaHU1?oc=5",
+   "type": "보도",
+   "auto": true
+  },
+  {
+   "date": "2026-06-05",
+   "title": "K채널 / 김태우·인순이, '2026 봉황대 뮤직스퀘어' 오프닝 무대 성황",
+   "source": "K채널",
+   "sourceSite": "https://www.kchannel.kr",
+   "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE8zbkRNWlBGMzN1QWV4aGZ6N0puSFZzNlo1MERPTDBFVWxDZjBPZktod0dEcUtUQXFOc2FfRUxEQzBVb2FKSGxxWHNkel94OWFRa2RXVXV6UFJzek5CRXVwMlVHRWVYYkt6ekE?oc=5",
+   "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-05-21",
+   "title": "경주 고분 콘서트 '봉황대 뮤직스퀘어' 내달 5일 개막…인순이·김태우 등",
+   "source": "뉴시스",
+   "sourceSite": "https://www.newsis.com",
+   "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE1JbG9NZElJeVhQOEJURTZrT0ZzT3Z1NFRNeEowdEJFcDE5Y3hGYndJR3RvVnpudzRGVVpJRjdSYWhZNkdvbE1xaVVkM2FaMlFzRzBzV0FEdzZ5Z2xaYmJxQdIBeEFVX3lxTE5Kek82MVdOdUljaEpOYXZjdHNzR25kbkhRRVlacms0aWw5MXphM0FLMXJzUHFCVjhiZDJkWVdfc2pSSW9TUnU2d2J5VmxGMmp1bE41Tk5YZVctMnN5NUhSZE5aaU1mN1RBbEhfbFdDZVRidnBTd3EyWQ?oc=5",
+   "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-05-12",
+   "title": "인순이·더 발룬티어스·신인류·서스턴 무어…‘DMZ 피스트레인’, 최종 라인업 공개",
+   "source": "싱글리스트",
+   "sourceSite": "https://www.slist.kr",
+   "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE43cGYzUlpRSmdMN3ZWTy1Wems0cGdMVDY4b3FiWkZqVmlGcFZWQk85d1RkZGJtd1N5TWEyYmIwQlBSd1VBV3d2eXF3b0pmUkI3NnQwOGFsaWFVR25SOTAyUXY2OWdKZw?oc=5",
+   "type": "보도",
+   "auto": true,
+   "also": 1
+  },
+  {
+   "date": "2026-05-04",
+   "title": "안동문화예술의전당 어버이날 특별기획 가수 인순이 & 명창 유지숙 '두 사랑 이야기'",
+   "source": "신경북뉴스",
+   "sourceSite": "https://skbnews.kr",
+   "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBvSEMyamIzT19ScmJLbmctVDdnTFdvVE9iZnVLYXBkUEdlcXNDclRZY3Z1bGZKbExCXzdwbVpZT0U2c2VvdlpTQ2dna05aVGhMUTRLakxaZTk?oc=5",
+   "type": "보도",
+   "auto": true,
+   "also": 1
+  }
+ ]
 }
