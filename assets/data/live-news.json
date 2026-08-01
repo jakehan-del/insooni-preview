@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-08-02 01:59",
+ "updated": "2026-08-02 05:52",
  "items": [
   {
    "date": "2026-07-28",
@@ -18,7 +18,7 @@
    "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
    "source": "v.daum.net",
    "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1GX3hoUzdOcG1SMngyNXBGVmF4YUlMTmdMZkJyZXV4a3RXRHpwVnlFT3NfWHMxTzhmWHFlRTF4MHV0ODNjTFNVRG9KWEtxWlE?oc=5",
+   "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE52cFRPVGYyaTNTdl8xRlFaRUdicmFpOWo5aW03WUhjcHYxekVGckRYbTNnSk1hTTJkS01iRURPOVpuRlFzcnc?oc=5",
    "type": "공연",
    "auto": true
   },
@@ -30,7 +30,7 @@
    "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1tV0FhNmZMendjUkhqd1VCeGFXNWJzYVJzdXpiaFM2aWNOdk5yMC1FLVVvVm92SVFHRUdEQUNTYVdaSkdWX2NlNTJSenpEV1ZjU3A0?oc=5",
    "type": "공연",
    "auto": true,
-   "also": 4
+   "also": 3
   },
   {
    "date": "2026-06-30",
@@ -45,9 +45,9 @@
   {
    "date": "2026-06-23",
    "title": "'11회 청주시 시민의 날 기념행사' 내달 1일 개최…염유리·인순이 공연",
-   "source": "네이트",
-   "sourceSite": "https://news.nate.com",
-   "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBDVFB1djFpS0ZCRWZOZmVicDJyYjg0UEEwWWNqV2VCMGFZa1BIQ05DM0tUQm5sWl8zQS1VRWtMZ1dJb2I3Rjk4TDZHLXB0ZXZId0xj?oc=5",
+   "source": "뉴스1",
+   "sourceSite": "https://www.news1.kr",
+   "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5pWndrbExpeXFyTENrOFYwWE9neTZPbnFtZWRPelZGLVZWSzlQczU4a2xBLXpaSHNDdUVNZlVOVUpKd3JmVkpLblhtSWJsbXc1dWVvU2hyTVppdnpDeVNn?oc=5",
    "type": "공연",
    "auto": true,
    "also": 1
