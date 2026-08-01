@@ -2867,7 +2867,14 @@ body.nav-open { overflow: hidden; touch-action: none; }
   margin-top: 1.4rem; padding: 1.1rem 1.2rem;
   border: 1px solid var(--line-strong); background: var(--surface-1);
 }
-.sb-done p { margin: 0 0 1rem; font-size: .95rem; line-height: 1.6; color: var(--ivory); }
+.sb-done p { margin: 0 0 .6rem; font-size: .95rem; line-height: 1.6; color: var(--ivory); }
+/* 확인번호와 다음 발행일 — 끝을 알 수 있게 */
+.sb-done-meta {
+  font-family: var(--font-mono); font-size: .78rem; letter-spacing: .06em;
+  color: var(--faint); margin-bottom: 1rem !important;
+}
+/* 검수가 밀렸을 때만 나타난다. 밀리지 않으면 이 줄은 없다. */
+.sb-lag { margin: .9rem 0 0; font-size: .88rem; color: var(--muted); }
 .sb-done-acts { display: flex; flex-wrap: wrap; gap: .6rem; }
 
 /* ── 줄기 ── */
@@ -2892,6 +2899,9 @@ body.nav-open { overflow: hidden; touch-action: none; }
 /* 연혁·앨범은 기록, 팬의 줄은 목소리 — 같은 줄기에 서되 결이 다르다 */
 .sb-row.is-note .sb-row-t { color: var(--muted); }
 .sb-row.is-note .sb-row-y { color: var(--ivory); }
+/* 방금 올린 내 줄 — 잠깐 밝게. 남에게는 보이지 않는 표시다. */
+.sb-row.is-mine { border-left: 2px solid var(--ivory); padding-left: .9rem; }
+.sb-row.is-mine .sb-row-t { color: var(--ivory); }
 .sb-more-wrap { margin-top: 1.6rem; }
 
 /* ── 나가는 문 ── */

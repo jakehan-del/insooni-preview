@@ -1590,6 +1590,13 @@
     var song = null, photo = null;
     var audio = null, timer = null;
     var TOKKEY = "insooni_note_token";
+    var nextIssueOn = "";          /* 다음 소식이 나가는 날 (서버 실측) */
+
+    /* 칩으로 바로 오른 줄은 그 자리에서 줄기에 반영한다.
+       새로고침해야 보이면 '올랐다'는 말이 반쯤 거짓이 된다. */
+    function refreshStream(mine) {
+      if (window.INSOONI_STREAM_RELOAD) window.INSOONI_STREAM_RELOAD(mine);
+    }
 
     if (elNight) {
       elNight.textContent = (en() ? ("Night " + nightNo() + " · ") : ("제" + nightNo() + "밤 · ")) + kstLabel();
@@ -1734,23 +1741,56 @@
       msg.className = "sb-msg" + (kind ? " is-" + kind : "");
     }
 
-    function showDone(token) {
+    /* 확인번호 — 토큰 앞 6자리. 접수증·상태조회·카드에 같은 번호가 찍힌다.
+       "내 글이 어디쯤 있나"를 물을 때 이 번호로 특정한다. */
+    var myCode = "";
+    function codeOf(token) { return String(token || "").replace(/-/g, "").slice(0, 6).toUpperCase(); }
+
+    function showDone(token, instant) {
       if (!done) return;
       done.hidden = false;
+      myCode = codeOf(token);
       if (token) { try { localStorage.setItem(TOKKEY, token); } catch (e) {} }
-      if (btnCancel) btnCancel.hidden = !token;
+
+      var head = $("#sb-done-head"), meta = $("#sb-done-meta");
+      if (instant) {
+        /* 사이트가 제시한 문구라 검수 없이 바로 올랐다. 그 사실을 그대로 말한다. */
+        if (head) head.innerHTML = "<strong>" + esc(t("sb.upNow", "사랑방에 올랐습니다.")) + "</strong> " +
+          esc(t("sb.upNowWhy", "사랑방이 드리는 문구라 바로 올라갑니다. 아래 줄기에서 보실 수 있어요."));
+        if (btnCancel) btnCancel.hidden = true;
+      } else {
+        if (head) head.innerHTML = "<strong>" + esc(t("sb.gotIt", "남겨졌습니다.")) + "</strong> " +
+          esc(t("sb.gotItWhy", "사람이 읽고 올립니다 — 며칠 걸릴 수 있어요. 아직 공개 전입니다."));
+        if (btnCancel) btnCancel.hidden = !token;
+      }
+      if (meta) {
+        var bits = [];
+        if (myCode) bits.push(t("sb.code", "확인번호") + " " + myCode);
+        if (nextIssueOn) bits.push(t("sb.nextIssue", "다음 소식") + " " + nextIssueOn);
+        meta.textContent = bits.join("  ·  ");
+      }
       if (btnCard) btnCard.hidden = false;
     }
 
+    /* 사이트가 제시하는 고정 문구. 사실 주장이 없어 검수가 필요 없다.
+       누르면 입력칸에 들어가고, **고치지 않고 그대로 보내면 바로 오른다.**
+       한 글자라도 손대면 사람이 쓴 문장이므로 검수를 거친다.
+       버튼은 하나 그대로 두고 시스템이 판별한다 — 고르는 부담을 주지 않는다.
+       이 통로가 있어야 검수가 밀려도 줄기가 죽지 않는다. */
+    var PRESETS = [
+      ["이 노래를 오래 좋아했습니다.", "I've loved this one for a long time."],
+      ["오늘 처음 들었습니다.", "I heard this for the first time today."],
+      ["다음 무대에서 듣고 싶어요.", "I'd love to hear this live."],
+      ["그냥 인사드리러 왔습니다.", "Just stopping by to say hello."]
+    ];
+    function chipOf(text) {
+      var t = (text || "").trim();
+      for (var i = 0; i < PRESETS.length; i++) {
+        if (t === PRESETS[i][0] || t === PRESETS[i][1]) return i + 1;
+      }
+      return 0;
+    }
     if (chips) {
-      /* 사실 주장이 없는 고정 문구. 누르면 입력칸에 들어가고 커서가 그 뒤에 선다.
-         대체가 아니라 시작이다 — 그대로 보내도 되고, 지우고 다시 써도 된다. */
-      var PRESETS = [
-        ["이 노래를 오래 좋아했습니다.", "I've loved this one for a long time."],
-        ["오늘 처음 들었습니다.", "I heard this for the first time today."],
-        ["다음 무대에서 듣고 싶어요.", "I'd love to hear this live."],
-        ["그냥 인사드리러 왔습니다.", "Just stopping by to say hello."]
-      ];
       PRESETS.forEach(function (p) {
         var b = el("button", "sb-chip", esc(en() ? p[1] : p[0]));
         b.type = "button";
@@ -1774,15 +1814,23 @@
         var btn = form.querySelector("button[type=submit]");
         if (btn) btn.disabled = true;
         note(t("sb.sending", "보내는 중…"));
-        be.submitNote({
+        var common = {
           songKey: song && song.k, songTitle: song && song.t, songYear: song && song.y,
-          name: (nameIn && nameIn.value || "").trim(), body: body
-        }).then(function (res) {
+          name: (nameIn && nameIn.value || "").trim()
+        };
+        var chip = chipOf(body);
+        var p = chip
+          ? be.submitPreset({ chip: chip, songKey: common.songKey, songTitle: common.songTitle,
+                              songYear: common.songYear, name: common.name })
+          : be.submitNote({ songKey: common.songKey, songTitle: common.songTitle,
+                            songYear: common.songYear, name: common.name, body: body });
+        p.then(function (res) {
           if (btn) btn.disabled = false;
           if (res && res.ok) {
             note("");
-            showDone(res.token);
+            showDone(res.token, !!res.instant);
             if (input) input.value = "";
+            if (res.instant) refreshStream(body);
           } else {
             note(beWhy(res), "bad");
           }
@@ -1942,6 +1990,35 @@
       var offNote = $("#sb-offline"); if (offNote) offNote.hidden = false;
     }
 
+    /* 사랑방의 상태를 읽어 화면 문구를 실측에 맞춘다.
+       사람이 손대야 정직해지는 문구는, 운영이 멈추는 순간 거짓말이 된다. */
+    (function readState() {
+      var be = BE();
+      if (!be || !be.state) return;
+      be.state().then(function (res) {
+        if (!res || !res.ok || !res.rows || !res.rows.length) return;
+        var st = res.rows[0];
+        nextIssueOn = fmtDay(st.next_issue_on);
+        var lag = $("#sb-lag");
+        if (!lag) return;
+        if (!st.last_read_at) return;                    /* 아직 아무도 안 읽었다 — 말하지 않는다 */
+        var days = Math.floor((Date.now() - new Date(st.last_read_at).getTime()) / 86400000);
+        if (days >= 8) {
+          lag.hidden = false;
+          lag.textContent = t("sb.lag", "지금은 조금 늦어지고 있습니다.") +
+            " " + t("sb.lastRead", "마지막으로 읽은 날") + " " + fmtDay(st.last_read_at) + ".";
+        }
+      });
+    })();
+
+    function fmtDay(v) {
+      if (!v) return "";
+      var d = new Date(v);
+      if (isNaN(d.getTime())) return "";
+      return en() ? ((d.getMonth() + 1) + "/" + d.getDate())
+                  : ((d.getMonth() + 1) + "월 " + d.getDate() + "일");
+    }
+
     loadSongs().then(function (list) {
       if (!list.length) {
         if (elSong) elSong.textContent = t("sb.nosongs", "곡 목록을 불러오지 못했습니다.");
@@ -2049,18 +2126,43 @@
 
     if (more) more.addEventListener("click", draw);
 
-    build([]);
-    setFilled(0);
+    /* 방금 올린 줄이 첫 12칸 밖에 있을 수 있다 — 곡 연도로 정렬하니
+       1978년 곡에 남긴 줄은 저 아래에 선다. "아래에서 보실 수 있어요"라고
+       해 놓고 30칸 밑에 묻히면 약속을 어기는 것이다. 나올 때까지 펼치고
+       그 자리로 데려간다. */
+    function reveal(body) {
+      if (!body) return;
+      for (var guard = 0; guard < 40 && shown < rows.length; guard++) {
+        var hit = null, items = list.querySelectorAll(".sb-row.is-note .sb-row-t");
+        for (var i = 0; i < items.length; i++) {
+          if (items[i].textContent === body) { hit = items[i]; break; }
+        }
+        if (hit) {
+          var row = hit.closest(".sb-row");
+          row.classList.add("is-mine");
+          row.scrollIntoView({ block: "center", behavior: "smooth" });
+          return;
+        }
+        draw();
+      }
+    }
 
-    var be = BE();
-    if (be) {
+    function reload(mine) {
+      var be = BE();
+      if (!be) return;
       be.listNotes().then(function (res) {
-        if (res && res.ok && res.rows && res.rows.length) build(res.rows);
+        if (res && res.ok) { build(res.rows || []); reveal(mine); }
       });
       be.notesFilled().then(function (res) {
         if (res && res.ok && res.rows && res.rows.length) setFilled(res.rows[0].songs || 0);
       });
     }
+
+    build([]);
+    setFilled(0);
+    reload();
+    /* 오늘의 자리에서 칩이 바로 올랐을 때 이 줄기를 즉시 다시 그린다 */
+    window.INSOONI_STREAM_RELOAD = reload;
   }
 
   /* ---------- 7. 사랑방: 마음 전하기 ----------

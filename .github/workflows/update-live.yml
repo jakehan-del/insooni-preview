@@ -20,6 +20,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # 무료 플랜은 7일간 요청이 없으면 프로젝트를 정지시킨다.
+      # 정지되면 사랑방이 통째로 멈추고 손으로 깨워야 한다.
+      # 공개키로 읽기만 하므로 secret 이 필요 없고 아무것도 바꾸지 않는다.
+      - name: 백엔드가 잠들지 않게
+        run: python3 scripts/keepalive.py
+        continue-on-error: true
+
       - name: 공식 채널의 새 무대 영상
         run: python3 scripts/collect-shows.py
         continue-on-error: true

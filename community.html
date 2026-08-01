@@ -157,8 +157,13 @@
         <p class="sb-msg" id="sb-msg" role="status"></p>
 
         <!-- 보낸 뒤. 사라지지 않고 그 자리에 남는다. 확인창 대신 '지금 지우기'를 둔다. -->
+        <p class="sb-lag" id="sb-lag" hidden role="status"></p>
+
+        <!-- 보낸 뒤. 사라지지 않고 그 자리에 남는다. 끝을 알 수 있게 확인번호와
+             다음 발행일을 함께 준다 — 끝 모르는 대기가 가장 길게 느껴진다. -->
         <div class="sb-done" id="sb-done" hidden>
-          <p data-i18n="sb.doneT"><strong>남겨졌습니다.</strong> 사람이 읽고 올립니다 — 며칠 걸릴 수 있어요. 아직 공개 전입니다.</p>
+          <p id="sb-done-head"></p>
+          <p class="sb-done-meta" id="sb-done-meta"></p>
           <div class="sb-done-acts">
             <button type="button" class="btn btn--ghost btn--sm" id="sb-cancel" data-i18n="sb.cancel">지금 지우기</button>
             <button type="button" class="btn btn--ghost btn--sm" id="sb-card" data-i18n="sb.card">내 카드 저장하기</button>

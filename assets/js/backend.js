@@ -133,6 +133,24 @@
     /* 상태만 돌려준다. 본문·이름은 돌려주지 않는다. */
     noteStatus: function (token) { return rpc("note_status", { p_token: token || null }); },
     listNotes:  function () { return readView("public_notes"); },
+
+    /* 사이트가 제시한 고정 문구를 그대로 보낼 때. 검수를 거치지 않고 바로 오른다.
+       사람이 쓴 문장이 아니라 사이트의 문구이기 때문이다.
+       서버 함수가 텍스트 인자를 아예 받지 않으므로 이 통로로는 아무 말도 못 넣는다. */
+    submitPreset: function (o) {
+      return rpc("submit_preset", {
+        p_chip:       (o && o.chip) || 0,
+        p_song_key:   (o && o.songKey) || null,
+        p_song_title: (o && o.songTitle) || null,
+        p_song_year:  (o && o.songYear) || null,
+        p_name:       (o && o.name) || null
+      });
+    },
+    /* 회차 — 매월 1일 저절로 묶여 나간다. 발행 작업이 없다(뷰가 날짜에서 계산). */
+    listIssue:   function (no) { return readView("issue_notes", no ? ("issue_no=eq." + no) : ""); },
+    listIssues:  function () { return readView("public_issues"); },
+    /* 사랑방의 상태 — 화면 문구가 실측에서 자동으로 바뀌게 */
+    state:       function () { return readView("sarangbang_state"); },
     /* 몇 곡에 기억이 붙었는지. 곡별 개수는 내주지 않는다
        (로그인이 없어 곡마다 숫자를 보이면 곧 부풀리기 대상이 된다). */
     notesFilled: function () { return readView("notes_filled"); },

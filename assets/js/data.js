@@ -322,7 +322,7 @@ window.SITE_DATA = {
     { date: "2025-08-21", type: "수상", title: "펄벅 인터내셔널 '올해의 여성상' 수상", excerpt: "Woman of Influence 2025. 노래와 나눔이 함께 만든 자리 — 시상식 리캡을 라이브에서 볼 수 있습니다.", en: { title: "Woman of Influence 2025, Pearl S. Buck International", excerpt: "An award where song and giving met. See the ceremony recap on the Tour page." } },
     { date: "2025-07-09", type: "공연", title: "여우락 페스티벌 '두 사랑 이야기'", excerpt: "국립극장 하늘극장, 인순이 x 유지숙. 이틀간의 무대.", en: { title: "Yeowoorak Festival 'Two Love Stories'", excerpt: "Two nights with Yoo Ji-sook at the National Theater of Korea." } },
     { date: "2025-02-23", type: "방송", title: "열린음악회 1514회 피날레 무대", excerpt: "1월 21일 녹화 — 백스테이지 기록은 라이브 페이지 리캡에.", en: { title: "Open Concert Ep.1514 finale", excerpt: "Taped January 21 — backstage records in the Tour page recap." } },
-    { date: "2025-02-19", type: "발매", title: "《인순이, 아름다운 우리나라》 발매", excerpt: "1984년 원곡 앨범을 다시 부른 아홉 곡.", en: { title: "'Insooni, Beautiful Korea' released", excerpt: "Nine songs revisiting the 1984 original album." } },
+    { date: "2025-02-19", type: "발매", title: "《인순이, 아름다운 우리나라》 발매", excerpt: "1984년 정규 5집의 곡들을 다시 부른 아홉 곡.", en: { title: "'Insooni, Beautiful Korea' released", excerpt: "Nine songs revisiting the 1984 original album." } },
     { date: "2024-12-30", type: "공연", title: "5년 만의 연말 디너쇼", excerpt: "그랜드 인터컨티넨탈 서울 파르나스, 이틀간의 밤.", en: { title: "First year-end dinner show in five years", excerpt: "Two nights at Grand InterContinental Seoul Parnas." } }
   ],
 
@@ -377,7 +377,7 @@ window.SITE_DATA = {
         { label: "멜론(곡)", url: "https://www.melon.com/song/detail.htm?songId=60847" },
         { label: "Spotify(2025 재녹음)", url: "https://open.spotify.com/album/5ErPwrIgz4dd8y6wEhXnwU" }
       ] },
-    { year: "1984", title: "아름다운 우리나라 / 여기가 어디냐", kind: "정규 5집", note: "원곡 '아름다운 우리나라' 수록. HKR. 2025년 신보가 이 원반의 커버 아트를 그대로 이어받았습니다." },
+    { year: "1984", title: "아름다운 우리나라 / 여기가 어디냐", kind: "정규 5집", note: "원곡 '아름다운 우리나라' 수록. HKR. 2025년에 이 앨범의 곡들을 다시 불렀습니다." },
     { year: "1985", title: "눈물의 편지 / 잊지 못하고", kind: "정규 6집", note: "대표곡 '눈물의 편지'. HKR." },
     { art: "assets/img/photos/album07.webp", year: "1987", title: "에레나라 불리운 여인", kind: "정규 7집", note: "대표곡 '에레나라 불리운 여인'. 지구레코드.", links: [{ label: "YT", url: "https://www.youtube.com/results?search_query=%EC%9D%B8%EC%88%9C%EC%9D%B4%20%EC%97%90%EB%A0%88%EB%82%98%EB%9D%BC%20%EB%B6%88%EB%A6%AC%EC%9A%B4%20%EC%97%AC%EC%9D%B8" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1827889007" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/38uPzmw0Vb0TrsXI2n78Bm" }] },
     { year: "1988", title: "그 어느 거리로", kind: "정규 8집", note: "대표곡 '그 어느 거리로'. HKR." },
@@ -455,9 +455,12 @@ window.SITE_DATA = {
     { year: "2023", title: "처음 이야기 (어쩌다 사장3 OST)", kind: "OST 싱글", note: "류민희와 함께." },
     { year: "2024", title: "토닥토닥", kind: "디지털 싱글", note: "리코브/NHN벅스.", links: [{ label: "YT", url: "https://www.youtube.com/results?search_query=%EC%9D%B8%EC%88%9C%EC%9D%B4%20%ED%86%A0%EB%8B%A5%ED%86%A0%EB%8B%A5" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1787119633" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/61AP6USxC0sDcxr3ktVbTK" }] },
     { year: "2024", title: "너의 이름을 세상이 부를 때", kind: "디지털 싱글", note: "리코브/NHN벅스.", links: [{ label: "YT", url: "https://www.youtube.com/results?search_query=%EC%9D%B8%EC%88%9C%EC%9D%B4%20%EB%84%88%EC%9D%98%20%EC%9D%B4%EB%A6%84%EC%9D%84%20%EC%84%B8%EC%83%81%EC%9D%B4%20%EB%B6%80%EB%A5%BC%20%EB%95%8C" }, { label: "APPLE", url: "https://music.apple.com/kr/album/1771373716" }, { label: "SPOTIFY", url: "https://open.spotify.com/album/3pDNQzz4RtG7LVOatoPreJ" }] },
-    { featured: true, art: "assets/img/covers/cover2025.webp", year: "2025", title: "인순이, 아름다운 우리나라", kind: "정규 앨범", note: "2025년 2월 발매, 9곡 수록. 커버는 1984년 5집 원반 아트를 그대로 살렸습니다.",
+    /* 이것은 새 정규 앨범이 아니라 1984년 정규 5집을 다시 부른 재녹음반이다.
+       '정규 앨범'으로 적으면 18집 다음의 새 앨범처럼 읽힌다.
+       커버도 1984년 원반 아트를 그대로 쓴 것이라 이 자리에 걸지 않는다. */
+    { year: "2025", title: "인순이, 아름다운 우리나라", kind: "재녹음", note: "2025년 2월 발매, 9곡. 1984년 정규 5집의 곡들을 다시 불렀습니다.",
       tracks: ["광주 광주", "밤이면 밤마다", "아름다운 우리나라", "야속한 내 님", "흔들리는 갈대", "너와 나", "욕망", "이별의 눈동자", "길섶에 핀 꽃"],
-      credits: "정규 9곡 · 2025. 2. 19. 발매 · ℗ RIAK · 타이틀곡 '아름다운 우리나라'는 1984년 정규 5집의 곡을 다시 불렀습니다.",
+      credits: "재녹음 9곡 · 2025. 2. 19. 발매 · ℗ RIAK · 1984년 정규 5집 《아름다운 우리나라 / 여기가 어디냐》의 곡들입니다.",
       links: [
         { label: "YouTube", url: "https://www.youtube.com/playlist?list=OLAK5uy_lg_F0ktj5nBUzEGoHZfANShrTMmUkL9xg" },
         { label: "Apple Music", url: "https://music.apple.com/kr/album/%EC%9D%B8%EC%88%9C%EC%9D%B4-%EC%95%84%EB%A6%84%EB%8B%A4%EC%9A%B4-%EC%9A%B0%EB%A6%AC%EB%82%98%EB%9D%BC/1797462838" },

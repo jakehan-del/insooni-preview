@@ -27,7 +27,7 @@ import json, os, re, sys, urllib.request, urllib.error
 from datetime import datetime, timezone
 
 MODEL = "claude-haiku-4-5-20251001"
-KINDS = {"letter": "letters", "post": "posts", "dream": "dreams"}
+KINDS = {"note": "notes", "letter": "letters", "post": "posts", "dream": "dreams"}
 BATCH = 40
 
 SYSTEM = """당신은 가수 인순이의 공식 홈페이지에 들어온 팬 글을 1차로 살펴보는 사람이다.
