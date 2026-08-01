@@ -146,7 +146,11 @@
           <div class="form-field">
             <label for="sb-body" data-i18n="sb.label">이 노래에 한 줄</label>
             <input id="sb-body" type="text" maxlength="200" required
-                   placeholder="예) 아버지 생각이 나서 한참 들었습니다" data-i18n-ph="sb.ph">
+                   placeholder="예) 88년 결혼식 날 아버지가 좋아하시던…" data-i18n-ph="sb.ph"
+                   autocomplete="off">
+            <!-- 되울림 — 치는 도중에 방이 읽은 것을 회색 한 줄로 돌려준다.
+                 못 읽었으면 아무것도 안 뜬다. 틀린 것을 우기지 않는다. -->
+            <p class="sb-echo" id="sb-echo" role="status" aria-live="polite"></p>
           </div>
           <div class="form-field">
             <label for="sb-name" data-i18n="sb.name">이름 또는 별명 (없어도 됩니다)</label>

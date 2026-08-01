@@ -1772,6 +1772,109 @@
       if (btnCard) btnCard.hidden = false;
     }
 
+    /* ---------- 되울림 ----------
+       팬이 한 줄을 **치는 도중에** 방이 그 문장에서 해를 집어내
+       회색 한 줄로 먼저 돌려준다. 버튼도 안 누르고, 소리도 없고,
+       서버 왕복도 없이 브라우저 안에서 끝난다.
+
+       이게 이 방의 심장이다. 지금까지 만든 것은 전부 글자와 목록이라
+       "어떻게 알았지" 하는 순간이 한 번도 없었다.
+       그리고 이 놀람은 **본인이 맞았는지 틀렸는지 판정할 수 있다** —
+       자기가 방금 친 글자가 화면에 되돌아오기 때문이다.
+
+       못 읽었으면 아무것도 안 띄운다. 틀린 것을 우겨 넣지 않는다.
+       조용히 없는 것은 실패가 아니지만, 틀린 것을 우기면 그건 실패다. */
+    var YEARS = null, echoTimer = null, echoYear = 0;
+    var elEcho = $("#sb-echo");
+
+    function loadYears() {
+      if (YEARS) return Promise.resolve(YEARS);
+      return fetch("assets/data/years.json")
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) { YEARS = d || { years: {} }; return YEARS; })
+        .catch(function () { YEARS = { years: {} }; return YEARS; });
+    }
+
+    /* 문장에서 해를 집어낸다.
+       네 자리는 1957~2026 만. 두 자리는 '년'이 붙을 때만 —
+       그러지 않으면 '88올림픽'이나 '3만8천'까지 걸린다. */
+    var RE4 = /(19[5-9]\d|20[0-2]\d)\s*년?/g;
+    var RE2 = /(?:^|[^\d])([0-9]{2})\s*년(?![대생])/g;
+    /* 숫자 뒤에 이런 단위가 오면 해가 아니다 */
+    var NOTYEAR = /^(만|천|억|원|명|번|개|시|분|초|층|호|살|세|kg|km|cm|%)/;
+
+    function readYear(text) {
+      var t = String(text || ""), hits = [], m;
+      RE4.lastIndex = 0;
+      while ((m = RE4.exec(t))) {
+        var rest = t.slice(m.index + m[0].length);
+        if (NOTYEAR.test(rest)) continue;
+        var y4 = parseInt(m[1], 10);
+        /* 정규식만으로는 1950~1956 이 통과한다. 그는 1957년생이니
+           그 이전 해는 이 방에 있을 수 없다. */
+        if (y4 < 1957 || y4 > 2026) continue;
+        hits.push(y4);
+      }
+      RE2.lastIndex = 0;
+      while ((m = RE2.exec(t))) {
+        var n = parseInt(m[1], 10);
+        var y = n >= 57 ? 1900 + n : (n <= 26 ? 2000 + n : 0);
+        if (y >= 1957 && y <= 2026) hits.push(y);
+      }
+      return hits.length ? hits[hits.length - 1] : 0;   /* 마지막에 말한 해를 쓴다 */
+    }
+
+    /* 그 해에 가장 가까운, 자리가 있는 해 */
+    function nearestYear(y) {
+      if (!YEARS || !YEARS.years) return 0;
+      var best = 0, gap = 999;
+      Object.keys(YEARS.years).forEach(function (k) {
+        var n = parseInt(k, 10), g = Math.abs(n - y);
+        if (g < gap) { gap = g; best = n; }
+      });
+      return best;
+    }
+
+    function sayEcho(html) {
+      if (!elEcho) return;
+      elEcho.innerHTML = html || "";
+      elEcho.classList.toggle("on", !!html);
+    }
+
+    function echoNow() {
+      if (!elEcho || !input) return;
+      var y = readYear(input.value);
+      if (!y) { echoYear = 0; sayEcho(""); return; }
+      if (y === echoYear) return;
+      echoYear = y;
+      loadYears().then(function (d) {
+        if (readYear(input.value) !== y) return;         /* 그 사이 바뀌었다 */
+        var slot = d.years[String(y)];
+        if (slot) {
+          var bits = [];
+          if (slot.songs && slot.songs.length) bits.push("「" + slot.songs[0].t + "」");
+          else if (slot.album) bits.push("《" + slot.album.title + "》");
+          else if (slot.life && slot.life.length) bits.push(slot.life[0].text);
+          sayEcho('<b>' + y + '</b>' +
+            (bits.length ? " · " + esc(bits[0]) : "") +
+            ' <span>' + esc(t("sb.echoHas", "이 방에 그 자리가 있습니다")) + "</span>");
+        } else {
+          /* 자료가 없는 해다. 없다고 사실대로 말하고 가장 가까운 해를 권한다. */
+          var near = nearestYear(y);
+          sayEcho('<b>' + y + '</b> <span>' +
+            esc(t("sb.echoNone", "그 해의 자료는 아직 이 방에 없습니다.")) +
+            (near ? (" " + near + esc(t("sb.echoNear", "년이 가장 가깝습니다."))) : "") + "</span>");
+        }
+      });
+    }
+
+    if (input) {
+      input.addEventListener("input", function () {
+        if (echoTimer) clearTimeout(echoTimer);
+        echoTimer = setTimeout(echoNow, 260);
+      });
+    }
+
     /* 사이트가 제시하는 고정 문구. 사실 주장이 없어 검수가 필요 없다.
        누르면 입력칸에 들어가고, **고치지 않고 그대로 보내면 바로 오른다.**
        한 글자라도 손대면 사람이 쓴 문장이므로 검수를 거친다.
