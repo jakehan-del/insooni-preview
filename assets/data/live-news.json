@@ -1,18 +1,8 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 AI 큐레이션으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "AI 큐레이션",
- "updated": "2026-08-02 15:32",
+ "updated": "2026-08-02 18:56",
  "items": [
-  {
-   "date": "2026-07-27",
-   "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
-   "source": "v.daum.net",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1GX3hoUzdOcG1SMngyNXBGVmF4YUlMTmdMZkJyZXV4a3RXRHpwVnlFT3NfWHMxTzhmWHFlRTF4MHV0ODNjTFNVRG9KWEtxWlE?oc=5",
-   "type": "나눔",
-   "auto": true,
-   "ai": true
-  },
   {
    "date": "2026-07-24",
    "title": "경수진 시구→인순이 애국가 '특집 불꽃야구 생중계' 고척돔 달군다",
@@ -21,15 +11,15 @@
    "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1tV0FhNmZMendjUkhqd1VCeGFXNWJzYVJzdXpiaFM2aWNOdk5yMC1FLVVvVm92SVFHRUdEQUNTYVdaSkdWX2NlNTJSenpEV1ZjU3A0?oc=5",
    "type": "공연",
    "auto": true,
-   "also": 3,
+   "also": 1,
    "ai": true
   },
   {
-   "date": "2026-06-30",
-   "title": "미국 독립기념일 행사에서 애국가 부르는 인순이",
-   "source": "연합뉴스 한민족센터",
-   "sourceSite": "https://www.koreancenter.or.kr",
-   "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1lUFFLT19OWU14SWNZbmNUUVBkUkxJaXp4ekRnWHpjRlFHNkpoMnBqRGZkY3RtODNldmZUenNLVms3Wm1mRm12d2dmRzJpaGhId2V6OF9uSDR2TWhEOHc2cDZFOTFnRkdSODJTcXJYQXhudGNZ?oc=5",
+   "date": "2026-06-23",
+   "title": "'11회 청주시 시민의 날 기념행사' 내달 1일 개최…염유리·인순이 공연",
+   "source": "네이트",
+   "sourceSite": "https://news.nate.com",
+   "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBDVFB1djFpS0ZCRWZOZmVicDJyYjg0UEEwWWNqV2VCMGFZa1BIQ05DM0tUQm5sWl8zQS1VRWtMZ1dJb2I3Rjk4TDZHLXB0ZXZId0xj?oc=5",
    "type": "공연",
    "auto": true,
    "also": 1,
@@ -43,7 +33,6 @@
    "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTFBLMEJuXy1BejFxbDJZYmQ3X3ljWE9jamdaU2tlSlhRem5CMXJGLXNlRDA2S0p4UmI0dkh5Wmdqb1N5VWdGd000NldvamFxWERpZk9FMXdpOWxGTExlN1htR2tZVTVVU2ViQ2hjZUpXYjRFS01ZdlRUdHRRR1lyQQ?oc=5",
    "type": "공연",
    "auto": true,
-   "also": 1,
    "ai": true
   },
   {
@@ -79,14 +68,13 @@
    "ai": true
   },
   {
-   "date": "2026-05-04",
-   "title": "안동문화예술의전당 어버이날 특별기획 가수 인순이 & 명창 유지숙 '두 사랑 이야기'",
-   "source": "신경북뉴스",
-   "sourceSite": "https://skbnews.kr",
-   "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBvSEMyamIzT19ScmJLbmctVDdnTFdvVE9iZnVLYXBkUEdlcXNDclRZY3Z1bGZKbExCXzdwbVpZT0U2c2VvdlpTQ2dna05aVGhMUTRLakxaZTk?oc=5",
+   "date": "2026-05-06",
+   "title": "가수 인순이·명창 유지숙, 안동서 9일 특별기획 공연",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE9uY003blVwdUQyOENMZUtTaGNmSVpNekk1Z1NXQ1dLVGtKX2VUaXNSbDdTTDE0R0ZVd0FCNEZ3MzFIMV9QSXc?oc=5",
    "type": "공연",
    "auto": true,
-   "also": 1,
    "ai": true
   }
  ]
