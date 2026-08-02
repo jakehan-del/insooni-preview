@@ -337,6 +337,36 @@ def main():
         x.pop("_when", None)
         x.pop("_ts", None)
 
+    # ── 소식 아카이브 — 한 번 모은 것은 잃지 않는다 ────────────
+    # live-news.json 은 최근 90일·상위 16건만 남긴다. 그대로 두면
+    # 지난 소식이 사라진다. 공식 사이트인데 쌓이는 것이 없다.
+    # 그래서 별도 파일에 **계속 더한다.** 지우지 않는다.
+    ARCH = os.path.join(BASE, "assets", "data", "news-archive.json")
+    try:
+        old_arch = json.load(open(ARCH, encoding="utf-8")).get("items", [])
+    except Exception:
+        old_arch = []
+    by_url = {}
+    for x in old_arch:
+        if x.get("url"):
+            by_url[x["url"]] = x
+    fresh = 0
+    for x in items:
+        u = x.get("url")
+        if u and u not in by_url:
+            by_url[u] = {k: v for k, v in x.items() if not k.startswith("_")}
+            fresh += 1
+    arch = sorted(by_url.values(), key=lambda x: x.get("date", ""), reverse=True)
+    with open(ARCH, "w", encoding="utf-8") as f:
+        json.dump({
+            "note": ("모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. "
+                     "live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다."),
+            "updated": now.astimezone(timezone(timedelta(hours=9))).strftime("%Y-%m-%d %H:%M"),
+            "count": len(arch),
+            "items": arch,
+        }, f, ensure_ascii=False, indent=1)
+    print("  아카이브: 새로 %d건 · 누적 %d건" % (fresh, len(arch)))
+
     doc = {
         "note": ("인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 "
                  + mode + "으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. "

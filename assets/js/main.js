@@ -2825,10 +2825,41 @@
           if (!d || !d.items || !d.items.length) return;
           var have = {};
           (D.news || []).forEach(function (n) { have[norm(tr(n, "title"))] = 1; });
-          var added = 0;
+
+          /* 손으로 쓴 소식과 자동 수집분이 같은 사건을 두 번 보여 주던 문제.
+             제목 글자를 통째로 비교하면 절대 안 걸린다 —
+               손:  "고척스카이돔에서 애국가 열창"
+               자동: "경수진 시구→인순이 애국가 '특집 불꽃야구 생중계' 고척돔 달군다"
+             날짜가 가깝고 특징적인 낱말을 나눠 가지면 같은 사건으로 본다.
+             겹치면 **손으로 쓴 쪽을 남긴다** — 사람이 다듬은 문장이 낫다. */
+          var STOP2 = { "인순이": 1, "가수": 1, "공연": 1, "무대": 1, "콘서트": 1, "출연": 1,
+                        "개최": 1, "소식": 1, "발표": 1, "함께": 1, "이번": 1, "특집": 1 };
+          function words(t) {
+            var out = {}, parts = String(t || "").split(/[^가-힣A-Za-z0-9]+/);
+            parts.forEach(function (w) {
+              if (w.length >= 2 && !STOP2[w]) out[w] = 1;
+            });
+            return out;
+          }
+          function sameStory(a, b) {
+            var gap = Math.abs(new Date(a.date) - new Date(b.date)) / 86400000;
+            if (!(gap <= 5)) return false;
+            var wa = words(a.title), wb = words(tr(b, "title")), n = 0;
+            for (var k in wa) if (wa.hasOwnProperty(k) && wb[k]) n++;
+            return n >= 1 && (function () {
+              /* 낱말 하나만 겹칠 때는 그 낱말이 충분히 특징적이어야 한다 */
+              for (var k in wa) if (wa.hasOwnProperty(k) && wb[k] && k.length >= 3) return true;
+              return n >= 2;
+            })();
+          }
+
+          var added = 0, skipped = 0;
           d.items.forEach(function (it) {
             var k = norm(it.title || "");
             if (!k || have[k]) return;
+            /* 이미 손으로 쓴 소식이 같은 사건을 다루고 있으면 넣지 않는다 */
+            var dupe = (D.news || []).some(function (n) { return !n.auto && sameStory(it, n); });
+            if (dupe) { skipped++; return; }
             have[k] = 1;
             D.news.push({
               date: it.date, type: it.type || "소식", title: it.title,
