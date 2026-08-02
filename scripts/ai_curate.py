@@ -40,11 +40,23 @@ SYSTEM = """당신은 가수 인순이의 공식 홈페이지에 올릴 뉴스�
   - 각 묶음에서 대표 기사 하나를 고른다. 사건을 가장 잘 설명하고
     인순이의 역할이 분명한 제목을 고른다.
 
-[버리기] 다음은 버린다.
-  - 사진 캡션 기사 ([포토], [사진], '~하는 인순이' 같은 제목만 있는 것)
-  - 인순이가 여러 출연자 중 하나로 이름만 스친 기사
-  - 같은 내용을 재배포한 보도자료 (묶음의 대표가 아닌 것은 묶으면 되니 여기 넣지 마라)
-  - 인순이가 아닌 다른 사람이 주인공인 기사
+[버리기] **확실한 것만 버린다. 애매하면 남긴다.**
+  이 사이트는 어머니의 소식을 모으는 곳이다. 실제 소식을 하나 지우는 것이
+  애매한 것 하나를 남기는 것보다 훨씬 나쁘다.
+
+  버리는 것은 이 둘뿐이다.
+  - 다른 사람이 명백히 주인공이고 인순이는 심사평·축하 한 줄만 나오는 기사
+    (예: 오디션 참가자가 주인공이고 인순이가 심사위원으로 한 마디)
+  - 제목에 사건이 전혀 없는 순수 사진 캡션
+    (예: '[포토] 무대에 선 인순이' — 언제 어디서 무엇이 없다)
+
+  **남기는 것 (헷갈리면 무조건 남긴다)**
+  - 인순이가 주인공이거나 공동 주인공인 모든 기사
+  - 여러 출연자가 함께 나오더라도 인순이가 그중 하나로 실제 활동한 기사
+    (합동 공연, 축제 라인업, 지역 행사 출연 — 전부 실제 소식이다)
+  - 화보·인터뷰·수상·기부·해밀학교
+  - 사진 기사라도 제목에 사건이 있으면 남긴다
+    (예: '미국 독립기념일 행사에서 애국가 부르는 인순이' — 사건이 있다)
 
 [분류] 각 묶음에 하나를 준다: 공연 / 방송 / 나눔 / 보도
   - 나눔 = 해밀학교, 기부, 후원, 장학, 봉사
@@ -123,7 +135,10 @@ def curate(items, log=print):
         return None
 
     n = len(items)
-    used, out = set(), []
+    used = set()          # 대표로 뽑혔거나 다른 대표에 합쳐진 번호
+    merged = set()        # 중복이라 합쳐진 번호 (되살리면 안 된다)
+    out, lead_of = [], []
+
     for st in doc["stories"]:
         if not isinstance(st, dict):
             continue
@@ -139,7 +154,7 @@ def curate(items, log=print):
         same = [j for j in (st.get("same") or [])
                 if isinstance(j, int) and 0 <= j < n and j not in used and j != lead]
         for j in same:
-            used.add(j)
+            used.add(j); merged.add(j)
         # 같은 사건을 몇 곳이 보도했는지는 사실이므로 그대로 남긴다
         if same:
             it["also"] = len(same)
@@ -147,11 +162,30 @@ def curate(items, log=print):
         if t in ("공연", "방송", "나눔", "보도"):
             it["type"] = t
         it["ai"] = True
-        out.append(it)
+        out.append(it); lead_of.append(lead)
 
     if not out:
         log("  AI 큐레이션 결과가 비어 규칙 기반 결과를 씁니다")
         return None
+
+    # ── 과다 삭제 안전망 ────────────────────────────────────
+    # 실제로 '뉴욕 브랜드 노아 화보'(어머니가 주인공인 소식)까지 버린 적이 있다.
+    # 후보가 넉넉한데 절반도 안 남기면 그 판단을 믿지 않고,
+    # **중복으로 합쳐진 것 말고** 그냥 버려진 것부터 순서대로 되살린다.
+    # 후보가 적을 때(8건 미만)는 손대지 않는다 — 정상적인 묶기까지 방해한다.
+    if n >= 8:
+        floor = min(n, (n + 1) // 2)
+        if len(out) < floor:
+            back = [i for i in range(n) if i not in merged and i not in set(lead_of)]
+            added = 0
+            for i in back:
+                if len(out) >= floor:
+                    break
+                it = dict(items[i]); it["ai"] = True
+                out.append(it); added += 1
+            if added:
+                log("  AI가 %d건만 남겨 과하다고 보고 %d건을 되살렸습니다 (최소 %d건)"
+                    % (len(out) - added, added, floor))
 
     dropped = n - len(out)
     log("  AI 큐레이션: 후보 %d건 → %d건 (중복·캡션·곁다리 %d건 정리)" % (n, len(out), dropped))
