@@ -2269,84 +2269,55 @@
     }
 
     function build(notes) {
-      rows = [];
-      (D.timeline || []).forEach(function (r) {
-        rows.push({ y: r.year, kind: "life", text: tr(r, "event"), sub: tr(r, "note") || "" });
+      /* 사람이 남긴 것만 세운다.
+         전에는 연혁 16 + 정규앨범 18 을 함께 세워 두었다. 이유는 '팬이 0명이어도
+         34칸이 이미 서 있다 — 빈 화면이 나오지 않는다' 였는데, 그 34칸이
+         정확히 빈 화면만 전할 수 있는 두 가지를 지웠다:
+         아직 첫 손님이 안 왔다는 것, 그래서 당신이 첫 줄이라는 것.
+         연혁은 이야기 페이지가, 앨범은 음악 페이지가 이미 한다. */
+      rows = (notes || []).map(function (n) {
+        return {
+          y: kstDayLabel(n.created_at), kind: "note", text: n.body,
+          sub: n.name ? n.name : ""
+        };
       });
-      var titleByYear = {};
-      (D.albums || []).forEach(function (a) { if (a.year && a.title) titleByYear[a.year] = titleByYear[a.year] || a.title; });
-      (window.REG_ALBUMS || []).forEach(function (a) {
-        rows.push({
-          y: String(a.year), kind: "album", art: a.art || null,
-          /* '인순이 (17집)' 처럼 제목에 이미 집 번호가 든 경우가 있다.
-             아래 줄에서 '정규 17집'을 또 말하므로 괄호를 떼어 낸다. */
-          text: (titleByYear[a.year]
-                  ? ("《" + String(titleByYear[a.year]).replace(/\s*\(\s*\d+\s*집\s*\)\s*$/, "") + "》")
-                  : ("정규 " + a.no + "집")),
-          sub: (document.documentElement.getAttribute("lang") === "en"
-                 ? ("Studio album no." + a.no) : ("정규 " + a.no + "집"))
-        });
-      });
-      (notes || []).forEach(function (n) {
-        rows.push({
-          y: n.song_year || "", kind: "note", text: n.body,
-          sub: (n.name ? (n.name + " · ") : "") + (n.song_title ? ("「" + n.song_title + "」") : "")
-        });
-      });
-      /* 최근이 위로. 연도가 없는 줄(곡을 고르지 않은 글)은 맨 위에 둔다. */
-      rows.sort(function (a, b) { return (b.y || "9999").localeCompare(a.y || "9999"); });
+      /* 정렬하지 않는다. public_notes 가 order by created_at desc 로 보낸다.
+         전에는 그걸 곡 연도로 다시 정렬해 덮어썼는데, 새 글은 곡이 없어
+         방금 올린 줄이 맨 아래로 밀렸다. 서버 순서를 안 버리면 늘 1행이다. */
       list.innerHTML = ""; shown = 0;
       draw();
+      /* 0건이면 섹션 자체가 없다. 빈 그릇의 크기를 보여 주지 않는다. */
+      box.hidden = rows.length === 0;
     }
 
-    function setFilled(n) {
-      if (!head) return;
-      /* 사람을 세지 않는다.
-         작품을 세는 숫자는 좋다(밥 딜런 사이트의 'TIMES PLAYED 1585' 처럼).
-         그러나 사람을 세면, 값이 작을 때 그 숫자가 '아무도 안 온다'는 말이 된다.
-         목록 자체가 몇 줄인지 이미 보여 주므로 숫자는 정보를 더하지 않고
-         인상만 깎는다. 빈 방일 때만 말을 건다. */
-      head.textContent = n
-        ? ""
-        : t("sb.firstLine", "아직 남은 줄이 없습니다. 첫 줄을 기다립니다.");
+    /* 남긴 날을 서울 기준 '8월 4일' 로. 곡 연도 자리를 대신한다 —
+       새 글에는 곡이 없으므로 그 칸은 영원히 비어 있었다. */
+    function kstDayLabel(iso) {
+      if (!iso) return "";
+      var d = new Date(iso);
+      if (isNaN(d)) return "";
+      var k = new Date(d.getTime() + 9 * 3600 * 1000);
+      return (document.documentElement.getAttribute("lang") === "en")
+        ? (k.getUTCMonth() + 1) + "/" + k.getUTCDate()
+        : (k.getUTCMonth() + 1) + "월 " + k.getUTCDate() + "일";
     }
+
 
     if (more) more.addEventListener("click", draw);
 
-    /* 방금 올린 줄이 첫 12칸 밖에 있을 수 있다 — 곡 연도로 정렬하니
-       1978년 곡에 남긴 줄은 저 아래에 선다. "아래에서 보실 수 있어요"라고
-       해 놓고 30칸 밑에 묻히면 약속을 어기는 것이다. 나올 때까지 펼치고
-       그 자리로 데려간다. */
-    function reveal(body) {
-      if (!body) return;
-      for (var guard = 0; guard < 40 && shown < rows.length; guard++) {
-        var hit = null, items = list.querySelectorAll(".sb-row.is-note .sb-row-t");
-        for (var i = 0; i < items.length; i++) {
-          if (items[i].textContent === body) { hit = items[i]; break; }
-        }
-        if (hit) {
-          var row = hit.closest(".sb-row");
-          row.classList.add("is-mine");
-          row.scrollIntoView({ block: "center", behavior: "smooth" });
-          return;
-        }
-        draw();
-      }
-    }
-
-    function reload(mine) {
+    /* 방금 올린 줄을 찾아 데려가는 우회로는 없앴다.
+       전에는 곡 연도로 정렬해서 1978년 곡에 남긴 줄이 30칸 밑에 묻혔고,
+       그래서 40회 루프로 펼쳐 가며 찾아야 했다.
+       이제 서버가 준 최신순을 그대로 쓰므로 방금 올린 줄이 언제나 1행이다. */
+    function reload() {
       var be = BE();
-      if (!be) return;
+      if (!be) { build([]); return; }
       be.listNotes().then(function (res) {
-        if (res && res.ok) { build(res.rows || []); reveal(mine); }
-      });
-      be.notesFilled().then(function (res) {
-        if (res && res.ok && res.rows && res.rows.length) setFilled(res.rows[0].songs || 0);
-      });
+        build(res && res.ok ? res.rows : []);
+      })["catch"](function () { build([]); });
     }
 
     build([]);
-    setFilled(0);
     reload();
     /* 오늘의 자리에서 칩이 바로 올랐을 때 이 줄기를 즉시 다시 그린다 */
     window.INSOONI_STREAM_RELOAD = reload;

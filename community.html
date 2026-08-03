@@ -13,10 +13,10 @@
 <meta name="description" content="편지를 쓰고, 팬 번호증과 응원 카드를 만들고, 공식 채널로 마음을 전하는 곳. 인순이 공식 사랑방.">
 <!-- 본문 글꼴은 먼저 확실히 깐다(미뤄 봤지만 첫 화면이 빨라지지 않았다).
      제목용 서체는 화면이 뜬 뒤 들어온다 — font-display:swap이라 늦어도 글자는 보인다. -->
-<link rel="stylesheet" href="assets/fonts/body.css?v124">
-<link rel="stylesheet" href="assets/fonts/display.css?v124" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/fonts/display.css?v124"></noscript>
-<link rel="stylesheet" href="assets/css/style.min.css?v124">
+<link rel="stylesheet" href="assets/fonts/body.css?v125">
+<link rel="stylesheet" href="assets/fonts/display.css?v125" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?v125"></noscript>
+<link rel="stylesheet" href="assets/css/style.min.css?v125">
 <link rel="canonical" href="https://jakehan-del.github.io/insooni-preview/community.html">
 <meta property="og:url" content="https://jakehan-del.github.io/insooni-preview/community.html">
 <meta property="og:type" content="website">
@@ -102,9 +102,9 @@
     <div class="container">
       <p class="sb-night" id="sb-night"></p>
       <h2 id="h-today" data-i18n="sb.todayH">한 줄 남기기</h2>
-      <p class="lede sb-invite" data-i18n="sb.invite">오늘 여기 오신 마음을 한 줄로 남겨 주세요. 검수를 거쳐 아래 사랑방의 줄기에 오릅니다.</p>
+      <p class="lede sb-invite" data-i18n="sb.invite">오늘 여기 오신 마음을 한 줄로 남겨 주세요. 검수를 거쳐 아래에 오릅니다.</p>
 
-      <p class="sb-uplifted" id="sb-uplifted" hidden data-i18n="sb.uplifted">남기신 줄이 사랑방에 올라왔습니다. 아래 줄기에서 보실 수 있어요.</p>
+      <p class="sb-uplifted" id="sb-uplifted" hidden data-i18n="sb.uplifted">남기신 줄이 사랑방에 올라왔습니다. 아래에서 보실 수 있어요.</p>
 
       <!-- 사이트 전체의 유일한 자유 입력칸 -->
       <div class="sb-write-box" id="sb-write-box">
@@ -145,54 +145,20 @@
     </div>
   </section>
 
-  <!-- ── 사랑방의 줄기 ─────────────────────────────────────────
-       연혁 16 + 정규앨범 18 + 승인된 팬의 한 줄이 한 줄기에 선다.
-       팬 줄의 자리는 '남긴 날'이 아니라 그 곡의 연도다 — 그래야
-       팬의 한 줄이 검증된 기록과 같은 자리에 같은 자격으로 선다. -->
-  <section class="section section--band sb-stream" id="sb-stream" aria-labelledby="h-stream">
+  <!-- ── 남기신 줄 ─────────────────────────────────────────────
+       사람이 남긴 것만 선다. 연혁도 앨범도 넣지 않는다 —
+       그건 이야기 페이지와 음악 페이지가 이미 한다.
+       0건이면 이 섹션은 아예 없다. 34줄로 빈 방을 덮으면
+       '아직 아무도 안 왔다'와 '그래서 당신이 첫 줄이다'가 함께 지워진다. -->
+  <section class="section section--band sb-stream" id="sb-stream" aria-labelledby="h-stream" hidden>
     <div class="container">
       <div class="section-head">
-        <h2 id="h-stream" data-i18n="sb.streamH">사랑방의 줄기</h2>
+        <h2 id="h-stream" data-i18n="sb.streamH">남기신 줄</h2>
       </div>
-      <p class="sb-filled" id="sb-filled"></p>
-      <p class="sb-filled-note" data-i18n="sb.onlyApproved">승인된 것만 셉니다.</p>
       <ul class="sb-rows" id="sb-rows"></ul>
       <p class="sb-more-wrap">
         <button type="button" class="btn btn--ghost btn--sm" id="sb-more" data-i18n="sb.more">더 보기</button>
       </p>
-    </div>
-  </section>
-
-  <!-- ── 무리 ─────────────────────────────────────────────────────
-       화면의 아기거위 한 마리 = 지금 이 페이지를 보고 있는 사람 한 명.
-       1:1 이다. 혼자면 한 마리다. 숫자를 부풀리지 않는다.
-
-       자리는 적분이 아니라 f(t) 라서, 늦게 들어와도 로딩 없이 첫 프레임에
-       정위치고 폰 두 대가 같은 대형을 그린다. 시계는 서버의 date 헤더에서
-       '초가 바뀌는 순간'을 찾아 맞춘다(실측 ±60ms).
-       8마디마다 모든 화면이 같이 밝아지는 것이 '같은 곳'이라는 유일한 증명이다. -->
-  <section class="section section--band muri" id="muri" aria-labelledby="h-muri">
-    <div class="container">
-      <div class="section-head">
-        <h2 id="h-muri" data-i18n="muri.t">무리</h2>
-      </div>
-      <p class="lede muri-lede" data-i18n="muri.lead">기러기가 V자로 나는 것은, 앞선 새가 만든 바람을 타고 뒤에 선 새가 덜 힘들게 날기 때문입니다. 맨 앞이 가장 힘들어서 선두는 돌아가며 섭니다. 여기 뜬 거위 한 마리는 지금 이 페이지를 보고 있는 한 사람입니다.</p>
-
-      <div class="muri-stage">
-        <canvas id="muri-canvas" role="img"
-                aria-label="지금 사랑방에 있는 사람 수만큼 아기거위가 무리 지어 납니다."
-                data-i18n-aria="muri.canvasAria"></canvas>
-        <!-- 정지 — 한국형 웹콘텐츠 접근성 지침은 '화면에 보이는 정지 수단'을 요구한다.
-             OS 의 '동작 줄이기' 설정으로 대체되지 않는다. muri.js 가 그 설정도 따로 읽지만
-             그것과 이 버튼은 다른 요구다. -->
-        <button type="button" class="muri-pause" id="muri-pause" aria-pressed="false"
-                aria-label="거위 움직임 멈추기" data-i18n-aria="muri.pause">
-          <span aria-hidden="true">❙❙</span>
-        </button>
-      </div>
-
-      <p class="muri-count" id="muri-count" role="status" aria-live="polite"></p>
-      <p class="muri-note" id="muri-note"></p>
     </div>
   </section>
 
@@ -237,19 +203,17 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동" data-i18n-aria="aria.toTop">↑</button>
-<script src="assets/js/config.js?v124" defer></script>
-<script src="assets/js/backend.js?v124" defer></script>
-<script src="assets/js/i18n.min.js?v124" defer></script>
-<script src="assets/js/data.min.js?v124" defer></script>
-<script src="assets/js/tracklinks.min.js?v124" defer></script>
-<script src="assets/js/albums-full.min.js?v124" defer></script>
-<script src="assets/js/albums-en.min.js?v124" defer></script>
-<script src="assets/js/song-moods.min.js?v124" defer></script>
-<script src="assets/js/goose.min.js?v124" defer></script>
-<script src="assets/js/main.min.js?v124" defer></script>
-<script src="assets/js/muri.min.js?v124" defer></script>
-<script src="assets/js/motion.min.js?v124" defer></script>
-<script src="assets/js/router.min.js?v124" defer></script>
-<script src="assets/js/deck.min.js?v124" defer></script>
+<script src="assets/js/config.js?v125" defer></script>
+<script src="assets/js/backend.js?v125" defer></script>
+<script src="assets/js/i18n.min.js?v125" defer></script>
+<script src="assets/js/data.min.js?v125" defer></script>
+<script src="assets/js/tracklinks.min.js?v125" defer></script>
+<script src="assets/js/albums-full.min.js?v125" defer></script>
+<script src="assets/js/albums-en.min.js?v125" defer></script>
+<script src="assets/js/song-moods.min.js?v125" defer></script>
+<script src="assets/js/main.min.js?v125" defer></script>
+<script src="assets/js/motion.min.js?v125" defer></script>
+<script src="assets/js/router.min.js?v125" defer></script>
+<script src="assets/js/deck.min.js?v125" defer></script>
 </body>
 </html>

@@ -2671,37 +2671,14 @@ body.nav-open { overflow: hidden; touch-action: none; }
 .ki-big { min-height: 56px; padding-inline: 2em; font-size: 1rem; }
 .ki-hint { margin-top: 1rem; }
 
-/* ============================================================
-   무리 — 사랑방의 하늘
-   화면의 아기거위 한 마리 = 지금 이 페이지를 보고 있는 사람 한 명.
-   색은 쓰지 않는다. 밝기로만 갈린다.
-   ============================================================ */
-/* 한글은 1em에 두 자가 들어간다. 46em이면 한 줄 92자가 되어 눈이 되돌아올 자리를
-   잃는다. 34em ≈ 68자로 잡는다 (읽기 좋은 범위는 45~75자). */
-.muri-lede { max-width: 34em; margin-bottom: 1.8rem; }
 
-.muri-stage {
-  position: relative;
-  /* 하늘은 넓어야 하늘이다. 다만 화면을 다 먹으면 아래 내용이 안 보인다 */
-  height: clamp(300px, 46vh, 460px);
-  overflow: hidden;
-  border-radius: var(--r-panel);
-  /* 가장자리를 흐려 캔버스가 '잘린 사각형'이 아니라 '열린 하늘'이 되게 한다 */
-  /* 좌우 '가장자리 한가운데'까지 닿아야 사각형이 안 보인다.
-     반지름을 115% 로 두면 모서리만 흐려지고 변은 그대로 각이 산다. */
-  -webkit-mask-image: radial-gradient(72% 92% at 50% 46%, #000 30%, transparent 100%);
-          mask-image: radial-gradient(72% 92% at 50% 46%, #000 30%, transparent 100%);
-}
-#muri-canvas { display: block; width: 100%; height: 100%; }
 
-/* 숫자는 캔버스가 아니라 HTML 이다 — 읽고 번역하고 낭독할 수 있어야 한다 */
-.muri-count {
-  margin: 1.2rem 0 .35rem;
-  font-family: var(--font-display); font-weight: 400;
-  font-size: clamp(1.15rem, 1.9vw, 1.5rem); color: var(--ivory);
-}
-.muri-count:empty { display: none; }
-.muri-note { margin: 0; color: var(--faint); font-size: .92rem; line-height: 1.6; max-width: 34em; }
+
+
+
+
+
+
 
 @media (max-width: 720px) {
   #fl-canvas { height: clamp(300px, 46vh, 400px); }
@@ -2825,8 +2802,8 @@ body.nav-open { overflow: hidden; touch-action: none; }
 
 /* ── 줄기 ── */
 .sb-stream .container { max-width: 48rem; }
-.sb-filled { margin: 0 0 .2rem; font-size: 1rem; color: var(--ivory); }
-.sb-filled-note { margin: 0 0 2rem; font-size: .8rem; color: var(--faint); }
+
+
 .sb-rows { list-style: none; margin: 0; padding: 0; }
 .sb-row {
   display: grid; grid-template-columns: 4.2rem auto 1fr; align-items: start;
@@ -2836,14 +2813,14 @@ body.nav-open { overflow: hidden; touch-action: none; }
   font-family: var(--font-mono); font-size: .78rem; letter-spacing: .05em;
   color: var(--faint); padding-top: .2rem;
 }
-.sb-row-art { width: 48px; }
-.sb-row-art img { display: block; width: 48px; height: 48px; object-fit: cover; background: var(--sink); }
-.sb-row:not(.is-album) .sb-row-art { display: none; }
+
+
+
 .sb-row:not(.is-album) { grid-template-columns: 4.2rem 1fr; }
 .sb-row-t { display: block; color: var(--ivory); font-size: 1rem; line-height: 1.55; }
 .sb-row-s { display: block; margin-top: .25rem; font-size: .82rem; color: var(--faint); line-height: 1.5; }
 /* 연혁·앨범은 기록, 팬의 줄은 목소리 — 같은 줄기에 서되 결이 다르다 */
-.sb-row.is-note .sb-row-t { color: var(--muted); }
+
 .sb-row.is-note .sb-row-y { color: var(--ivory); }
 /* 방금 올린 내 줄 — 잠깐 밝게. 남에게는 보이지 않는 표시다. */
 .sb-row.is-mine { border-left: 2px solid var(--ivory); padding-left: .9rem; }
@@ -3112,14 +3089,5 @@ body.home .section::before, body.home .section--band::before { display: none; }
 html[data-fs="2"] .fs-toggle .fs-b, html[data-fs="3"] .fs-toggle .fs-b { opacity: 1; }
 .header-tools { display: flex; align-items: center; gap: .5rem; }
 
-/* 무리 정지 버튼 — 화면 안에 둔다. 캔버스 위에 얹되 글을 가리지 않는 구석. */
-.muri-pause {
-  position: absolute; right: .8rem; bottom: .8rem; z-index: 2;
-  min-width: 44px; min-height: 44px;
-  display: inline-flex; align-items: center; justify-content: center;
-  border: 1px solid var(--line); border-radius: 999px;
-  background: rgba(8,8,8,.55); color: var(--muted);
-  font-size: .8rem; line-height: 1; cursor: pointer;
-  transition: color .18s ease, border-color .18s ease, background .18s ease;
-}
-.muri-pause:hover { color: var(--ivory); border-color: var(--line-strong); background: rgba(8,8,8,.75); }
+
+

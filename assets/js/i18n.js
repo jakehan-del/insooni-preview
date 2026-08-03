@@ -393,10 +393,6 @@ window.I18N_EN = {
 
   /* 꿈의 비행 */
   /* 사랑방 — 오늘의 자리 · 줄기 · 나가는 문 */
-  "muri.pause": "Pause the geese",
-  "muri.t": "The Flock",
-  "muri.lead": "Geese fly in a V because the bird in front makes a wind the ones behind can ride. The front is the hardest place, so they take turns leading. Each goose here is one person reading this page right now.",
-  "muri.canvasAria": "Baby geese fly in formation \u2014 one for each person in the room right now.",
   "sb.invite": "Leave a line for the room today. After review it joins the stream below.",
   "sb.todayH": "Leave a line",
   "sb.play": "Listen · 30 seconds",
@@ -444,9 +440,7 @@ window.I18N_EN = {
   "sb.whyAmb": "This song appeared on more than one album. The earliest is shown.",
   "sb.uplifted": "Your line is up in the Sarangbang. You can find it in the stream below.",
   "sb.todayPhoto": "Today's photo",
-  "sb.streamH": "The Sarangbang Stream",
-  "sb.onlyApproved": "Only approved lines are counted.",
-  "sb.firstLine": "No lines yet. Waiting for the first one.",
+  "sb.streamH": "Lines Left Here",
   "sb.more": "Show more",
   "sb.doorsH": "Ways out of here",
   "sb.doorYt": "official channel \u2014 new stage videos land here first",
