@@ -270,14 +270,32 @@
 
   if (window.IntersectionObserver) {
     new IntersectionObserver(function (es) {
-      if (es[0].isIntersecting) { if (reduce) paint(); else start(); }
+      if (es[0].isIntersecting) { if (reduce || paused) paint(); else start(); }
       else stop();
     }, { threshold: 0.01 }).observe(cv);
   } else { start(); }
 
+  /* 손으로 멈추기. prefers-reduced-motion 을 이미 읽고 있지만
+     한국형 웹콘텐츠 접근성 지침은 '화면에 보이는 정지 수단'을 따로 요구한다.
+     OS 설정을 켜지 않은 사람도 멈출 수 있어야 한다. */
+  var paused = false;
+  var pauseBtn = document.getElementById("muri-pause");
+  if (pauseBtn) {
+    pauseBtn.addEventListener("click", function () {
+      paused = !paused;
+      pauseBtn.setAttribute("aria-pressed", paused ? "true" : "false");
+      var en = document.documentElement.getAttribute("lang") === "en";
+      pauseBtn.setAttribute("aria-label", paused
+        ? (en ? "Resume the geese" : "거위 움직임 다시 시작")
+        : (en ? "Pause the geese" : "거위 움직임 멈추기"));
+      pauseBtn.firstElementChild.textContent = paused ? "\u25B6" : "\u2759\u2759";
+      if (paused) stop(); else if (!reduce) start();
+    });
+  }
+
   document.addEventListener("visibilitychange", function () {
     if (document.hidden) stop();
-    else if (!reduce) start();
+    else if (!reduce && !paused) start();
   });
 
   window.addEventListener("resize", function () {

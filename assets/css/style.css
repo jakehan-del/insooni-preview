@@ -254,8 +254,12 @@ html.js-anim .reveal.in { opacity: 1; transform: none; transition: opacity .9s v
      inline-block이면 '음악'처럼 짧은 항목은 33px 폭만 눌려 손끝이 자주 빗나간다. */
   .main-nav ul li { width: 100%; }
   .main-nav a {
-    font-family: var(--font-mono); font-size: 15px; font-weight: 400;
-    letter-spacing: .22em; text-transform: uppercase;
+    /* W3C 한국어 레이아웃 요구사항(KLREQ) 7.3.1:
+       "Characters like Hangul, Hanja, or Kana have zero space between characters
+       by default." 메뉴는 전부 한글인데 .22em 을 벌려 어절 경계가 흐려져 있었다.
+       고정폭 서체도 뗀다 — 숫자·연도에는 계속 쓰지만 한글 메뉴에는 맞지 않는다. */
+    font-family: var(--font-body); font-size: 1.06rem; font-weight: 500;
+    letter-spacing: 0;
     color: #fff; padding: 19px 0; display: flex;
     align-items: center; justify-content: center; width: 100%; min-height: 56px;
   }
@@ -1508,9 +1512,24 @@ button.show-cell:hover .show-cta, button.show-cell:focus-visible .show-cta { col
 /* 전체 디스코그래피: 타이포그래피 인덱스 */
 .disco-index { columns: 2 340px; column-gap: 4rem; }
 .di-row {
-  display: flex; gap: 1.1rem; align-items: baseline; margin: 0;
+  /* '듣기 / YT' 를 손가락 크기(44px)로 키운 뒤 좁은 화면에서 이 행이 폭을 넘었다.
+     한 줄에 다 못 넣으면 줄을 바꾸는 게 맞다 — 가로로 밀어내면 제목이
+     화면 밖으로 나가 아무도 못 읽는다. */
+  display: flex; flex-wrap: wrap; gap: .3rem 1.1rem; align-items: center; margin: 0;
   padding: .78rem .1rem; border-bottom: 1px solid var(--line);
   font-family: var(--font-mono); break-inside: avoid;
+}
+.di-title { min-width: 0; }
+@media (max-width: 620px) {
+  /* 좁으면 링크를 아래 줄로 통째로 내린다. 연도·제목이 먼저 읽혀야 한다. */
+  .disco-index { columns: 1; }
+  /* flex-basis 100% 에 margin 을 더하면 그만큼 넘친다 — 실제로 그렇게 넘쳤다.
+     들여쓰기는 margin 이 아니라 padding 으로 준다(box-sizing: border-box). */
+  .di-links { flex: 1 0 100%; justify-content: flex-start; padding-left: 3.2em; }
+}
+@media (max-width: 380px) {
+  /* 아주 좁은 화면 + 큰 글씨에서는 들여쓰기까지 뺀다. 읽는 것이 먼저다. */
+  .di-links { padding-left: 0; }
 }
 .di-year { font-size: .76rem; letter-spacing: .12em; color: var(--faint); flex: 0 0 3.2em; }
 .di-title { font-size: .82rem; letter-spacing: .05em; color: var(--ivory); flex: 1; }
@@ -1530,7 +1549,10 @@ button.show-cell:hover .show-cta, button.show-cell:focus-visible .show-cta { col
    정확히 눌러야 노래가 열렸다. 팬 상당수가 50~70대인 사이트에서
    이건 장식 문제가 아니라 기능이 없는 것과 같다.
    글자를 키우고 좌우에 여백을 줘 누를 면을 만든다. */
-.di-links { display: inline-flex; gap: .35em; white-space: nowrap; }
+.di-links {
+  /* 링크끼리도 접힌다. nowrap 이면 320px·큰글씨에서 셋이 한 줄을 고집해 넘친다. */
+  display: inline-flex; flex-wrap: wrap; gap: .2em .35em;
+}
 .di-link {
   font-size: .82rem; letter-spacing: .1em; color: var(--muted); text-decoration: none;
   display: inline-flex; align-items: center; justify-content: center;
@@ -2331,11 +2353,13 @@ body.deck-full .bt-deck[data-deck="1"] { opacity: .3; }
    레이아웃 비율은 그대로 유지된다. 시니어 가독성을 지키려 16px 아래로는
    본문을 더 줄이지 않고, 대신 제목의 낭비되는 크기만 걷어낸다.
    ============================================================ */
-@media (max-width: 900px) {
-  html { font-size: 16.5px; }
-}
+/* 폰에서 루트를 16.5 → 16 → 15.5px 로 내리고 있었다. rem 기반이라 사이트 전체가
+   폰에서 9% 작아진다 — 정작 눈이 어두운 분이 가장 많이 보는 화면이 가장 작았다.
+   GOV.UK 는 2022년 타입 스케일 개정에서 '모바일에서 본문을 줄인다'는 관행을 폐기했고,
+   한국 정부 디자인 시스템(KRDS)도 Body·Label·Navigation 토큰이 PC·모바일 동일하다.
+   루트는 전 폭에서 17px 로 두고, 대신 제목만 화면 폭에 맞춰 눌러 준다.
+   그리고 크기의 결정권은 헤더의 [가] 버튼으로 보는 사람에게 넘긴다. */
 @media (max-width: 720px) {
-  html { font-size: 16px; }                     /* 본문 16px — 웹 표준이자 가장 읽기 좋은 크기 */
   /* 제목은 화면 폭에 비례해 시원하게, 그러나 한 화면을 다 먹지 않게 */
   .page-hero h1 { font-size: clamp(1.9rem, 8.8vw, 2.8rem); line-height: 1.16; }
   .page-hero p { font-size: 1rem; line-height: 1.7; }
@@ -2347,8 +2371,7 @@ body.deck-full .bt-deck[data-deck="1"] { opacity: .3; }
   .page-hero p, .card-desc, .excerpt { letter-spacing: 0; }
 }
 @media (max-width: 400px) {
-  html { font-size: 15.5px; }
-  .page-hero h1 { font-size: clamp(1.75rem, 8.8vw, 2.4rem); }
+  .page-hero h1 { font-size: clamp(1.7rem, 8.4vw, 2.3rem); }
 }
 
 /* ============================================================
@@ -2757,12 +2780,16 @@ body.nav-open { overflow: hidden; touch-action: none; }
 
 /* ── 한 줄 남기기 (사이트 유일의 자유 입력칸) ── */
 .sb-write-box { margin-top: 2rem; padding-top: 1.8rem; border-top: 1px solid var(--line); }
-.sb-chips { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 1.2rem; }
+/* 칩은 팬이 사랑방에서 실제로 손대는 유일한 지점이다.
+   가로로 넷을 붙여 두면 폰에서 서로 붙어 오누름이 난다. 세로로 편다. */
+.sb-chips { display: flex; flex-direction: column; gap: .55rem; margin: 0 0 1.4rem; }
 .sb-chip {
-  padding: .6rem .9rem; min-height: 44px;
+  padding: .75rem 1rem; min-height: 48px; width: 100%;
+  display: flex; align-items: center; text-align: left;
   background: var(--panel); color: var(--muted);
-  border: 1px solid var(--line); border-radius: var(--r-pill);
-  font-size: .88rem; cursor: pointer;
+  border: 1px solid var(--line); border-radius: 4px;
+  font: inherit; font-size: 1rem; letter-spacing: 0; cursor: pointer;
+  transition: color .18s ease, background .18s ease, border-color .18s ease;
 }
 .sb-chip:hover { background: var(--panel-lift); color: var(--ivory); }
 .sb-form .form-field { margin-bottom: 1rem; }
@@ -3062,3 +3089,37 @@ body.home .section::before, body.home .section--band::before { display: none; }
 .hl-n { grid-column: 2; display: block; color: var(--muted); font-size: .88rem; margin-top: .25rem; line-height: 1.6; }
 .haemil-line-note { margin: 1.2rem 0 0; color: var(--faint); font-size: .88rem; }
 @media (max-width: 860px) { .haemil-grid { grid-template-columns: 1fr; gap: 2.6rem; } }
+
+
+/* ── 글자 크기 [가] ──────────────────────────────────────────────
+   '큰글씨 모드'라는 별도 화면을 만들지 않는다. 그건 낙인이고,
+   따로 만든 화면은 반드시 본화면보다 뒤처진다.
+   기본 화면 자체를 세 단계로 키운다. 인라인 스타일이라 미디어쿼리를 포함한
+   모든 규칙을 이기므로 어느 페이지에서도 확실히 먹는다.
+   혼혈로 차별을 겪고 다문화 아이들의 학교를 세운 사람의 사이트가
+   눈이 어두워진 사람을 밀어내지 않는다는 것은 장식이 아니다. */
+.fs-toggle {
+  min-width: 44px; min-height: 44px; padding: 0 .35em;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--line); border-radius: 4px; background: transparent;
+  color: var(--muted); cursor: pointer; line-height: 1;
+  font-family: var(--font-body); font-weight: 600; letter-spacing: 0;
+  transition: color .18s ease, border-color .18s ease;
+}
+.fs-toggle:hover { color: var(--ivory); border-color: var(--line-strong); }
+.fs-toggle .fs-a { font-size: 1rem; }
+.fs-toggle .fs-b { font-size: .78rem; opacity: .55; margin-left: .12em; }
+html[data-fs="2"] .fs-toggle .fs-b, html[data-fs="3"] .fs-toggle .fs-b { opacity: 1; }
+.header-tools { display: flex; align-items: center; gap: .5rem; }
+
+/* 무리 정지 버튼 — 화면 안에 둔다. 캔버스 위에 얹되 글을 가리지 않는 구석. */
+.muri-pause {
+  position: absolute; right: .8rem; bottom: .8rem; z-index: 2;
+  min-width: 44px; min-height: 44px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: rgba(8,8,8,.55); color: var(--muted);
+  font-size: .8rem; line-height: 1; cursor: pointer;
+  transition: color .18s ease, border-color .18s ease, background .18s ease;
+}
+.muri-pause:hover { color: var(--ivory); border-color: var(--line-strong); background: rgba(8,8,8,.75); }

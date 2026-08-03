@@ -54,6 +54,7 @@ window.I18N_EN = {
   "live.freshD": "This list updates automatically when new stage videos land on official channels.",
   "dyn.freshEmpty": "New official videos will appear here automatically.",
   "recap.poster": "Show poster",
+  "aria.fontSize": "Text size — press to change",
   "aria.zoom": "view larger",
   "aria.close": "Close",
   "dyn.pollHint": "Tap an option to vote. (one vote per person)",
@@ -392,6 +393,7 @@ window.I18N_EN = {
 
   /* 꿈의 비행 */
   /* 사랑방 — 오늘의 자리 · 줄기 · 나가는 문 */
+  "muri.pause": "Pause the geese",
   "muri.t": "The Flock",
   "muri.lead": "Geese fly in a V because the bird in front makes a wind the ones behind can ride. The front is the hardest place, so they take turns leading. Each goose here is one person reading this page right now.",
   "muri.canvasAria": "Baby geese fly in formation \u2014 one for each person in the room right now.",

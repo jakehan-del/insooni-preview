@@ -13,10 +13,10 @@
 <meta name="description" content="편지를 쓰고, 팬 번호증과 응원 카드를 만들고, 공식 채널로 마음을 전하는 곳. 인순이 공식 사랑방.">
 <!-- 본문 글꼴은 먼저 확실히 깐다(미뤄 봤지만 첫 화면이 빨라지지 않았다).
      제목용 서체는 화면이 뜬 뒤 들어온다 — font-display:swap이라 늦어도 글자는 보인다. -->
-<link rel="stylesheet" href="assets/fonts/body.css?v123">
-<link rel="stylesheet" href="assets/fonts/display.css?v123" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/fonts/display.css?v123"></noscript>
-<link rel="stylesheet" href="assets/css/style.min.css?v123">
+<link rel="stylesheet" href="assets/fonts/body.css?v124">
+<link rel="stylesheet" href="assets/fonts/display.css?v124" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?v124"></noscript>
+<link rel="stylesheet" href="assets/css/style.min.css?v124">
 <link rel="canonical" href="https://jakehan-del.github.io/insooni-preview/community.html">
 <meta property="og:url" content="https://jakehan-del.github.io/insooni-preview/community.html">
 <meta property="og:type" content="website">
@@ -52,6 +52,7 @@
       </ul>
     </nav>
     <div class="header-tools">
+      <button class="fs-toggle" type="button" aria-label="글자 크기 바꾸기 — 지금 보통" data-i18n-aria="aria.fontSize"><span class="fs-a">가</span><span class="fs-b">가</span></button>
       <button class="lang-toggle" type="button" aria-label="Switch to English">EN</button>
       <button class="nav-toggle" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="메뉴 열기" data-i18n-aria="aria.menuOpen"><span class="bars"></span></button>
     </div>
@@ -181,6 +182,13 @@
         <canvas id="muri-canvas" role="img"
                 aria-label="지금 사랑방에 있는 사람 수만큼 아기거위가 무리 지어 납니다."
                 data-i18n-aria="muri.canvasAria"></canvas>
+        <!-- 정지 — 한국형 웹콘텐츠 접근성 지침은 '화면에 보이는 정지 수단'을 요구한다.
+             OS 의 '동작 줄이기' 설정으로 대체되지 않는다. muri.js 가 그 설정도 따로 읽지만
+             그것과 이 버튼은 다른 요구다. -->
+        <button type="button" class="muri-pause" id="muri-pause" aria-pressed="false"
+                aria-label="거위 움직임 멈추기" data-i18n-aria="muri.pause">
+          <span aria-hidden="true">❙❙</span>
+        </button>
       </div>
 
       <p class="muri-count" id="muri-count" role="status" aria-live="polite"></p>
@@ -229,19 +237,19 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동" data-i18n-aria="aria.toTop">↑</button>
-<script src="assets/js/config.js?v123" defer></script>
-<script src="assets/js/backend.js?v123" defer></script>
-<script src="assets/js/i18n.min.js?v123" defer></script>
-<script src="assets/js/data.min.js?v123" defer></script>
-<script src="assets/js/tracklinks.min.js?v123" defer></script>
-<script src="assets/js/albums-full.min.js?v123" defer></script>
-<script src="assets/js/albums-en.min.js?v123" defer></script>
-<script src="assets/js/song-moods.min.js?v123" defer></script>
-<script src="assets/js/goose.min.js?v123" defer></script>
-<script src="assets/js/main.min.js?v123" defer></script>
-<script src="assets/js/muri.min.js?v123" defer></script>
-<script src="assets/js/motion.min.js?v123" defer></script>
-<script src="assets/js/router.min.js?v123" defer></script>
-<script src="assets/js/deck.min.js?v123" defer></script>
+<script src="assets/js/config.js?v124" defer></script>
+<script src="assets/js/backend.js?v124" defer></script>
+<script src="assets/js/i18n.min.js?v124" defer></script>
+<script src="assets/js/data.min.js?v124" defer></script>
+<script src="assets/js/tracklinks.min.js?v124" defer></script>
+<script src="assets/js/albums-full.min.js?v124" defer></script>
+<script src="assets/js/albums-en.min.js?v124" defer></script>
+<script src="assets/js/song-moods.min.js?v124" defer></script>
+<script src="assets/js/goose.min.js?v124" defer></script>
+<script src="assets/js/main.min.js?v124" defer></script>
+<script src="assets/js/muri.min.js?v124" defer></script>
+<script src="assets/js/motion.min.js?v124" defer></script>
+<script src="assets/js/router.min.js?v124" defer></script>
+<script src="assets/js/deck.min.js?v124" defer></script>
 </body>
 </html>

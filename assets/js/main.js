@@ -417,6 +417,47 @@
     });
   }
 
+
+  /* ── 글자 크기 ──────────────────────────────────────────────────
+     보통 17px · 크게 19px · 아주 크게 21px 세 단계를 돌린다.
+     document.documentElement.style 로 직접 쓰기 때문에 미디어쿼리를 포함한
+     모든 시트 규칙을 이긴다 — 어느 페이지에서도 확실히 먹는다.
+     고른 값은 localStorage 에 남아 다음에 와도 그대로다.
+     '큰글씨 모드'라는 별도 화면을 만들지 않는 이유는 style.css 에 적어 두었다. */
+  function initFontSize() {
+    var KEY = "insooni_fs";
+    var STEPS = [17, 19, 21];
+    var NAMES = ["보통", "크게", "아주 크게"];
+    var EN = ["normal", "large", "largest"];
+    var btns = $all(".fs-toggle");
+    if (!btns.length) return;
+
+    function apply(i, save) {
+      i = ((i % STEPS.length) + STEPS.length) % STEPS.length;
+      document.documentElement.style.fontSize = STEPS[i] + "px";
+      document.documentElement.setAttribute("data-fs", String(i + 1));
+      var en = document.documentElement.getAttribute("lang") === "en";
+      btns.forEach(function (b) {
+        b.setAttribute("aria-label", en
+          ? ("Text size — now " + EN[i] + ". Press to change.")
+          : ("글자 크기 바꾸기 — 지금 " + NAMES[i]));
+      });
+      if (save) { try { localStorage.setItem(KEY, String(i)); } catch (e) {} }
+      return i;
+    }
+
+    var cur = 0;
+    try {
+      var saved = parseInt(localStorage.getItem(KEY), 10);
+      if (saved >= 0 && saved < STEPS.length) cur = saved;
+    } catch (e) {}
+    apply(cur, false);
+
+    btns.forEach(function (b) {
+      b.addEventListener("click", function () { cur = apply(cur + 1, true); });
+    });
+  }
+
   function renderTimeline() {
     var box = $("#timeline");
     if (!box || !D.timeline) return;
@@ -2260,11 +2301,13 @@
 
     function setFilled(n) {
       if (!head) return;
-      /* 곡 수를 세지 않는다. 사랑방에서 세어야 할 것은 사람이 남긴 줄이다. */
+      /* 사람을 세지 않는다.
+         작품을 세는 숫자는 좋다(밥 딜런 사이트의 'TIMES PLAYED 1585' 처럼).
+         그러나 사람을 세면, 값이 작을 때 그 숫자가 '아무도 안 온다'는 말이 된다.
+         목록 자체가 몇 줄인지 이미 보여 주므로 숫자는 정보를 더하지 않고
+         인상만 깎는다. 빈 방일 때만 말을 건다. */
       head.textContent = n
-        ? (document.documentElement.getAttribute("lang") === "en"
-            ? (n + (n === 1 ? " line has" : " lines have") + " been left here.")
-            : (n + "줄이 이 방에 남았습니다."))
+        ? ""
         : t("sb.firstLine", "아직 남은 줄이 없습니다. 첫 줄을 기다립니다.");
     }
 
@@ -2828,7 +2871,7 @@
   function pageInit() {
     [renderEventList, initStrip, initVhero, renderArchive, renderPastRecaps,
      initFreshVideos, initVideoButtons, initReveal, renderNewsPage, renderCalendar,
-     renderTimeline, renderHaemilLine, renderAnniversary, renderDiscography, initToday, initStream, initFlight, initSubscribe,
+     initFontSize, renderTimeline, renderHaemilLine, renderAnniversary, renderDiscography, initToday, initStream, initFlight, initSubscribe,
      initArtistLetter, initRise].forEach(safe);
     /* 마지막에 번역을 건다 — 위 렌더러들이 만들어 낸 요소까지 함께 잡기 위해서.
        라우터로 페이지를 옮겨도 새 <main>이 영어로 칠해진다. */
