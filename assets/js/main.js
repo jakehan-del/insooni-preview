@@ -395,6 +395,28 @@
     sec.hidden = false;
   }
 
+
+  /* 해밀로 가는 길 — 이 페이지에만.
+     새 사실을 여기서 만들지 않는다. 검증된 연표에서 이 일에 해당하는 것만 골라 세운다.
+     그래서 연표를 고치면 이 목록도 함께 고쳐지고, 둘이 갈라질 수 없다. */
+  function renderHaemilLine() {
+    var box = $("#hm-line");
+    if (!box || !D.timeline) return;
+    var KEY = /해밀|좋은 사람들|펄벅|Haemil|Good People|Pearl/i;
+    var hit = D.timeline.filter(function (t) {
+      return KEY.test((t.event || "") + " " + (t.note || "") +
+                      " " + ((t.en && t.en.event) || ""));
+    });
+    if (!hit.length) { var sec = box.closest(".haemil-line"); if (sec) sec.hidden = true; return; }
+    hit.forEach(function (t) {
+      var li = el("li");
+      li.innerHTML = '<span class="hl-y">' + esc(t.year) + "</span>" +
+        '<span class="hl-e">' + esc(tr(t, "event")) + "</span>" +
+        (t.note ? '<span class="hl-n">' + esc(tr(t, "note")) + "</span>" : "");
+      box.appendChild(li);
+    });
+  }
+
   function renderTimeline() {
     var box = $("#timeline");
     if (!box || !D.timeline) return;
@@ -2806,7 +2828,7 @@
   function pageInit() {
     [renderEventList, initStrip, initVhero, renderArchive, renderPastRecaps,
      initFreshVideos, initVideoButtons, initReveal, renderNewsPage, renderCalendar,
-     renderTimeline, renderAnniversary, renderDiscography, initToday, initStream, initFlight, initSubscribe,
+     renderTimeline, renderHaemilLine, renderAnniversary, renderDiscography, initToday, initStream, initFlight, initSubscribe,
      initArtistLetter, initRise].forEach(safe);
     /* 마지막에 번역을 건다 — 위 렌더러들이 만들어 낸 요소까지 함께 잡기 위해서.
        라우터로 페이지를 옮겨도 새 <main>이 영어로 칠해진다. */

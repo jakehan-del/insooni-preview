@@ -31,7 +31,12 @@ h1, h2, h3, h4, .brand-en, [class*="-year"], .a-note, .card-meta {
   --panel-lift: #1d1d1d;     /* 패널 호버 */
   --ivory: #F3EFE7;          /* 본문 텍스트 (void 위 ≈15:1) */
   --muted: #b3a99c;          /* 보조 텍스트 (≈7.5:1) */
-  --faint: #8b8175;          /* 메타 텍스트 (≈4.8:1) */
+  /* 메타 텍스트. #8b8175 였다 — void 위 5.24:1 로 AA(4.5)를 겨우 0.74 넘겨,
+     조명을 α 0.083 까지밖에 못 올리게 이 토큰 하나가 사이트 전체를 묶고 있었다.
+     #9c9284 로 올리면 6.54:1 이 되고 광량 상한이 0.160 으로 거의 두 배가 된다.
+     --muted(#b3a99c)와는 아직 27% 떨어져 있어 ivory>muted>faint 세 단계는 그대로다
+     (#a49a8c 까지 올리면 18% 로 좁혀져 층이 뭉개진다). */
+  --faint: #9c9284;          /* 메타 텍스트 (void 위 6.54:1) */
   --gold: #F3EFE7;           /* 액센트 = 아이보리 (모노크롬) */
   --gold-deep: #57534c;      /* 중성 보더 */
   --gold-hover: #ffffff;     /* 액센트 호버 */
@@ -150,7 +155,7 @@ html.js-anim .reveal.in { opacity: 1; transform: none; transition: opacity .9s v
   font-size: .92rem; letter-spacing: .34em; text-transform: uppercase; color: #fff;
 }
 .section-head .more {
-  font-family: var(--font-mono); font-size: .68rem; font-weight: 400; letter-spacing: .22em;
+  font-family: var(--font-mono); font-size: .76rem; font-weight: 400; letter-spacing: .22em;
   text-transform: uppercase; color: var(--faint); text-decoration: none;
   border-bottom: 1px solid var(--line-strong); padding-bottom: .25em; white-space: nowrap;
   transition: color .2s ease, border-color .2s ease;
@@ -159,7 +164,7 @@ html.js-anim .reveal.in { opacity: 1; transform: none; transition: opacity .9s v
 
 /* 라벨(절제 사용: 페이지당 1~2회) */
 .label {
-  display: inline-block; font-family: var(--font-mono); font-size: .72rem; font-weight: 500;
+  display: inline-block; font-family: var(--font-mono); font-size: .76rem; font-weight: 500;
   letter-spacing: .22em; text-transform: uppercase; color: var(--gold);
 }
 
@@ -209,6 +214,8 @@ html.js-anim .reveal.in { opacity: 1; transform: none; transition: opacity .9s v
   font-family: var(--font-mono); color: var(--faint); font-weight: 500;
   font-size: .76rem; letter-spacing: .17em;
   text-shadow: 0 1px 12px rgba(8,8,8,.65);
+  min-width: 44px; min-height: 44px;
+  display: inline-flex; align-items: center; justify-content: center;
 }
 .lang-toggle:hover { color: var(--gold); }
 .header-tools button:focus-visible, .main-nav a:focus-visible {
@@ -292,7 +299,7 @@ html.js-anim .reveal.in { opacity: 1; transform: none; transition: opacity .9s v
 
 .badge {
   display: inline-block; padding: .3em .85em; border-radius: var(--r-pill);
-  font-family: var(--font-mono); font-size: .72rem; font-weight: 500; letter-spacing: .12em;
+  font-family: var(--font-mono); font-size: .76rem; font-weight: 500; letter-spacing: .12em;
   border: 1px solid var(--line-strong); color: var(--muted); background: transparent;
 }
 .badge--gold { border-color: var(--gold-deep); color: var(--gold); }
@@ -315,7 +322,7 @@ html.js-anim .reveal.in { opacity: 1; transform: none; transition: opacity .9s v
 }
 .frame .frame-note {
   position: relative; margin: 0; padding: 1.1rem 1.5rem;
-  font-family: var(--font-mono); font-size: .72rem; letter-spacing: .12em; color: var(--faint);
+  font-family: var(--font-mono); font-size: .76rem; letter-spacing: .12em; color: var(--faint);
 }
 
 /* ---------- 7c-00. 비디오 히어로: 첫 화면은 영상 그 자체 (텍스트 0) ---------- */
@@ -367,7 +374,7 @@ html.js-anim .vhero-poster { animation: vhero-fade 1.1s ease both; }
 }
 .vhero-credit {
   position: absolute; left: max(24px, calc((100vw - var(--container)) / 2 + 24px)); bottom: 18px; margin: 0;
-  font-family: var(--font-mono); font-size: .72rem; letter-spacing: .14em;
+  font-family: var(--font-mono); font-size: .76rem; letter-spacing: .14em;
   text-transform: uppercase; color: rgba(243,239,231,.6);
 }
 
@@ -430,7 +437,7 @@ html.js-anim .hero [data-rise="5"] { animation-delay: .5s; }
   font-size: .92rem; letter-spacing: .34em; text-transform: uppercase; color: #fff;
 }
 .page-hero p {
-  font-family: var(--font-mono); font-size: .68rem; letter-spacing: .1em;
+  font-family: var(--font-mono); font-size: .76rem; letter-spacing: .1em;
   color: var(--faint); margin: 0; max-width: 52em;
 }
 
@@ -464,14 +471,14 @@ html.js-anim .hero [data-rise="5"] { animation-delay: .5s; }
   border-radius: var(--r-panel); padding: clamp(1.8rem, 5vw, 3.2rem);
 }
 .nr-kicker {
-  display: block; font-family: var(--font-mono); font-size: .68rem;
+  display: block; font-family: var(--font-mono); font-size: .76rem;
   letter-spacing: .24em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem;
 }
 .nr-card h2 {
   font-family: var(--font-display); font-size: clamp(1.4rem, 3.4vw, 2.1rem);
   line-height: 1.35; letter-spacing: 0; margin: 0 0 1rem; color: var(--ivory); word-break: keep-all;
 }
-.nr-outlet { font-family: var(--font-mono); font-size: .74rem; letter-spacing: .1em; color: var(--faint); margin: 0 0 1.4rem; }
+.nr-outlet { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .1em; color: var(--faint); margin: 0 0 1.4rem; }
 .nr-note { font-size: .95rem; line-height: 1.75; color: var(--muted); margin: 0 0 1.8rem; }
 .nr-actions { margin: 0; }
 .nr-close { position: fixed; top: 20px; right: 20px; }
@@ -481,7 +488,7 @@ html.js-anim .hero [data-rise="5"] { animation-delay: .5s; }
 button.news-item--auto { width: 100%; text-align: left; background: none; cursor: pointer; font: inherit; }
 button.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline; text-underline-offset: 4px; }
 .news-item .news-src {
-  font-family: var(--font-mono); font-size: .72rem; letter-spacing: .1em;
+  font-family: var(--font-mono); font-size: .76rem; letter-spacing: .1em;
   text-transform: uppercase; color: var(--faint);
 }
 @media (max-width: 720px) {
@@ -502,7 +509,7 @@ button.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline
   font-family: var(--font-mono); font-size: 2.1rem; font-weight: 400;
   color: var(--ivory); line-height: 1; letter-spacing: .04em;
 }
-.event-date .m { font-family: var(--font-mono); font-size: .72rem; color: var(--faint); letter-spacing: .12em; }
+.event-date .m { font-family: var(--font-mono); font-size: .76rem; color: var(--faint); letter-spacing: .12em; }
 .event-info h3 { margin: .35em 0 .1em; font-size: 1.3rem; }
 .event-info .where { color: var(--muted); font-size: .92rem; margin: 0; }
 @media (max-width: 720px) {
@@ -534,7 +541,7 @@ button.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline
 }
 .stage-tile:hover { border-color: var(--gold-deep); transform: translateY(-3px); }
 .stage-tile .t-year {
-  font-family: var(--font-mono); font-size: .72rem; color: var(--gold); letter-spacing: .2em; margin-bottom: .5rem; font-weight: 500;
+  font-family: var(--font-mono); font-size: .76rem; color: var(--gold); letter-spacing: .2em; margin-bottom: .5rem; font-weight: 500;
 }
 .stage-tile .t-title {
   font-family: var(--font-display); font-weight: 700; color: var(--ivory);
@@ -542,7 +549,7 @@ button.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline
 }
 .stage-grid > :first-child .t-title { font-size: clamp(1.9rem, 3.6vw, 3rem); }
 .stage-tile .t-desc { color: var(--muted); font-size: .98rem; margin: 0; max-width: 34em; }
-.stage-tile .t-note { margin-top: .9rem; font-family: var(--font-mono); font-size: .72rem; letter-spacing: .12em; color: var(--faint); }
+.stage-tile .t-note { margin-top: .9rem; font-family: var(--font-mono); font-size: .76rem; letter-spacing: .12em; color: var(--faint); }
 .stage-tile .thumb-embed { position: absolute; inset: 0; }
 .stage-tile .thumb-embed iframe { width: 100%; height: 100%; border: 0; }
 @media (max-width: 880px) {
@@ -580,7 +587,7 @@ button.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline
 .lightbox-frame iframe { width: 100%; height: 100%; border: 0; }
 .lightbox-caption {
   position: absolute; left: 4vw; bottom: 3.2vh; margin: 0;
-  font-family: var(--font-mono); font-size: .72rem; letter-spacing: .14em;
+  font-family: var(--font-mono); font-size: .76rem; letter-spacing: .14em;
   text-transform: uppercase; color: var(--muted);
 }
 .lightbox-close {
@@ -602,12 +609,12 @@ button.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline
 .recap-inner { max-width: 980px; margin: 0 auto; }
 .recap-head { margin-bottom: 2.2rem; padding-right: 64px; }
 .recap-kicker {
-  font-family: var(--font-mono); font-size: .72rem; letter-spacing: .3em;
+  font-family: var(--font-mono); font-size: .76rem; letter-spacing: .3em;
   color: var(--gold); text-transform: uppercase;
 }
 .recap-head h2 { font-size: clamp(1.7rem, 4vw, 2.7rem); margin: .35em 0 .4em; }
 .recap-meta {
-  font-family: var(--font-mono); font-size: .74rem; letter-spacing: .12em;
+  font-family: var(--font-mono); font-size: .76rem; letter-spacing: .12em;
   color: var(--faint); margin: 0 0 1em;
 }
 .recap-desc { color: var(--muted); max-width: 46em; margin: 0; }
@@ -702,7 +709,7 @@ button.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline
   transition: color .2s ease;
 }
 .era-card .e-desc { color: var(--muted); font-size: .98rem; margin: 0 0 1.1rem; max-width: 26em; }
-.era-card .e-go { font-family: var(--font-mono); font-size: .72rem; font-weight: 500; color: var(--muted); letter-spacing: .18em; text-transform: uppercase; transition: color .2s ease; }
+.era-card .e-go { font-family: var(--font-mono); font-size: .76rem; font-weight: 500; color: var(--muted); letter-spacing: .18em; text-transform: uppercase; transition: color .2s ease; }
 .era-card:hover .e-go { color: var(--gold); }
 .era-c1 {
   background:
@@ -834,7 +841,7 @@ button.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline
 .spotlight-img img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
 .spotlight-copy .label { margin-bottom: 1.2rem; }
 .spotlight-copy h2 { margin-bottom: .3em; }
-.spotlight-copy .s-date { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .14em; color: var(--faint); display: block; margin-bottom: 1rem; }
+.spotlight-copy .s-date { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .14em; color: var(--faint); display: block; margin-bottom: 1rem; }
 .spotlight-copy p { color: var(--muted); max-width: 30em; }
 .spotlight-copy .more { display: inline-block; margin-top: .6rem; }
 @media (max-width: 880px) { .spotlight-grid { grid-template-columns: 1fr; gap: 1.8rem; } }
@@ -852,7 +859,7 @@ button.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline
   background: linear-gradient(to top, rgba(8,8,8,.85) 8%, rgba(8,8,8,.1) 45%);
 }
 .feature-live .fl-copy { position: absolute; left: 2rem; bottom: 1.8rem; right: 2rem; z-index: 2; }
-.feature-live .fl-meta { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .16em; color: var(--muted); text-transform: uppercase; display: block; margin-bottom: .4rem; }
+.feature-live .fl-meta { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .16em; color: var(--muted); text-transform: uppercase; display: block; margin-bottom: .4rem; }
 .feature-live .fl-title { font-family: var(--font-display); font-weight: 700; color: var(--ivory); font-size: clamp(1.6rem, 3.2vw, 2.6rem); margin: 0; }
 .feature-live .fl-play {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -883,7 +890,7 @@ button.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline
 .footer-min nav {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end;
   gap: 1.6rem; padding: 1.5rem 28px;
-  font-family: var(--font-mono); font-size: .68rem; letter-spacing: .18em;
+  font-family: var(--font-mono); font-size: .76rem; letter-spacing: .18em;
   text-transform: uppercase;
 }
 .footer-min a { color: var(--faint); text-decoration: none; }
@@ -900,7 +907,7 @@ button.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline
 }
 .footer-brand p { color: var(--faint); font-size: .92rem; margin-top: 1rem; }
 .site-footer h3 {
-  font-family: var(--font-mono); font-size: .72rem; font-weight: 500;
+  font-family: var(--font-mono); font-size: .76rem; font-weight: 500;
   letter-spacing: .22em; color: var(--faint); text-transform: uppercase; margin-bottom: 1.1rem;
 }
 .site-footer ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .65rem; }
@@ -908,7 +915,7 @@ button.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline
 .site-footer ul a:hover { color: var(--gold); }
 .footer-legal {
   border-top: 1px solid var(--line); padding-top: 1.6rem;
-  font-family: var(--font-mono); font-size: .72rem; color: var(--faint);
+  font-family: var(--font-mono); font-size: .76rem; color: var(--faint);
   display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
 }
 @media (max-width: 880px) { .footer-cols { grid-template-columns: 1fr 1fr; } }
@@ -918,7 +925,7 @@ button.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline
 .filter-bar { display: flex; gap: .4rem 1.9rem; flex-wrap: wrap; margin-bottom: 2.2rem; }
 .filter-bar button {
   min-height: 44px; padding: 0 .2em; border: 0; background: transparent;
-  font-family: var(--font-mono); font-size: .72rem; font-weight: 400;
+  font-family: var(--font-mono); font-size: .76rem; font-weight: 400;
   letter-spacing: .22em; text-transform: uppercase; color: var(--faint);
   transition: color .2s ease;
 }
@@ -940,7 +947,7 @@ button.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline
 .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
 .calendar-grid .dow {
   padding: .7em 0; text-align: center; font-family: var(--font-mono);
-  font-size: .72rem; font-weight: 500;
+  font-size: .76rem; font-weight: 500;
   letter-spacing: .12em; color: var(--faint); border-bottom: 1px solid var(--line);
 }
 .calendar-grid .dow:first-child { color: var(--danger-t); }
@@ -973,7 +980,15 @@ button.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline
 .timeline li.milestone .year { color: #fff; }
 .timeline .evt { color: var(--ivory); font-size: 1.08rem; font-weight: 600; }
 .timeline li.milestone .evt { font-weight: 700; }
-.timeline .note { display: block; color: var(--muted); font-size: .9rem; font-weight: 400; margin-top: .3em; }
+/* year·evt·note 가 형제 셋인데 그리드는 2열이라, note 가 세 번째 아이템으로
+   '다음 행 1열'(연도 칸, 10rem)로 떨어져 있었다. 그래서 설명글이 좁은 칸에
+   눌려 어색하게 끊기고 오른쪽 60% 는 통째로 비었다.
+   2열에 못박아 사건 제목 아래로 보낸다. */
+.timeline .note {
+  grid-column: 2; display: block; color: var(--muted);
+  font-size: .9rem; font-weight: 400; margin-top: -1.2rem; max-width: 46em;
+}
+@media (max-width: 640px) { .timeline .note { grid-column: 1; margin-top: .1rem; } }
 @media (max-width: 640px) {
   .timeline li { grid-template-columns: 1fr; gap: .4rem; padding: 1.4rem .2rem; }
 }
@@ -997,7 +1012,7 @@ a.card { text-decoration: none; color: inherit; }
 .card-body { padding: .9rem .1rem 1.2rem; display: flex; flex-direction: column; gap: .45rem; flex: 1; }
 .card-body > .btn { margin-top: auto; }
 .card-body h3 { margin: 0; font-family: var(--font-mono); font-weight: 400; font-size: .85rem; letter-spacing: .14em; }
-.card-meta { font-family: var(--font-mono); font-size: .72rem; color: var(--faint); display: flex; gap: .9em; flex-wrap: wrap; margin-top: auto; letter-spacing: .08em; }
+.card-meta { font-family: var(--font-mono); font-size: .76rem; color: var(--faint); display: flex; gap: .9em; flex-wrap: wrap; margin-top: auto; letter-spacing: .08em; }
 .card-desc { color: var(--muted); font-size: 1rem; margin: 0; }
 
 /* 디스코그래피 레코드 행 */
@@ -1015,7 +1030,7 @@ a.card { text-decoration: none; color: inherit; }
 .album-row .a-year { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; color: var(--gold); }
 .album-row .a-title { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; color: var(--ivory); margin: 0 0 .15em; }
 .album-row .a-note { color: var(--muted); font-size: .92rem; margin: 0; }
-.album-row .a-kind { font-family: var(--font-mono); font-size: .72rem; color: var(--faint); letter-spacing: .12em; white-space: nowrap; }
+.album-row .a-kind { font-family: var(--font-mono); font-size: .76rem; color: var(--faint); letter-spacing: .12em; white-space: nowrap; }
 @media (max-width: 720px) { .album-row { grid-template-columns: 1fr; gap: .4rem; } }
 
 /* ---------- 19. 커뮤니티 ---------- */
@@ -1098,7 +1113,7 @@ a.card { text-decoration: none; color: inherit; }
 .admin-side .link-pending { display: block; padding: .75em 1em; font-size: .9rem; }
 .stat-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 1rem; }
 .stat-card { border: 1px solid var(--line); border-radius: var(--r-panel); padding: 1.4rem 1.5rem; background: var(--stage); }
-.stat-card .label { font-size: .72rem; color: var(--faint); letter-spacing: .22em; }
+.stat-card .label { font-size: .76rem; color: var(--faint); letter-spacing: .22em; }
 .stat-card .value { font-family: var(--font-display); font-size: 2.1rem; font-weight: 700; color: var(--ivory); line-height: 1.25; display: block; }
 .stat-card .delta { font-size: .8rem; font-weight: 700; }
 .delta.up { color: var(--ok); } .delta.down { color: var(--danger-t); }
@@ -1107,7 +1122,7 @@ a.card { text-decoration: none; color: inherit; }
 
 .data-table { width: 100%; border-collapse: collapse; border: 1px solid var(--line); }
 .data-table th {
-  text-align: left; font-family: var(--font-mono); font-size: .72rem; font-weight: 500;
+  text-align: left; font-family: var(--font-mono); font-size: .76rem; font-weight: 500;
   letter-spacing: .12em; color: var(--faint);
   background: var(--stage); padding: .85em 1.1em; border-bottom: 1px solid var(--line);
 }
@@ -1131,7 +1146,7 @@ a.card { text-decoration: none; color: inherit; }
 .arch-item:hover img { transform: scale(1.04); }
 .arch-cap {
   display: block; position: static; opacity: 1;
-  font-family: var(--font-mono); font-size: .67rem; letter-spacing: .08em;
+  font-family: var(--font-mono); font-size: .76rem; letter-spacing: .08em;
   color: var(--muted); text-align: left; padding: .55rem .15rem 1.05rem; background: none;
 }
 .arch-item:hover .arch-cap, .arch-item:focus-visible .arch-cap { color: #fff; }
@@ -1159,7 +1174,7 @@ button.album-row:hover { background: rgba(243,239,231,.03); }
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
   padding: 1.4rem .4rem 2rem; border-bottom: 1px solid var(--line);
 }
-.album-detail h4, .album-detail .a-sub { font-family: var(--font-mono); font-size: .7rem; font-weight: 500; letter-spacing: .18em; color: var(--gold); text-transform: uppercase; margin: 0 0 .5em; }
+.album-detail h4, .album-detail .a-sub { font-family: var(--font-mono); font-size: .76rem; font-weight: 500; letter-spacing: .18em; color: var(--gold); text-transform: uppercase; margin: 0 0 .5em; }
 .album-detail p { color: var(--faint); font-size: .95rem; margin: 0; }
 @media (max-width: 720px) { .album-detail { grid-template-columns: 1fr; gap: 1rem; } .arch-grid { grid-template-columns: repeat(2, 1fr); } }
 
@@ -1311,7 +1326,7 @@ body.home .footer-min a { display: inline-flex; align-items: center; min-height:
   background: radial-gradient(closest-side, rgba(8,8,8,.66), transparent 78%);
 }
 .strip-caption > * { position: relative; }
-.sc-eyebrow { margin: 0; font-family: var(--font-mono); font-size: .67rem; letter-spacing: .3em; text-transform: uppercase; color: rgba(243,239,231,.78); text-shadow: 0 1px 14px rgba(8,8,8,.95); }
+.sc-eyebrow { margin: 0; font-family: var(--font-mono); font-size: .76rem; letter-spacing: .3em; text-transform: uppercase; color: rgba(243,239,231,.78); text-shadow: 0 1px 14px rgba(8,8,8,.95); }
 .sc-title {
   pointer-events: auto; border: 0; background: transparent; padding: .35em .6em; cursor: pointer;
   font-family: var(--font-mono); font-size: 1rem; letter-spacing: .18em;
@@ -1321,7 +1336,7 @@ body.home .footer-min a { display: inline-flex; align-items: center; min-height:
 .sc-sub {
   pointer-events: auto; display: inline-flex; align-items: center; min-height: 44px;
   border: 0; background: transparent; cursor: pointer;
-  font-family: var(--font-mono); font-size: .72rem; letter-spacing: .26em;
+  font-family: var(--font-mono); font-size: .76rem; letter-spacing: .26em;
   text-transform: uppercase; color: rgba(243,239,231,.85); text-decoration: none;
   box-shadow: inset 0 -1px 0 rgba(243,239,231,.5);
   text-shadow: 0 1px 12px rgba(8,8,8,.9);
@@ -1369,7 +1384,7 @@ button.strip-item:focus-visible { outline: 3px solid var(--ivory); outline-offse
 /* 음악: 최신 릴리즈 히어로 (act ii 문법) */
 .release-hero { display: grid; grid-template-columns: minmax(240px, 420px) 1fr; gap: 2.6rem; align-items: center; }
 .release-hero > img { width: 100%; height: auto; border-radius: 2px; }
-.rh-eyebrow { font-family: var(--font-mono); font-size: .67rem; letter-spacing: .3em; text-transform: uppercase; color: var(--faint); margin: 0 0 .8em; }
+.rh-eyebrow { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .3em; text-transform: uppercase; color: var(--faint); margin: 0 0 .8em; }
 .rh-info h2 { font-size: clamp(1.5rem, 2.6vw, 2.2rem); margin: 0 0 .7em; }
 .rh-tracks { margin: 0 0 1.6rem; padding-left: 1.5em; font-family: var(--font-mono); font-size: .92rem; letter-spacing: .06em; color: var(--ivory); line-height: 2.1; }
 .rh-tracks li::marker { color: var(--faint); font-size: .78rem; }
@@ -1387,7 +1402,7 @@ button.strip-item:focus-visible { outline: 3px solid var(--ivory); outline-offse
   padding: clamp(1.6rem, 4vw, 2.6rem) clamp(1.4rem, 5vw, 3rem); text-align: center;
 }
 .anniv-kicker {
-  display: inline-block; font-family: var(--font-mono); font-size: .68rem;
+  display: inline-block; font-family: var(--font-mono); font-size: .76rem;
   letter-spacing: .3em; text-transform: uppercase; color: var(--gold); margin-bottom: .9rem;
 }
 .anniv-head {
@@ -1435,7 +1450,7 @@ button.strip-item:focus-visible { outline: 3px solid var(--ivory); outline-offse
 
 .sys-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
 .sys-step { border: 1px solid var(--line); border-radius: 2px; padding: 1.5rem 1.3rem; }
-.sys-step span { display: block; font-family: var(--font-mono); font-size: .72rem; letter-spacing: .3em; color: var(--faint); margin-bottom: .8em; }
+.sys-step span { display: block; font-family: var(--font-mono); font-size: .76rem; letter-spacing: .3em; color: var(--faint); margin-bottom: .8em; }
 .sys-step p { margin: 0; font-family: var(--font-mono); font-size: .8rem; letter-spacing: .04em; color: var(--muted); line-height: 1.8; }
 @media (max-width: 760px) { .sys-strip { grid-template-columns: 1fr; } }
 
@@ -1452,7 +1467,7 @@ button.strip-item:focus-visible { outline: 3px solid var(--ivory); outline-offse
 
 /* 투어 레저 타이포 마감 (bbMono 문법) */
 .event-info h3 { font-family: var(--font-mono); font-weight: 400; font-size: .98rem; letter-spacing: .12em; margin: .3em 0 .15em; }
-.event-info .where { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .16em; text-transform: uppercase; color: var(--faint); }
+.event-info .where { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .16em; text-transform: uppercase; color: var(--faint); }
 .stage-tile--recap .t-note { font-family: var(--font-mono); letter-spacing: .22em; }
 
 /* 리캡 = 투어식 텍스트 레저 (이미지 없음, 패널 안에서 사진·영상) */
@@ -1465,8 +1480,8 @@ button.strip-item:focus-visible { outline: 3px solid var(--ivory); outline-offse
 #past-recaps:hover .recap-row:not(:hover) { opacity: .4; }
 .rr-year { font-family: var(--font-mono); font-size: .78rem; letter-spacing: .18em; color: var(--faint); }
 .rr-title { font-family: var(--font-mono); font-size: .98rem; letter-spacing: .12em; }
-.rr-place { display: block; font-size: .66rem; letter-spacing: .16em; text-transform: uppercase; color: var(--faint); margin-top: .45em; }
-.rr-cta { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .26em; color: var(--faint); white-space: nowrap; }
+.rr-place { display: block; font-size: .76rem; letter-spacing: .16em; text-transform: uppercase; color: var(--faint); margin-top: .45em; }
+.rr-cta { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .26em; color: var(--faint); white-space: nowrap; }
 .recap-row:hover .rr-cta, .recap-row:focus-visible .rr-cta { color: #fff; }
 @media (max-width: 640px) { .recap-row { grid-template-columns: 1fr auto; } .rr-year { display: none; } }
 
@@ -1484,8 +1499,8 @@ button.show-cell { cursor: pointer; }
 .shows-grid:hover .show-cell:not(:hover) { opacity: .45; }
 .show-mark { font-size: 2rem; line-height: 1; color: #fff; }
 .show-date { font-size: .78rem; letter-spacing: .14em; }
-.show-city { font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); max-width: 15em; }
-.show-cta { font-size: .62rem; letter-spacing: .3em; color: var(--faint); }
+.show-city { font-size: .76rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); max-width: 15em; }
+.show-cta { font-size: .76rem; letter-spacing: .3em; color: var(--faint); }
 button.show-cell:hover .show-cta, button.show-cell:focus-visible .show-cta { color: #fff; text-decoration: underline; text-underline-offset: 5px; }
 .show-cell { min-width: 0; width: 100%; }
 .show-city { overflow-wrap: anywhere; }
@@ -1497,9 +1512,9 @@ button.show-cell:hover .show-cta, button.show-cell:focus-visible .show-cta { col
   padding: .78rem .1rem; border-bottom: 1px solid var(--line);
   font-family: var(--font-mono); break-inside: avoid;
 }
-.di-year { font-size: .72rem; letter-spacing: .12em; color: var(--faint); flex: 0 0 3.2em; }
+.di-year { font-size: .76rem; letter-spacing: .12em; color: var(--faint); flex: 0 0 3.2em; }
 .di-title { font-size: .82rem; letter-spacing: .05em; color: var(--ivory); flex: 1; }
-.di-kind { font-size: .62rem; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); white-space: nowrap; }
+.di-kind { font-size: .76rem; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); white-space: nowrap; }
 
 /* 해밀학교 페이지 */
 .haemil-hero { height: 62vh; overflow: hidden; }
@@ -1509,10 +1524,19 @@ button.show-cell:hover .show-cta, button.show-cell:focus-visible .show-cta { col
 .haemil-photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 4px; }
 .haemil-photos figure { margin: 0; }
 .haemil-photos img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 2px; display: block; }
-.haemil-photos figcaption { font-family: var(--font-mono); font-size: .67rem; letter-spacing: .08em; color: var(--faint); padding: .55rem .15rem 1rem; }
+.haemil-photos figcaption { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .08em; color: var(--faint); padding: .55rem .15rem 1rem; }
 
-.di-links { display: inline-flex; gap: .9em; white-space: nowrap; }
-.di-link { font-size: .6rem; letter-spacing: .16em; color: var(--faint); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 2px; }
+/* 손가락 — '듣기 / YT' 는 폭이 14~21px 였다. 9.6px 글자를 그 폭에 맞춰
+   정확히 눌러야 노래가 열렸다. 팬 상당수가 50~70대인 사이트에서
+   이건 장식 문제가 아니라 기능이 없는 것과 같다.
+   글자를 키우고 좌우에 여백을 줘 누를 면을 만든다. */
+.di-links { display: inline-flex; gap: .35em; white-space: nowrap; }
+.di-link {
+  font-size: .82rem; letter-spacing: .1em; color: var(--muted); text-decoration: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 44px; min-height: 44px; padding: 0 .5em;
+  border-bottom: 1px solid var(--line);
+}
 .di-link:hover { color: #fff; border-color: #fff; }
 
 /* 시그니처 마크: 仁 인장 (비욘세 ★ 슬롯 대응) */
@@ -1580,7 +1604,7 @@ main h3 { font-family: var(--font-mono); font-weight: 400; font-size: .85rem; le
 }
 .a-tracks .tr-link:hover, .a-tracks .tr-link:focus-visible { color: #fff; }
 .tr-play {
-  font-family: var(--font-mono); font-size: .6rem; letter-spacing: .22em;
+  font-family: var(--font-mono); font-size: .76rem; letter-spacing: .22em;
   color: var(--faint); opacity: 0; white-space: nowrap; transition: opacity .18s ease;
 }
 .tr-link:hover .tr-play, .tr-link:focus-visible .tr-play { opacity: 1; color: #fff; }
@@ -1666,7 +1690,7 @@ main h3 { font-family: var(--font-mono); font-weight: 400; font-size: .85rem; le
 }
 .board-prompt:hover { border-color: var(--gold); transform: translateY(-1px); }
 .board-prompt .bp-kicker {
-  display: block; font-family: var(--font-mono); font-size: .64rem;
+  display: block; font-family: var(--font-mono); font-size: .76rem;
   letter-spacing: .3em; text-transform: uppercase; color: var(--gold); margin-bottom: .4rem;
 }
 .board-prompt .bp-text { font-size: 1.08rem; line-height: 1.5; color: var(--ivory); word-break: keep-all; }
@@ -1702,7 +1726,7 @@ main h3 { font-family: var(--font-mono); font-weight: 400; font-size: .85rem; le
   font-family: inherit; font-size: 1rem; transition: color .2s ease;
 }
 .fresh-row:hover .fr-title { color: var(--gold); }
-.fresh-row .fr-date, .fresh-row .fr-ch { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .1em; color: var(--faint); }
+.fresh-row .fr-date, .fresh-row .fr-ch { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .1em; color: var(--faint); }
 .fresh-row .fr-title { transition: color .2s ease; }
 @media (max-width: 640px) { .fresh-row { grid-template-columns: 1fr; gap: .25em; } }
 
@@ -1710,7 +1734,7 @@ main h3 { font-family: var(--font-mono); font-weight: 400; font-size: .85rem; le
 .recap-clips { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .8rem; }
 .recap-clip {
   min-height: 44px; display: inline-flex; align-items: center;
-  font-family: var(--font-mono); font-size: .72rem; letter-spacing: .12em;
+  font-family: var(--font-mono); font-size: .76rem; letter-spacing: .12em;
   padding: .6em 1.05em; background: transparent; border: 1px solid var(--line-strong);
   border-radius: 2px; color: var(--muted); cursor: pointer;
   transition: color .2s ease, border-color .2s ease;
@@ -1727,7 +1751,7 @@ main h3 { font-family: var(--font-mono); font-weight: 400; font-size: .85rem; le
 /* 홈 푸터 = 비욘세 우측 하단 한 줄 */
 body.home .footer-min nav {
   justify-content: flex-end; padding: 3rem 22px 16px; gap: 1.5rem;
-  font-size: .6rem;
+  font-size: .76rem;
   /* 영상 위에 얹히는 줄이라, 밝은 장면에서도 읽히게 아래를 확실히 덮는다 */
   background: linear-gradient(to top, rgba(8,8,8,.96) 0%, rgba(8,8,8,.86) 45%, rgba(8,8,8,.45) 78%, transparent 100%);
 }
@@ -1793,7 +1817,7 @@ html { scrollbar-color: var(--hairline) var(--sink); }
 }
 .ts-row .ts-title { font-size: 1.12rem; font-weight: 600; transition: color .25s ease; }
 .ts-row .ts-why { color: var(--muted); font-size: .98rem; }
-.ts-row .ts-play { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .14em; color: var(--faint); white-space: nowrap; }
+.ts-row .ts-play { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .14em; color: var(--faint); white-space: nowrap; }
 .ts-row:hover .ts-title, .ts-row:hover .ts-play { color: var(--gold); }
 @media (max-width: 700px) {
   .ts-row { grid-template-columns: 1fr auto; gap: .3em 1em; }
@@ -1809,7 +1833,7 @@ html { scrollbar-color: var(--hairline) var(--sink); }
 }
 #song-q::placeholder { color: var(--faint); }
 #song-q:focus { border-color: var(--gold); outline: 3px solid var(--gold); outline-offset: 2px; }
-.song-count { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .12em; color: var(--faint); margin: .9rem 0 1rem; min-height: 1.2em; }
+.song-count { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .12em; color: var(--faint); margin: .9rem 0 1rem; min-height: 1.2em; }
 #song-chips { margin-bottom: 1.4rem; }
 #song-chips button { font-size: .9rem; min-height: 44px; }
 .song-results { border-top: 1px solid var(--line); max-height: 30em; overflow-y: auto; }
@@ -1820,8 +1844,8 @@ html { scrollbar-color: var(--hairline) var(--sink); }
   text-decoration: none; color: var(--ivory); transition: color .2s ease;
 }
 .sr-row .sr-title { font-size: 1.02rem; }
-.sr-row .sr-meta { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .1em; color: var(--faint); }
-.sr-row .sr-play { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .12em; color: var(--faint); white-space: nowrap; }
+.sr-row .sr-meta { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .1em; color: var(--faint); }
+.sr-row .sr-play { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .12em; color: var(--faint); white-space: nowrap; }
 .sr-row:hover { color: var(--gold); }
 .sr-row:hover .sr-play { color: var(--gold); }
 @media (max-width: 640px) {
@@ -1845,7 +1869,7 @@ html { scrollbar-color: var(--hairline) var(--sink); }
 }
 .aw-cell .aw-no {
   position: absolute; top: 8px; left: 10px; z-index: 2;
-  font-family: var(--font-mono); font-size: .62rem; letter-spacing: .1em;
+  font-family: var(--font-mono); font-size: .76rem; letter-spacing: .1em;
   color: #fff; mix-blend-mode: difference;
 }
 .aw-cell .aw-cap {
@@ -1855,7 +1879,7 @@ html { scrollbar-color: var(--hairline) var(--sink); }
   opacity: 0; transform: translateY(6px); transition: opacity .35s ease, transform .35s ease;
 }
 .aw-cell .aw-cap em { font-style: normal; font-size: .78rem; color: var(--ivory); line-height: 1.25; }
-.aw-cell .aw-cap i { font-style: normal; font-family: var(--font-mono); font-size: .58rem; letter-spacing: .1em; color: var(--gold); }
+.aw-cell .aw-cap i { font-style: normal; font-family: var(--font-mono); font-size: .76rem; letter-spacing: .1em; color: var(--gold); }
 @media (hover: hover) {
   .aw-cell:hover img { transform: scale(1.06); filter: grayscale(0%) brightness(1); }
   .aw-cell:hover .aw-cap { opacity: 1; transform: none; }
@@ -1908,7 +1932,7 @@ html { scrollbar-color: var(--hairline) var(--sink); }
 }
 .stage-title.is-on { opacity: 1; transform: translate(-50%, -50%); }
 .stage-title .st-when {
-  font-family: var(--font-mono); font-size: .68rem; letter-spacing: .34em; color: var(--gold);
+  font-family: var(--font-mono); font-size: .76rem; letter-spacing: .34em; color: var(--gold);
 }
 .stage-title .st-name {
   font-family: "Cormorant Garamond", serif; font-weight: 600; line-height: 1.08;
@@ -1957,10 +1981,10 @@ body > main, body > header, body > footer { position: relative; z-index: 1; }
 .rd-screen { width: 132px; aspect-ratio: 16/9; background: #000; border-radius: 2px; overflow: hidden; flex: 0 0 auto; }
 .rd-screen iframe { width: 100%; height: 100%; border: 0; display: block; }
 .rd-now { min-width: 0; display: grid; gap: .18rem; }
-.rd-kicker { font-family: var(--font-mono); font-size: .58rem; letter-spacing: .2em; color: var(--faint); }
+.rd-kicker { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .2em; color: var(--faint); }
 .rd-kicker b { color: var(--gold); font-weight: 400; }
 .rd-title { font-size: 1.02rem; font-weight: 600; color: var(--ivory); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.rd-meta { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .1em; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rd-meta { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .1em; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rd-controls { display: flex; align-items: center; gap: .35rem; }
 .rd-controls button {
   min-width: 44px; min-height: 44px; padding: 0 .6em; background: transparent; border: 1px solid transparent;
@@ -2015,10 +2039,10 @@ body.deck-playing .dk-disc { animation: dk-spin 3.6s linear infinite; }
 @keyframes dk-spin { to { transform: rotate(360deg); } }
 
 .dk-now { min-width: 0; display: grid; gap: .2rem; }
-.dk-kicker { font-family: var(--font-mono); font-size: .56rem; letter-spacing: .22em; color: var(--faint); }
+.dk-kicker { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .22em; color: var(--faint); }
 .dk-kicker b { color: var(--gold); font-weight: 400; }
 .dk-title { font-size: 1.06rem; font-weight: 600; color: var(--ivory); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.dk-meta { font-family: var(--font-mono); font-size: .6rem; letter-spacing: .1em; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dk-meta { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .1em; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .dk-viz { width: 200px; height: 42px; opacity: .95; }
 .dk-controls { display: flex; align-items: center; gap: .3rem; }
@@ -2032,7 +2056,7 @@ body.deck-playing .dk-disc { animation: dk-spin 3.6s linear infinite; }
 .dk-controls .dk-play:hover { border-color: var(--gold); }
 .dk-controls [aria-pressed="true"] { color: var(--gold); border-color: var(--gold-deep); }
 .dk-full {
-  margin-left: .5rem; padding: .55em .9em; font-family: var(--font-mono); font-size: .6rem; letter-spacing: .14em;
+  margin-left: .5rem; padding: .55em .9em; font-family: var(--font-mono); font-size: .76rem; letter-spacing: .14em;
   color: var(--faint); text-decoration: none; border: 1px solid var(--line); border-radius: 2px; white-space: nowrap;
   transition: color .2s ease, border-color .2s ease;
 }
@@ -2112,7 +2136,7 @@ body.has-deck .back-to-top { bottom: calc(92px + 1.2rem); }
 }
 .bt-deck.is-live .bt-arm { transform: rotate(-6deg); opacity: .9; }
 
-.bt-label { font-family: var(--font-mono); font-size: .6rem; letter-spacing: .3em; color: var(--faint); margin: 0; }
+.bt-label { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .3em; color: var(--faint); margin: 0; }
 .bt-deck.is-live .bt-label { color: var(--gold); }
 .bt-track {
   margin: 0; font-size: .92rem; color: var(--muted); text-align: center; min-height: 2.6em;
@@ -2139,7 +2163,7 @@ body.has-deck .back-to-top { bottom: calc(92px + 1.2rem); }
   content: ""; position: absolute; left: 50%; top: 6px; bottom: 6px; width: 2px; margin-left: -1px;
   background: rgba(212,175,55,.9);
 }
-.bt-fader-label, .bt-bpm { margin: 0; font-family: var(--font-mono); font-size: .56rem; letter-spacing: .26em; color: var(--faint); }
+.bt-fader-label, .bt-bpm { margin: 0; font-family: var(--font-mono); font-size: .76rem; letter-spacing: .26em; color: var(--faint); }
 .bt-bpm b { color: var(--gold); font-weight: 400; font-size: .8rem; letter-spacing: .1em; }
 
 @media (max-width: 760px) {
@@ -2166,17 +2190,17 @@ body.has-deck .back-to-top { bottom: calc(92px + 1.2rem); }
 }
 .req-hit:hover { border-color: var(--gold); }
 .req-hit .rh-t { font-size: 1rem; }
-.req-hit .rh-m { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .1em; color: var(--faint); }
-.req-hit .rh-go { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .14em; color: var(--gold); }
-.req-rank-t { font-family: var(--font-mono); font-weight: 400; font-size: .68rem; letter-spacing: .2em;
+.req-hit .rh-m { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .1em; color: var(--faint); }
+.req-hit .rh-go { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .14em; color: var(--gold); }
+.req-rank-t { font-family: var(--font-mono); font-weight: 400; font-size: .76rem; letter-spacing: .2em;
   color: var(--faint); margin: 1.8rem 0 .9rem; }
 .req-rank { display: grid; gap: .5rem; }
 .rk-row { display: grid; grid-template-columns: 1.6em minmax(0,1fr) 4.5em 2.4em; gap: .7em; align-items: center; font-size: .95rem; }
-.rk-row .rk-no { font-family: var(--font-mono); font-size: .68rem; color: var(--faint); }
+.rk-row .rk-no { font-family: var(--font-mono); font-size: .76rem; color: var(--faint); }
 .rk-row .rk-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .rk-row .rk-bar { height: 4px; background: rgba(243,239,231,.12); border-radius: 3px; overflow: hidden; }
 .rk-row .rk-bar i { display: block; height: 100%; background: var(--gold); }
-.rk-row .rk-n { font-family: var(--font-mono); font-size: .66rem; color: var(--faint); text-align: right; }
+.rk-row .rk-n { font-family: var(--font-mono); font-size: .76rem; color: var(--faint); text-align: right; }
 .rk-row.is-mine .rk-name { color: var(--gold); }
 @media (max-width: 560px) { .rk-row { grid-template-columns: 1.4em minmax(0,1fr) 2.4em; } .rk-row .rk-bar { display: none; } }
 
@@ -2270,7 +2294,7 @@ html.has-cursor, html.has-cursor a, html.has-cursor button, html.has-cursor .sho
 }
 .bt-power:hover { border-color: var(--gold); color: var(--gold); }
 .bt-power .btp-icon { font-size: 1.5rem; line-height: 1; }
-.bt-power .btp-label { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .3em; }
+.bt-power .btp-label { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .3em; }
 .booth.is-live .bt-power .btp-icon { font-size: 1.2rem; }
 .booth:not(.is-live) .bt-viz { opacity: .12; }
 .booth:not(.is-live) .bt-fader, .booth:not(.is-live) .bt-fader-label, .booth:not(.is-live) .bt-bpm { opacity: .35; }
@@ -2279,7 +2303,7 @@ html.has-cursor, html.has-cursor a, html.has-cursor button, html.has-cursor .sho
 /* 재생 방식 전환 */
 .bt-mode { display: flex; gap: 2px; margin-top: .5rem; }
 .bt-mode button {
-  padding: .5em .9em; font-family: var(--font-mono); font-size: .56rem; letter-spacing: .12em;
+  padding: .5em .9em; font-family: var(--font-mono); font-size: .76rem; letter-spacing: .12em;
   background: transparent; border: 1px solid var(--line); color: var(--faint);
   cursor: pointer; border-radius: 2px; min-height: 44px;
   transition: color .2s ease, border-color .2s ease;
@@ -2456,14 +2480,14 @@ button.sr-row .sr-play { color: var(--gold); }
   body.home .footer-min nav {
     justify-content: center; align-items: center;
     gap: .2rem .85rem; padding: 0 14px 10px;
-    font-size: .58rem; text-align: center;
+    font-size: .76rem; text-align: center;
   }
   /* 오버레이 한 줄 푸터에서는 44px 박스가 줄 간격을 벌린다 — 여기서만 낮춘다 */
   body.home .footer-min a,
   body.home .footer-min span { min-height: 40px; display: inline-flex; align-items: center; }
 }
 @media (max-width: 400px) {
-  body.home .footer-min nav { gap: .15rem .7rem; font-size: .55rem; }
+  body.home .footer-min nav { gap: .15rem .7rem; font-size: .76rem; }
 }
 
 /* ============================================================
@@ -2474,7 +2498,7 @@ button.sr-row .sr-play { color: var(--gold); }
 .strip-hint {
   position: absolute; left: 50%; bottom: 84px; transform: translateX(-50%);
   z-index: 5; margin: 0; display: none; align-items: center; gap: .5em;
-  font-family: var(--font-mono); font-size: .62rem; letter-spacing: .22em;
+  font-family: var(--font-mono); font-size: .76rem; letter-spacing: .22em;
   text-transform: uppercase; color: rgba(243,239,231,.72); pointer-events: none;
   text-shadow: 0 1px 10px rgba(8,8,8,.9);
   animation: sh-in .6s .9s both;
@@ -2614,7 +2638,7 @@ body.nav-open { overflow: hidden; touch-action: none; }
 .ki-state { margin: 0 0 1.2rem; font-size: 1.05rem; line-height: 1.6; color: var(--ivory); min-height: 3.2em; }
 .ki-state .ki-title { display: block; font-family: var(--font-latin); font-weight: 600;
   font-size: clamp(1.4rem, 2.2vw, 1.9rem); line-height: 1.25; margin-bottom: .2em; }
-.ki-state .ki-meta { display: block; font-family: var(--font-mono); font-size: .74rem;
+.ki-state .ki-meta { display: block; font-family: var(--font-mono); font-size: .76rem;
   letter-spacing: .16em; color: var(--muted); }
 .ki-state .ki-secs { color: var(--muted); }
 
@@ -2959,3 +2983,82 @@ img.a-art {
 /* 사랑방 — 곡을 걷어내고 글칸 하나만 남긴 뒤 */
 .sb-invite { max-width: 34em; margin: .6rem 0 1.8rem; }
 .sb-today h2 { margin-bottom: .2rem; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   본문 구역의 빛 — v123
+   -------------------------------------------------------------------
+   히어로에는 조명을 넣었지만 본문은 여전히 평평했다. 이유는 하나였다:
+   --faint 가 void 위 5.24:1 로 AA 를 겨우 넘겨 광량 상한이 0.083 이었다.
+   그 토큰을 #9c9284 로 올려 상한이 0.160 이 되었으므로 이제 넣을 수 있다.
+
+   다만 균일하게 밝히지 않는다. 그러면 검정이 회색이 될 뿐 깊이는 안 생긴다.
+   섹션이 바뀌는 자리에서만 빛이 들어오게 한다 —
+   무대에서 장면이 바뀔 때 조명이 한 번 바뀌는 것과 같다.
+   전부 정적 그라디언트라 프레임당 0ms 다.
+   ═══════════════════════════════════════════════════════════════════ */
+.section, .section--band { position: relative; }
+
+/* 섹션 머리에서 빛이 들어온다. 아래로 갈수록 잦아든다.
+   α 0.10 — 실측 상한 0.160 의 62% 라 --faint 본문도 5.38:1 로 안전하다. */
+.section::before, .section--band::before {
+  content: ""; position: absolute; inset: 0 0 auto; height: min(62%, 420px);
+  z-index: -1; pointer-events: none;
+  background: radial-gradient(78% 100% at 50% 0%,
+    rgba(var(--stage-tint), .100) 0%,
+    rgba(var(--stage-tint), .030) 46%,
+    transparent 82%);
+}
+
+/* 번갈아 반대쪽에서 — 같은 자리에서만 들어오면 스크롤이 단조로워진다 */
+.section:nth-of-type(even)::before, .section--band:nth-of-type(even)::before {
+  background: radial-gradient(74% 100% at 22% 0%,
+    rgba(var(--stage-tint), .092) 0%,
+    rgba(var(--stage-tint), .026) 46%,
+    transparent 80%);
+}
+.section:nth-of-type(odd)::before, .section--band:nth-of-type(odd)::before {
+  background: radial-gradient(74% 100% at 78% 0%,
+    rgba(var(--stage-tint), .092) 0%,
+    rgba(var(--stage-tint), .026) 46%,
+    transparent 80%);
+}
+
+/* 밴드 섹션은 원래 한 겹 더 어둡다. 빛이 통과하도록 살짝 연다 —
+   불투명하면 위에서 들어온 빛이 경계에서 뚝 끊긴다. */
+.section--band { background: rgba(18, 17, 17, .92); }
+
+/* 섹션 사이의 이음매 — 자로 그은 1px 대신 가운데가 밝은 선.
+   이 한 줄이 '문서'를 '공간'으로 바꾼다. */
+.section--band { border-top: 0; border-bottom: 0; }
+.section--band::after {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg,
+    transparent 0%, rgba(var(--stage-tint), .04) 14%,
+    rgba(var(--stage-tint), .26) 50%,
+    rgba(var(--stage-tint), .04) 86%, transparent 100%);
+}
+
+/* 홈은 건드리지 않는다 — 영상이 이미 광원이다. 등을 하나 더 세우면 싸운다. */
+body.home .section::before, body.home .section--band::before { display: none; }
+
+
+/* 사람이 읽어야 하는 안내문은 라벨보다 크다.
+   '258곡이 담겨 있습니다' 는 장식이 아니라 지시문이다. */
+#song-count, .form-hint { font-size: .95rem; letter-spacing: 0; }
+
+/* 거르개 버튼 — '전체'가 30×44 였다. 폭도 손가락에 맞춘다. */
+.filter-bar button { min-width: 44px; min-height: 44px; padding-inline: .6em; }
+
+/* 해밀 — 오른쪽 절반이 비어 있었다. 지어낸 말로 채우지 않고
+   검증된 연표에서 이 일에 해당하는 항목만 세운다. */
+.haemil-grid { display: grid; grid-template-columns: minmax(0,1.15fr) minmax(0,.85fr); gap: 3.4rem 4rem; align-items: start; }
+.haemil-line h2 { font-size: .95rem; letter-spacing: .2em; color: var(--faint); font-family: var(--font-mono); font-weight: 400; margin: .2rem 0 1.4rem; }
+.haemil-line ol { list-style: none; margin: 0; padding: 0; }
+.haemil-line li { display: grid; grid-template-columns: 4.2rem 1fr; gap: 1rem; padding: 1rem 0; border-top: 1px solid var(--line); }
+.haemil-line li:first-child { border-top: 0; }
+.hl-y { font-family: var(--font-mono); font-size: .88rem; letter-spacing: .1em; color: var(--faint); }
+.hl-e { color: var(--ivory); font-size: 1rem; line-height: 1.5; }
+.hl-n { grid-column: 2; display: block; color: var(--muted); font-size: .88rem; margin-top: .25rem; line-height: 1.6; }
+.haemil-line-note { margin: 1.2rem 0 0; color: var(--faint); font-size: .88rem; }
+@media (max-width: 860px) { .haemil-grid { grid-template-columns: 1fr; gap: 2.6rem; } }
