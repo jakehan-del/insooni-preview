@@ -1893,7 +1893,22 @@
       }
       return 0;
     }
-    if (chips) {
+    /* DB 에 있는 문구를 먼저 읽는다. 읽히면 그것으로 갈아끼운다 —
+       화면의 말과 저장되는 말이 언제나 같아야 한다.
+       못 읽으면(백엔드 꺼짐) 아래 기본값을 쓰는데, 그때는 어차피
+       보낼 수도 없으므로 어긋날 일이 없다. */
+    (function () {
+      var be = BE();
+      if (!be || !be.listPresets) return;
+      be.listPresets().then(function (r) {
+        if (!r || !r.ok || !r.rows || !r.rows.length) return;
+        var rows = r.rows.slice().sort(function (a, b) { return (a.n || 0) - (b.n || 0); });
+        PRESETS = rows.map(function (x) { return [x.ko || "", x.en || x.ko || ""]; });
+        if (chips) { chips.innerHTML = ""; drawChips(); }
+      });
+    })();
+
+    function drawChips() {
       PRESETS.forEach(function (p) {
         var b = el("button", "sb-chip", esc(en() ? p[1] : p[0]));
         b.type = "button";
@@ -1906,6 +1921,7 @@
         chips.appendChild(b);
       });
     }
+    if (chips) drawChips();
 
     if (form) {
       form.addEventListener("submit", function (e) {
@@ -1917,10 +1933,13 @@
         var btn = form.querySelector("button[type=submit]");
         if (btn) btn.disabled = true;
         note(t("sb.sending", "보내는 중…"));
-        var common = {
-          songKey: song && song.k, songTitle: song && song.t, songYear: song && song.y,
-          name: (nameIn && nameIn.value || "").trim()
-        };
+        /* 곡은 붙이지 않는다.
+           사랑방에서 곡을 고르는 화면을 걷어냈다 — 그건 음악 페이지가 하는 일이고,
+           여기서 또 하면 사랑방이 음악 페이지의 그림자가 된다.
+           이미 올라온 옛 글의 곡 정보는 실제 기록이므로 지우지 않는다.
+           그래서 줄기에는 곡이 붙은 옛 줄과 붙지 않은 새 줄이 함께 선다. */
+        var common = { songKey: null, songTitle: null, songYear: null,
+                       name: (nameIn && nameIn.value || "").trim() };
         var chip = chipOf(body);
         var p = chip
           ? be.submitPreset({ chip: chip, songKey: common.songKey, songTitle: common.songTitle,
@@ -2219,12 +2238,12 @@
 
     function setFilled(n) {
       if (!head) return;
-      var total = (SONGS && SONGS.length) || 103;
+      /* 곡 수를 세지 않는다. 사랑방에서 세어야 할 것은 사람이 남긴 줄이다. */
       head.textContent = n
         ? (document.documentElement.getAttribute("lang") === "en"
-            ? (n + " of " + total + " songs carry a memory.")
-            : (total + "곡 중 " + n + "곡에 기억이 붙었습니다."))
-        : t("sb.firstLine", "아직 아무 곡에도 기억이 붙지 않았습니다. 첫 줄을 기다립니다.");
+            ? (n + (n === 1 ? " line has" : " lines have") + " been left here.")
+            : (n + "줄이 이 방에 남았습니다."))
+        : t("sb.firstLine", "아직 남은 줄이 없습니다. 첫 줄을 기다립니다.");
     }
 
     if (more) more.addEventListener("click", draw);

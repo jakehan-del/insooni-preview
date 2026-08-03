@@ -134,6 +134,11 @@
     noteStatus: function (token) { return rpc("note_status", { p_token: token || null }); },
     listNotes:  function () { return readView("public_notes"); },
 
+    /* 칩 문구는 DB 가 갖고 있다. 화면에 박아 두면 DB 를 고칠 때마다
+       '보이는 말'과 '실제로 저장되는 말'이 갈라진다 — submit_preset 은
+       번호만 받고 문구는 서버에서 찾아 넣기 때문이다. 그래서 읽어 쓴다. */
+    listPresets: function () { return readView("presets"); },
+
     /* 사이트가 제시한 고정 문구를 그대로 보낼 때. 검수를 거치지 않고 바로 오른다.
        사람이 쓴 문장이 아니라 사이트의 문구이기 때문이다.
        서버 함수가 텍스트 인자를 아예 받지 않으므로 이 통로로는 아무 말도 못 넣는다. */
