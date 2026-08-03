@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 AI 큐레이션으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "AI 큐레이션",
- "updated": "2026-08-04 02:50",
+ "updated": "2026-08-04 06:01",
  "items": [
   {
    "date": "2026-08-03",
@@ -14,6 +14,17 @@
    "ai": true
   },
   {
+   "date": "2026-07-27",
+   "title": "\"인순이 공연에 감동\"…마샬이 다문화 학교에 스피커 보낸 사연",
+   "source": "네이트",
+   "sourceSite": "https://news.nate.com",
+   "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFB2U2lCYmlCVFpqTk14TnlCLTl1cW5Tbld1aWF5cDVuOWxMaGtjX0NpTWp3S2FJTC1ycllEb01Lcm9CVTV5WDRFTkI4ODVEeU1jSGtJ?oc=5",
+   "type": "나눔",
+   "auto": true,
+   "also": 1,
+   "ai": true
+  },
+  {
    "date": "2026-07-24",
    "title": "경수진 시구→인순이 애국가 '특집 불꽃야구 생중계' 고척돔 달군다",
    "source": "네이트",
@@ -21,37 +32,15 @@
    "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1tV0FhNmZMendjUkhqd1VCeGFXNWJzYVJzdXpiaFM2aWNOdk5yMC1FLVVvVm92SVFHRUdEQUNTYVdaSkdWX2NlNTJSenpEV1ZjU3A0?oc=5",
    "type": "공연",
    "auto": true,
-   "also": 3,
-   "ai": true
-  },
-  {
-   "date": "2026-06-30",
-   "title": "미국 독립기념일 행사에서 애국가 부르는 인순이",
-   "source": "연합뉴스 한민족센터",
-   "sourceSite": "https://www.koreancenter.or.kr",
-   "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1lUFFLT19OWU14SWNZbmNUUVBkUkxJaXp4ekRnWHpjRlFHNkpoMnBqRGZkY3RtODNldmZUenNLVms3Wm1mRm12d2dmRzJpaGhId2V6OF9uSDR2TWhEOHc2cDZFOTFnRkdSODJTcXJYQXhudGNZ?oc=5",
-   "type": "공연",
-   "auto": true,
    "also": 1,
    "ai": true
   },
   {
    "date": "2026-06-23",
-   "title": "'11회 청주시 시민의 날 기념행사' 내달 1일 개최…염유리·인순이 공연",
-   "source": "네이트",
-   "sourceSite": "https://news.nate.com",
-   "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBDVFB1djFpS0ZCRWZOZmVicDJyYjg0UEEwWWNqV2VCMGFZa1BIQ05DM0tUQm5sWl8zQS1VRWtMZ1dJb2I3Rjk4TDZHLXB0ZXZId0xj?oc=5",
-   "type": "공연",
-   "auto": true,
-   "also": 1,
-   "ai": true
-  },
-  {
-   "date": "2026-06-17",
-   "title": "\"왜 이렇게 눈물이 날까요\" 인순이가 완성한 축제의 대미",
-   "source": "star.ohmynews.com",
-   "sourceSite": "https://star.ohmynews.com",
-   "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTFBLMEJuXy1BejFxbDJZYmQ3X3ljWE9jamdaU2tlSlhRem5CMXJGLXNlRDA2S0p4UmI0dkh5Wmdqb1N5VWdGd000NldvamFxWERpZk9FMXdpOWxGTExlN1htR2tZVTVVU2ViQ2hjZUpXYjRFS01ZdlRUdHRRR1lyQQ?oc=5",
+   "title": "가수 인순이·염유리 청주온다…시민의날 기념행사 7월 1일",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE04WWM0VmRRWWFUVjdaTXk2Vjg0czVDeWFZd2JpaC1Fc1MxeWtIOXpjN2RocXU0WjNPTnlPckdsZ2drS1lWNjdWaUJPZUJtd2c?oc=5",
    "type": "공연",
    "auto": true,
    "ai": true

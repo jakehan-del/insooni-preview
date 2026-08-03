@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-08-04 02:50",
- "count": 13,
+ "updated": "2026-08-04 06:01",
+ "count": 14,
  "items": [
   {
    "date": "2026-08-03",
@@ -72,6 +72,16 @@
    "type": "공연",
    "auto": true,
    "also": 1
+  },
+  {
+   "date": "2026-06-23",
+   "title": "가수 인순이·염유리 청주온다…시민의날 기념행사 7월 1일",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE04WWM0VmRRWWFUVjdaTXk2Vjg0czVDeWFZd2JpaC1Fc1MxeWtIOXpjN2RocXU0WjNPTnlPckdsZ2drS1lWNjdWaUJPZUJtd2c?oc=5",
+   "type": "공연",
+   "auto": true,
+   "ai": true
   },
   {
    "date": "2026-06-17",
