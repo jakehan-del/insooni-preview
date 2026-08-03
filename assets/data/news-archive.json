@@ -1,8 +1,18 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-08-03 23:37",
- "count": 12,
+ "updated": "2026-08-04 02:50",
+ "count": 13,
  "items": [
+  {
+   "date": "2026-08-03",
+   "title": "남진 & 인순이 - 님과 함께 | KBS 260803 방송",
+   "source": "대한민국 대표 공영미디어 KBS",
+   "sourceSite": "https://www.kbs.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiwgJBVV95cUxOT1lyU3BxV0N5UEZZeHdFV2FVUzlEaFhJcC1lRVAzcWtzYS1zZ2NldEw1VW9EemFDNm1mVUpTQmloOVlFUEg0MTByU3JuSlA4M1BzQjJiRVlQSGJhaEpQN3pUSC1PckRtRDZpcTgtYkM2dGtoRDl6NVFQWWdVa0NPNUowWmJoWWlIYjZoMlcwdVlOUXBRNEYzUUFtUHNKVW84VjdHZEZ5d1p4Ti1aMnJGOG1CU2pFb0h2anJ5XzlHQTBPeXhSLTR6R1Bnc1NIY3hKU0owVFQ0QXA1dkhJdTA1TVNHckdINmF2bkJ5NXlza1VDRzlFdG1LUGlEMmhIeEpyNHpINzVtbTJidFI1ZU0wV0NGT0pfcGVHalNqcXhCOHpHMllvQTNrRVZDcnNsNU0wMjQ1eXhzSnBHREtUdW00eHln?oc=5",
+   "type": "방송",
+   "auto": true,
+   "ai": true
+  },
   {
    "date": "2026-07-28",
    "title": "한강 X 문초희, '이제는', 고음과 안무에도 빛난 듀엣 호흡! 인순이 X 서지오 심사평은? [인생은 오디션]",
