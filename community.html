@@ -13,10 +13,10 @@
 <meta name="description" content="편지를 쓰고, 팬 번호증과 응원 카드를 만들고, 공식 채널로 마음을 전하는 곳. 인순이 공식 사랑방.">
 <!-- 본문 글꼴은 먼저 확실히 깐다(미뤄 봤지만 첫 화면이 빨라지지 않았다).
      제목용 서체는 화면이 뜬 뒤 들어온다 — font-display:swap이라 늦어도 글자는 보인다. -->
-<link rel="stylesheet" href="assets/fonts/body.css?v121">
-<link rel="stylesheet" href="assets/fonts/display.css?v121" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/fonts/display.css?v121"></noscript>
-<link rel="stylesheet" href="assets/css/style.min.css?v121">
+<link rel="stylesheet" href="assets/fonts/body.css?v122">
+<link rel="stylesheet" href="assets/fonts/display.css?v122" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?v122"></noscript>
+<link rel="stylesheet" href="assets/css/style.min.css?v122">
 <link rel="canonical" href="https://jakehan-del.github.io/insooni-preview/community.html">
 <meta property="og:url" content="https://jakehan-del.github.io/insooni-preview/community.html">
 <meta property="og:type" content="website">
@@ -30,7 +30,7 @@
 <meta name="twitter:image" content="https://jakehan-del.github.io/insooni-preview/assets/img/photos/dsc0427.jpg">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://jakehan-del.github.io/insooni-preview/"},{"@type":"ListItem","position":2,"name":"사랑방","item":"https://jakehan-del.github.io/insooni-preview/community.html"}]}</script>
 </head>
-<body>
+<body data-page="community">
 <a class="skip-link" href="#main" data-i18n="nav.skip">본문 바로가기</a>
 
 <header class="site-header">
@@ -197,44 +197,29 @@
     </div>
   </section>
 
-  <section class="section section--band fl" id="flight" aria-labelledby="h-flight">
+  <!-- ── 무리 ─────────────────────────────────────────────────────
+       화면의 아기거위 한 마리 = 지금 이 페이지를 보고 있는 사람 한 명.
+       1:1 이다. 혼자면 한 마리다. 숫자를 부풀리지 않는다.
+
+       자리는 적분이 아니라 f(t) 라서, 늦게 들어와도 로딩 없이 첫 프레임에
+       정위치고 폰 두 대가 같은 대형을 그린다. 시계는 서버의 date 헤더에서
+       '초가 바뀌는 순간'을 찾아 맞춘다(실측 ±60ms).
+       8마디마다 모든 화면이 같이 밝아지는 것이 '같은 곳'이라는 유일한 증명이다. -->
+  <section class="section section--band muri" id="muri" aria-labelledby="h-muri">
     <div class="container">
       <div class="section-head">
-        <h2 id="h-flight" data-i18n="fl.t">꿈의 비행</h2>
+        <h2 id="h-muri" data-i18n="muri.t">무리</h2>
       </div>
-      <p class="lede fl-lede" data-i18n="fl.lead">기러기가 V자로 나는 것은, 앞선 새가 만든 바람을 타고 뒤에 선 새가 덜 힘들게 날기 때문입니다. 맨 앞이 가장 힘들어서 선두는 돌아가며 섭니다. 앞서 나는 거위의 비스듬히 뒤로 들어가 보세요. 그 거위가 품은 꿈이 열립니다.</p>
+      <p class="lede muri-lede" data-i18n="muri.lead">기러기가 V자로 나는 것은, 앞선 새가 만든 바람을 타고 뒤에 선 새가 덜 힘들게 날기 때문입니다. 맨 앞이 가장 힘들어서 선두는 돌아가며 섭니다. 여기 뜬 거위 한 마리는 지금 이 페이지를 보고 있는 한 사람입니다.</p>
 
-      <div class="fl-stage">
-        <canvas id="fl-canvas" tabindex="0" role="application"
-                aria-label="꿈의 비행. 누르고 있으면 거위가 오르고 놓으면 내려옵니다. 부딪히는 것은 없습니다."
-                data-i18n-aria="fl.canvasAria"></canvas>
-
-        <div class="fl-overlay" id="fl-intro">
-          <p class="fl-sky-note" id="fl-sky-note" data-i18n="fl.skyher">지금 하늘에는 인순이의 발자취가 떠 있습니다.</p>
-          <button type="button" class="btn btn--gold fl-big" id="fl-start" data-i18n="fl.start">거위 한 마리 날리기</button>
-          <button type="button" class="btn btn--ghost btn--sm fl-alt" id="fl-watch" data-i18n="fl.watch">그냥 지켜볼게요</button>
-          <p class="fl-how" data-i18n="fl.how">누르고 있으면 오릅니다. 놓으면 활공합니다.</p>
-        </div>
-
-        <div class="fl-hud" id="fl-hud" hidden>
-          <span class="fl-count" id="fl-count" role="status">0개의 꿈</span>
-          <button type="button" class="btn btn--ghost btn--sm" id="fl-land" data-i18n="fl.land">그만 내려오기</button>
-        </div>
-
-        <p class="fl-caption" id="fl-caption" role="status" aria-live="polite"></p>
+      <div class="muri-stage">
+        <canvas id="muri-canvas" role="img"
+                aria-label="지금 사랑방에 있는 사람 수만큼 아기거위가 무리 지어 납니다."
+                data-i18n-aria="muri.canvasAria"></canvas>
       </div>
 
-      <div class="fl-end" id="fl-end" hidden>
-        <h3 id="fl-end-head" class="fl-end-head"></h3>
-        <p class="fl-end-sub" data-i18n="fl.turn">맨 앞은 돌아가며 섭니다. 이번엔 당신 차례예요.</p>
-        <div class="fl-end-actions">
-          <button type="button" class="btn btn--gold" id="fl-tonote" data-i18n="fl.tonote">사랑방에 한 줄 남기기</button>
-          <button type="button" class="btn btn--ghost" id="fl-again" data-i18n="fl.again">한 번 더 날기</button>
-        </div>
-        <p class="fl-msg" id="fl-msg" role="status"></p>
-      </div>
-
-      <ul class="fl-log" id="fl-log" aria-label="따라 난 꿈 목록" data-i18n-aria="fl.logAria"></ul>
+      <p class="muri-count" id="muri-count" role="status" aria-live="polite"></p>
+      <p class="muri-note" id="muri-note"></p>
     </div>
   </section>
 
@@ -279,17 +264,19 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동" data-i18n-aria="aria.toTop">↑</button>
-<script src="assets/js/config.js?v121" defer></script>
-<script src="assets/js/backend.js?v121" defer></script>
-<script src="assets/js/i18n.min.js?v121" defer></script>
-<script src="assets/js/data.min.js?v121" defer></script>
-<script src="assets/js/tracklinks.min.js?v121" defer></script>
-<script src="assets/js/albums-full.min.js?v121" defer></script>
-<script src="assets/js/albums-en.min.js?v121" defer></script>
-<script src="assets/js/song-moods.min.js?v121" defer></script>
-<script src="assets/js/main.min.js?v121" defer></script>
-<script src="assets/js/motion.min.js?v121" defer></script>
-<script src="assets/js/router.min.js?v121" defer></script>
-<script src="assets/js/deck.min.js?v121" defer></script>
+<script src="assets/js/config.js?v122" defer></script>
+<script src="assets/js/backend.js?v122" defer></script>
+<script src="assets/js/i18n.min.js?v122" defer></script>
+<script src="assets/js/data.min.js?v122" defer></script>
+<script src="assets/js/tracklinks.min.js?v122" defer></script>
+<script src="assets/js/albums-full.min.js?v122" defer></script>
+<script src="assets/js/albums-en.min.js?v122" defer></script>
+<script src="assets/js/song-moods.min.js?v122" defer></script>
+<script src="assets/js/goose.min.js?v122" defer></script>
+<script src="assets/js/main.min.js?v122" defer></script>
+<script src="assets/js/muri.min.js?v122" defer></script>
+<script src="assets/js/motion.min.js?v122" defer></script>
+<script src="assets/js/router.min.js?v122" defer></script>
+<script src="assets/js/deck.min.js?v122" defer></script>
 </body>
 </html>

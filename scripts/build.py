@@ -33,7 +33,14 @@ KNOWN_BASES = [
 def minify_css(s):
     s = re.sub(r"/\*.*?\*/", "", s, flags=re.S)          # 주석
     s = re.sub(r"\s+", " ", s)                           # 연속 공백
-    s = re.sub(r"\s*([{}:;,>~+])\s*", r"\1", s)
+    # + 는 절대 붙이면 안 된다.
+    # CSS 명세상 calc() 안의 +, - 는 양옆 공백이 필수라서
+    # calc(96px + 1.2rem) 을 calc(96px+1.2rem) 으로 줄이면
+    # 브라우저가 그 선언을 통째로 버린다.
+    # 실제로 그랬다 — 라디오 바가 떠 있을 때 '맨 위로' 버튼이 겹쳐 있었다
+    # (style.css 의 body.has-radio/.has-deck .back-to-top 두 규칙).
+    # 인접 형제 결합자(.a + .b)는 공백이 남아도 유효하므로 손해는 몇 바이트뿐이다.
+    s = re.sub(r"\s*([{}:;,>~])\s*", r"\1", s)
     s = re.sub(r";}", "}", s)
     return s.strip()
 
