@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-08-05 02:48",
- "count": 19,
+ "updated": "2026-08-05 06:12",
+ "count": 20,
  "items": [
   {
    "date": "2026-08-04",
@@ -54,6 +54,17 @@
    "type": "방송",
    "auto": true,
    "also": 3
+  },
+  {
+   "date": "2026-07-28",
+   "title": "총상금 1억 ‘인생은 오디션’, 서지오 심사 출격…인순이와 트롯 스타 발굴",
+   "source": "일간스포츠",
+   "sourceSite": "https://isplus.com",
+   "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5zQ1VQT1VmdGtPLWFZQVpRQ3ZPRFlUS3hNRGxoOXhUZ2F0N1VPSDlqU2RkVHlkb29wbWJPZVhYcUVGXzZaN1RQNk4zcEhSNGQwZkdfSWdGc2V4elE?oc=5",
+   "type": "방송",
+   "auto": true,
+   "also": 3,
+   "ai": true
   },
   {
    "date": "2026-07-27",
