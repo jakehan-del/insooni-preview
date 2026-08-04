@@ -374,24 +374,51 @@
      미래를 예측해 카운트다운하지 않는다 — 확정되지 않은 일정을 앞당겨 보여주지 않기 위해서.
      오늘이 아무 기념일도 아니면 배너 자체를 숨긴다. 모든 날짜는 앨범 크레딧·보도로 확인된 것. */
   function renderAnniversary() {
-    var sec = $("#anniv"), card = $("#anniv-card");
-    if (!sec || !card || !D.milestones || !D.milestones.length) return;
+    var sec = $("#anniv"), list = $("#anniv-rows");
+    if (!sec || !list || !D.milestones || !D.milestones.length) return;
     sec.hidden = true;
     var isEN = document.documentElement.getAttribute("lang") === "en";
     var pick = function (o) { return (isEN && o.en) ? o.en : o.ko; };
+
+    /* 오늘 날짜로 거르지 않는다.
+       전에는 `m.d === todayKey` 로 걸러서, 기념일이 12건뿐인 탓에
+       1년 365일 중 353일(96.7%)은 이 자리가 0px 였다.
+       조건이 맞아야 열리는 칸은, 안 맞는 날이 압도적이면 그냥 없는 칸이다.
+       (조용필 팬클럽 「이벤트」 게시판이 2020년에 멈춘 채 6년간 그대로인 것과 같은 병.
+        반대로 같은 사이트의 「친필 메시지」는 날짜 조건이 없어 21년째 살아 있다.)
+       그래서 12건을 전부 깔되, 오늘에서 가까운 순으로 돌려 세운다.
+       새 사실은 한 건도 만들지 않는다 — 있는 12건의 순서만 바꾼다. */
     var now = new Date();
     var todayKey = String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
-    var todays = D.milestones.filter(function (m) { return m.d === todayKey; });
-    if (!todays.length) return;                       /* 오늘이 기념일이 아니면 아무것도 안 보인다 */
-    todays.sort(function (a, b) { return a.y - b.y; });
-    var m = todays[0];
-    var years = now.getFullYear() - m.y;
-    var head = isEN ? (years + " year" + (years === 1 ? "" : "s") + " ago today")
-                    : (years + "년 전 오늘");
-    card.innerHTML =
-      '<span class="anniv-kicker">' + esc(isEN ? "ON THIS DAY" : "오늘의 기념일") + "</span>" +
-      '<p class="anniv-head">' + esc(head) + "</p>" +
-      '<p class="anniv-body">' + esc(pick(m)) + "</p>";
+
+    /* MM-DD 를 '올해 몇 번째 날'로 바꿔 오늘로부터의 거리를 잰다.
+       연말·연초가 이어지도록 365 로 감싼다(12월 28일 다음이 1월 3일이 되게). */
+    function dayNo(md) {
+      var p = String(md || "").split("-");
+      return (parseInt(p[0], 10) - 1) * 31 + parseInt(p[1], 10);   /* 근사로 충분하다 — 정렬용이다 */
+    }
+    var t0 = dayNo(todayKey);
+    var rows = D.milestones.slice().sort(function (a, b) {
+      var da = (dayNo(a.d) - t0 + 372) % 372, db = (dayNo(b.d) - t0 + 372) % 372;
+      return da !== db ? da - db : a.y - b.y;
+    });
+
+    var MON = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
+    var MONE = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    list.innerHTML = rows.map(function (m) {
+      var p = String(m.d).split("-"), mi = parseInt(p[0], 10) - 1, dd = parseInt(p[1], 10);
+      var when = isEN ? (MONE[mi] + " " + dd) : (MON[mi] + " " + dd + "일");
+      /* 'N년 전 오늘' 배지는 진짜 오늘인 줄에만. 아무 날에나 붙이면 거짓이 된다. */
+      var isToday = m.d === todayKey;
+      var badge = isToday
+        ? '<em class="av-today">' + esc(isEN ? ((now.getFullYear() - m.y) + " years ago today")
+                                            : ((now.getFullYear() - m.y) + "년 전 오늘")) + "</em>"
+        : "";
+      return '<li class="av-row' + (isToday ? " is-today" : "") + '">' +
+               '<span class="av-when">' + esc(m.y) + " · " + esc(when) + "</span>" +
+               '<span class="av-what">' + esc(pick(m)) + badge + "</span>" +
+             "</li>";
+    }).join("");
     sec.hidden = false;
   }
 
@@ -884,7 +911,7 @@
       inner.appendChild(grid);
     }
     var mem = el("p", "recap-mem");
-    mem.innerHTML = '<a class="btn btn--ghost btn--sm" href="community.html#letter">' + t("recap.mem", "이 공연에 다녀오셨나요? 추억을 보내주세요") + "</a>";
+    mem.innerHTML = '<a class="btn btn--ghost btn--sm" href="community.html#sb-today">' + t("recap.mem", "이 공연에 다녀오셨나요? 추억을 보내주세요") + "</a>";
     inner.appendChild(mem);
     box.hidden = false;
     document.body.style.overflow = "hidden";
@@ -1812,6 +1839,10 @@
     function showDone(token, instant) {
       if (!done) return;
       done.hidden = false;
+      /* 글칸을 <details> 로 접었으므로, 보낸 뒤 접힘이 닫히면 확인번호와
+         「지금 지우기」가 통째로 숨는다. 남긴 직후가 가장 중요한 화면이라 열어 둔다. */
+      var fold = $("#sb-fold");
+      if (fold) fold.open = true;
       myCode = codeOf(token);
       if (token) { try { localStorage.setItem(TOKKEY, token); } catch (e) {} }
 
@@ -1819,7 +1850,7 @@
       if (instant) {
         /* 사이트가 제시한 문구라 검수 없이 바로 올랐다. 그 사실을 그대로 말한다. */
         if (head) head.innerHTML = "<strong>" + esc(t("sb.upNow", "사랑방에 올랐습니다.")) + "</strong> " +
-          esc(t("sb.upNowWhy", "사랑방이 드리는 문구라 바로 올라갑니다. 아래 줄기에서 보실 수 있어요."));
+          esc(t("sb.upNowWhy", "사랑방이 드리는 문구라 바로 올라갑니다. 위 줄기에서 보실 수 있어요."));
         if (btnCancel) btnCancel.hidden = true;
       } else {
         if (head) head.innerHTML = "<strong>" + esc(t("sb.gotIt", "남겨졌습니다.")) + "</strong> " +
@@ -2238,6 +2269,16 @@
   /* ---------- 7.2 사랑방의 줄기 ----------
      연혁 16 + 정규앨범 18 + 승인된 팬의 한 줄이 한 줄기에 선다.
      팬이 0명이어도 34칸이 이미 서 있다 — 빈 화면이 나오지 않는 이유다. */
+  /* '사연 보내기'·'추억을 보내주세요' 로 들어온 사람을 글칸까지 데려간다.
+     글칸을 접었기 때문에, 해시만 맞고 접힘이 닫혀 있으면 아무것도 안 보인다. */
+  function openFoldFromHash() {
+    var h = location.hash;
+    if (h !== "#sb-today" && h !== "#letter") return;
+    var fold = $("#sb-fold"), sec = $("#sb-today");
+    if (fold) fold.open = true;
+    if (sec && sec.scrollIntoView) sec.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   function initStream() {
     var box = $("#sb-stream");
     if (!box) return;
@@ -2246,7 +2287,19 @@
 
     var PAGE = 12, shown = 0, rows = [];
 
-    function addRow(r) {
+    function addRow(r, i) {
+      /* 맨 위 한 줄은 크게 세운다.
+         승인 글이 1건뿐일 때 작은 목록 한 줄은 '덜 찬 그릇'으로 보이지만,
+         같은 한 줄을 인용으로 조판하면 그 자체로 완성된 화면이 된다.
+         2건째부터는 지금 마크업 그대로 — 목록이 인용의 연속이면 아무것도 강조되지 않는다. */
+      if (i === 0) {
+        var lead = el("li", "sb-row sb-row--lead is-" + r.kind);
+        lead.innerHTML =
+          '<blockquote class="sbl-q">' + esc(r.text) + "</blockquote>" +
+          '<p class="sbl-by">' + (r.sub ? esc(r.sub) + " · " : "") + esc(r.y || "") + "</p>";
+        list.appendChild(lead);
+        return;
+      }
       var li = el("li", "sb-row is-" + r.kind);
       var art = r.art
         ? '<span class="sb-row-art"><img src="' + esc(r.art) + '" alt="" loading="lazy" decoding="async"></span>'
@@ -2263,7 +2316,7 @@
 
     function draw() {
       var next = rows.slice(shown, shown + PAGE);
-      next.forEach(addRow);
+      next.forEach(function (r, k) { addRow(r, shown + k); });
       shown += next.length;
       if (more) more.hidden = shown >= rows.length;
     }
@@ -2286,8 +2339,27 @@
          방금 올린 줄이 맨 아래로 밀렸다. 서버 순서를 안 버리면 늘 1행이다. */
       list.innerHTML = ""; shown = 0;
       draw();
-      /* 0건이면 섹션 자체가 없다. 빈 그릇의 크기를 보여 주지 않는다. */
-      box.hidden = rows.length === 0;
+      box.hidden = false;
+      showState(rows.length ? "" : "none");
+    }
+
+    /* 「서버가 죽었다」와 「아직 아무도 안 남겼다」를 화면에서 가른다.
+       전에는 res.ok===false 일 때도 catch 일 때도 똑같이 build([]) 를 불렀고,
+       0건이면 섹션을 통째로 숨겼다 — 두 상태가 화면에서 완전히 같았다.
+       그래서 서버가 끊긴 날에도 방문자는 '아무도 안 왔구나'로 읽었다. 그건 거짓말이다.
+         none : 정상 응답 + 0건  → 초대 문장
+         off  : 시간초과·네트워크·서버오류 → 못 불러온다고 말한다
+         quiet: 백엔드 미설정(로컬 열람) → 조용히 숨긴다. 설정 전은 정상 상태다 */
+    function showState(kind) {
+      var msg = $("#sb-stream-msg");
+      if (!msg) return;
+      if (!kind) { msg.hidden = true; return; }
+      if (kind === "quiet") { box.hidden = true; msg.hidden = true; return; }
+      box.hidden = false;                 /* 안 켜면 이 문장이 hidden 섹션 안에 갇힌다 */
+      msg.textContent = kind === "none"
+        ? t("sb.streamNone", "아직 아무도 남기지 않으셨습니다. 당신이 첫 줄입니다.")
+        : t("sb.streamOff", "지금은 사랑방을 불러올 수 없습니다. 잠시 뒤 다시 열어 주세요.");
+      msg.hidden = false;
     }
 
     /* 남긴 날을 서울 기준 '8월 4일' 로. 곡 연도 자리를 대신한다 —
@@ -2311,13 +2383,18 @@
        이제 서버가 준 최신순을 그대로 쓰므로 방금 올린 줄이 언제나 1행이다. */
     function reload() {
       var be = BE();
-      if (!be) { build([]); return; }
+      /* 백엔드가 아예 안 붙은 상태(로컬에서 열어 볼 때)는 오류가 아니다. 조용히 접는다. */
+      if (!be) { list.innerHTML = ""; showState("quiet"); return; }
       be.listNotes().then(function (res) {
-        build(res && res.ok ? res.rows : []);
-      })["catch"](function () { build([]); });
+        if (res && res.ok) { build(res.rows || []); return; }
+        /* backend.js 는 예외를 던지지 않고 {ok:false, reason} 만 준다.
+           설정 문제면 조용히, 통신·서버 문제면 사실대로 말한다. */
+        var r = res && res.reason;
+        list.innerHTML = "";
+        showState(r === "not_configured" ? "quiet" : "off");
+      })["catch"](function () { list.innerHTML = ""; showState("off"); });
     }
 
-    build([]);
     reload();
     /* 오늘의 자리에서 칩이 바로 올랐을 때 이 줄기를 즉시 다시 그린다 */
     window.INSOONI_STREAM_RELOAD = reload;
@@ -2338,8 +2415,16 @@
     var be = BE();
     if (!be) return;                 /* 폼은 hidden 그대로, 공식 채널 링크만 보인다 */
     form.hidden = false;
-    if (note) note.textContent = t("sub.noteLive",
-      "이메일은 소식 발송에만 쓰이며, 언제든 해지하실 수 있습니다.");
+    /* 「언제든 해지하실 수 있습니다」라고 쓰지 않는다.
+       해지 RPC 도, 해지 링크도, 화면에 적힌 연락처도 없다 — privacy.html 은
+       '소속사 소솝의 공식 채널'이라고만 하고 실제 주소를 주지 않는다.
+       방문자가 스스로 할 수 없는 일을 '언제든 됩니다'라고 말하면 그건 약속이 아니라 거짓이다.
+       할 수 있는 만큼만 적고, 경로는 개인정보처리방침으로 넘긴다.
+       (해지 창구가 실제로 생기면 이 문구를 원래대로 되돌리면 된다.) */
+    if (note) {
+      note.innerHTML = esc(t("sub.noteLive", "이메일 주소는 소식 발송에만 씁니다.")) +
+        ' <a href="privacy.html">' + esc(t("sub.noteHow", "보관과 삭제 안내")) + "</a>";
+    }
 
     var okT = null;
     function say(text, good) {
@@ -2843,7 +2928,7 @@
     [renderEventList, initStrip, initVhero, renderArchive, renderPastRecaps,
      initFreshVideos, initVideoButtons, initReveal, renderNewsPage, renderCalendar,
      initFontSize, renderTimeline, renderHaemilLine, renderAnniversary, renderDiscography, initToday, initStream, initFlight, initSubscribe,
-     initArtistLetter, initRise].forEach(safe);
+     initArtistLetter, initRise, openFoldFromHash].forEach(safe);
     /* 마지막에 번역을 건다 — 위 렌더러들이 만들어 낸 요소까지 함께 잡기 위해서.
        라우터로 페이지를 옮겨도 새 <main>이 영어로 칠해진다. */
     applyLang(curLang());

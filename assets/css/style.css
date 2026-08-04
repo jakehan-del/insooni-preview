@@ -3091,3 +3091,132 @@ html[data-fs="2"] .fs-toggle .fs-b, html[data-fs="3"] .fs-toggle .fs-b { opacity
 
 
 
+
+
+/* ══════════════════════════════════════════════════════════════════
+   한글 자간 — 벌리지 않는다
+   ------------------------------------------------------------------
+   왜 있는가
+   ---------
+   라이브 10페이지를 실측하니 한글에 양(+)의 자간이 걸린 곳이 702군데였다.
+   「개인정보처리방침」이 「개 인 정 보 처 리 방 침」으로 읽혔다.
+   낱글자가 떨어지면 단어 덩어리가 깨져서, 읽는 속도가 아니라 '읽히는지'가 무너진다.
+
+   W3C 한국어 레이아웃 요구사항(KLREQ) 7.3.1 —
+   "Characters like Hangul, Hanja, or Kana have zero space between characters
+    by default." 한글은 자간 0이 기본이다.
+
+   눈이 어두운 분이 가장 오래 보실 화면이고, 헤더의 [가] 버튼으로 글자를 키우면
+   자간도 em 비례로 함께 커져 더 벌어진다. 키울수록 나빠지는 구조였다.
+
+   왜 lang="ko" 로 한정하나
+   ----------------------
+   라틴 대문자 조판에는 자간을 벌리는 것이 맞다(INSOONI, 연도, 영문 라벨).
+   이 사이트는 <html lang> 을 ko/en 으로 바꾸므로, 영문 화면은 원래 조판을 지킨다.
+   즉 이 규칙은 '한글을 읽는 화면에서만' 작동한다.
+
+   고정폭 서체(--font-mono)의 숫자·연도에는 손대지 않는다 — 아래 목록에 없다.
+   ══════════════════════════════════════════════════════════════════ */
+
+html[lang="ko"] h1,
+html[lang="ko"] h2,
+html[lang="ko"] h3,
+html[lang="ko"] h4,
+html[lang="ko"] h5,
+html[lang="ko"] h6,
+html[lang="ko"] .rv-word,
+html[lang="ko"] .main-nav a,
+html[lang="ko"] .footer-min a,
+html[lang="ko"] .footer-legal,
+html[lang="ko"] .footer-legal a,
+/* .btn 을 안 단 <button> 이 14군데 있었다(음악 재생·필터). 태그로 잡는다. */
+html[lang="ko"] button,
+html[lang="ko"] .btn,
+html[lang="ko"] .strip-hint,
+html[lang="ko"] .btp-label,
+html[lang="ko"] .today-line,
+html[lang="ko"] .where,
+html[lang="ko"] .sb-night,
+html[lang="ko"] .sb-row-y,
+html[lang="ko"] .tr-name,
+html[lang="ko"] .event-date .m,
+html[lang="ko"] .bt-bpm,
+html[lang="ko"] .badge,
+html[lang="ko"] .tr-play,
+html[lang="ko"] .ts-play,
+html[lang="ko"] .show-city,
+html[lang="ko"] .a-sub,
+html[lang="ko"] .a-kind,
+html[lang="ko"] .a-title,
+html[lang="ko"] .a-link,
+html[lang="ko"] .di-title,
+html[lang="ko"] .di-link,
+html[lang="ko"] .arch-cap,
+html[lang="ko"] .fr-ch,
+html[lang="ko"] .sc-title,
+html[lang="ko"] .sc-sub,
+html[lang="ko"] .rh-eyebrow,
+html[lang="ko"] .frame-note,
+html[lang="ko"] .news-src,
+html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
+
+
+/* ══ 사랑방 — 인순이의 날들 · 접히는 글칸 · 인용 카드 ══════════════
+   왜 이렇게 바꿨나
+   ----------------
+   실측: 사랑방 2,240px 중 904px(40%)이 빈 입력칸이었고, 읽을 것은 0px 였다.
+   「오늘의 기념일」은 milestones 12건을 오늘 날짜로 걸러서 1년 중 353일이 0px 였다.
+   부족한 게 아니라 순서가 뒤집혀 있었다 — 쓸 칸이 먼저 오고 읽을 것이 없었다.
+   ══════════════════════════════════════════════════════════════ */
+
+.anniv-rows { list-style: none; margin: 0 0 1.2rem; padding: 0; }
+.av-row {
+  display: grid; grid-template-columns: 9.2rem 1fr; gap: .2rem 1.2rem;
+  padding: .85rem 0; border-top: 1px solid var(--line);
+}
+.av-row:first-child { border-top: 0; }
+.av-when { font-family: var(--font-mono); font-size: .82rem; color: var(--faint); line-height: 1.65; }
+.av-what { color: var(--muted); font-size: 1rem; line-height: 1.65; }
+.av-row.is-today .av-what { color: var(--ivory); }
+.av-today {
+  display: inline-block; margin-left: .55rem; font-style: normal;
+  font-family: var(--font-mono); font-size: .74rem; color: var(--gold);
+  border: 1px solid var(--gold-deep); border-radius: 2px; padding: .1em .5em;
+  vertical-align: .1em; white-space: nowrap;
+}
+/* 폰에서 9.2rem 열을 두면 본문이 반토막 난다. 날짜를 위로 올린다. */
+@media (max-width: 620px) {
+  .av-row { grid-template-columns: 1fr; gap: .3rem; }
+  .av-today { margin-left: 0; margin-top: .4rem; display: table; }
+}
+
+/* 접히는 글칸. summary 는 화살표가 아니라 낱말이어야 한다 —
+   68세 기준으로 삼각형은 '누르는 것'으로 안 읽힌다. 최소 56px 높이. */
+.sb-fold { margin-top: 1.4rem; }
+.sb-fold-s {
+  display: flex; align-items: center; gap: .6rem;
+  min-height: 56px; padding: 0 1.1rem; cursor: pointer;
+  border: 1px solid var(--line-strong, rgba(243,239,231,.22)); border-radius: 4px;
+  color: var(--ivory); font-size: 1.02rem; list-style: none;
+}
+.sb-fold-s::-webkit-details-marker { display: none; }
+.sb-fold-s::before {
+  content: "+"; font-family: var(--font-mono); font-size: 1.15rem;
+  color: var(--gold); line-height: 1;
+}
+.sb-fold[open] > .sb-fold-s { margin-bottom: 1.1rem; }
+.sb-fold[open] > .sb-fold-s::before { content: "−"; }
+.sb-fold-s:hover, .sb-fold-s:focus-visible { border-color: var(--ivory); }
+
+/* 맨 위 한 줄을 인용으로. 1건뿐일 때 '덜 찬 목록'이 아니라 완성된 화면이 되게. */
+.sb-row--lead { display: block; padding: 1.6rem 0 1.9rem; border-top: 0; }
+.sbl-q {
+  margin: 0; color: var(--ivory); font-size: 1.28rem; line-height: 1.66;
+  text-indent: -.42em;
+}
+.sbl-q::before { content: "\201C"; }
+.sbl-q::after  { content: "\201D"; }
+.sbl-by { margin: .9rem 0 0; color: var(--faint); font-size: .86rem; letter-spacing: 0; }
+@media (max-width: 620px) { .sbl-q { font-size: 1.16rem; } }
+
+.sb-stream-msg { margin: .4rem 0 0; color: var(--muted); font-size: 1rem; line-height: 1.7; }

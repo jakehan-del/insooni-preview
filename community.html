@@ -13,10 +13,10 @@
 <meta name="description" content="편지를 쓰고, 팬 번호증과 응원 카드를 만들고, 공식 채널로 마음을 전하는 곳. 인순이 공식 사랑방.">
 <!-- 본문 글꼴은 먼저 확실히 깐다(미뤄 봤지만 첫 화면이 빨라지지 않았다).
      제목용 서체는 화면이 뜬 뒤 들어온다 — font-display:swap이라 늦어도 글자는 보인다. -->
-<link rel="stylesheet" href="assets/fonts/body.css?ve0a94bcb">
-<link rel="stylesheet" href="assets/fonts/display.css?ve0a94bcb" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/fonts/display.css?ve0a94bcb"></noscript>
-<link rel="stylesheet" href="assets/css/style.min.css?ve0a94bcb">
+<link rel="stylesheet" href="assets/fonts/body.css?v04759416">
+<link rel="stylesheet" href="assets/fonts/display.css?v04759416" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?v04759416"></noscript>
+<link rel="stylesheet" href="assets/css/style.min.css?v04759416">
 <link rel="canonical" href="https://jakehan-del.github.io/insooni-preview/community.html">
 <meta property="og:url" content="https://jakehan-del.github.io/insooni-preview/community.html">
 <meta property="og:type" content="website">
@@ -67,10 +67,13 @@
     </div>
   </section>
 
-  <!-- 오늘의 기념일: 검증된 연대기에서 오늘 날짜를 비춘다 -->
-  <section class="anniv" id="anniv" hidden aria-live="polite">
+  <!-- 인순이의 날들: 앨범 크레딧과 보도로 확인된 12일. 날짜로 거르지 않고 전부 세운다.
+       오늘에서 가까운 순으로 돌아가고, '오늘'인 줄에만 배지가 붙는다. -->
+  <section class="section anniv" id="anniv" hidden aria-labelledby="h-anniv">
     <div class="container">
-      <div class="anniv-card" id="anniv-card"></div>
+      <h2 id="h-anniv" data-i18n="sb.daysH">인순이의 날들</h2>
+      <ul class="anniv-rows" id="anniv-rows"></ul>
+      <p class="form-hint" data-i18n="sb.daysNote">앨범 크레딧과 보도로 확인된 날들입니다.</p>
     </div>
   </section>
 
@@ -98,15 +101,37 @@
        음악 페이지가 한다 — 여기서 또 하면 사랑방이 음악 페이지의
        그림자가 된다. 그래서 이 자리에는 글칸 하나만 둔다.
        사이트 전체에서 자유롭게 쓸 수 있는 칸은 여기 하나뿐이다. -->
+  <!-- ── 남기신 줄 ─────────────────────────────────────────────
+       사람이 남긴 것만 선다. 연혁도 앨범도 넣지 않는다 —
+       그건 이야기 페이지와 음악 페이지가 이미 한다.
+       0건이면 이 섹션은 아예 없다. 34줄로 빈 방을 덮으면
+       '아직 아무도 안 왔다'와 '그래서 당신이 첫 줄이다'가 함께 지워진다. -->
+  <section class="section section--band sb-stream" id="sb-stream" aria-labelledby="h-stream" hidden>
+    <div class="container">
+      <div class="section-head">
+        <h2 id="h-stream" data-i18n="sb.streamH">남기신 줄</h2>
+      </div>
+      <ul class="sb-rows" id="sb-rows"></ul>
+      <!-- 「0건」과 「못 불러옴」을 가르는 자리. 둘을 같은 화면으로 보여 주면
+           서버가 끊긴 날 '아무도 안 왔다'는 거짓말이 첫 화면에 뜬다. -->
+      <p class="sb-stream-msg" id="sb-stream-msg" role="status" hidden></p>
+      <p class="sb-more-wrap">
+        <button type="button" class="btn btn--ghost btn--sm" id="sb-more" data-i18n="sb.more">더 보기</button>
+      </p>
+    </div>
+  </section>
+
   <section class="section sb-today" id="sb-today" aria-labelledby="h-today">
     <div class="container">
       <p class="sb-night" id="sb-night"></p>
       <h2 id="h-today" data-i18n="sb.todayH">한 줄 남기기</h2>
-      <p class="lede sb-invite" data-i18n="sb.invite">오늘 여기 오신 마음을 한 줄로 남겨 주세요. 검수를 거쳐 아래에 오릅니다.</p>
+      <p class="lede sb-invite" data-i18n="sb.invite">오늘 여기 오신 마음을 한 줄로 남겨 주세요.</p>
 
-      <p class="sb-uplifted" id="sb-uplifted" hidden data-i18n="sb.uplifted">남기신 줄이 사랑방에 올라왔습니다. 아래에서 보실 수 있어요.</p>
+      <p class="sb-uplifted" id="sb-uplifted" hidden data-i18n="sb.uplifted">남기신 줄이 사랑방에 올라왔습니다. 위에서 보실 수 있어요.</p>
 
       <!-- 사이트 전체의 유일한 자유 입력칸 -->
+      <details class="sb-fold" id="sb-fold">
+        <summary class="sb-fold-s" data-i18n="sb.foldS">글 남기러 들어가기</summary>
       <div class="sb-write-box" id="sb-write-box">
         <p class="sb-chips" id="sb-chips" aria-label="문구 고르기" data-i18n-aria="sb.chipsAria"></p>
         <form id="sb-form" class="sb-form">
@@ -141,26 +166,12 @@
         </div>
       </div>
 
+      </details>
+
       <p class="form-hint" id="sb-offline" hidden data-i18n="sb.offline">지금은 글을 받을 수 없습니다. 잠시 뒤 다시 시도해 주세요.</p>
     </div>
   </section>
 
-  <!-- ── 남기신 줄 ─────────────────────────────────────────────
-       사람이 남긴 것만 선다. 연혁도 앨범도 넣지 않는다 —
-       그건 이야기 페이지와 음악 페이지가 이미 한다.
-       0건이면 이 섹션은 아예 없다. 34줄로 빈 방을 덮으면
-       '아직 아무도 안 왔다'와 '그래서 당신이 첫 줄이다'가 함께 지워진다. -->
-  <section class="section section--band sb-stream" id="sb-stream" aria-labelledby="h-stream" hidden>
-    <div class="container">
-      <div class="section-head">
-        <h2 id="h-stream" data-i18n="sb.streamH">남기신 줄</h2>
-      </div>
-      <ul class="sb-rows" id="sb-rows"></ul>
-      <p class="sb-more-wrap">
-        <button type="button" class="btn btn--ghost btn--sm" id="sb-more" data-i18n="sb.more">더 보기</button>
-      </p>
-    </div>
-  </section>
 
   <!-- ── 나가는 문 ─────────────────────────────────────────────
        방이 아니라 나가는 길이다. 그래서 카드가 아니라 각주로 둔다.
@@ -203,17 +214,17 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동" data-i18n-aria="aria.toTop">↑</button>
-<script src="assets/js/config.js?ve0a94bcb" defer></script>
-<script src="assets/js/backend.js?ve0a94bcb" defer></script>
-<script src="assets/js/i18n.min.js?ve0a94bcb" defer></script>
-<script src="assets/js/data.min.js?ve0a94bcb" defer></script>
-<script src="assets/js/tracklinks.min.js?ve0a94bcb" defer></script>
-<script src="assets/js/albums-full.min.js?ve0a94bcb" defer></script>
-<script src="assets/js/albums-en.min.js?ve0a94bcb" defer></script>
-<script src="assets/js/song-moods.min.js?ve0a94bcb" defer></script>
-<script src="assets/js/main.min.js?ve0a94bcb" defer></script>
-<script src="assets/js/motion.min.js?ve0a94bcb" defer></script>
-<script src="assets/js/router.min.js?ve0a94bcb" defer></script>
-<script src="assets/js/deck.min.js?ve0a94bcb" defer></script>
+<script src="assets/js/config.js?v04759416" defer></script>
+<script src="assets/js/backend.js?v04759416" defer></script>
+<script src="assets/js/i18n.min.js?v04759416" defer></script>
+<script src="assets/js/data.min.js?v04759416" defer></script>
+<script src="assets/js/tracklinks.min.js?v04759416" defer></script>
+<script src="assets/js/albums-full.min.js?v04759416" defer></script>
+<script src="assets/js/albums-en.min.js?v04759416" defer></script>
+<script src="assets/js/song-moods.min.js?v04759416" defer></script>
+<script src="assets/js/main.min.js?v04759416" defer></script>
+<script src="assets/js/motion.min.js?v04759416" defer></script>
+<script src="assets/js/router.min.js?v04759416" defer></script>
+<script src="assets/js/deck.min.js?v04759416" defer></script>
 </body>
 </html>
