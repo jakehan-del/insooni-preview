@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-08-04 15:27",
- "count": 16,
+ "updated": "2026-08-04 19:38",
+ "count": 17,
  "items": [
   {
    "date": "2026-08-04",
@@ -31,6 +31,16 @@
    "source": "대한민국 대표 공영미디어 KBS",
    "sourceSite": "https://www.kbs.co.kr",
    "url": "https://news.google.com/rss/articles/CBMiwgJBVV95cUxOT1lyU3BxV0N5UEZZeHdFV2FVUzlEaFhJcC1lRVAzcWtzYS1zZ2NldEw1VW9EemFDNm1mVUpTQmloOVlFUEg0MTByU3JuSlA4M1BzQjJiRVlQSGJhaEpQN3pUSC1PckRtRDZpcTgtYkM2dGtoRDl6NVFQWWdVa0NPNUowWmJoWWlIYjZoMlcwdVlOUXBRNEYzUUFtUHNKVW84VjdHZEZ5d1p4Ti1aMnJGOG1CU2pFb0h2anJ5XzlHQTBPeXhSLTR6R1Bnc1NIY3hKU0owVFQ0QXA1dkhJdTA1TVNHckdINmF2bkJ5NXlza1VDRzlFdG1LUGlEMmhIeEpyNHpINzVtbTJidFI1ZU0wV0NGT0pfcGVHalNqcXhCOHpHMllvQTNrRVZDcnNsNU0wMjQ1eXhzSnBHREtUdW00eHln?oc=5",
+   "type": "방송",
+   "auto": true,
+   "ai": true
+  },
+  {
+   "date": "2026-07-29",
+   "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE9kLTZJcnFMUmF6Vkl2TWxKejBVblBxS0RTU0NYbkhhNlJPc3FfU2dBTGd0NG1RLVBaX3NybTZMR2owdXVidjdYTzYxMVBxNlhpOEkyaQ?oc=5",
    "type": "방송",
    "auto": true,
    "ai": true
