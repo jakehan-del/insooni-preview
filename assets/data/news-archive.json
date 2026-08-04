@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-08-04 23:10",
- "count": 18,
+ "updated": "2026-08-05 02:48",
+ "count": 19,
  "items": [
   {
    "date": "2026-08-04",
@@ -171,6 +171,16 @@
    "type": "보도",
    "auto": true,
    "also": 1
+  },
+  {
+   "date": "2026-05-12",
+   "title": "DMZ 피스트레인 뮤직 페스티벌, 인순이·백현진 등 30개 팀 출연",
+   "source": "연합뉴스",
+   "sourceSite": "https://www.yna.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5OZElpVmN5bGtwZEZPVkFzbUc5OFAyTlBPVHhzS3FrblotejRHSTBBRm9KeFJ3Vm95c2ppek1PV2hYNmlyaUM2VFp1S3BKcHhBc0pBWmZqSTU1T03SAWBBVV95cUxNNU9rb1lDNEIxVG03TTBYRURURmphdEJsa3laTlBmNmtwRUkyUFFobU5sSFVGY2k3MEF6MVpNcFdzUkJUSUFuc05WWXdqU3BEU3IwTzdlNzBnc0FpbjhRUjQ?oc=5",
+   "type": "공연",
+   "auto": true,
+   "ai": true
   },
   {
    "date": "2026-05-06",
