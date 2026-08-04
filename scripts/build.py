@@ -130,6 +130,39 @@ def restamp_site_url():
     print("  배포 주소 %s (%d개 파일 갱신)" % (base, changed))
 
 
+
+def restamp_cache_bust():
+    """캐시 무효화 값을 내용 해시로 바꾼다.
+
+    전에는 HTML 마다 ?v124 를 손으로 올렸다. build.py 는 이 번호를 올려 주지
+    않으므로, 빠뜨리면 고친 것이 라이브에 하나도 안 보인다 — 파일은 바뀌었는데
+    브라우저가 옛 것을 계속 쓴다. 실제로 매번 이 순서를 지켜야 했다.
+
+    번호를 없애면 빠뜨릴 수도 없다. 파생본(.min)의 내용을 해시해 그 값을 쓴다.
+    바뀌지 않은 파일은 값도 그대로라 캐시가 그대로 살아 있고,
+    바뀐 파일만 새 값을 받는다. 사람이 기억할 것이 하나 줄어든다.
+    """
+    import hashlib, re
+    keys = ["assets/css/style.min.css", "assets/js/main.min.js",
+            "assets/js/i18n.min.js", "assets/js/data.min.js"]
+    h = hashlib.sha1()
+    for k in keys:
+        f = os.path.join(ROOT, k)
+        if os.path.exists(f):
+            h.update(io.open(f, "rb").read())
+    stamp = h.hexdigest()[:8]
+
+    n = 0
+    for html in sorted(glob.glob(os.path.join(ROOT, "*.html"))):
+        s = io.open(html, encoding="utf-8").read()
+        # ?v123 같은 옛 번호도, 이전 해시도 모두 새 해시로 바꾼다
+        s2 = re.sub(r"\?v[0-9a-f]{2,10}(?=[\"'])", "?v" + stamp, s)
+        if s2 != s:
+            io.open(html, "w", encoding="utf-8").write(s2)
+            n += 1
+    print("캐시 무효화: ?v%s (%d개 파일)" % (stamp, n))
+
+
 def run():
     restamp_site_url()
     split_fonts()
@@ -154,6 +187,9 @@ def run():
         tot_b += sb
         print("  %-26s %6.1f KB → %6.1f KB" % (os.path.basename(a), sa / 1024, sb / 1024))
     print("합계 %.1f KB → %.1f KB (%.0f%% 절감)" % (tot_a / 1024, tot_b / 1024, 100 * (1 - tot_b / tot_a)))
+
+    # 파생본을 다 만든 뒤에 해시를 찍는다 — 순서가 뒤바뀌면 옛 내용으로 해시한다
+    restamp_cache_bust()
 
 
 if __name__ == "__main__":
