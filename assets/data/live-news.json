@@ -1,16 +1,17 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 AI 큐레이션으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "AI 큐레이션",
- "updated": "2026-08-04 06:01",
+ "updated": "2026-08-04 11:29",
  "items": [
   {
-   "date": "2026-08-03",
-   "title": "남진 & 인순이 - 님과 함께 | KBS 260803 방송",
-   "source": "대한민국 대표 공영미디어 KBS",
-   "sourceSite": "https://www.kbs.co.kr",
-   "url": "https://news.google.com/rss/articles/CBMiwgJBVV95cUxOT1lyU3BxV0N5UEZZeHdFV2FVUzlEaFhJcC1lRVAzcWtzYS1zZ2NldEw1VW9EemFDNm1mVUpTQmloOVlFUEg0MTByU3JuSlA4M1BzQjJiRVlQSGJhaEpQN3pUSC1PckRtRDZpcTgtYkM2dGtoRDl6NVFQWWdVa0NPNUowWmJoWWlIYjZoMlcwdVlOUXBRNEYzUUFtUHNKVW84VjdHZEZ5d1p4Ti1aMnJGOG1CU2pFb0h2anJ5XzlHQTBPeXhSLTR6R1Bnc1NIY3hKU0owVFQ0QXA1dkhJdTA1TVNHckdINmF2bkJ5NXlza1VDRzlFdG1LUGlEMmhIeEpyNHpINzVtbTJidFI1ZU0wV0NGT0pfcGVHalNqcXhCOHpHMllvQTNrRVZDcnNsNU0wMjQ1eXhzSnBHREtUdW00eHln?oc=5",
+   "date": "2026-08-04",
+   "title": "가수 남진·인순이, KBS '가요무대'서 환상적인 듀엣 무대…",
+   "source": "유스연합",
+   "sourceSite": "https://www.youthassembly.kr",
+   "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE9WeVM3ZWl3bXF2S0FkQTJBUkNaV1dHdnZKdmM1QXdsRU5oczJYUXhCdDRoMVc1VUtJazBaa3BiNGk4T29RQjYzVFdjZnc4RllncEE?oc=5",
    "type": "방송",
    "auto": true,
+   "also": 1,
    "ai": true
   },
   {
@@ -41,6 +42,16 @@
    "source": "v.daum.net",
    "sourceSite": "https://v.daum.net",
    "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE04WWM0VmRRWWFUVjdaTXk2Vjg0czVDeWFZd2JpaC1Fc1MxeWtIOXpjN2RocXU0WjNPTnlPckdsZ2drS1lWNjdWaUJPZUJtd2c?oc=5",
+   "type": "공연",
+   "auto": true,
+   "ai": true
+  },
+  {
+   "date": "2026-06-17",
+   "title": "\"왜 이렇게 눈물이 날까요\" 인순이가 완성한 축제의 대미",
+   "source": "오마이스타",
+   "sourceSite": "https://star.ohmynews.com",
+   "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTFBLMEJuXy1BejFxbDJZYmQ3X3ljWE9jamdaU2tlSlhRem5CMXJGLXNlRDA2S0p4UmI0dkh5Wmdqb1N5VWdGd000NldvamFxWERpZk9FMXdpOWxGTExlN1htR2tZVTVVU2ViQ2hjZUpXYjRFS01ZdlRUdHRRR1lyQQ?oc=5",
    "type": "공연",
    "auto": true,
    "ai": true
