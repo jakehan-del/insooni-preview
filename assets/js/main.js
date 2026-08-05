@@ -2279,6 +2279,86 @@
     if (sec && sec.scrollIntoView) sec.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
+  /* ---------- 옛 공식홈에서 옮겨 온 것 (아카이브 페이지) ----------
+     insooni.com 은 2010년 플래시 사이트다. 플래시가 2020년 12월에 끝나면서
+     서버는 살아 있는데 아무도 볼 수 없는 상태가 됐다. 그 안의 것을 여기로 옮겼다.
+
+     반드시 지킬 것: 사진 캡션은 인순이 본인이 쓴 것이고, 일정은 회사가 적은 것이다.
+     화면에서 그 둘의 출처를 다르게 밝힌다 — 섞으면 누가 한 말인지 사라진다. */
+  function initOldSite() {
+    var gal = $("#old-gal");
+    if (!gal) return;                       /* 아카이브 페이지에서만 돈다 */
+
+    var STEP = 12;
+    fetch("assets/data/old-gallery.json").then(function (r) { return r.json(); })
+      .then(function (d) {
+        var items = (d && d.items) || [], shown = 0;
+        var more = $("#old-more");
+        function draw() {
+          var next = items.slice(shown, shown + STEP);
+          next.forEach(function (it) {
+            var fig = el("figure", "old-card");
+            fig.innerHTML =
+              '<img src="' + esc(it.img) + '" alt="' + esc(it.title) + '" width="' + it.w +
+                '" height="' + it.h + '" loading="lazy" decoding="async">' +
+              '<figcaption><b>' + esc(it.title) + "</b>" +
+                (it.note ? '<span class="old-note">' + esc(it.note) + "</span>" : "") +
+              "</figcaption>";
+            gal.appendChild(fig);
+          });
+          shown += next.length;
+          if (more) more.hidden = shown >= items.length;
+        }
+        draw();
+        if (more) more.addEventListener("click", draw);
+      })["catch"](function () {
+        /* 조용히 접는다. 못 불러온 것을 '자료가 없다'로 보이게 하지 않는다. */
+        var sec = $("#old-site"); if (sec) sec.hidden = true;
+      });
+
+    /* 일정 872건 — 오늘 날짜(월·일)와 같은 날부터 보여 준다.
+       872건을 통째로 쏟으면 아무도 안 읽는다. '몇 년 전 오늘'이 읽는 이유가 된다. */
+    var list = $("#old-sched"), note = $("#old-sched-note"), smore = $("#old-sched-more");
+    if (!list) return;
+    fetch("assets/data/old-schedule.json").then(function (r) { return r.json(); })
+      .then(function (d) {
+        var items = (d && d.items) || [];
+        if (!items.length) { var w = $("#old-sched-wrap"); if (w) w.hidden = true; return; }
+        var now = new Date();
+        var md = String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
+        var today = items.filter(function (x) { return x.date.slice(5) === md; });
+        var rest = items.filter(function (x) { return x.date.slice(5) !== md; })
+                        .sort(function (a, b) { return a.date < b.date ? 1 : -1; });
+        var order = today.concat(rest);
+        if (note) {
+          note.textContent = today.length
+            ? t("old.schedToday", "오늘과 같은 날짜의 기록 " + today.length + "건이 맨 위에 있습니다. 전체 "
+                + items.length + "건, " + items[0].date.slice(0,4) + "~"
+                + items[items.length-1].date.slice(0,4) + "년.")
+            : t("old.schedAll", "전체 " + items.length + "건, " + items[0].date.slice(0,4) + "~"
+                + items[items.length-1].date.slice(0,4) + "년의 공식 일정 기록입니다.");
+        }
+        var shown = 0;
+        function draw() {
+          order.slice(shown, shown + 20).forEach(function (x, k) {
+            var li = el("li", "old-row" + (shown + k < today.length ? " is-today" : ""));
+            li.innerHTML =
+              '<span class="old-when">' + esc(x.date) + "</span>" +
+              '<span class="old-what">' + esc(x.text) +
+                (x.kind !== "일정" ? ' <em class="old-kind">' + esc(x.kind) + "</em>" : "") +
+              "</span>";
+            list.appendChild(li);
+          });
+          shown = Math.min(shown + 20, order.length);
+          if (smore) smore.hidden = shown >= order.length;
+        }
+        draw();
+        if (smore) smore.addEventListener("click", draw);
+      })["catch"](function () {
+        var w = $("#old-sched-wrap"); if (w) w.hidden = true;
+      });
+  }
+
   function initStream() {
     var box = $("#sb-stream");
     if (!box) return;
@@ -2928,7 +3008,7 @@
     [renderEventList, initStrip, initVhero, renderArchive, renderPastRecaps,
      initFreshVideos, initVideoButtons, initReveal, renderNewsPage, renderCalendar,
      initFontSize, renderTimeline, renderHaemilLine, renderAnniversary, renderDiscography, initToday, initStream, initFlight, initSubscribe,
-     initArtistLetter, initRise, openFoldFromHash].forEach(safe);
+     initArtistLetter, initRise, openFoldFromHash, initOldSite].forEach(safe);
     /* 마지막에 번역을 건다 — 위 렌더러들이 만들어 낸 요소까지 함께 잡기 위해서.
        라우터로 페이지를 옮겨도 새 <main>이 영어로 칠해진다. */
     applyLang(curLang());

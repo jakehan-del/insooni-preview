@@ -3220,3 +3220,52 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
 @media (max-width: 620px) { .sbl-q { font-size: 1.16rem; } }
 
 .sb-stream-msg { margin: .4rem 0 0; color: var(--muted); font-size: 1rem; line-height: 1.7; }
+
+
+/* ══ 옛 공식홈에서 옮겨 온 것 (아카이브) ══════════════════════════
+   insooni.com 은 2010년 플래시 사이트였고 2020년 12월 플래시 종료 이후
+   서버는 살아 있는데 아무도 볼 수 없었다. 그 안의 것을 꺼내 놓은 자리다.
+   사진 캡션은 인순이 본인이 2005년에 쓴 것이라, 설명글보다 캡션이 앞에 선다.
+   ══════════════════════════════════════════════════════════════ */
+
+.old-gal {
+  display: grid; gap: 1.6rem 1.4rem; margin: 2rem 0 1.2rem;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+.old-card { margin: 0; }
+.old-card img {
+  width: 100%; height: auto; display: block; border-radius: 3px;
+  /* 1978~79년 스캔본이라 어둡고 거칠다. 살짝 띄워 사진처럼 보이게 한다. */
+  box-shadow: 0 18px 34px -22px rgba(0,0,0,.95), inset 0 1px 0 rgba(243,239,231,.08);
+}
+.old-card figcaption {
+  margin-top: .7rem; color: var(--ivory); font-size: .95rem; line-height: 1.55;
+}
+.old-card figcaption b { font-weight: 400; }
+.old-note {
+  display: block; margin-top: .25rem; color: var(--faint);
+  font-size: .86rem; line-height: 1.5;
+}
+.old-more-wrap { margin: .4rem 0 0; }
+
+.old-sched { margin-top: 3.4rem; padding-top: 2.2rem; border-top: 1px solid var(--line); }
+.old-sched h3 { margin: 0 0 .6rem; }
+.old-sched-rows { list-style: none; margin: 1.2rem 0 1rem; padding: 0; }
+.old-row {
+  display: grid; grid-template-columns: 7.2rem 1fr; gap: .2rem 1.1rem;
+  padding: .8rem 0; border-top: 1px solid var(--line);
+}
+.old-row:first-child { border-top: 0; }
+.old-when { font-family: var(--font-mono); font-size: .8rem; color: var(--faint); line-height: 1.7; }
+.old-what { color: var(--muted); font-size: .97rem; line-height: 1.62; white-space: pre-line; }
+.old-row.is-today .old-what { color: var(--ivory); }
+.old-kind {
+  font-style: normal; font-family: var(--font-mono); font-size: .72rem;
+  color: var(--faint); border: 1px solid var(--gold-deep); border-radius: 2px;
+  padding: .08em .45em; margin-left: .4em; white-space: nowrap;
+}
+/* 폰에서 7.2rem 열을 두면 본문이 반토막 난다 */
+@media (max-width: 620px) {
+  .old-row { grid-template-columns: 1fr; gap: .25rem; }
+  .old-gal { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1.3rem 1rem; }
+}
