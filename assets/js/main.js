@@ -2946,6 +2946,32 @@
     var pos = 0, vel = 0, dragging = false, lastX = 0, moved = 0, half = 0, raf = null;
     function measure() { half = track.scrollWidth / 2; }
 
+    /* 사진 불러오기를 우리가 직접 판단한다.
+       loading="lazy" 는 요청이지 보장이 아니다 — 실측하니 폭 21,060px 짜리
+       트랙에서 390px 화면인데도 48장 중 27장을 미리 받아 왔다(2.5MB).
+       스트립은 제 위치(pos)를 정확히 아는데 브라우저의 짐작에 맡길 이유가 없다.
+       항목 폭은 전부 CSS 로 정해져 있어(--tall/--wide/--sleeve/--video)
+       src 가 없어도 레이아웃과 scrollWidth 는 흔들리지 않는다. */
+    var HYDRATE_PAD = 1.6;                 /* 화면 좌우로 이만큼(화면 폭 배수)까지 미리 */
+    function hydrate() {
+      var vw = strip.clientWidth;
+      if (!vw) return;
+      var pad = vw * HYDRATE_PAD;
+      var from = pos - pad, to = pos + vw + pad;
+      var kids = track.children;
+      for (var i = 0; i < kids.length; i++) {
+        var it = kids[i];
+        var left = it.offsetLeft, right = left + it.offsetWidth;
+        /* 무한 루프라 같은 항목이 half 만큼 떨어진 곳에도 있다 */
+        var near = (right >= from && left <= to) ||
+                   (right - half >= from && left - half <= to) ||
+                   (right + half >= from && left + half <= to);
+        if (!near) continue;
+        var im = it.querySelector("img[data-src]");
+        if (im) { im.setAttribute("src", im.getAttribute("data-src")); im.removeAttribute("data-src"); }
+      }
+    }
+
     /* 가운데 캡션은 '그래도 꿈은 흐른다' 뮤직비디오의 것이다.
        고정 오버레이로 두면 스트립을 넘길 때 남의 사진 위에 그대로 얹힌다 —
        실제로 1980년 《인연》 재킷 위에 겹쳐 있었다.
@@ -2970,6 +2996,7 @@
       if (half > 1) pos = ((pos % half) + half) % half;
       track.style.transform = "translate3d(" + (-pos) + "px,0,0)";
       capFade();
+      hydrate();
     }
     function tick() {
       raf = null;
