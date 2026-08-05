@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-08-05 06:12",
- "count": 20,
+ "updated": "2026-08-05 11:28",
+ "count": 21,
  "items": [
   {
    "date": "2026-08-04",
@@ -20,6 +20,17 @@
    "source": "얼리어답터뉴스",
    "sourceSite": "https://www.eanews.kr",
    "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTFAzTWhaNDdxOU5GUDhweThvOWg5SXNqbVZYRXQ0MFRSMV9EdkZLclRCaDRnSGwtRGxROUs4UlQ3WHlPOUNaSS1yMA?oc=5",
+   "type": "방송",
+   "auto": true,
+   "also": 1,
+   "ai": true
+  },
+  {
+   "date": "2026-08-04",
+   "title": "가수 남진·인순이, KBS '가요무대'서 환상적인 듀엣 무대…",
+   "source": "kcemedia.com",
+   "sourceSite": "http://knpp.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTE9UWFp3dGdyY09vbkg4c2E1YzlkOXZLNk5fS292ZHFzQkRxTDJTajBLWXp2NjROSjVaZzJYUWVvSERUYnc?oc=5",
    "type": "방송",
    "auto": true,
    "also": 1,
