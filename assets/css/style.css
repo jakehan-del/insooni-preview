@@ -718,7 +718,7 @@ button.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline
 .era-c1 {
   background:
     linear-gradient(to top, rgba(8,8,8,.88) 10%, rgba(8,8,8,.2) 55%, rgba(8,8,8,.2)),
-    url("../img/story.jpg") center 22% / cover no-repeat, var(--void);
+    url("../img/story.webp") center 22% / cover no-repeat, var(--void);
 }
 .era-c2 {
   background:
@@ -787,7 +787,7 @@ button.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline
 .era-tile:nth-child(1) {
   background:
     linear-gradient(to top, rgba(8,8,8,.88) 10%, rgba(8,8,8,.2) 55%, rgba(8,8,8,.2)),
-    url("../img/story.jpg") center 22% / cover no-repeat,
+    url("../img/story.webp") center 22% / cover no-repeat,
     linear-gradient(168deg, #1d1712, var(--void) 78%);
 }
 .era-tile:nth-child(2) {
