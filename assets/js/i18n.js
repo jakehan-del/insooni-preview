@@ -207,7 +207,7 @@ window.I18N_EN = {
   "cat.musical": "MUSICAL",
   "cat.record": "MEMORIES",
   "aria.strip": "Gallery by era — drag or use left and right arrow keys",
-  "aria.heroVideo": "Watch the official music video for Dream Still Flows",
+  "aria.heroVideo": "Watch the official music video for Still, the Dream Flows",
   "aria.pauseVideo": "Pause background video",
   "aria.playVideo": "Play background video",
   "nav.home": "Home",
