@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 AI 큐레이션으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "AI 큐레이션",
- "updated": "2026-08-05 19:34",
+ "updated": "2026-08-05 23:08",
  "items": [
   {
    "date": "2026-08-04",
@@ -39,20 +39,31 @@
   {
    "date": "2026-07-24",
    "title": "경수진 시구→인순이 애국가 '특집 불꽃야구 생중계' 고척돔 달군다",
-   "source": "news.nate.com",
+   "source": "네이트",
    "sourceSite": "https://news.nate.com",
    "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1tV0FhNmZMendjUkhqd1VCeGFXNWJzYVJzdXpiaFM2aWNOdk5yMC1FLVVvVm92SVFHRUdEQUNTYVdaSkdWX2NlNTJSenpEV1ZjU3A0?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 3,
+   "ai": true
+  },
+  {
+   "date": "2026-06-30",
+   "title": "미국 독립기념일 행사에서 애국가 부르는 인순이",
+   "source": "연합뉴스 한민족센터",
+   "sourceSite": "https://www.koreancenter.or.kr",
+   "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1lUFFLT19OWU14SWNZbmNUUVBkUkxJaXp4ekRnWHpjRlFHNkpoMnBqRGZkY3RtODNldmZUenNLVms3Wm1mRm12d2dmRzJpaGhId2V6OF9uSDR2TWhEOHc2cDZFOTFnRkdSODJTcXJYQXhudGNZ?oc=5",
    "type": "공연",
    "auto": true,
    "also": 1,
    "ai": true
   },
   {
-   "date": "2026-06-23",
-   "title": "가수 인순이·염유리 청주온다…시민의날 기념행사 7월 1일",
-   "source": "v.daum.net",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE04WWM0VmRRWWFUVjdaTXk2Vjg0czVDeWFZd2JpaC1Fc1MxeWtIOXpjN2RocXU0WjNPTnlPckdsZ2drS1lWNjdWaUJPZUJtd2c?oc=5",
+   "date": "2026-06-17",
+   "title": "\"왜 이렇게 눈물이 날까요\" 인순이가 완성한 축제의 대미",
+   "source": "오마이스타",
+   "sourceSite": "https://star.ohmynews.com",
+   "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTFBLMEJuXy1BejFxbDJZYmQ3X3ljWE9jamdaU2tlSlhRem5CMXJGLXNlRDA2S0p4UmI0dkh5Wmdqb1N5VWdGd000NldvamFxWERpZk9FMXdpOWxGTExlN1htR2tZVTVVU2ViQ2hjZUpXYjRFS01ZdlRUdHRRR1lyQQ?oc=5",
    "type": "공연",
    "auto": true,
    "also": 1,
@@ -61,7 +72,7 @@
   {
    "date": "2026-06-11",
    "title": "뉴욕 브랜드 '노아' 가수 인순이 만났다… 다양성·공존 담은 화보 선봬",
-   "source": "패션비즈",
+   "source": "fashionbiz.co.kr",
    "sourceSite": "https://fashionbiz.co.kr",
    "url": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5tV2hkSzFRelFoWEY3OHhKaWd1Z0N0MUh2M0V1VThxcDJKWUNZZ3pPM3BlUU5UU1oxV01VUGp0NEpvNk1UeDFPdVlPMGhNaHU1?oc=5",
    "type": "보도",
