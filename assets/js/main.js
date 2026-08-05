@@ -2316,6 +2316,41 @@
         var sec = $("#old-site"); if (sec) sec.hidden = true;
       });
 
+    /* 영상 41편 — 시대별로 묶는다.
+       파일은 없다. 있는 것은 '언제 어느 무대에서 무슨 노래를 불렀나' 라는 사실뿐이고,
+       1979년부터의 그 목록이 이 아카이브에서 가장 오래된 기록이다. */
+    var vbox = $("#old-vid");
+    if (vbox) {
+      fetch("assets/data/old-videos.json").then(function (r) { return r.json(); })
+        .then(function (d) {
+          var items = (d && d.items) || [];
+          if (!items.length) { var w = $("#old-vid-wrap"); if (w) w.hidden = true; return; }
+          var ERAS = ["희자매", "방송", "음반", "가스펠", "무대"];
+          var LABEL = { "희자매": "희자매 시절", "방송": "방송 무대", "음반": "음반·뮤직비디오",
+                        "가스펠": "가스펠", "무대": "무대" };
+          ERAS.forEach(function (era) {
+            var g = items.filter(function (x) { return x.era === era; });
+            if (!g.length) return;
+            var ys = g.map(function (x) { return x.year; }).filter(Boolean);
+            var span = ys.length
+              ? (Math.min.apply(null, ys) + (Math.max.apply(null, ys) !== Math.min.apply(null, ys)
+                  ? "~" + Math.max.apply(null, ys) : "") + " · ")
+              : "";
+            var wrap = el("div", "ov-group");
+            var rows = g.map(function (x) {
+              /* 같은 무대가 여러 클립으로 올라와 있던 것도 기록이다. 지우지 않고 표시한다. */
+              var dup = x.clips > 1 ? ' <em class="ov-clips">' + x.clips + "편</em>" : "";
+              var where = x.source ? '<span class="ov-src">' + esc(x.source) + "</span>" : "";
+              var yr = x.year ? '<span class="ov-yr">' + x.year + "</span>" : '<span class="ov-yr"></span>';
+              return "<li>" + yr + '<span class="ov-song">' + esc(x.song) + dup + "</span>" + where + "</li>";
+            }).join("");
+            wrap.innerHTML = '<h4 class="ov-h">' + esc(LABEL[era]) + ' <span class="ov-n">' +
+                             esc(span) + g.length + "편</span></h4><ul class=\"ov-rows\">" + rows + "</ul>";
+            vbox.appendChild(wrap);
+          });
+        })["catch"](function () { var w = $("#old-vid-wrap"); if (w) w.hidden = true; });
+    }
+
     /* 일정 872건 — 오늘 날짜(월·일)와 같은 날부터 보여 준다.
        872건을 통째로 쏟으면 아무도 안 읽는다. '몇 년 전 오늘'이 읽는 이유가 된다. */
     var list = $("#old-sched"), note = $("#old-sched-note"), smore = $("#old-sched-more");

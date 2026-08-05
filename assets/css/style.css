@@ -3290,3 +3290,37 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
 .letter-fold > .sb-fold-s { list-style: none; }
 .letter-fold[open] > .sb-fold-s { margin-bottom: 1.1rem; }
 .letter-fold[open] > .sb-fold-s::before { content: "−"; }
+
+
+/* ══ 영상으로 남은 무대 (아카이브) ═══════════════════════════════
+   영상 파일은 없다. 방송사·음반사 저작물이라 옮기지 않았다.
+   남은 것은 '언제 어느 무대에서 무슨 노래를 불렀나'라는 사실이고,
+   1979년부터의 이 목록이 이 아카이브에서 가장 오래된 기록이다.
+   그래서 목록을 초라하게 두지 않고 연표처럼 세운다.
+   ══════════════════════════════════════════════════════════════ */
+.old-vid { margin-top: 3.4rem; padding-top: 2.2rem; border-top: 1px solid var(--line); }
+.old-vid h3 { margin: 0 0 .6rem; }
+.ov-group { margin-top: 2.2rem; }
+.ov-h {
+  margin: 0 0 .8rem; font-size: 1.02rem; color: var(--gold);
+  display: flex; align-items: baseline; gap: .7rem; flex-wrap: wrap;
+}
+.ov-n { font-family: var(--font-mono); font-size: .76rem; color: var(--faint); }
+.ov-rows { list-style: none; margin: 0; padding: 0; }
+.ov-rows li {
+  display: grid; grid-template-columns: 4.2rem 1fr auto; gap: .2rem 1rem;
+  align-items: baseline; padding: .62rem 0; border-top: 1px solid var(--line);
+}
+.ov-yr { font-family: var(--font-mono); font-size: .8rem; color: var(--faint); }
+.ov-song { color: var(--ivory); font-size: .98rem; line-height: 1.5; }
+.ov-src { color: var(--faint); font-size: .82rem; text-align: right; }
+.ov-clips {
+  font-style: normal; font-family: var(--font-mono); font-size: .7rem;
+  color: var(--faint); border: 1px solid var(--gold-deep); border-radius: 2px;
+  padding: .06em .4em; margin-left: .4em; white-space: nowrap;
+}
+/* 폰에서 3열은 무리다. 곡 이름이 먼저 읽히게 세로로 푼다. */
+@media (max-width: 620px) {
+  .ov-rows li { grid-template-columns: 1fr; gap: .18rem; }
+  .ov-src { text-align: left; }
+}
