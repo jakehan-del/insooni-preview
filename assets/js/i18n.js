@@ -471,7 +471,7 @@ window.I18N_EN = {
   "old.schedH": "Where she was, back then",
   "old.schedMore": "More dates",
   "sb.daysH": "Days of Insooni",
-  "sb.daysNote": "Twelve dates confirmed by album credits and press.",
+  "sb.daysNote": "Listed from the date nearest today. Every date is confirmed by album credits or press.",
   "sb.foldS": "Leave a line",
   "sb.streamNone": "No one has written yet. Yours can be the first line.",
   "sb.streamOff": "The room can't be loaded right now. Please try again shortly.",

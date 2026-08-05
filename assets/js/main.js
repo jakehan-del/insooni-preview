@@ -415,8 +415,11 @@
         ? '<em class="av-today">' + esc(isEN ? ((now.getFullYear() - m.y) + " years ago today")
                                             : ((now.getFullYear() - m.y) + "년 전 오늘")) + "</em>"
         : "";
+      /* 월·일을 앞에 세운다. 정렬 기준이 '오늘에서 가까운 날'인데
+         연도를 앞에 두면 2004→2003→2013→1980 으로 읽혀 순서가 없어 보인다.
+         기준이 되는 값이 앞에 와야 목록이 정렬돼 있다는 게 눈에 보인다. */
       return '<li class="av-row' + (isToday ? " is-today" : "") + '">' +
-               '<span class="av-when">' + esc(m.y) + " · " + esc(when) + "</span>" +
+               '<span class="av-when">' + esc(when) + " · " + esc(m.y) + "</span>" +
                '<span class="av-what">' + esc(pick(m)) + badge + "</span>" +
              "</li>";
     }).join("");
@@ -695,8 +698,11 @@
       } else {
         c = el("div", "show-cell");
       }
+      /* 예전에는 칸마다 거위를 한 마리씩 앉혔다. 70칸이면 거위가 70마리다 —
+         상징은 반복되는 순간 벽지가 된다. 게다가 그 거위는 구형 마크였고
+         내비게이션의 새 마크와 나란히 놓여 두 개의 로고가 공존했다.
+         기록은 날짜와 이름으로 서면 된다. 거위는 사이트에 한 마리면 족하다. */
       c.innerHTML =
-        '<span class="show-mark" aria-hidden="true"><svg viewBox="0 0 120 72" focusable="false"><g fill="currentColor"><ellipse cx="48" cy="46" rx="27" ry="11.5" transform="rotate(-7 48 46)"/><path d="M66 41 C78 36 87 30 94 23" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><circle cx="96" cy="21" r="5.4"/><path d="M100 18.5 L111 21 L100 24.5 Z"/><path d="M45 38 C36 24 34 13 41 6 C48 12 55 27 57 37 C53 38.5 49 38.7 45 38 Z"/><path d="M24 42 L10 37 L22 50 Z"/></g></svg></span>' +
         '<span class="show-date">' + esc(sh.date) + "</span>" +
         '<span class="show-city">' + esc(sh.title) + (sh.city ? " · " + esc(sh.city) : "") + "</span>" +
         (sh.recap ? '<span class="show-cta">VIEW RECAP</span>' : "");
