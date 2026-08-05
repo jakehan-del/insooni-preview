@@ -63,7 +63,10 @@ jobs:
         run: |
           git config user.name  "insooni-bot"
           git config user.email "actions@users.noreply.github.com"
-          if git diff --quiet; then
+          # git diff 는 '새로 생긴' 파일을 못 본다. build.py 가 새 .min 을 만들면
+          # untracked 라 diff 에 안 잡혀 커밋 없이 끝났다(실제 버그).
+          # status --porcelain 은 추적·미추적을 다 본다.
+          if [ -z "$(git status --porcelain)" ]; then
             echo "파생본이 이미 최신입니다"
             exit 0
           fi
