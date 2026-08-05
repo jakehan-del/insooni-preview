@@ -1,8 +1,18 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-08-05 23:08",
- "count": 21,
+ "updated": "2026-08-06 02:36",
+ "count": 22,
  "items": [
+  {
+   "date": "2026-08-05",
+   "title": "안동문화예술의전당 어버이날 특별기획 가수 인순이 & 명창 유지숙 `두 사랑 이야기`",
+   "source": "경북뉴스",
+   "sourceSite": "http://www.kbnews.kr",
+   "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPMXRuVmxnUDIteHB5VEpoWFotZ2JYdUpidS1PSHJQRllfVXpQamdZZTV5MV82ZWNITVctVnZnZHkyLVNDMnVYYnMzR3ZEOGFNc1pVN292TFZPOGxGNmFId3h5eVdJTXNmV190NHZjNmJGUTBKVm5mQjBiWldQdndpaGVvOV9YTEkwUDllc0xNS3poam9pZEZod21lZ2NVOEhxOW5ZSXFrTl9yRFdPT19zNlFB?oc=5",
+   "type": "공연",
+   "auto": true,
+   "ai": true
+  },
   {
    "date": "2026-08-04",
    "title": "가수 남진·인순이, KBS '가요무대'서 환상적인 듀엣 무대…",
