@@ -3269,3 +3269,24 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
   .old-row { grid-template-columns: 1fr; gap: .25rem; }
   .old-gal { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1.3rem 1rem; }
 }
+
+
+/* ══ 인순이의 편지 — 2005년 원문 ═════════════════════════════════
+   본문은 pre-wrap 이다. 어머니가 친 겹띄어쓰기("나는 오리였어요"의 호흡)와
+   빈 줄이 곧 목소리라, 브라우저의 공백 접기를 끈다.
+   글자 크기를 키우는 [가] 버튼과 함께 커지도록 전부 rem 이다.
+   ══════════════════════════════════════════════════════════════ */
+.letter-title { margin: 1.2rem 0 .3rem; font-size: 1.35rem; color: var(--ivory); }
+.letter-meta {
+  margin: 0 0 1.6rem; font-family: var(--font-mono); font-size: .78rem;
+  color: var(--faint); letter-spacing: 0;
+}
+.letter-body {
+  white-space: pre-wrap;              /* 원문의 줄바꿈·겹띄어쓰기를 그대로 */
+  text-align: left;                   /* 시처럼 왼끝 맞춤 — 가운데 정렬은 호흡을 깬다 */
+  max-width: 34em; margin-left: auto; margin-right: auto;
+}
+.letter-fold { margin-top: 1.2rem; }
+.letter-fold > .sb-fold-s { list-style: none; }
+.letter-fold[open] > .sb-fold-s { margin-bottom: 1.1rem; }
+.letter-fold[open] > .sb-fold-s::before { content: "−"; }

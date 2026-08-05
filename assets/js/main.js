@@ -2541,25 +2541,46 @@
      리서치 근거: 위버스 모먼트(편지 UI)·팬카페 출석 문화·버블의 짧은 답장 구조·토스 시니어 UT
      (타이핑 대신 선택, 라벨 있는 큰 버튼, 행동마다 명확한 완료 피드백) */
   function initArtistLetter() {
-    /* 인순이의 편지 */
-    var alBody = $("#al-body");
-    var alSec = $("#artist-letter");
-    if (alBody && D.artistLetter && D.artistLetter.body) {
-      if (alSec) alSec.hidden = false;
-      var AL = D.artistLetter;
-      alBody.textContent = tr(AL, "body");
-      $("#al-date").textContent = AL.date;
-      $("#al-sign").textContent = tr(AL, "sign");
-      /* 친필 사인 이미지가 준비되면 서명란에 실제 사인이 들어온다 */
-      var sigBox = $("#al-signature");
-      if (sigBox && AL.signature) {
-        var im = new Image();
-        im.alt = tr(AL, "sign");
-        im.className = "sig-img";
-        im.onload = function () { sigBox.innerHTML = ""; sigBox.appendChild(im); sigBox.hidden = false; };
-        im.src = AL.signature;
-      }
-    }
+    /* 인순이의 편지 — 옛 공식홈(2005) '인순이가 팬들에게'에서 본인이 쓴 글.
+       오랫동안 이 섹션은 artistLetter: null 이라 영원히 닫혀 있었다.
+       "본인 말을 지어낼 수 없으니 비워 둔다"가 이유였는데, 지어낼 필요가 없었다 —
+       21년 전에 본인이 쓴 글이 옛 서버에 그대로 있었다.
+
+       원문 존중 규칙:
+       · textContent 로만 넣는다(HTML 해석 금지). CSS pre-wrap 이 줄바꿈·겹띄어쓰기를 살린다.
+       · 번역하지 않는다. 본인의 말은 본인이 쓴 언어로만 선다.
+       · 두 번째 편지(눈물.....)는 사적인 글이라 접힘 안에 둔다. 여는 것은 읽는 사람이다. */
+    var sec = $("#artist-letter");
+    if (!sec || !$("#al-body1")) return;
+    fetch("assets/data/letters.json").then(function (r) { return r.json(); })
+      .then(function (d) {
+        var L = (d && d.items) || [];
+        if (!L.length) return;                    /* 편지가 없으면 조용히 닫혀 있는다 */
+        var isEN = document.documentElement.getAttribute("lang") === "en";
+        function meta(l) {
+          var years = new Date().getFullYear() - parseInt(l.posted.slice(0, 4), 10);
+          var p = l.posted.split("-");
+          var koDate = parseInt(p[0], 10) + "년 " + parseInt(p[1], 10) + "월 " + parseInt(p[2], 10) + "일";
+          return isEN
+            ? (l.posted + " — " + years + " years ago · in her own words · " +
+               l.hit + " reads and " + l.comments + " replies at the time")
+            : (koDate + " — " + years + "년 전 · 본인이 직접 쓴 글 · " +
+               "당시 조회 " + l.hit + " · 댓글 " + l.comments);
+        }
+        $("#al-title1").textContent = "「" + L[0].title + "」";
+        $("#al-meta1").textContent = meta(L[0]);
+        $("#al-body1").textContent = L[0].body;
+        if (L[1] && $("#al-fold2")) {
+          $("#al-sum2").textContent = isEN
+            ? ("The second letter — “" + L[1].title + "” (" + L[1].posted.slice(0, 7) + ")")
+            : ("두 번째 편지 — 「" + L[1].title + "」 (" + L[1].posted.slice(0, 7).replace("-", "년 ") + "월)");
+          $("#al-title2").textContent = "「" + L[1].title + "」";
+          $("#al-meta2").textContent = meta(L[1]);
+          $("#al-body2").textContent = L[1].body;
+          $("#al-fold2").hidden = false;
+        }
+        sec.hidden = false;
+      })["catch"](function () { /* 못 불러오면 닫힌 채로 둔다 */ });
   }
 
   /* ---------- 9.4 사랑방: 팬 번호증 ----------

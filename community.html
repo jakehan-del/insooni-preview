@@ -13,10 +13,10 @@
 <meta name="description" content="편지를 쓰고, 팬 번호증과 응원 카드를 만들고, 공식 채널로 마음을 전하는 곳. 인순이 공식 사랑방.">
 <!-- 본문 글꼴은 먼저 확실히 깐다(미뤄 봤지만 첫 화면이 빨라지지 않았다).
      제목용 서체는 화면이 뜬 뒤 들어온다 — font-display:swap이라 늦어도 글자는 보인다. -->
-<link rel="stylesheet" href="assets/fonts/body.css?v637984dd">
-<link rel="stylesheet" href="assets/fonts/display.css?v637984dd" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/fonts/display.css?v637984dd"></noscript>
-<link rel="stylesheet" href="assets/css/style.min.css?v637984dd">
+<link rel="stylesheet" href="assets/fonts/body.css?va90469aa">
+<link rel="stylesheet" href="assets/fonts/display.css?va90469aa" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?va90469aa"></noscript>
+<link rel="stylesheet" href="assets/css/style.min.css?va90469aa">
 <link rel="canonical" href="https://jakehan-del.github.io/insooni-preview/community.html">
 <meta property="og:url" content="https://jakehan-del.github.io/insooni-preview/community.html">
 <meta property="og:type" content="website">
@@ -77,22 +77,38 @@
     </div>
   </section>
 
-  <!-- 인순이의 편지: 본인이 직접 쓴 글이 있을 때만 나타난다 (data.js의 artistLetter) -->
+  <!-- ── 인순이의 편지 ─────────────────────────────────────────
+       2005년, 옛 공식홈 '인순이가 팬들에게' 게시판에 본인이 남긴 글이다.
+       홈페이지가 플래시와 함께 닫히며 21년간 묻혀 있던 것을 꺼내 왔다.
+       맞춤법·띄어쓰기까지 원문 그대로 싣는다 — 그 호흡이 곧 본인의 목소리다.
+       첫 편지 「거위의꿈」은 펼쳐 두고, 「눈물.....」은 사적인 글이라
+       읽는 사람이 스스로 여는 접힘 안에 둔다. -->
   <section class="section" id="artist-letter" aria-labelledby="h-artist-letter" hidden>
     <div class="container">
       <div class="section-head">
         <h2 id="h-artist-letter" data-i18n="comm.alT">인순이의 편지</h2>
       </div>
+      <p class="lede" data-i18n="al.lede">2005년, 옛 공식 홈페이지에 인순이가 직접 남긴 글입니다. 홈페이지가 닫히며 21년간 묻혀 있었습니다. 맞춤법도 띄어쓰기도 그대로 옮겼습니다.</p>
       <article class="letter-corner">
         <div class="letter-paper">
           <svg class="letter-goose" viewBox="-11.11 -16.3 28.96 22.31" aria-hidden="true" focusable="false"><mask id="gm-letter" maskUnits="userSpaceOnUse" x="-11.11" y="-16.3" width="28.96" height="22.31"><g fill="#fff"><path d="M 5.6 -2.5 C 6.75 -0.3 6.05 2.6 3.8 4.05 C 1.4 5.55 -2.4 5.3 -4.7 3.2 C -5.5 2.5 -6.2 1.95 -7.0 1.5 C -8.3 0.85 -9.6 0.15 -10.0 -0.95 C -10.35 -1.85 -9.8 -2.8 -8.8 -3.0 C -7.6 -3.25 -6.3 -3.1 -5.4 -3.45 C -3.2 -4.35 -0.2 -4.95 2.2 -4.55 C 4.0 -4.25 5.15 -3.5 5.6 -2.5 Z"/><path d="M -2.6 -2.8 C -4.4 -6.0 -5.6 -9.2 -4.9 -11.4 C -4.55 -12.5 -3.2 -12.6 -2.5 -11.6 C -0.7 -9.0 2.4 -5.2 3.9 -2.2 Z"/><path d="M 0.4 -3.4 C 2.0 -6.8 3.65 -9.45 6.0 -11.0 L 10.65 -6.45 C 9.15 -4.7 7.5 -2.9 6.55 -0.95 C 5.95 0.32 5.2 1.1 4.2 1.4 Z"/><circle cx="9.35" cy="-10.5" r="4.8"/><path d="M 11.85 -12.85 C 13.85 -12.65 15.55 -12.15 16.3 -11.55 A 1.05 1.05 0 0 1 16.3 -9.7 C 15.55 -9.2 13.85 -8.9 11.85 -8.75 Z"/></g><g fill="#000"><circle cx="10.65" cy="-10.6" r="1.75"/></g></mask><rect x="-11.11" y="-16.3" width="28.96" height="22.31" fill="currentColor" mask="url(#gm-letter)"/></svg>
-          <p class="letter-body" id="al-body"></p>
-          <div class="letter-signature">
-            <div id="al-signature" class="sig-slot" hidden></div>
-            <p class="letter-sign"><span id="al-date"></span> · <span id="al-sign"></span></p>
-          </div>
+          <h3 class="letter-title" id="al-title1"></h3>
+          <p class="letter-meta" id="al-meta1"></p>
+          <p class="letter-body" id="al-body1"></p>
         </div>
       </article>
+      <!-- 두 번째 편지는 사적인 글이다. 자동으로 펼치지 않는다 —
+           읽을지는 읽는 사람이 정한다. -->
+      <details class="letter-fold" id="al-fold2" hidden>
+        <summary class="sb-fold-s"><span id="al-sum2"></span></summary>
+        <article class="letter-corner">
+          <div class="letter-paper">
+            <h3 class="letter-title" id="al-title2"></h3>
+            <p class="letter-meta" id="al-meta2"></p>
+            <p class="letter-body" id="al-body2"></p>
+          </div>
+        </article>
+      </details>
     </div>
   </section>
 
@@ -214,17 +230,17 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동" data-i18n-aria="aria.toTop">↑</button>
-<script src="assets/js/config.js?v637984dd" defer></script>
-<script src="assets/js/backend.js?v637984dd" defer></script>
-<script src="assets/js/i18n.min.js?v637984dd" defer></script>
-<script src="assets/js/data.min.js?v637984dd" defer></script>
-<script src="assets/js/tracklinks.min.js?v637984dd" defer></script>
-<script src="assets/js/albums-full.min.js?v637984dd" defer></script>
-<script src="assets/js/albums-en.min.js?v637984dd" defer></script>
-<script src="assets/js/song-moods.min.js?v637984dd" defer></script>
-<script src="assets/js/main.min.js?v637984dd" defer></script>
-<script src="assets/js/motion.min.js?v637984dd" defer></script>
-<script src="assets/js/router.min.js?v637984dd" defer></script>
-<script src="assets/js/deck.min.js?v637984dd" defer></script>
+<script src="assets/js/config.js?va90469aa" defer></script>
+<script src="assets/js/backend.js?va90469aa" defer></script>
+<script src="assets/js/i18n.min.js?va90469aa" defer></script>
+<script src="assets/js/data.min.js?va90469aa" defer></script>
+<script src="assets/js/tracklinks.min.js?va90469aa" defer></script>
+<script src="assets/js/albums-full.min.js?va90469aa" defer></script>
+<script src="assets/js/albums-en.min.js?va90469aa" defer></script>
+<script src="assets/js/song-moods.min.js?va90469aa" defer></script>
+<script src="assets/js/main.min.js?va90469aa" defer></script>
+<script src="assets/js/motion.min.js?va90469aa" defer></script>
+<script src="assets/js/router.min.js?va90469aa" defer></script>
+<script src="assets/js/deck.min.js?va90469aa" defer></script>
 </body>
 </html>
