@@ -602,10 +602,18 @@
       if (blending) {
         btBpm.textContent = "";
         if (lab) lab.textContent = T("두 곡이 겹치는 중", "BLENDING");
-      } else {
-        btBpm.textContent = queue.length ? (pos + 1) + " / " + queue.length : "—";
+      } else if (queue.length) {
+        btBpm.textContent = (pos + 1) + " / " + queue.length;
         if (lab) lab.textContent = T("번째 곡", "IN SET");
+      } else {
+        btBpm.textContent = "";
       }
+      /* 아직 아무것도 안 걸렸으면 이 줄을 통째로 감춘다.
+         전에는 "— 번째 곡" 이 떠 있었는데, 자리를 채우려고 넣은 대시는
+         고장난 것처럼 읽힌다. 라벨에 data-i18n 이 걸려 있어 글자만 비우면
+         언어를 적용할 때 되살아나므로, 줄 자체를 감추는 편이 확실하다. */
+      var line = btBpm.closest(".bt-bpm");
+      if (line) line.hidden = !(blending || queue.length);
     }
   }
   function idleBooth() {
