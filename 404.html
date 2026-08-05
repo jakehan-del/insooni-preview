@@ -30,5 +30,27 @@
     <p class="desc"><span data-i18n="e404.d">찾으시는 페이지가 없습니다. 공연장으로 다시 안내해 드리겠습니다.</span></p>
     <a href="https://jakehan-del.github.io/insooni-preview/" data-i18n="e404.cta">홈으로 돌아가기</a>
   </div>
+  <!-- 404는 GitHub Pages가 깨진 경로에도 서빙하는 독립 페이지다.
+       JS 번들에 의존하지 않고, 저장된 언어(insooni_lang)만 읽어 세 줄을 바꾼다.
+       값은 i18n.js의 e404.* 와 반드시 일치시킨다. -->
+  <script>
+  (function () {
+    try {
+      if (JSON.parse(localStorage.getItem("insooni_lang") || "null") !== "en") return;
+      document.documentElement.setAttribute("lang", "en");
+      document.title = "Page not found | Insooni";
+      var EN = {
+        "e404.t": "You’re backstage",
+        "e404.d": "That page isn’t here. Let us walk you back to the hall.",
+        "e404.cta": "Back to home"
+      };
+      var nodes = document.querySelectorAll("[data-i18n]");
+      for (var i = 0; i < nodes.length; i++) {
+        var k = nodes[i].getAttribute("data-i18n");
+        if (EN[k]) nodes[i].textContent = EN[k];
+      }
+    } catch (e) {}
+  })();
+  </script>
 </body>
 </html>

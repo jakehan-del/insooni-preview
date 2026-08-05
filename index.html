@@ -16,10 +16,10 @@
 <meta name="twitter:card" content="summary_large_image">
 <!-- 본문 글꼴은 먼저 확실히 깐다(미뤄 봤지만 첫 화면이 빨라지지 않았다).
      제목용 서체는 화면이 뜬 뒤 들어온다 — font-display:swap이라 늦어도 글자는 보인다. -->
-<link rel="stylesheet" href="assets/fonts/body.css?v425deecf">
-<link rel="stylesheet" href="assets/fonts/display.css?v425deecf" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/fonts/display.css?v425deecf"></noscript>
-<link rel="stylesheet" href="assets/css/style.min.css?v425deecf">
+<link rel="stylesheet" href="assets/fonts/body.css?v083ad6d8">
+<link rel="stylesheet" href="assets/fonts/display.css?v083ad6d8" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?v083ad6d8"></noscript>
+<link rel="stylesheet" href="assets/css/style.min.css?v083ad6d8">
 <link rel="canonical" href="https://jakehan-del.github.io/insooni-preview/">
 <meta property="og:url" content="https://jakehan-del.github.io/insooni-preview/">
 <meta property="og:type" content="website">
@@ -115,7 +115,7 @@
 
   <!-- 홈 = 무한 가로 필름스트립 한 화면. 각 노래·시대의 고유 아트가 옆으로 흐른다 -->
   <section class="strip" id="strip" tabindex="0" role="region"
-    aria-roledescription="캐러셀" aria-label="시대별 갤러리 — 드래그하거나 좌우 화살표 키로 넘겨 보세요" data-i18n-aria="aria.strip">
+    aria-roledescription="캐러셀" data-i18n-roledesc="aria.stripRole" aria-label="시대별 갤러리 — 드래그하거나 좌우 화살표 키로 넘겨 보세요" data-i18n-aria="aria.strip">
     <div class="strip-track" id="strip-track">
       <button type="button" class="strip-item strip-item--video" data-lightbox-video="6joBf4xW6Qs" data-video-title="그래도 꿈은 흐른다" aria-haspopup="dialog" aria-label="'그래도 꿈은 흐른다' 뮤직비디오 크게 보기" data-i18n-aria="aria.heroVideo">
         <img class="vhero-poster" src="assets/img/hero.webp" alt="" fetchpriority="high" width="1800" height="1012">
@@ -123,25 +123,30 @@
           <source data-src="assets/media/hero-loop.mp4" data-lite="assets/media/hero-loop-720.mp4" type="video/mp4">
         </video>
       </button>
-      <a class="strip-item" href="music.html"><img src="assets/img/photos/album01.webp" alt="《인연》 LP 자켓 (1980)" data-i18n-alt="alt.01" width="600" height="591"></a>
+      <a class="strip-item strip-item--sleeve" href="music.html"><img src="assets/img/photos/album01.webp" alt="《인연》 LP 자켓 (1980)" data-i18n-alt="alt.01" width="600" height="591"></a>
       <a class="strip-item strip-item--tall" href="archive.html"><img src="assets/img/photos/hinkchi2.webp" alt="크림색 수트의 인순이 스튜디오 화보" data-i18n-alt="alt.02" style="object-position:center 15%" width="1067" height="1600"></a>
       <a class="strip-item strip-item--tall" href="archive.html"><img src="assets/img/photos/press-2019.webp" alt="푸른 안개 속 흰 레이스 드레스의 무대" data-i18n-alt="alt.03" style="object-position:center 22%" loading="lazy" width="640" height="960"></a>
       <a class="strip-item strip-item--tall" href="schedule.html"><img src="assets/img/photos/hanteo-2.webp" alt="한터뮤직어워즈, 트로피를 들어 올리며" data-i18n-alt="alt.04" style="object-position:center 20%" loading="lazy" width="1200" height="1600"></a>
+      <a class="strip-item strip-item--tall" href="schedule.html"><img src="assets/img/photos/hanteo-1.webp" alt="한터뮤직어워즈, 트로피와 꽃다발을 든 인순이" data-i18n-alt="alt.36" style="object-position:center 20%" loading="lazy" width="1200" height="1600"></a>
       <a class="strip-item strip-item--wide" href="archive.html"><img src="assets/img/photos/dsc0427.webp" alt="깃털 장식 흰 의상으로 오케스트라와 함께 선 무대" data-i18n-alt="alt.05" loading="lazy" width="1600" height="1065"></a>
-      <a class="strip-item" href="music.html"><img src="assets/img/photos/album04.webp" alt="독집 제4집 《욕망》 LP 자켓 (1983)" data-i18n-alt="alt.06" loading="lazy" width="597" height="593"></a>
+      <a class="strip-item strip-item--sleeve" href="music.html"><img src="assets/img/photos/album04.webp" alt="독집 제4집 《욕망》 LP 자켓 (1983)" data-i18n-alt="alt.06" loading="lazy" width="597" height="593"></a>
       <a class="strip-item strip-item--wide" href="archive.html"><img src="assets/img/photos/kakao23.webp" alt="선글라스와 블랙 수트, 안개 속의 인순이" data-i18n-alt="alt.07" loading="lazy" width="1600" height="1067"></a>
       <a class="strip-item strip-item--tall" href="archive.html"><img src="assets/img/photos/dsc0081.webp" alt="쏟아지는 조명 아래 스팽글 드레스로 노래하는 인순이" data-i18n-alt="alt.08" style="object-position:center 18%" loading="lazy" width="1063" height="1600"></a>
-      <a class="strip-item" href="music.html"><img src="assets/img/photos/album11.webp" alt="《The Queen Of Soul》 자켓 (1996)" data-i18n-alt="alt.09" loading="lazy" width="800" height="800"></a>
+      <a class="strip-item strip-item--wide" href="schedule.html"><img src="assets/img/photos/hanteo-3.webp" alt="한터뮤직어워즈 무대 위의 인순이, 마이크를 들고" data-i18n-alt="alt.37" style="object-position:70% center" loading="lazy" width="1600" height="1227"></a>
+      <a class="strip-item strip-item--sleeve" href="music.html"><img src="assets/img/photos/album11.webp" alt="《The Queen Of Soul》 자켓 (1996)" data-i18n-alt="alt.09" loading="lazy" width="800" height="800"></a>
       <a class="strip-item strip-item--wide" href="archive.html"><img src="assets/img/photos/photo-av3u.webp" alt="초록 벨벳 드레스로 노래하는 인순이" data-i18n-alt="alt.10" loading="lazy" width="1600" height="1067"></a>
       <a class="strip-item strip-item--tall" href="archive.html"><img src="assets/img/photos/seasons-3.webp" alt="은빛 페인팅 재킷과 후프 귀걸이, 무대 직전의 프로필" data-i18n-alt="alt.11" style="object-position:center 18%" loading="lazy" width="1263" height="1600"></a>
       <a class="strip-item strip-item--tall" href="schedule.html"><img src="assets/img/photos/openc-1.webp" alt="열린음악회 무대 리허설" data-i18n-alt="alt.12" style="object-position:center 25%" loading="lazy" width="1200" height="1600"></a>
-      <a class="strip-item" href="music.html"><img src="assets/img/photos/album16.webp" alt="《A To Z》 자켓 (2004)" data-i18n-alt="alt.13" loading="lazy" width="600" height="600"></a>
+      <a class="strip-item strip-item--tall" href="schedule.html"><img src="assets/img/photos/openc-6.webp" alt="열린음악회 대기실, 노란 꽃을 꽂고 미소 짓는 인순이" data-i18n-alt="alt.38" style="object-position:center 18%" loading="lazy" width="1268" height="1600"></a>
+      <a class="strip-item strip-item--sleeve" href="music.html"><img src="assets/img/photos/album16.webp" alt="《A To Z》 자켓 (2004)" data-i18n-alt="alt.13" loading="lazy" width="600" height="600"></a>
       <a class="strip-item strip-item--tall" href="archive.html"><img src="assets/img/photos/hinkchi6.webp" alt="데님 수트와 긴 브레이드의 인순이 화보" data-i18n-alt="alt.14" style="object-position:center 16%" loading="lazy" width="1067" height="1600"></a>
-      <a class="strip-item" href="music.html"><img src="assets/img/covers/cover2023.webp" alt="골든걸스 'One Last Time' 커버 (2023)" data-i18n-alt="alt.15" loading="lazy" width="640" height="640"></a>
+      <a class="strip-item strip-item--tall" href="archive.html"><img src="assets/img/photos/hinkchi7.webp" alt="데님 수트 차림으로 앉은 인순이 스튜디오 화보" data-i18n-alt="alt.39" style="object-position:center 25%" loading="lazy" width="1067" height="1600"></a>
+      <a class="strip-item strip-item--sleeve" href="music.html"><img src="assets/img/covers/cover2023.webp" alt="골든걸스 'One Last Time' 커버 (2023)" data-i18n-alt="alt.15" loading="lazy" width="640" height="640"></a>
       <a class="strip-item strip-item--wide" href="archive.html"><img src="assets/img/photos/dsc0628.webp" alt="댄서들과 함께한 스팽글 의상의 무대" data-i18n-alt="alt.16" loading="lazy" width="1600" height="1063"></a>
-      <a class="strip-item" href="music.html"><img src="assets/img/photos/album18.webp" alt="수채화 일러스트 앨범 자켓" data-i18n-alt="alt.17" loading="lazy" width="600" height="600"></a>
+      <a class="strip-item strip-item--sleeve" href="music.html"><img src="assets/img/photos/album18.webp" alt="수채화 일러스트 앨범 자켓" data-i18n-alt="alt.17" loading="lazy" width="600" height="600"></a>
       <a class="strip-item strip-item--tall" href="archive.html"><img src="assets/img/photos/hinkchi3.webp" alt="가죽 팬츠 차림으로 포즈를 취한 인순이 화보" data-i18n-alt="alt.18" style="object-position:center 22%" loading="lazy" width="1067" height="1600"></a>
-      <a class="strip-item" href="archive.html"><img src="assets/img/photos/musical-cats.webp" alt="뮤지컬 '캣츠' 그리자벨라 분장의 인순이" data-i18n-alt="alt.19" loading="lazy" width="900" height="900"></a>
+      <a class="strip-item strip-item--tall" href="schedule.html"><img src="assets/img/photos/openc-5.webp" alt="검은 드레스로 고개를 든 인순이의 옆모습" data-i18n-alt="alt.40" style="object-position:center 15%" loading="lazy" width="1232" height="1600"></a>
+      <a class="strip-item strip-item--sleeve" href="archive.html"><img src="assets/img/photos/musical-cats.webp" alt="뮤지컬 '캣츠' 그리자벨라 분장의 인순이" data-i18n-alt="alt.19" loading="lazy" width="900" height="900"></a>
       <a class="strip-item strip-item--tall" href="archive.html"><img src="assets/img/photos/insooni007.webp" alt="황금빛 조명 기둥 아래에서 노래하는 인순이" data-i18n-alt="alt.20" style="object-position:center 30%" loading="lazy" width="1064" height="1600"></a>
       <a class="strip-item strip-item--wide" href="archive.html"><img src="assets/img/photos/img2496.webp" alt="긴 드레스 자락의 인순이, 마이크 스탠드 앞에서" data-i18n-alt="alt.21" loading="lazy" width="1600" height="1067"></a>
     </div>
@@ -165,17 +170,17 @@
   </nav>
 </footer>
 
-<script src="assets/js/config.js?v425deecf" defer></script>
-<script src="assets/js/backend.js?v425deecf" defer></script>
-<script src="assets/js/i18n.min.js?v425deecf" defer></script>
-<script src="assets/js/data.min.js?v425deecf" defer></script>
-<script src="assets/js/tracklinks.min.js?v425deecf" defer></script>
-<script src="assets/js/albums-full.min.js?v425deecf" defer></script>
-<script src="assets/js/albums-en.min.js?v425deecf" defer></script>
-<script src="assets/js/song-moods.min.js?v425deecf" defer></script>
-<script src="assets/js/main.min.js?v425deecf" defer></script>
-<script src="assets/js/motion.min.js?v425deecf" defer></script>
-<script src="assets/js/router.min.js?v425deecf" defer></script>
-<script src="assets/js/deck.min.js?v425deecf" defer></script>
+<script src="assets/js/config.js?v083ad6d8" defer></script>
+<script src="assets/js/backend.js?v083ad6d8" defer></script>
+<script src="assets/js/i18n.min.js?v083ad6d8" defer></script>
+<script src="assets/js/data.min.js?v083ad6d8" defer></script>
+<script src="assets/js/tracklinks.min.js?v083ad6d8" defer></script>
+<script src="assets/js/albums-full.min.js?v083ad6d8" defer></script>
+<script src="assets/js/albums-en.min.js?v083ad6d8" defer></script>
+<script src="assets/js/song-moods.min.js?v083ad6d8" defer></script>
+<script src="assets/js/main.min.js?v083ad6d8" defer></script>
+<script src="assets/js/motion.min.js?v083ad6d8" defer></script>
+<script src="assets/js/router.min.js?v083ad6d8" defer></script>
+<script src="assets/js/deck.min.js?v083ad6d8" defer></script>
 </body>
 </html>

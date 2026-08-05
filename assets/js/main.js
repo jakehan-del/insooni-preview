@@ -51,7 +51,8 @@
     return document.documentElement.getAttribute("lang") === "en" && map[c] ? map[c] : c;
   }
   function kindLabel(k) {
-    var map = { "공지": "Notice", "공연": "Show", "방송": "Broadcast", "발매": "Release", "수상": "Award", "행사": "Event", "보도": "Press" };
+    var map = { "공지": "Notice", "공연": "Show", "방송": "Broadcast", "발매": "Release", "수상": "Award", "행사": "Event", "보도": "Press",
+                "촬영": "Filming", "라디오": "Radio", "일정": "Schedule" };
     return document.documentElement.getAttribute("lang") === "en" && map[k] ? map[k] : k;
   }
   /* 동적 문자열 이중 언어 헬퍼 */
@@ -798,7 +799,7 @@
             '<span class="fr-ch">' + esc(v.channel) + "</span>";
           b.addEventListener("click", function () {
             if (window.INSOONI_DECK) window.INSOONI_DECK.pause();
-            openLightbox(v.id, title, b);
+            openLightbox(v.id, title, b, v.channel);
           });
           box.appendChild(b);
         });
@@ -900,8 +901,9 @@
         var b = el("button", "arch-item recap-item");
         b.type = "button";
         b.setAttribute("aria-haspopup", "dialog");
-        b.setAttribute("aria-label", (p.caption || r.title) + " 크게 보기");
-        b.innerHTML = '<img src="' + esc(p.img) + '" alt="' + esc(p.caption || "") + '" width="' + p.w + '" height="' + p.h + '" loading="lazy">';
+        var pcap = tr(p, "caption") || tr(r, "title");
+        b.setAttribute("aria-label", pcap + " " + t("aria.zoom", "크게 보기"));
+        b.innerHTML = '<img src="' + esc(p.img) + '" alt="' + esc(tr(p, "caption") || "") + '" width="' + p.w + '" height="' + p.h + '" loading="lazy">';
         b.addEventListener("click", function () {
           archView.list = photos;
           openImageViewer(i, b);
@@ -1079,7 +1081,7 @@
     host.appendChild(btn);
   }
 
-  function openLightbox(videoId, title, opener) {
+  function openLightbox(videoId, title, opener, channel) {
     if (window.INSOONI_DECK) window.INSOONI_DECK.pause();
     var box = ensureLightbox();
     box.dataset.mode = "video";
@@ -1087,7 +1089,10 @@
     $(".lb-next", box).hidden = true;
     lightboxOpener = opener || null;
     box.setAttribute("aria-label", title + t("aria.lbVideoSuffix", " 영상 재생"));
-    $(".lightbox-caption", box).textContent = title + " · INSOONI OFFICIAL";
+    /* 출처를 실제 채널로 적는다. 리캡 영상 중 7개는 KBS·tvN 등 방송사 것이라
+       무조건 'INSOONI OFFICIAL' 을 붙이면 타사 방송에 공식 도장을 찍는 거짓이 된다.
+       채널을 모르는 호출부(사연 클립 등)만 공식 폴백을 유지한다. */
+    $(".lightbox-caption", box).textContent = title + " · " + (channel || "INSOONI OFFICIAL");
     mountHDVideo($(".lightbox-frame", box), videoId, title, true);
     box.hidden = false;
     document.body.style.overflow = "hidden";
@@ -2326,8 +2331,15 @@
           var items = (d && d.items) || [];
           if (!items.length) { var w = $("#old-vid-wrap"); if (w) w.hidden = true; return; }
           var ERAS = ["희자매", "방송", "음반", "가스펠", "무대"];
-          var LABEL = { "희자매": "희자매 시절", "방송": "방송 무대", "음반": "음반·뮤직비디오",
-                        "가스펠": "가스펠", "무대": "무대" };
+          /* 시대 라벨은 EN 화면에서도 한국어로 남던 결함. 언어 토글은 reload 라
+             t() 가 현재 언어를 그대로 반영한다. */
+          var LABEL = {
+            "희자매": t("old.era.hee", "희자매 시절"), "방송": t("old.era.tv", "방송 무대"),
+            "음반": t("old.era.rec", "음반·뮤직비디오"), "가스펠": t("old.era.gospel", "가스펠"),
+            "무대": t("old.era.stage", "무대")
+          };
+          var isEN = document.documentElement.getAttribute("lang") === "en";
+          var clips = function (n) { return isEN ? (n + (n > 1 ? " clips" : " clip")) : (n + "편"); };
           ERAS.forEach(function (era) {
             var g = items.filter(function (x) { return x.era === era; });
             if (!g.length) return;
@@ -2339,13 +2351,13 @@
             var wrap = el("div", "ov-group");
             var rows = g.map(function (x) {
               /* 같은 무대가 여러 클립으로 올라와 있던 것도 기록이다. 지우지 않고 표시한다. */
-              var dup = x.clips > 1 ? ' <em class="ov-clips">' + x.clips + "편</em>" : "";
+              var dup = x.clips > 1 ? ' <em class="ov-clips">' + clips(x.clips) + "</em>" : "";
               var where = x.source ? '<span class="ov-src">' + esc(x.source) + "</span>" : "";
               var yr = x.year ? '<span class="ov-yr">' + x.year + "</span>" : '<span class="ov-yr"></span>';
               return "<li>" + yr + '<span class="ov-song">' + esc(x.song) + dup + "</span>" + where + "</li>";
             }).join("");
             wrap.innerHTML = '<h4 class="ov-h">' + esc(LABEL[era]) + ' <span class="ov-n">' +
-                             esc(span) + g.length + "편</span></h4><ul class=\"ov-rows\">" + rows + "</ul>";
+                             esc(span) + clips(g.length) + "</span></h4><ul class=\"ov-rows\">" + rows + "</ul>";
             vbox.appendChild(wrap);
           });
         })["catch"](function () { var w = $("#old-vid-wrap"); if (w) w.hidden = true; });
@@ -2366,12 +2378,21 @@
                         .sort(function (a, b) { return a.date < b.date ? 1 : -1; });
         var order = today.concat(rest);
         if (note) {
-          note.textContent = today.length
-            ? t("old.schedToday", "오늘과 같은 날짜의 기록 " + today.length + "건이 맨 위에 있습니다. 전체 "
-                + items.length + "건, " + items[0].date.slice(0,4) + "~"
-                + items[items.length-1].date.slice(0,4) + "년.")
-            : t("old.schedAll", "전체 " + items.length + "건, " + items[0].date.slice(0,4) + "~"
-                + items[items.length-1].date.slice(0,4) + "년의 공식 일정 기록입니다.");
+          /* 건수·연도가 문장 안에 들어가므로 사전 키 하나로는 못 만든다.
+             (t()는 정적 문장만 바꾼다 — 숫자가 낀 문장은 언어별로 조립해야 한다) */
+          var isEN2 = document.documentElement.getAttribute("lang") === "en";
+          var yFrom = items[0].date.slice(0, 4), yTo = items[items.length - 1].date.slice(0, 4);
+          if (isEN2) {
+            note.textContent = today.length
+              ? today.length + (today.length > 1 ? " records from this same date are" : " record from this same date is")
+                + " listed first. " + items.length + " entries in all, " + yFrom + "-" + yTo + "."
+              : items.length + " entries in all — the official schedule record, " + yFrom + "-" + yTo + ".";
+          } else {
+            note.textContent = today.length
+              ? "오늘과 같은 날짜의 기록 " + today.length + "건이 맨 위에 있습니다. 전체 "
+                + items.length + "건, " + yFrom + "~" + yTo + "년."
+              : "전체 " + items.length + "건, " + yFrom + "~" + yTo + "년의 공식 일정 기록입니다.";
+          }
         }
         var shown = 0;
         function draw() {
@@ -2380,7 +2401,7 @@
             li.innerHTML =
               '<span class="old-when">' + esc(x.date) + "</span>" +
               '<span class="old-what">' + esc(x.text) +
-                (x.kind !== "일정" ? ' <em class="old-kind">' + esc(x.kind) + "</em>" : "") +
+                (x.kind !== "일정" ? ' <em class="old-kind">' + esc(kindLabel(x.kind)) + "</em>" : "") +
               "</span>";
             list.appendChild(li);
           });
@@ -2676,6 +2697,17 @@
           n.setAttribute("aria-label", n.dataset.koAria);
         }
       });
+      /* aria-roledescription(스트립 '캐러셀', 갤러리 '갤러리')도 화면 낭독기가
+         읽는 텍스트다 — EN 화면에서 한국어로 남던 것을 언어에 맞춘다. */
+      $all("[data-i18n-roledesc]").forEach(function (n) {
+        var key = n.getAttribute("data-i18n-roledesc");
+        if (lang === "en") {
+          if (n.dataset.koRoledesc === undefined) n.dataset.koRoledesc = n.getAttribute("aria-roledescription") || "";
+          if (dict[key]) n.setAttribute("aria-roledescription", dict[key]);
+        } else if (n.dataset.koRoledesc !== undefined) {
+          n.setAttribute("aria-roledescription", n.dataset.koRoledesc);
+        }
+      });
       /* 원래 한국어인 것들 — 곡명·공식 영상 제목·팬이 쓴 글.
          번역하지 않고 한국어임을 표시만 해, 화면 낭독기가 올바른 발음으로 읽게 한다. */
       var koIds = ["home-news", "home-schedule", "home-videos", "news-list", "event-list", "cal-grid",
@@ -2913,9 +2945,31 @@
     });
     var pos = 0, vel = 0, dragging = false, lastX = 0, moved = 0, half = 0, raf = null;
     function measure() { half = track.scrollWidth / 2; }
+
+    /* 가운데 캡션은 '그래도 꿈은 흐른다' 뮤직비디오의 것이다.
+       고정 오버레이로 두면 스트립을 넘길 때 남의 사진 위에 그대로 얹힌다 —
+       실제로 1980년 《인연》 재킷 위에 겹쳐 있었다.
+       그래서 히어로 영상이 화면 가운데를 벗어나는 만큼 걷어낸다. */
+    var cap = $(".strip-caption");
+    var heroItem = track.querySelector(".strip-item--video");
+    function capFade() {
+      if (!cap || !heroItem || half <= 1) return;
+      var w = heroItem.offsetWidth;
+      var center = pos + strip.clientWidth / 2;          /* 뷰포트 중앙의 트랙 좌표 */
+      /* 무한 루프라 히어로는 0 과 half 두 곳에 있다 — 가까운 쪽 기준 */
+      var d = Math.min(Math.abs(center - w / 2), Math.abs(center - (half + w / 2)));
+      var o = 1 - (d - w * 0.26) / (w * 0.4);
+      o = o < 0 ? 0 : (o > 1 ? 1 : o);
+      cap.style.opacity = o.toFixed(3);
+      /* 투명해진 캡션이 뒤 사진의 클릭을 가로채면 안 된다 */
+      cap.style.pointerEvents = o < 0.06 ? "none" : "";
+      cap.setAttribute("aria-hidden", o < 0.06 ? "true" : "false");
+    }
+
     function apply() {
       if (half > 1) pos = ((pos % half) + half) % half;
       track.style.transform = "translate3d(" + (-pos) + "px,0,0)";
+      capFade();
     }
     function tick() {
       raf = null;
