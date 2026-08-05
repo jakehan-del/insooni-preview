@@ -1630,7 +1630,8 @@ button.show-cell:hover .show-cta, button.show-cell:focus-visible .show-cta { col
   padding: 0 0 .9rem; cursor: grab; -webkit-overflow-scrolling: touch;
   scrollbar-width: thin; scrollbar-color: var(--hairline) transparent;
 }
-.hstrip { align-items: center; }
+.hstrip { align-items: flex-end; }   /* 높이가 제각각이라 가운데 정렬하면 떠 보인다 —
+                                       바닥선을 맞추면 선반 위에 놓인 사진처럼 읽힌다 */
 /* 높이만 맞추면 가로로 넓은 저해상도 사진이 과하게 늘어난다 —
    실제로 650px 짜리가 996px 로 벌어져 0.65배(뭉갬)였다.
    그래서 각 사진에 inline max-height 로 '원본의 1.25배까지'라는 상한을 둔다.
