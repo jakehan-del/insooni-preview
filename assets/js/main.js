@@ -2290,6 +2290,103 @@
     if (sec && sec.scrollIntoView) sec.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
+  /* ---------- 다음 무대에서 듣고 싶은 노래 (사랑방) ----------
+     백엔드에 request_song 과 song_requests 가 처음부터 있었는데 화면이 없었다.
+     자유 입력을 받지 않는다 — songs.json 의 103곡에서만 고르게 해야
+     "거위의꿈"과 "거위의 꿈"이 따로 세어지지 않는다.
+     한 기기에서 같은 곡을 거듭 넣지 못하게 막는다. 서버에도 속도 제한이 있지만
+     그것은 남용을 막는 장치이지 순위를 지켜 주지는 않는다. */
+  function initSetlist() {
+    var box = $("#setlist");
+    if (!box) return;
+    var q = $("#sl-q"), opts = $("#sl-opts"), msg = $("#sl-msg"),
+        rank = $("#sl-rank"), tally = $("#sl-tally");
+    var B = window.INSOONI_BACKEND;
+    var SENT = "insooni.setlist.sent";
+    var songs = [];
+
+    function sent() {
+      try { return JSON.parse(localStorage.getItem(SENT) || "[]"); } catch (e) { return []; }
+    }
+    function remember(t) {
+      try {
+        var a = sent(); if (a.indexOf(t) < 0) a.push(t);
+        localStorage.setItem(SENT, JSON.stringify(a.slice(-40)));
+      } catch (e) {}
+    }
+
+    fetch("assets/data/songs.json").then(function (r) { return r.json(); }).then(function (d) {
+      songs = (d.songs || d || []).map(function (s) { return s.t || s.title || s.k; }).filter(Boolean);
+    }).catch(function () {});
+
+    function show(list) {
+      opts.innerHTML = list.slice(0, 8).map(function (t) {
+        return '<li><button type="button" class="sl-opt" data-t="' + esc(t) + '">' + esc(t) + '</button></li>';
+      }).join("");
+    }
+
+    q.addEventListener("input", function () {
+      var v = q.value.trim().toLowerCase();
+      if (!v) { opts.innerHTML = ""; return; }
+      show(songs.filter(function (t) { return t.toLowerCase().indexOf(v) >= 0; }));
+    });
+
+    opts.addEventListener("click", function (e) {
+      var b = e.target.closest(".sl-opt");
+      if (!b) return;
+      var title = b.getAttribute("data-t");
+      opts.innerHTML = ""; q.value = "";
+      if (sent().indexOf(title) >= 0) {
+        msg.textContent = t("sl.dup", "이미 보내신 노래입니다.");
+        return;
+      }
+      if (!B || !B.isReady()) {
+        msg.textContent = t("sl.off", "지금은 연결이 어렵습니다. 잠시 뒤 다시 시도해 주세요.");
+        return;
+      }
+      msg.textContent = t("sl.sending", "보내는 중…");
+      B.requestSong(title).then(function (r) {
+        if (r && r.ok) {
+          remember(title);
+          msg.textContent = "\u300c" + title + "\u300d " + t("sl.ok", "— 전해졌습니다.");
+          load();
+        } else {
+          msg.textContent = (r && r.reason === "rate_limited")
+            ? t("sl.rate", "잠시 뒤에 다시 보내 주세요.")
+            : t("sl.fail", "보내지 못했습니다. 잠시 뒤 다시 시도해 주세요.");
+        }
+      });
+    });
+
+    function load() {
+      if (!B || !B.isReady()) return;
+      B.listSongRequests().then(function (r) {
+        if (!r || !r.ok) return;
+        var n = {}, total = 0;
+        r.rows.forEach(function (x) {
+          var k = (x.title || "").trim();
+          if (!k) return;
+          n[k] = (n[k] || 0) + 1; total++;
+        });
+        var rows = Object.keys(n).map(function (k) { return [k, n[k]]; })
+                     .sort(function (a, b) { return b[1] - a[1] || a[0].localeCompare(b[0]); })
+                     .slice(0, 10);
+        rank.innerHTML = rows.map(function (p, i) {
+          return '<li class="sl-row"><span class="sl-no">' + (i + 1) + '</span>' +
+                 '<span class="sl-t">' + esc(p[0]) + '</span>' +
+                 '<span class="sl-n">' + p[1] + '</span></li>';
+        }).join("");
+        /* 0건일 때 순위표를 빈 채로 두면 고장처럼 보인다 — 사실을 적는다 */
+        tally.textContent = total
+          ? total + t("sl.total", "번의 신청이 모였습니다.")
+          : t("sl.empty", "아직 첫 신청을 기다리고 있습니다.");
+      });
+    }
+    load();
+  }
+  (window.INSOONI_PAGE_INIT = window.INSOONI_PAGE_INIT || []).push(initSetlist);
+  initSetlist();
+
   /* ---------- 수상과 서훈 · 펴낸 책 (이야기 페이지) ----------
      소속사가 2025년에 정리한 공식 프로필이 출처다. 표창 번호까지 원문 그대로다.
      목록 스타일은 사랑방에서 걷어낸 「인순이의 날들」의 것을 그대로 쓴다 —

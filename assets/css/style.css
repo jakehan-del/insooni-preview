@@ -3393,3 +3393,31 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
 .agency-lines a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--line); }
 .agency-lines a:hover { color: var(--ivory); }
 .agency-roster { margin: 1.4rem 0 0; font-size: .9rem; color: var(--faint); }
+
+
+/* ── 다음 무대에서 듣고 싶은 노래 ───────────────────────────
+   순위표는 장식하지 않는다. 숫자와 제목만 있으면 읽힌다. */
+.sl-pick { position: relative; max-width: 30rem; margin: 1.6rem 0 2.6rem; }
+.sl-input {
+  width: 100%; padding: .8rem 0; background: none; border: 0;
+  border-bottom: 1px solid var(--line); color: var(--ivory);
+  font-size: 1rem; font-family: inherit;
+}
+.sl-input:focus { outline: none; border-bottom-color: var(--ivory); }
+.sl-opts { list-style: none; margin: .3rem 0 0; padding: 0; }
+.sl-opt {
+  display: block; width: 100%; text-align: left; padding: .58rem 0;
+  background: none; border: 0; border-bottom: 1px solid var(--line);
+  color: var(--muted); font: inherit; font-size: .95rem; cursor: pointer;
+}
+.sl-opt:hover, .sl-opt:focus-visible { color: var(--ivory); }
+.sl-rank { list-style: none; margin: 0; padding: 0; max-width: 34rem; }
+.sl-row {
+  display: grid; grid-template-columns: 2.4rem 1fr auto; align-items: baseline;
+  gap: 1rem; padding: .78rem 0; border-top: 1px solid var(--line);
+}
+.sl-row:first-child { border-top: 0; }
+.sl-no { font-family: var(--font-mono); font-size: .82rem; color: var(--faint); }
+.sl-t  { color: var(--muted); font-size: 1rem; }
+.sl-n  { font-family: var(--font-mono); font-size: .82rem; color: var(--faint); }
+.sl-row:nth-child(-n+3) .sl-t { color: var(--ivory); }

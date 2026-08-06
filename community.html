@@ -17,10 +17,10 @@
 <meta name="description" content="편지를 쓰고, 팬 번호증과 응원 카드를 만들고, 공식 채널로 마음을 전하는 곳. 인순이 공식 사랑방.">
 <!-- 본문 글꼴은 먼저 확실히 깐다(미뤄 봤지만 첫 화면이 빨라지지 않았다).
      제목용 서체는 화면이 뜬 뒤 들어온다 — font-display:swap이라 늦어도 글자는 보인다. -->
-<link rel="stylesheet" href="assets/fonts/body.css?v4d05a066">
-<link rel="stylesheet" href="assets/fonts/display.css?v4d05a066" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/fonts/display.css?v4d05a066"></noscript>
-<link rel="stylesheet" href="assets/css/style.min.css?v4d05a066">
+<link rel="stylesheet" href="assets/fonts/body.css?vb7617512">
+<link rel="stylesheet" href="assets/fonts/display.css?vb7617512" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?vb7617512"></noscript>
+<link rel="stylesheet" href="assets/css/style.min.css?vb7617512">
 <link rel="canonical" href="https://insooni.com/community">
 <meta property="og:url" content="https://insooni.com/community">
 <meta property="og:type" content="website">
@@ -164,6 +164,34 @@
     </div>
   </section>
 
+    <!-- ── 다음 무대에서 듣고 싶은 노래 ─────────────────────────
+         백엔드(supabase/001_init.sql)에 request_song 과 song_requests 표가
+         처음부터 있었는데 화면에 나온 적이 없었다. 집계용 select 정책까지
+         열려 있다 — 실시간 순위를 보여주라고 만들어 둔 것이다.
+
+         자유 입력이 아니라 songs.json 의 103곡에서 고르게 한다.
+         "거위의꿈"·"거위의 꿈"·"Goose's Dream"이 따로 세어지면 순위가 거짓이 된다. -->
+    <section class="section section--band" id="setlist" aria-labelledby="h-setlist">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="h-setlist" data-i18n="sl.h">다음 무대에서 듣고 싶은 노래</h2>
+        </div>
+        <p class="lede" data-i18n="sl.lede">고른 노래는 모여서 순위가 됩니다. 무대를 준비할 때 실제로 참고합니다.</p>
+
+        <div class="sl-pick">
+          <label class="sr-only" for="sl-q" data-i18n="sl.search">노래 찾기</label>
+          <input id="sl-q" type="search" autocomplete="off" class="sl-input"
+                 placeholder="노래 제목으로 찾기" data-i18n-ph="sl.ph">
+          <ul class="sl-opts" id="sl-opts" role="listbox" aria-label="노래 후보"></ul>
+          <p class="form-hint" id="sl-msg" role="status" aria-live="polite"></p>
+        </div>
+
+        <ol class="sl-rank" id="sl-rank"></ol>
+        <p class="form-hint" id="sl-tally"></p>
+      </div>
+    </section>
+
+
 <!-- ── 남기신 줄 ─────────────────────────────────────────────
        사람이 남긴 것만 선다. 연혁도 앨범도 넣지 않는다 —
        그건 이야기 페이지와 음악 페이지가 이미 한다.
@@ -229,17 +257,17 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동" data-i18n-aria="aria.toTop">↑</button>
-<script src="assets/js/config.js?v4d05a066" defer></script>
-<script src="assets/js/backend.js?v4d05a066" defer></script>
-<script src="assets/js/i18n.min.js?v4d05a066" defer></script>
-<script src="assets/js/data.min.js?v4d05a066" defer></script>
-<script src="assets/js/tracklinks.min.js?v4d05a066" defer></script>
-<script src="assets/js/albums-full.min.js?v4d05a066" defer></script>
-<script src="assets/js/albums-en.min.js?v4d05a066" defer></script>
-<script src="assets/js/song-moods.min.js?v4d05a066" defer></script>
-<script src="assets/js/main.min.js?v4d05a066" defer></script>
-<script src="assets/js/motion.min.js?v4d05a066" defer></script>
-<script src="assets/js/router.min.js?v4d05a066" defer></script>
-<script src="assets/js/deck.min.js?v4d05a066" defer></script>
+<script src="assets/js/config.js?vb7617512" defer></script>
+<script src="assets/js/backend.js?vb7617512" defer></script>
+<script src="assets/js/i18n.min.js?vb7617512" defer></script>
+<script src="assets/js/data.min.js?vb7617512" defer></script>
+<script src="assets/js/tracklinks.min.js?vb7617512" defer></script>
+<script src="assets/js/albums-full.min.js?vb7617512" defer></script>
+<script src="assets/js/albums-en.min.js?vb7617512" defer></script>
+<script src="assets/js/song-moods.min.js?vb7617512" defer></script>
+<script src="assets/js/main.min.js?vb7617512" defer></script>
+<script src="assets/js/motion.min.js?vb7617512" defer></script>
+<script src="assets/js/router.min.js?vb7617512" defer></script>
+<script src="assets/js/deck.min.js?vb7617512" defer></script>
 </body>
 </html>

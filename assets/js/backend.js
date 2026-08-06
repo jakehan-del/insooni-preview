@@ -171,6 +171,14 @@
 
     /* 소식지 구독 — 서버는 신규든 중복이든 같은 응답을 준다.
        그렇지 않으면 특정 이메일이 구독자인지 확인하는 창구가 되어 버린다. */
+    /* 듣고 싶은 노래 —
+       쓰기는 rpc(속도 제한이 서버에 있다), 집계는 표를 직접 읽는다.
+       001_init.sql 의 "신청곡 집계용 읽기" 정책이 select 를 열어 둔 이유가 이것이다.
+       세는 것은 화면에서 한다 — PostgREST 로 GROUP BY 를 하려면 뷰가 필요한데,
+       뷰를 새로 만들려면 남의 데이터베이스에 손을 대야 한다. */
+    requestSong: function (title) { return rpc("request_song", { p_title: title || "" }); },
+    listSongRequests: function () { return readView("song_requests", "select=title"); },
+
     subscribe: function (email) { return rpc("subscribe", { p_email: email || "" }); }
   };
 })();
