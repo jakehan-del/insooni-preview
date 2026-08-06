@@ -20,7 +20,7 @@ ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 # 전부 이 값으로 다시 쓰입니다. 한 곳이라도 옛 주소가 남으면 검색엔진에
 # "진짜 페이지는 옛 주소다"라고 알려 주는 셈이 되어 새 도메인이 손해를 봅니다.
 # ============================================================
-SITE_URL = "https://jakehan-del.github.io/insooni-preview"
+SITE_URL = "https://insooni.com"
 
 # 과거에 쓴 적 있는 주소들. 어느 것이 남아 있어도 SITE_URL로 바꾼다(여러 번 실행해도 안전).
 KNOWN_BASES = [
