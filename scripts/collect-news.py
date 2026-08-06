@@ -17,7 +17,21 @@ from datetime import datetime, timezone, timedelta
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(BASE, "assets", "data", "live-news.json")
 
-QUERIES = ['"인순이"', "가수 인순이", "인순이 공연", "인순이 콘서트", "인순이 신곡"]
+# 질의를 넓혔다. 어머니는 노래만 하는 사람이 아니라 학교를 세운 사람이고
+# 예능·시상식·출간까지 걸쳐 있다 — 한 갈래만 보면 절반을 놓친다.
+QUERIES = [
+    '"인순이"', "가수 인순이", "인순이 공연", "인순이 콘서트", "인순이 신곡",
+    "인순이 디너쇼", "인순이 단독공연", "인순이 출연", "인순이 수상",
+    "인순이 해밀학교", "인순이 신간", "인순이 골든걸스",
+]
+
+# 출처는 구글 뉴스 RSS 하나다.
+# 네이버 RSS(search.naver.com/search.naver?where=rss)도 붙여 봤지만 폐지됐다 —
+# 200 을 주지만 본문은 HTML 검색 페이지이고 <item> 이 0개다. 실측 확인.
+# 죽은 출처를 목록에 남겨 두면 "두 곳을 본다"는 착각만 생기므로 넣지 않는다.
+FEEDS = [
+    ("google", "https://news.google.com/rss/search?q={q}&hl=ko&gl=KR&ceid=KR:ko"),
+]
 
 # 이 중 하나라도 제목에 있으면 버린다 (좋은 소식만 남기기)
 NEGATIVE = [
@@ -53,7 +67,9 @@ def fetch(url):
 
 
 def norm(s):
-    return re.sub(r"[\s'\"`·.,!?()\[\]/\-–—…]", "", s).lower()
+    # 곡선 따옴표(“ ” ‘ ’)까지 지운다. 언론사마다 따옴표 모양이 달라서
+    # 같은 기사가 두 건으로 세어졌다 — 실제로 그런 일이 있었다.
+    return re.sub(r"[\s'\"`“”‘’«»·.,!?()\[\]/\-–—…]", "", s).lower()
 
 
 def parse_date(pub):
@@ -226,9 +242,45 @@ def main():
     cutoff = now - timedelta(days=90)
     by_key = {}
 
-    for q in QUERIES:
+    # ── 이미 실려 있던 소식을 먼저 담는다 ──────────────────────
+    # 구글 뉴스 RSS 는 굴러가는 창이라 며칠 지나면 기사를 빼 버린다.
+    # 매번 새로 그리면 그때마다 사이트에서도 사라진다 — 4시간마다 도는 뜻이 없다.
+    # 90일 안이면 이어서 싣는다. 새 것을 더할 뿐, 있던 것을 지우지 않는다.
+    for prev_path in ("live-news.json", "news-archive.json"):
+        f = os.path.join(BASE, "assets", "data", prev_path)
+        if not os.path.exists(f):
+            continue
         try:
-            url = "https://news.google.com/rss/search?q=" + urllib.parse.quote(q) + "&hl=ko&gl=KR&ceid=KR:ko"
+            blob = json.load(open(f, encoding="utf-8"))
+            prev = blob if isinstance(blob, list) else blob.get("items", [])
+        except Exception as e:
+            print("  이전 파일 읽기 실패", prev_path, e)
+            continue
+        kept = 0
+        for it in prev:
+            t, d, u = it.get("title"), it.get("date"), it.get("url")
+            if not (t and d and u):
+                continue
+            try:
+                when = datetime.strptime(d, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+            except Exception:
+                continue
+            if when < cutoff:
+                continue
+            k = norm(t)
+            if k in by_key:
+                continue
+            row = dict(it)
+            row["_when"] = when
+            by_key[k] = row
+            kept += 1
+        if kept:
+            print("  이어받음 %s: %d건" % (prev_path, kept))
+
+    for feed_name, feed_tpl in FEEDS:
+     for q in QUERIES:
+        try:
+            url = feed_tpl.format(q=urllib.parse.quote(q))
             root = ElementTree.fromstring(fetch(url))
         except Exception as e:
             print("query fail", q, e)
