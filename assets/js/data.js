@@ -462,19 +462,36 @@ window.SITE_DATA = {
   ],
 
   /* ---------- 연혁 타임라인 (milestone: 굵은 표시 / 검증 완료 항목 중심) ---------- */
-  /* 수상·서훈 — 소속사(주식회사 소솝)가 2025년에 정리한 공식 프로필에서 그대로 옮긴다.
-     새 사실은 만들지 않았고, 표창 번호까지 원문 그대로다.
-     이 목록이 사이트에 없던 것이 이상했다 — 국민훈장 목련장은 대한민국이
-     한 사람의 공적에 주는 훈장이고, 대통령·국무총리 표창이 그 앞뒤에 있다. */
+  /* 수상·서훈 — 출처를 항목마다 남긴다(src).
+     소속사(주식회사 소솝) 2025 공식 프로필이 1차 출처이고, 거기 빠진 것을
+     위키백과와 언론 보도로 보탰다. 표창 번호는 프로필 원문 그대로다.
+
+     🔴 펄벅 '영향력 있는 여성상'은 사이트 안에 리캡·영상·사진까지 있는데
+        수상 목록에는 없었다. 프로필 PDF 가 완전하지 않았던 것이다 —
+        한 곳만 믿으면 이런 구멍이 난다.
+
+     명칭 표기: 언론은 '영향력 있는 여성상'(Woman of Influence Award)으로 썼다.
+     사이트 리캡의 '올해의 여성상'은 같은 상의 다른 번역이다. */
   awards: [
-    { y: "2025", ko: "HMA 2024 인피니트 인스퍼레이션 아이콘", en: "HMA 2024 Infinite Inspiration Icon" },
-    { y: "2023", ko: "KBS 연예대상 신인상", en: "KBS Entertainment Awards — Rookie Award" },
-    { y: "2013", ko: "제6회 올해의 여성문화인상", en: "6th Woman of the Year in Culture" },
-    { y: "2009", ko: "제41회 대한민국문화예술상 대중예술부문상", en: "41st Korea Culture and Arts Award — Popular Arts" },
-    { y: "2009", ko: "대통령 표창", note: "제4113호", en: "Presidential Citation", enNote: "No. 4113" },
-    { y: "2005", ko: "KBS 가요대상 본상", en: "KBS Song Awards — Main Prize" },
-    { y: "1997", ko: "국민훈장 목련장", note: "제19866호", en: "Order of Civil Merit, Magnolia Medal", enNote: "No. 19866" },
-    { y: "1997", ko: "국무총리 표창", note: "제81568호", en: "Prime Minister's Citation", enNote: "No. 81568" }
+    { y: "2025", ko: "펄벅 인터내셔널 '영향력 있는 여성상'", note: "故 이희호 여사 이후 25년 만의 한국인 수상",
+      en: "Pearl S. Buck International — Woman of Influence Award", enNote: "First Korean recipient in 25 years", src: "언론" },
+    { y: "2025", ko: "한터뮤직어워즈 인피니트 인스퍼레이션 아이콘", note: "32주년",
+      en: "Hanteo Music Awards — Infinite Inspiration Icon", enNote: "32nd anniversary", src: "프로필·위키" },
+    { y: "2023", ko: "KBS 연예대상 쇼·버라이어티 부문 여자 신인상",
+      en: "KBS Entertainment Awards — Rookie Award, Show & Variety", src: "프로필·위키" },
+    { y: "2016", ko: "코리아드라마어워즈 OST상", en: "Korea Drama Awards — OST Award", src: "위키" },
+    { y: "2013", ko: "제6회 올해의 여성문화인상", en: "6th Woman of the Year in Culture", src: "프로필" },
+    { y: "2009", ko: "제41회 대한민국문화예술상 대중예술부문상",
+      en: "41st Korea Culture and Arts Award — Popular Arts", src: "프로필" },
+    { y: "2009", ko: "대통령 표창", note: "제4113호", en: "Presidential Citation", enNote: "No. 4113", src: "프로필" },
+    { y: "2006", ko: "미래의 여성 지도상", note: "여성신문사", en: "Future Women Leaders Award", enNote: "Women's News", src: "위키" },
+    { y: "2005", ko: "KBS 가요대상 본상", en: "KBS Song Awards — Main Prize", src: "프로필·위키" },
+    { y: "2004", ko: "KBS 가요대상 본상", en: "KBS Song Awards — Main Prize", src: "위키" },
+    { y: "1997", ko: "국민훈장 목련장", note: "제19866호 · 4등급",
+      en: "Order of Civil Merit, Magnolia Medal", enNote: "No. 19866", src: "프로필·위키" },
+    { y: "1997", ko: "국무총리 표창", note: "제81568호", en: "Prime Minister's Citation", enNote: "No. 81568", src: "프로필" },
+    { y: "1995", ko: "KBS 방송대상 여자 가수상", en: "KBS Broadcasting Awards — Best Female Singer", src: "위키" },
+    { y: "1984", ko: "KBS 7대 가수상", en: "KBS Top 7 Singers Award", src: "위키" }
   ],
 
   /* 펴낸 책 — 같은 프로필 출처 */

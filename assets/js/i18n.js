@@ -340,6 +340,7 @@ window.I18N_EN = {
   "about.agencyH": "Management",
   "nav.agency": "Management",
   "about.awardsH": "Awards & Honours",
+  "about.awardsNote": "Compiled from the official artist profile, press reports and public records.",
   "about.booksH": "Books",
   "about.moments": "Moments to Remember",
   "comm.msg": "From Insooni",

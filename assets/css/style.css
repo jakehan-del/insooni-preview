@@ -184,7 +184,15 @@ html.js-anim .reveal.in { opacity: 1; transform: none; transition: opacity .9s v
   display: flex; align-items: center; gap: 2rem;
   min-height: 68px; max-width: none; margin: 0; padding: 0 28px;
 }
-.brand { display: flex; align-items: baseline; gap: .7rem; text-decoration: none; }
+/* 상표 잠금(lockup) — 백조와 워드마크는 한 덩어리다.
+   메뉴 사이에 아이콘 하나를 띄워 두면 클립아트가 되지만,
+   워드마크 옆에 붙으면 상표가 된다. 둘은 늘 함께 움직인다. */
+.brand { display: flex; align-items: center; gap: .62rem; text-decoration: none; }
+.brand-mark {
+  width: 27px; height: auto; color: var(--ivory); flex: 0 0 auto;
+  transition: color .3s ease;
+}
+.brand:hover .brand-mark { color: var(--gold); }
 .brand .brand-en {
   font-family: var(--font-latin); font-weight: 600; font-size: 1.15rem;
   letter-spacing: .34em; color: var(--ivory);
