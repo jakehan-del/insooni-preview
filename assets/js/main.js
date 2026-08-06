@@ -2439,6 +2439,52 @@
   (window.INSOONI_PAGE_INIT = window.INSOONI_PAGE_INIT || []).push(initAgency);
   initAgency();
 
+  /* ---------- 무대의 기록 (아카이브) ----------
+     옛 아카이브는 서로 상관없는 목록 셋이 쌓여 있었다 —
+     영상 35편, 일정 872건, 사진 66장. 그중 872건은 남의 업무 달력이라
+     "밴드 안무연습 14:00~" 같은 줄이 절반이었다. 그게 조잡함의 정체였다.
+
+     scripts/build-stages.py 가 연습·이동을 걷어내고 영상과 합쳐
+     1979–2013 한 줄기로 만든다(406건). 여기서는 그리기만 한다.
+
+     펼치고 접는 것은 <details> 에 맡긴다 — 자바스크립트가 없어도 동작하고
+     키보드와 스크린리더가 이미 아는 요소다. */
+  function initStages() {
+    var wrap = $("#stages");
+    if (!wrap) return;
+    var en = document.documentElement.lang === "en";
+    fetch("assets/data/stages.json").then(function (r) { return r.json(); }).then(function (d) {
+      var lede = $("#st-lede");
+      if (lede) {
+        lede.textContent = en
+          ? d.first + "\u2013" + d.last + " \u00b7 " + d.count + " stages on record"
+          : d.first + "\u2013" + d.last + " \u00b7 " + d.count + "개의 무대가 남아 있습니다";
+      }
+      wrap.innerHTML = d.years.map(function (yr, idx) {
+        var rows = yr.items.map(function (it) {
+          var when = it.date ? it.date.slice(5).replace("-", ".") : "";
+          var meta = [it.venue, it.who].filter(Boolean).join(" \u00b7 ");
+          return '<li class="st-row">' +
+                 '<span class="st-when">' + esc(when) + '</span>' +
+                 '<span class="st-what">' + esc(it.t) +
+                   (meta ? ' <span class="st-meta">' + esc(meta) + '</span>' : '') +
+                 '</span></li>';
+        }).join("");
+        /* 가장 최근 해만 펼쳐 둔다. 13개 해를 모두 펼치면 다시 조잡해진다. */
+        return '<details class="st-year"' + (idx === 0 ? ' open' : '') + '>' +
+               '<summary><span class="st-y">' + esc(yr.y) + '</span>' +
+               '<span class="st-n">' + yr.n + '</span></summary>' +
+               '<ul class="st-list">' + rows + '</ul></details>';
+      }).join("");
+    }).catch(function () {
+      /* 조용히 비워 두지 않는다 — 고장과 "기록 없음"이 구분되어야 한다 */
+      wrap.innerHTML = '<p class="form-hint">' +
+        (en ? "The stage records could not be loaded." : "무대 기록을 불러오지 못했습니다.") + '</p>';
+    });
+  }
+  (window.INSOONI_PAGE_INIT = window.INSOONI_PAGE_INIT || []).push(initStages);
+  initStages();
+
   /* ---------- 1979년부터의 기록 (아카이브 페이지) ----------
      insooni.com 은 2010년 플래시 사이트다. 플래시가 2020년 12월에 끝나면서
      서버는 살아 있는데 아무도 볼 수 없는 상태가 됐다. 그 안의 것을 여기로 옮겼다.
