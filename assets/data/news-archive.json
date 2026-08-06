@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-08-06 15:30",
- "count": 23,
+ "updated": "2026-08-06 19:38",
+ "count": 26,
  "items": [
   {
    "date": "2026-08-05",
@@ -57,6 +57,15 @@
    "ai": true
   },
   {
+   "date": "2026-07-31",
+   "title": "류원정 X 공훈 '내 사랑 투유', 절제하며 맞춘 듀엣 호흡! 인순이 X 서지오 심사평은? [인생은 오디션]",
+   "source": "sbs.co.kr",
+   "sourceSite": "https://programs.sbs.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9YMWVGWGZZNThtWDZlZEducS1WeEczOGM2T2w0RzgxMDE1OTVWbU1IVnB4VllXa1BUX0ktbFQ0RXV5SnVxeFpIeUg3bVp6UmhCc01Jc1ZRT1l4Sk9YaGFIcTA1Wk1LZ1BlSDdmWU9EWXFKelV3bFFR?oc=5",
+   "type": "방송",
+   "auto": true
+  },
+  {
    "date": "2026-07-29",
    "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
    "source": "v.daum.net",
@@ -86,6 +95,16 @@
    "auto": true,
    "also": 3,
    "ai": true
+  },
+  {
+   "date": "2026-07-28",
+   "title": "듀엣 경연의 핵심은 둘의 호흡과 개성?! 심사위원 인순이 X 서지오가 말하는 심사 포인트! [인생은 오디션]",
+   "source": "sbs.co.kr",
+   "sourceSite": "https://programs.sbs.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBPQ041WGZ5MlRYTXZOOTdtdHBWWGRLTDkyWXc0SmhGU3ZrWnY1N2huSU5rbVd4WlY2SWxRb1Jha0pHZ0hFZ3dFWmNNOU45YjBpa3VKMFBmeWRUcGVOVUN2dUZTaDU5QWZ4QnhXYlpHRDFfaWNJTTN3?oc=5",
+   "type": "방송",
+   "auto": true,
+   "also": 1
   },
   {
    "date": "2026-07-27",
@@ -167,6 +186,16 @@
    "type": "공연",
    "auto": true,
    "ai": true
+  },
+  {
+   "date": "2026-06-23",
+   "title": "'11회 청주시 시민의 날 기념행사' 내달 1일 개최…염유리·인순이 공연",
+   "source": "뉴스1",
+   "sourceSite": "https://www.news1.kr",
+   "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5pWndrbExpeXFyTENrOFYwWE9neTZPbnFtZWRPelZGLVZWSzlQczU4a2xBLXpaSHNDdUVNZlVOVUpKd3JmVkpLblhtSWJsbXc1dWVvU2hyTVppdnpDeVNn?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 1
   },
   {
    "date": "2026-06-17",

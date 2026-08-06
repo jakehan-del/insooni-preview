@@ -1,18 +1,53 @@
 {
- "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 AI 큐레이션으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
- "mode": "AI 큐레이션",
- "updated": "2026-08-06 15:30",
+ "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
+ "mode": "규칙 기반",
+ "updated": "2026-08-06 19:38",
  "items": [
+  {
+   "date": "2026-08-05",
+   "title": "안동문화예술의전당 어버이날 특별기획 가수 인순이 & 명창 유지숙 `두 사랑 이야기`",
+   "source": "경북뉴스",
+   "sourceSite": "http://www.kbnews.kr",
+   "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPMXRuVmxnUDIteHB5VEpoWFotZ2JYdUpidS1PSHJQRllfVXpQamdZZTV5MV82ZWNITVctVnZnZHkyLVNDMnVYYnMzR3ZEOGFNc1pVN292TFZPOGxGNmFId3h5eVdJTXNmV190NHZjNmJGUTBKVm5mQjBiWldQdndpaGVvOV9YTEkwUDllc0xNS3poam9pZEZod21lZ2NVOEhxOW5ZSXFrTl9yRFdPT19zNlFB?oc=5",
+   "type": "보도",
+   "auto": true
+  },
   {
    "date": "2026-08-04",
    "title": "가수 남진·인순이, KBS '가요무대'서 환상적인 듀엣 무대…",
    "source": "kcemedia.com",
    "sourceSite": "http://knpp.co.kr",
    "url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTE9UWFp3dGdyY09vbkg4c2E1YzlkOXZLNk5fS292ZHFzQkRxTDJTajBLWXp2NjROSjVaZzJYUWVvSERUYnc?oc=5",
-   "type": "방송",
+   "type": "공연",
    "auto": true,
-   "also": 1,
-   "ai": true
+   "also": 1
+  },
+  {
+   "date": "2026-07-31",
+   "title": "류원정 X 공훈 '내 사랑 투유', 절제하며 맞춘 듀엣 호흡! 인순이 X 서지오 심사평은? [인생은 오디션]",
+   "source": "sbs.co.kr",
+   "sourceSite": "https://programs.sbs.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9YMWVGWGZZNThtWDZlZEducS1WeEczOGM2T2w0RzgxMDE1OTVWbU1IVnB4VllXa1BUX0ktbFQ0RXV5SnVxeFpIeUg3bVp6UmhCc01Jc1ZRT1l4Sk9YaGFIcTA1Wk1LZ1BlSDdmWU9EWXFKelV3bFFR?oc=5",
+   "type": "방송",
+   "auto": true
+  },
+  {
+   "date": "2026-07-29",
+   "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE9kLTZJcnFMUmF6Vkl2TWxKejBVblBxS0RTU0NYbkhhNlJPc3FfU2dBTGd0NG1RLVBaX3NybTZMR2owdXVidjdYTzYxMVBxNlhpOEkyaQ?oc=5",
+   "type": "방송",
+   "auto": true
+  },
+  {
+   "date": "2026-07-28",
+   "title": "한강 X 문초희, '이제는', 고음과 안무에도 빛난 듀엣 호흡! 인순이 X 서지오 심사평은? [인생은 오디션]",
+   "source": "sbs.co.kr",
+   "sourceSite": "https://programs.sbs.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFAxUHNaU29ORTRFc1VEUVBxQ0Vid2xTY0stTDZFbXVvWUZrUGNOZWxfRlZzcENhU1U4eGxSdFpkc1JCVU50OW9MUUZXdVZodkp5UGROeGpJT1N2YzZMVzZYeHo4Q0U1elpIbXJZQ2VwNXpIeGcxb1Z3?oc=5",
+   "type": "방송",
+   "auto": true
   },
   {
    "date": "2026-07-28",
@@ -21,19 +56,27 @@
    "sourceSite": "https://isplus.com",
    "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5zQ1VQT1VmdGtPLWFZQVpRQ3ZPRFlUS3hNRGxoOXhUZ2F0N1VPSDlqU2RkVHlkb29wbWJPZVhYcUVGXzZaN1RQNk4zcEhSNGQwZkdfSWdGc2V4elE?oc=5",
    "type": "방송",
+   "auto": true
+  },
+  {
+   "date": "2026-07-28",
+   "title": "듀엣 경연의 핵심은 둘의 호흡과 개성?! 심사위원 인순이 X 서지오가 말하는 심사 포인트! [인생은 오디션]",
+   "source": "sbs.co.kr",
+   "sourceSite": "https://programs.sbs.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBPQ041WGZ5MlRYTXZOOTdtdHBWWGRLTDkyWXc0SmhGU3ZrWnY1N2huSU5rbVd4WlY2SWxRb1Jha0pHZ0hFZ3dFWmNNOU45YjBpa3VKMFBmeWRUcGVOVUN2dUZTaDU5QWZ4QnhXYlpHRDFfaWNJTTN3?oc=5",
+   "type": "방송",
    "auto": true,
-   "also": 4,
-   "ai": true
+   "also": 1
   },
   {
    "date": "2026-07-27",
-   "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
-   "source": "v.daum.net",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1ha0ZobU9TdWhIMEw1N05GX05Hd3B5UU5SSGtTZWF2ZG9xNEE3UElMVG1uVGNoVlUxSTJZeG5IZl9wYUdzOUxQa3d1bw?oc=5",
-   "type": "나눔",
+   "title": "\"인순이 공연에 감동\"…마샬이 다문화 학교에 스피커 보낸 사연",
+   "source": "네이트",
+   "sourceSite": "https://news.nate.com",
+   "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFB2U2lCYmlCVFpqTk14TnlCLTl1cW5Tbld1aWF5cDVuOWxMaGtjX0NpTWp3S2FJTC1ycllEb01Lcm9CVTV5WDRFTkI4ODVEeU1jSGtJ?oc=5",
+   "type": "공연",
    "auto": true,
-   "ai": true
+   "also": 1
   },
   {
    "date": "2026-07-24",
@@ -43,8 +86,7 @@
    "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1tV0FhNmZMendjUkhqd1VCeGFXNWJzYVJzdXpiaFM2aWNOdk5yMC1FLVVvVm92SVFHRUdEQUNTYVdaSkdWX2NlNTJSenpEV1ZjU3A0?oc=5",
    "type": "공연",
    "auto": true,
-   "also": 4,
-   "ai": true
+   "also": 4
   },
   {
    "date": "2026-06-30",
@@ -54,8 +96,17 @@
    "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1lUFFLT19OWU14SWNZbmNUUVBkUkxJaXp4ekRnWHpjRlFHNkpoMnBqRGZkY3RtODNldmZUenNLVms3Wm1mRm12d2dmRzJpaGhId2V6OF9uSDR2TWhEOHc2cDZFOTFnRkdSODJTcXJYQXhudGNZ?oc=5",
    "type": "공연",
    "auto": true,
-   "also": 1,
-   "ai": true
+   "also": 1
+  },
+  {
+   "date": "2026-06-23",
+   "title": "'11회 청주시 시민의 날 기념행사' 내달 1일 개최…염유리·인순이 공연",
+   "source": "뉴스1",
+   "sourceSite": "https://www.news1.kr",
+   "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5pWndrbExpeXFyTENrOFYwWE9neTZPbnFtZWRPelZGLVZWSzlQczU4a2xBLXpaSHNDdUVNZlVOVUpKd3JmVkpLblhtSWJsbXc1dWVvU2hyTVppdnpDeVNn?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 1
   },
   {
    "date": "2026-06-17",
@@ -64,9 +115,7 @@
    "sourceSite": "https://star.ohmynews.com",
    "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTFBLMEJuXy1BejFxbDJZYmQ3X3ljWE9jamdaU2tlSlhRem5CMXJGLXNlRDA2S0p4UmI0dkh5Wmdqb1N5VWdGd000NldvamFxWERpZk9FMXdpOWxGTExlN1htR2tZVTVVU2ViQ2hjZUpXYjRFS01ZdlRUdHRRR1lyQQ?oc=5",
    "type": "공연",
-   "auto": true,
-   "also": 1,
-   "ai": true
+   "auto": true
   },
   {
    "date": "2026-06-11",
@@ -75,8 +124,7 @@
    "sourceSite": "https://fashionbiz.co.kr",
    "url": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5tV2hkSzFRelFoWEY3OHhKaWd1Z0N0MUh2M0V1VThxcDJKWUNZZ3pPM3BlUU5UU1oxV01VUGp0NEpvNk1UeDFPdVlPMGhNaHU1?oc=5",
    "type": "보도",
-   "auto": true,
-   "ai": true
+   "auto": true
   },
   {
    "date": "2026-06-05",
@@ -85,9 +133,16 @@
    "sourceSite": "https://www.kchannel.kr",
    "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE8zbkRNWlBGMzN1QWV4aGZ6N0puSFZzNlo1MERPTDBFVWxDZjBPZktod0dEcUtUQXFOc2FfRUxEQzBVb2FKSGxxWHNkel94OWFRa2RXVXV6UFJzek5CRXVwMlVHRWVYYkt6ekE?oc=5",
    "type": "공연",
-   "auto": true,
-   "also": 1,
-   "ai": true
+   "auto": true
+  },
+  {
+   "date": "2026-05-21",
+   "title": "경주 고분 콘서트 '봉황대 뮤직스퀘어' 내달 5일 개막…인순이·김태우 등",
+   "source": "newsis.com",
+   "sourceSite": "https://www.newsis.com",
+   "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE1JbG9NZElJeVhQOEJURTZrT0ZzT3Z1NFRNeEowdEJFcDE5Y3hGYndJR3RvVnpudzRGVVpJRjdSYWhZNkdvbE1xaVVkM2FaMlFzRzBzV0FEdzZ5Z2xaYmJxQdIBeEFVX3lxTE5Kek82MVdOdUljaEpOYXZjdHNzR25kbkhRRVlacms0aWw5MXphM0FLMXJzUHFCVjhiZDJkWVdfc2pSSW9TUnU2d2J5VmxGMmp1bE41Tk5YZVctMnN5NUhSZE5aaU1mN1RBbEhfbFdDZVRidnBTd3EyWQ?oc=5",
+   "type": "공연",
+   "auto": true
   },
   {
    "date": "2026-05-12",
@@ -95,10 +150,9 @@
    "source": "싱글리스트",
    "sourceSite": "https://www.slist.kr",
    "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE43cGYzUlpRSmdMN3ZWTy1Wems0cGdMVDY4b3FiWkZqVmlGcFZWQk85d1RkZGJtd1N5TWEyYmIwQlBSd1VBV3d2eXF3b0pmUkI3NnQwOGFsaWFVR25SOTAyUXY2OWdKZw?oc=5",
-   "type": "공연",
+   "type": "보도",
    "auto": true,
-   "also": 1,
-   "ai": true
+   "also": 1
   }
  ]
 }
