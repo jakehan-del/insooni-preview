@@ -21,6 +21,10 @@ cd "$ROOT"
 
 # 웹에 나가는 것만. scripts/ · supabase/ · .github/ · .git/ 는 여기 없다.
 cp -R assets "$DIST/"
+
+# 사진 복원 전 원본(-orig)은 저장소에만 둔다. 웹에 올릴 이유가 없고,
+# 보정 전 사진이 주소만 알면 열리는 것도 곤란하다.
+find "$DIST/assets/img/photos" -name '*-orig.webp' -delete
 for f in *.html robots.txt sitemap.xml site.webmanifest; do
   [ -e "$f" ] && cp "$f" "$DIST/"
 done

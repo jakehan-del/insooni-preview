@@ -133,7 +133,7 @@ window.I18N_EN = {
   "alt.13": "Jacket for 'A To Z', 2004",
   "alt.14": "Insooni in a denim suit with long braids",
   "alt.15": "Golden Girls 'One Last Time' cover, 2023",
-  "alt.16": "On stage with dancers, in sequins",
+  "alt.16": "A black suit and sunglasses, in the haze behind the stage",
   "alt.17": "Album jacket with a watercolour illustration",
   "alt.18": "Insooni posing in leather trousers",
   "alt.19": "Insooni as Grizabella in the musical 'Cats'",

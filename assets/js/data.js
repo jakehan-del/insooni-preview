@@ -32,7 +32,7 @@ window.SITE_DATA = {
     { img: "assets/img/photos/haemill-halloween.webp", w: 600, h: 400, year: "", cat: "기록", caption: "해밀학교 한옥 교정의 핼러윈 파티" , en: { caption: "Halloween at Haemil School's hanok campus" } },
     { img: "assets/img/photos/haemill-wall.webp", w: 450, h: 658, year: "", cat: "기록", caption: "건축 후원자의 이름이 새겨진 해밀학교 나무 벽 앞에서" , en: { caption: "By Haemil School's wooden donor wall" } },
     { img: "assets/img/photos/haemill-library.webp", w: 650, h: 364, year: "", cat: "기록", caption: "해밀학교 서가 계단에서 학생들과" , en: { caption: "On the library steps with Haemil students" } },
-    { img: "assets/img/stills/s5.webp", w: 1280, h: 720, year: "2025", cat: "무대", caption: "스포트라이트 아래, 두 팔을 펴며" , en: { caption: "Arms open under the spotlight" } },
+    { img: "assets/img/stills/s5.webp", w: 1280, h: 720, year: "2025", cat: "무대", caption: "스포트라이트 아래, 두 팔을 펴며" , en: { caption: "Arms open under the spotlight" } }
   ],
 
   /* ---------- 지난 무대 리캡 (VIEW RECAP: 사진 갤러리 + 영상) ----------
@@ -49,9 +49,9 @@ window.SITE_DATA = {
       photos: [
         { img: "assets/img/photos/hanteo-1.webp", w: 1200, h: 1600, caption: "트로피와 꽃다발", en: { caption: "With trophy and flowers" } },
         { img: "assets/img/photos/hanteo-2.webp", w: 1200, h: 1600, caption: "트로피를 들어 올리며", en: { caption: "Raising the trophy" } },
-        { img: "assets/img/photos/hanteo-3.webp", w: 1600, h: 1227, caption: "무대 인사", en: { caption: "A stage greeting" } },
-        { img: "assets/img/photos/hanteo-4.webp", w: 900, h: 1600, caption: "스크린 속 초록 드레스", en: { caption: "Green dress, on the screen" } },
-        { img: "assets/img/photos/hanteo-5.webp", w: 1600, h: 1200, caption: "한터뮤직어워즈 무대", en: { caption: "On the Hanteo Music Awards stage" } }
+        { img: "assets/img/photos/hanteo-3.webp", w: 1000, h: 1000, caption: "무대 인사", en: { caption: "A stage greeting" } },
+        { img: "assets/img/photos/hanteo-4.webp", w: 820, h: 1100, caption: "스크린 속 초록 드레스", en: { caption: "Green dress, on the screen" } },
+        { img: "assets/img/photos/hanteo-5.webp", w: 1000, h: 750, caption: "한터뮤직어워즈 무대", en: { caption: "On the Hanteo Music Awards stage" } }
       ]
     },
     {
@@ -62,7 +62,7 @@ window.SITE_DATA = {
       desc: "노란 꽃을 꽂은 검은 드레스, 베이시스트와 웃던 대기실, 그리고 무대 리허설까지 — 녹화일의 백스테이지 기록.",
       bg: "assets/img/photos/openc-1.webp",
       photos: [
-        { img: "assets/img/photos/openc-1.webp", w: 1200, h: 1600, caption: "무대 리허설", en: { caption: "Stage rehearsal" } },
+        { img: "assets/img/photos/openc-1.webp", w: 700, h: 900, caption: "무대 리허설", en: { caption: "Stage rehearsal" } },
         { img: "assets/img/photos/openc-2.webp", w: 1200, h: 1600, caption: "베이시스트와 함께", en: { caption: "With the bassist" } },
         { img: "assets/img/photos/openc-3.webp", w: 1200, h: 1600, caption: "대기실의 웃음", en: { caption: "Laughter in the green room" } },
         { img: "assets/img/photos/openc-4.webp", w: 1200, h: 1600, caption: "출연 대기", en: { caption: "Waiting to go on" } },
@@ -77,12 +77,8 @@ window.SITE_DATA = {
       place: "그랜드 인터컨티넨탈 서울 파르나스",
       desc: "5년 만의 연말 디너쇼. 무대 뒤에는 몇 주간의 안무 연습이 있었습니다 — 연습실의 기록.",
       video: "assets/media/dinner-practice.mp4",
-      poster: "assets/img/photos/dsprac-1.webp",
-      bg: "assets/img/photos/dsprac-1.webp",
-      photos: [
-        { img: "assets/img/photos/dsprac-1.webp", w: 1600, h: 900, caption: "안무 연습실에서", en: { caption: "In the dance studio" } },
-        { img: "assets/img/photos/dsprac-2.webp", w: 900, h: 1600, caption: "거울 앞의 시간", en: { caption: "Time before the mirror" } }
-      ]
+      poster: "assets/img/photos/dinner-practice-still.webp",
+      photos: []
     },
     {
       date: "", year: "",
@@ -91,13 +87,8 @@ window.SITE_DATA = {
       place: "",
       desc: "소극장의 밤. 재즈 밴드와 함께한 라이브의 기록입니다.",
       video: "assets/media/jazz-live.mp4",
-      poster: "assets/img/photos/jazzc-1.webp",
-      bg: "assets/img/photos/jazzc-1.webp",
-      photos: [
-        { img: "assets/img/photos/jazzc-1.webp", w: 1600, h: 900, caption: "스포트라이트 아래, 재즈 밴드와", en: { caption: "Under the spotlight, with the jazz band" } },
-        { img: "assets/img/photos/jazzc-2.webp", w: 1200, h: 1600, caption: "객석에서 본 무대", en: { caption: "The stage, seen from the audience" } },
-        { img: "assets/img/photos/jazzc-3.webp", w: 900, h: 1600, caption: "소극장의 밤", en: { caption: "A night at the small theater" } }
-      ]
+      poster: "assets/img/photos/jazz-stage.webp",
+      photos: []
     },
 
     {
@@ -110,12 +101,9 @@ window.SITE_DATA = {
       poster: "assets/img/photos/woi-award.webp",
       bg: "assets/img/photos/woi-award.webp",
       photos: [
-        { img: "assets/img/photos/woi-award.webp", w: 1074, h: 1542, caption: "'올해의 여성상' 시상 순간", en: { caption: "The 'Woman of Influence' award moment" } },
-        { img: "assets/img/photos/woi-flag.webp", w: 900, h: 1600, caption: "기념 성조기 전달", en: { caption: "A commemorative flag presentation" } },
-        { img: "assets/img/photos/woi-speech.webp", w: 900, h: 1600, caption: "수상 연설, 연단에서", en: { caption: "The acceptance speech, at the podium" } },
-        { img: "assets/img/photos/woi-podium.webp", w: 900, h: 1600, caption: "Woman of Influence 2025 로고 앞에서", en: { caption: "In front of the Woman of Influence 2025 logo" } },
-        { img: "assets/img/photos/woi-song.webp", w: 900, h: 1600, caption: "객석 사이에서 부른 축하 무대", en: { caption: "A celebratory song among the guests" } },
-        { img: "assets/img/photos/woi-audience.webp", w: 900, h: 1600, caption: "객석에서, 박수와 함께", en: { caption: "From the audience, amid applause" } }
+        { img: "assets/img/photos/woi-award.webp", w: 590, h: 848, caption: "'올해의 여성상' 시상 순간", en: { caption: "The 'Woman of Influence' award moment" } },
+        { img: "assets/img/photos/woi-speech.webp", w: 495, h: 880, caption: "수상 연설, 연단에서", en: { caption: "The acceptance speech, at the podium" } },
+        { img: "assets/img/photos/woi-podium.webp", w: 495, h: 880, caption: "Woman of Influence 2025 로고 앞에서", en: { caption: "In front of the Woman of Influence 2025 logo" } }
       ]
     },
     {
@@ -152,14 +140,10 @@ window.SITE_DATA = {
       en: { title: "Theatrical Concert Live", place: "", desc: "Show name and year being confirmed. A grand stage with orchestra, rococo costumes and sequined jazz numbers." },
       place: "",
       desc: "오케스트라 협연, 로코코 의상극, 스팽글 재즈 넘버까지 — 하나의 카메라가 따라간 대형 무대의 밤입니다.",
-      bg: "assets/img/photos/dsc0628.webp",
+      bg: "assets/img/photos/dsc0427.webp",
       photos: [
         { img: "assets/img/photos/dsc0427.webp", w: 1600, h: 1065, caption: "깃털 장식 흰 의상, 오케스트라와 함께", en: { caption: "White feathered costume, with the orchestra" } },
-        { img: "assets/img/photos/dsc0628.webp", w: 1600, h: 1063, caption: "댄서들과 함께한 스팽글 무대", en: { caption: "A sequined number with the dancers" } },
-        { img: "assets/img/photos/dsc0284.webp", w: 1600, h: 1063, caption: "순백의 무대 세트", en: { caption: "A pure-white stage set" } },
-        { img: "assets/img/photos/dsc0369.webp", w: 1600, h: 1063, caption: "흰 의상의 군무와 함께", en: { caption: "With a corps in white" } },
-        { img: "assets/img/photos/dsc0081.webp", w: 1063, h: 1600, caption: "쏟아지는 조명 아래, 스팽글 드레스", en: { caption: "A sequined dress under pouring light" } },
-        { img: "assets/img/photos/dsc9427.webp", w: 1600, h: 1063, caption: "원색의 무대, 폭발하는 에너지", en: { caption: "A vivid stage, explosive energy" } }
+        { img: "assets/img/photos/dsc0081.webp", w: 1063, h: 1600, caption: "쏟아지는 조명 아래, 스팽글 드레스", en: { caption: "A sequined dress under pouring light" } }
       ]
     },
     {
@@ -168,11 +152,7 @@ window.SITE_DATA = {
       en: { title: "Neon City Stage", place: "", desc: "Show name and year being confirmed. A live record on an LED cityscape stage." },
       place: "",
       desc: "도시의 불빛을 닮은 LED 무대. 그날의 실황 기록입니다.",
-      bg: "assets/img/photos/kakao21.webp",
-      photos: [
-        { img: "assets/img/photos/kakao21.webp", w: 1600, h: 1067, caption: "네온 조명의 대형 무대", en: { caption: "A large stage in neon light" } },
-        { img: "assets/img/photos/kakao22.webp", w: 1600, h: 1067, caption: "도시의 불빛을 닮은 무대 세트", en: { caption: "A stage set like city lights" } }
-      ]
+      photos: []
     }
   ],
 
