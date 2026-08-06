@@ -1615,12 +1615,8 @@ button.show-cell:hover .show-cta, button.show-cell:focus-visible .show-cta { col
   .main-nav .nav-mark { display: flex; justify-content: center; }
   .main-nav .nav-mark a { justify-content: center; }
 }
-.mark-goose { width: 30px; height: auto; display: block; }
-.nav-mark a::after { display: none !important; }
-.nav-mark a:hover { opacity: .75; }
 .show-mark svg { width: 40px; height: auto; display: block; margin: 0 auto; }
 @media (max-width: 1080px) {
-  .main-nav .nav-mark a { padding: 12px 0 !important; } .main-nav .mark-goose { width: 40px; }
 }
 
 /* 해밀학교: 가로 갤러리 (원본 비율, 전신) */
