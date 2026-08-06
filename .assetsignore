@@ -1,9 +1,0 @@
-# 웹에 올리지 않을 것. assets.directory 가 저장소 루트라서 필요하다.
-# (공개 저장소이므로 비밀이 새는 것은 아니고, 웹 주소로 노출될 이유가 없을 뿐이다)
-
-/.github
-/scripts
-/supabase
-/.gitignore
-/wrangler.jsonc
-/.assetsignore

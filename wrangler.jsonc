@@ -4,21 +4,22 @@
   // 이 저장소는 HTML·CSS·이미지가 곧 결과물이다 — 실행할 서버 코드가 없다.
   // 그래서 "main"(워커 스크립트) 없이 assets 만 선언한다.
   //
-  // Pages 로 만들려 했으나 Cloudflare 가 새 계정에서 Pages 생성 경로를 없앴다.
-  // Workers 정적 자산은 같은 일을 하고, 도메인도 여러 개 붙는다.
-  //
   // name 은 대시보드의 Project name 과 반드시 같아야 한다.
-  // 다르면 빌드는 A 로 만들고 배포는 B 로 가서 아무 일도 안 일어난 것처럼 보인다.
+  // 다르면 빌드는 A 로 만들고 배포는 B 로 가서, 화면상 성공했는데
+  // 실제로는 아무것도 안 올라간 것처럼 보인다.
   "name": "insooni-preview",
   "compatibility_date": "2026-08-06",
 
   "assets": {
-    "directory": "./",
+    // 저장소 루트가 아니라 dist/ 를 올린다.
+    // 루트로 두면 wrangler 가 .git 까지 읽어 31MB pack 파일에서 죽는다
+    // (자산 한도 25MB). scripts/build-dist.sh 가 올릴 것만 모은다.
+    "directory": "./dist",
 
     // 없는 주소로 들어오면 404.html 을 돌려준다.
     // SPA 가 아니다 — about.html, music.html 처럼 진짜 파일이 각각 있다.
-    // "single-page-application" 을 쓰면 모든 오타 주소가 index.html 을 띄워
-    // 검색엔진이 유령 페이지를 무한히 수집한다.
+    // "single-page-application" 을 쓰면 모든 오타 주소가 index.html 을
+    // 200 으로 돌려주어 검색엔진이 유령 페이지를 무한히 수집한다.
     "not_found_handling": "404-page"
   }
 }
