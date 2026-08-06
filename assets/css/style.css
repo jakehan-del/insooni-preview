@@ -3229,6 +3229,8 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
 .av-when { font-family: var(--font-mono); font-size: .82rem; color: var(--faint); line-height: 1.65; }
 .av-what { color: var(--muted); font-size: 1rem; line-height: 1.65; }
 .av-row.is-today .av-what { color: var(--ivory); }
+/* 표창 번호처럼 곁들이는 사실 — 본문보다 한 단계 물러나게 */
+.av-note { font-family: var(--font-mono); font-size: .78rem; color: var(--faint); margin-left: .5rem; }
 .av-today {
   display: inline-block; margin-left: .55rem; font-style: normal;
   font-family: var(--font-mono); font-size: .74rem; color: var(--gold);
@@ -3375,3 +3377,23 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
   .ov-rows li { grid-template-columns: 1fr; gap: .18rem; }
   .ov-src { text-align: left; }
 }
+
+
+/* ── 매니지먼트 ─────────────────────────────────────────────
+   명함의 세리프 워드마크를 그대로 가져온다. 색은 사이트의 것을 쓴다 —
+   버건디를 그대로 옮기면 어머니 페이지 위에 남의 브랜드가 얹힌다. */
+.agency { max-width: 34rem; }
+.agency-mark {
+  font-family: var(--font-display); letter-spacing: .26em;
+  font-size: 1.5rem; margin: 0 0 .5rem; color: var(--ivory);
+}
+.agency-name { margin: 0 0 1.3rem; color: var(--muted); font-size: .96rem; }
+.agency-lines { list-style: none; margin: 0; padding: 0; }
+.agency-lines li {
+  padding: .62rem 0; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: .95rem; line-height: 1.6;
+}
+.agency-lines li:first-child { border-top: 0; }
+.agency-lines a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--line); }
+.agency-lines a:hover { color: var(--ivory); }
+.agency-roster { margin: 1.4rem 0 0; font-size: .9rem; color: var(--faint); }

@@ -14,6 +14,8 @@ window.SITE_DATA = {
 
   /* ---------- 시각 아카이브 (실사진 확보 시 추가) ---------- */
   archive: [
+    { img: "assets/img/photos/portrait2025.webp", w: 642, h: 913, year: "2025", cat: "화보", caption: "2025년 공식 프로필 — 검은 턱시도", en: { caption: "Official 2025 portrait — black tuxedo" } },
+    { img: "assets/img/photos/editorial2025.webp", w: 643, h: 970, year: "2025", cat: "화보", caption: "2025년 공식 프로필 — 자주색 드레이프 드레스", en: { caption: "Official 2025 portrait — draped plum dress" } },
     { img: "assets/img/photos/kakao26.webp", w: 1600, h: 1067, year: "2024", cat: "화보", caption: "블랙 크롭 수트, 무대 뒤 안개 속에서" , en: { caption: "Black cropped suit, in the backstage haze" } },
     { img: "assets/img/photos/seasons-1.webp", w: 1281, h: 1600, year: "2024", cat: "화보", caption: "은빛 페인팅 재킷 — '더 시즌즈' 대기실에서 (2024. 12.)" , en: { caption: "Silver-painted jacket — backstage at 'The Seasons' (Dec 2024)" } },
     { img: "assets/img/photos/seasons-2.webp", w: 1277, h: 1600, year: "2024", cat: "화보", caption: "무대 직전의 프로필 — '더 시즌즈' 대기실에서 (2024. 12.)" , en: { caption: "A profile just before the stage — backstage at 'The Seasons' (Dec 2024)" } },
@@ -460,6 +462,43 @@ window.SITE_DATA = {
   ],
 
   /* ---------- 연혁 타임라인 (milestone: 굵은 표시 / 검증 완료 항목 중심) ---------- */
+  /* 수상·서훈 — 소속사(주식회사 소솝)가 2025년에 정리한 공식 프로필에서 그대로 옮긴다.
+     새 사실은 만들지 않았고, 표창 번호까지 원문 그대로다.
+     이 목록이 사이트에 없던 것이 이상했다 — 국민훈장 목련장은 대한민국이
+     한 사람의 공적에 주는 훈장이고, 대통령·국무총리 표창이 그 앞뒤에 있다. */
+  awards: [
+    { y: "2025", ko: "HMA 2024 인피니트 인스퍼레이션 아이콘", en: "HMA 2024 Infinite Inspiration Icon" },
+    { y: "2023", ko: "KBS 연예대상 신인상", en: "KBS Entertainment Awards — Rookie Award" },
+    { y: "2013", ko: "제6회 올해의 여성문화인상", en: "6th Woman of the Year in Culture" },
+    { y: "2009", ko: "제41회 대한민국문화예술상 대중예술부문상", en: "41st Korea Culture and Arts Award — Popular Arts" },
+    { y: "2009", ko: "대통령 표창", note: "제4113호", en: "Presidential Citation", enNote: "No. 4113" },
+    { y: "2005", ko: "KBS 가요대상 본상", en: "KBS Song Awards — Main Prize" },
+    { y: "1997", ko: "국민훈장 목련장", note: "제19866호", en: "Order of Civil Merit, Magnolia Medal", enNote: "No. 19866" },
+    { y: "1997", ko: "국무총리 표창", note: "제81568호", en: "Prime Minister's Citation", enNote: "No. 81568" }
+  ],
+
+  /* 펴낸 책 — 같은 프로필 출처 */
+  books: [
+    { y: "2024", ko: "안녕, 해나!", en: "Hello, Hanna!" },
+    { y: "2024", ko: "어떤 여행", en: "A Certain Journey" },
+    { y: "2013", ko: "딸에게", en: "To My Daughter" }
+  ],
+
+  /* 소속사 — 주식회사 소솝. 나중에 소속 아티스트가 늘면 artists 에 더한다.
+     대표번호와 회사 메일만 싣는다. 개인 휴대폰은 공개 사이트에 올리지 않는다. */
+  agency: {
+    name: "주식회사 소솝",
+    nameEn: "SOSOB Inc.",
+    mark: "SOSOB",
+    addr: "서울시 광진구 천호대로101길 11, 영진빌딩 6층",
+    addrEn: "6F Yeongjin Bldg, 11 Cheonho-daero 101-gil, Gwangjin-gu, Seoul",
+    tel: "070-8713-9555",
+    email: "sosob7@naver.com",
+    artists: [
+      { name: "인순이", en: "INSOONI", href: "/", current: true }
+    ]
+  },
+
   timeline: [
     { year: "1957", event: "4월 5일 출생 (본명 김인순)", note: "", en: { event: "Born Kim In-soon, April 5" } },
     { year: "1978", event: "걸그룹 '희자매'로 데뷔", note: "타이틀곡 '실버들' TBC 가요차트 7주 1위", milestone: true, en: { event: "Debut with the trio Hee Sisters", note: "'Silvers' topped the TBC chart for 7 weeks" } },

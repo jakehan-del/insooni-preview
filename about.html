@@ -17,10 +17,10 @@
 <meta name="description" content="1978년 데뷔부터 오늘까지. 인순이의 삶과 음악, 해밀학교 이야기를 타임라인으로 만나보세요.">
 <!-- 본문 글꼴은 먼저 확실히 깐다(미뤄 봤지만 첫 화면이 빨라지지 않았다).
      제목용 서체는 화면이 뜬 뒤 들어온다 — font-display:swap이라 늦어도 글자는 보인다. -->
-<link rel="stylesheet" href="assets/fonts/body.css?v46c9060f">
-<link rel="stylesheet" href="assets/fonts/display.css?v46c9060f" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/fonts/display.css?v46c9060f"></noscript>
-<link rel="stylesheet" href="assets/css/style.min.css?v46c9060f">
+<link rel="stylesheet" href="assets/fonts/body.css?v282658ba">
+<link rel="stylesheet" href="assets/fonts/display.css?v282658ba" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?v282658ba"></noscript>
+<link rel="stylesheet" href="assets/css/style.min.css?v282658ba">
 <link rel="canonical" href="https://insooni.com/about">
 <meta property="og:url" content="https://insooni.com/about">
 <meta property="og:type" content="profile">
@@ -133,7 +133,7 @@
       </div>
       <div class="grid grid--3">
         <div class="card">
-          <div class="thumb"><img src="assets/img/photos/woi-award.webp" alt="펄벅 인터내셔널 '올해의 여성상' 시상 순간" data-i18n-alt="alt.24" style="width:100%;height:100%;object-fit:cover;object-position:center 20%" loading="lazy" width="1074" height="1542"></div>
+          <div class="thumb"><img src="assets/img/photos/woi-award.webp" alt="펄벅 인터내셔널 '올해의 여성상' 시상 순간" data-i18n-alt="alt.24" style="width:100%;height:100%;object-fit:cover;object-position:center 20%" loading="lazy" width="590" height="848"></div>
           <div class="card-body">
             <h3 data-i18n="mom.woiT">Woman of Influence 2025</h3>
             <p class="card-desc" data-i18n="mom.woi">펄벅 인터내셔널 '올해의 여성상'. 노래와 나눔이 함께 만든 자리입니다.</p>
@@ -154,9 +154,46 @@
           </div>
         </div>
       </div>
-      <!-- 운영 메모: 수상 기록·주요 순간 전체 목록은 공식 자료 확인 후 이 섹션에 연도별로 정리됩니다. [공식 수상 기록 필요] -->
     </div>
   </section>
+
+    <!-- ── 수상과 서훈 ─────────────────────────────────────────────
+         소속사(주식회사 소솝)가 2025년에 정리한 공식 프로필에서 그대로 옮겼다.
+         표창 번호까지 원문 그대로다. 새 사실은 만들지 않았다.
+         목록은 data.js 의 awards 에서 나온다 — 여기 하드코딩하지 않는다. -->
+    <section class="section section--band" aria-labelledby="h-awards">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="h-awards" data-i18n="about.awardsH">수상과 서훈</h2>
+        </div>
+        <ul class="anniv-rows" id="awards-rows"></ul>
+      </div>
+    </section>
+
+    <!-- ── 펴낸 책 ────────────────────────────────────────────── -->
+    <section class="section" aria-labelledby="h-books">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="h-books" data-i18n="about.booksH">펴낸 책</h2>
+        </div>
+        <ul class="anniv-rows" id="books-rows"></ul>
+      </div>
+    </section>
+
+    <!-- ── 매니지먼트 ───────────────────────────────────────────
+         주식회사 소솝. 내용은 data.js 의 agency 에서 나온다.
+         소속 아티스트가 늘면 agency.artists 에 더하면 여기 자동으로 붙는다.
+         대표번호와 회사 메일만 싣는다 — 개인 휴대폰은 공개 사이트에 올리지 않는다. -->
+    <section class="section" id="agency" aria-labelledby="h-agency">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="h-agency" data-i18n="about.agencyH">매니지먼트</h2>
+        </div>
+        <div id="agency-card"></div>
+      </div>
+    </section>
+
+
 </main>
 
 <footer class="footer-min">
@@ -171,22 +208,23 @@
     <a href="https://www.instagram.com/ins00ni/" target="_blank" rel="noopener">Instagram</a>
     <a href="privacy.html" data-i18n="nav.privacy">개인정보처리방침</a>
     <a href="terms.html" data-i18n="nav.terms">이용약관</a>
+        <a href="about.html#agency" data-i18n="nav.agency">매니지먼트</a>
     <span>© 2026 INSOONI</span>
   </nav>
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동" data-i18n-aria="aria.toTop">↑</button>
-<script src="assets/js/config.js?v46c9060f" defer></script>
-<script src="assets/js/backend.js?v46c9060f" defer></script>
-<script src="assets/js/i18n.min.js?v46c9060f" defer></script>
-<script src="assets/js/data.min.js?v46c9060f" defer></script>
-<script src="assets/js/tracklinks.min.js?v46c9060f" defer></script>
-<script src="assets/js/albums-full.min.js?v46c9060f" defer></script>
-<script src="assets/js/albums-en.min.js?v46c9060f" defer></script>
-<script src="assets/js/song-moods.min.js?v46c9060f" defer></script>
-<script src="assets/js/main.min.js?v46c9060f" defer></script>
-<script src="assets/js/motion.min.js?v46c9060f" defer></script>
-<script src="assets/js/router.min.js?v46c9060f" defer></script>
-<script src="assets/js/deck.min.js?v46c9060f" defer></script>
+<script src="assets/js/config.js?v282658ba" defer></script>
+<script src="assets/js/backend.js?v282658ba" defer></script>
+<script src="assets/js/i18n.min.js?v282658ba" defer></script>
+<script src="assets/js/data.min.js?v282658ba" defer></script>
+<script src="assets/js/tracklinks.min.js?v282658ba" defer></script>
+<script src="assets/js/albums-full.min.js?v282658ba" defer></script>
+<script src="assets/js/albums-en.min.js?v282658ba" defer></script>
+<script src="assets/js/song-moods.min.js?v282658ba" defer></script>
+<script src="assets/js/main.min.js?v282658ba" defer></script>
+<script src="assets/js/motion.min.js?v282658ba" defer></script>
+<script src="assets/js/router.min.js?v282658ba" defer></script>
+<script src="assets/js/deck.min.js?v282658ba" defer></script>
 </body>
 </html>

@@ -2290,6 +2290,58 @@
     if (sec && sec.scrollIntoView) sec.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
+  /* ---------- 수상과 서훈 · 펴낸 책 (이야기 페이지) ----------
+     소속사가 2025년에 정리한 공식 프로필이 출처다. 표창 번호까지 원문 그대로다.
+     목록 스타일은 사랑방에서 걷어낸 「인순이의 날들」의 것을 그대로 쓴다 —
+     연도와 내용 두 칸이라 구조가 같다. */
+  function renderRecordList(id, rows, fmt) {
+    var el = $("#" + id);
+    if (!el || !rows || !rows.length) return;
+    var en = document.documentElement.lang === "en";
+    el.innerHTML = rows.map(function (r) {
+      var what = en ? (r.en || r.ko) : r.ko;
+      var note = en ? (r.enNote || "") : (r.note || "");
+      return '<li class="av-row"><span class="av-when">' + esc(r.y) + '</span>' +
+             '<span class="av-what">' + esc(what) +
+             (note ? ' <span class="av-note">' + esc(note) + '</span>' : '') +
+             '</span></li>';
+    }).join("");
+  }
+
+  function initRecords() {
+    renderRecordList("awards-rows", D.awards);
+    renderRecordList("books-rows", D.books);
+  }
+  (window.INSOONI_PAGE_INIT = window.INSOONI_PAGE_INIT || []).push(initRecords);
+  initRecords();
+
+  /* ---------- 매니지먼트 (이야기 페이지) ----------
+     소속 아티스트가 늘면 data.js 의 agency.artists 에 더하면 된다.
+     개인 휴대폰은 데이터에 아예 넣지 않았다 — 없는 것은 샐 수 없다. */
+  function initAgency() {
+    var el = $("#agency-card"), a = D.agency;
+    if (!el || !a) return;
+    var en = document.documentElement.lang === "en";
+    var others = (a.artists || []).filter(function (x) { return !x.current; });
+    el.innerHTML =
+      '<div class="agency">' +
+        '<p class="agency-mark">' + esc(a.mark) + '</p>' +
+        '<p class="agency-name">' + esc(en ? a.nameEn : a.name) + '</p>' +
+        '<ul class="agency-lines">' +
+          '<li>' + esc(en ? a.addrEn : a.addr) + '</li>' +
+          '<li><a href="tel:' + esc(a.tel.replace(/-/g, "")) + '">' + esc(a.tel) + '</a></li>' +
+          '<li><a href="mailto:' + esc(a.email) + '">' + esc(a.email) + '</a></li>' +
+        '</ul>' +
+        (others.length
+          ? '<p class="agency-roster">' + others.map(function (x) {
+              return '<a href="' + esc(x.href) + '">' + esc(en ? x.en : x.name) + '</a>';
+            }).join(" · ") + '</p>'
+          : '') +
+      '</div>';
+  }
+  (window.INSOONI_PAGE_INIT = window.INSOONI_PAGE_INIT || []).push(initAgency);
+  initAgency();
+
   /* ---------- 1979년부터의 기록 (아카이브 페이지) ----------
      insooni.com 은 2010년 플래시 사이트다. 플래시가 2020년 12월에 끝나면서
      서버는 살아 있는데 아무도 볼 수 없는 상태가 됐다. 그 안의 것을 여기로 옮겼다.
