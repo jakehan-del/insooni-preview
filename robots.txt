@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin.html
 Disallow: /404.html
-Sitemap: https://jakehan-del.github.io/insooni-preview/sitemap.xml
+Sitemap: https://insooni.com/sitemap.xml
