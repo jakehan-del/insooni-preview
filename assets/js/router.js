@@ -19,12 +19,21 @@
     return url.origin === location.origin && /\.html$|\/$/.test(url.pathname);
   }
 
+  /* 확장자를 떼고 비교한다.
+     호스팅(Cloudflare)이 /about.html 을 /about 으로 넘겨보내므로, 주소창으로
+     직접 열린 페이지의 pathname 에는 .html 이 없다. 반면 헤더 링크는 여전히
+     "about.html" 이다(라우터가 .html 만 가로채기 때문에 그대로 둔다).
+     그냥 비교하면 직접 열린 페이지에서 현재 메뉴 표시가 하나도 안 켜진다. */
+  function norm(s) {
+    return (s || "").replace(/\.html$/, "") || "index";
+  }
+
   function setActive(path) {
-    var file = path.split("/").pop() || "index.html";
+    var file = norm(path.split("/").pop() || "index.html");
     document.querySelectorAll(".site-header a[href]").forEach(function (a) {
       var href = a.getAttribute("href");
       if (!href || href.indexOf("http") === 0) return;
-      if (href === file) a.setAttribute("aria-current", "page");
+      if (norm(href) === file) a.setAttribute("aria-current", "page");
       else a.removeAttribute("aria-current");
     });
   }

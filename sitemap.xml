@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://insooni.com/</loc><priority>1.0</priority></url>
-  <url><loc>https://insooni.com/about.html</loc><priority>0.8</priority></url>
-  <url><loc>https://insooni.com/music.html</loc><priority>0.8</priority></url>
-  <url><loc>https://insooni.com/schedule.html</loc><priority>0.8</priority></url>
-  <url><loc>https://insooni.com/news.html</loc><priority>0.8</priority></url>
-  <url><loc>https://insooni.com/archive.html</loc><priority>0.8</priority></url>
-  <url><loc>https://insooni.com/community.html</loc><priority>0.8</priority></url>
-  <url><loc>https://insooni.com/haemil.html</loc><priority>0.8</priority></url>
-  <url><loc>https://insooni.com/privacy.html</loc><priority>0.4</priority></url>
-  <url><loc>https://insooni.com/terms.html</loc><priority>0.4</priority></url>
+  <url><loc>https://insooni.com/about</loc><priority>0.8</priority></url>
+  <url><loc>https://insooni.com/music</loc><priority>0.8</priority></url>
+  <url><loc>https://insooni.com/schedule</loc><priority>0.8</priority></url>
+  <url><loc>https://insooni.com/news</loc><priority>0.8</priority></url>
+  <url><loc>https://insooni.com/archive</loc><priority>0.8</priority></url>
+  <url><loc>https://insooni.com/community</loc><priority>0.8</priority></url>
+  <url><loc>https://insooni.com/haemil</loc><priority>0.8</priority></url>
+  <url><loc>https://insooni.com/privacy</loc><priority>0.4</priority></url>
+  <url><loc>https://insooni.com/terms</loc><priority>0.4</priority></url>
 </urlset>

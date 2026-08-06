@@ -130,6 +130,37 @@ def restamp_site_url():
     print("  배포 주소 %s (%d개 파일 갱신)" % (base, changed))
 
 
+def restamp_clean_urls():
+    """canonical·og:url·sitemap 을 실제로 서빙되는 주소에 맞춘다.
+
+    Cloudflare 정적 자산은 /about.html 요청을 /about 으로 307 넘겨보낸다
+    (html_handling 기본값). 그래서 canonical 이 .html 을 가리키면 신호가 원을 그린다 —
+    구글이 /about.html 을 크롤 → 307 로 /about 도착 → 그 페이지가 "진짜 주소는
+    /about.html" 이라고 주장 → 다시 307. 어느 쪽이 정본인지 결론이 안 난다.
+
+    링크(href="about.html")는 일부러 건드리지 않는다. router.js 의 internal() 이
+    .html 로 끝나는 주소만 가로채서 <main> 만 갈아끼우기 때문이다. 확장자를 떼면
+    페이지 전환이 통째로 죽고 라디오가 매 이동마다 끊긴다 — 눈에 안 보이는 회귀다.
+    링크는 307 을 한 번 거치지만 그 리다이렉트는 엣지에서 끝난다.
+
+    절대주소 .html 은 <head> 메타와 sitemap 에만 있다(본문 0건, 실측 확인).
+    """
+    base = SITE_URL.rstrip("/")
+    esc = re.escape(base)
+    targets = sorted(glob.glob(os.path.join(ROOT, "*.html")))
+    targets += [os.path.join(ROOT, "sitemap.xml")]
+    changed = 0
+    for f in targets:
+        if not os.path.exists(f):
+            continue
+        src = io.open(f, encoding="utf-8").read()
+        out = re.sub(esc + r"/index\.html\b", base + "/", src)
+        out = re.sub(esc + r"/([a-z0-9-]+)\.html\b", base + r"/\1", out)
+        if out != src:
+            io.open(f, "w", encoding="utf-8").write(out)
+            changed += 1
+    print("  정본 주소 확장자 정리 (%d개 파일)" % changed)
+
 
 def restamp_cache_bust():
     """캐시 무효화 값을 내용 해시로 바꾼다.
@@ -165,6 +196,7 @@ def restamp_cache_bust():
 
 def run():
     restamp_site_url()
+    restamp_clean_urls()
     split_fonts()
     made = []
     css = os.path.join(ROOT, "assets/css/style.css")
