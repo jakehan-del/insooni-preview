@@ -1,25 +1,52 @@
 {
   // Cloudflare Workers 정적 자산 배포 설정.
   //
-  // 이 저장소는 HTML·CSS·이미지가 곧 결과물이다 — 실행할 서버 코드가 없다.
-  // 그래서 "main"(워커 스크립트) 없이 assets 만 선언한다.
-  //
   // name 은 대시보드의 Project name 과 반드시 같아야 한다.
   // 다르면 빌드는 A 로 만들고 배포는 B 로 가서, 화면상 성공했는데
   // 실제로는 아무것도 안 올라간 것처럼 보인다.
   "name": "insooni-preview",
   "compatibility_date": "2026-08-06",
 
+  // http → https 강제. zone 설정 "Always Use HTTPS" 가 Worker 커스텀
+  // 도메인에서 동작하지 않아 직접 처리한다(worker.js 주석에 실측 근거).
+  "main": "./worker.js",
+
   "assets": {
     // 저장소 루트가 아니라 dist/ 를 올린다.
     // 루트로 두면 wrangler 가 .git 까지 읽어 31MB pack 파일에서 죽는다
     // (자산 한도 25MB). scripts/build-dist.sh 가 올릴 것만 모은다.
     "directory": "./dist",
+    "binding": "ASSETS",
 
     // 없는 주소로 들어오면 404.html 을 돌려준다.
     // SPA 가 아니다 — about.html, music.html 처럼 진짜 파일이 각각 있다.
     // "single-page-application" 을 쓰면 모든 오타 주소가 index.html 을
     // 200 으로 돌려주어 검색엔진이 유령 페이지를 무한히 수집한다.
-    "not_found_handling": "404-page"
+    "not_found_handling": "404-page",
+
+    // 문서 주소만 Worker 를 먼저 거친다.
+    //
+    // true 로 두면 이미지·CSS·폰트까지 전부 Worker 를 통과해 요청 수가
+    // 페이지당 30배가 된다(무료 한도 10만/일). 정적 자산 요청은 Worker 를
+    // 거치지 않으면 무료다. 그래서 문서만 골라 넣는다 — 페이지 조회 1건당
+    // Worker 요청 1건.
+    //
+    // 자산은 어차피 리다이렉트가 필요 없다. http 로 들어온 문서가 먼저
+    // https 로 올라가면, 그 문서가 부르는 자산도 https 로 따라온다.
+    "run_worker_first": [
+      "/",
+      "/*.html",
+      "/about",
+      "/music",
+      "/schedule",
+      "/news",
+      "/archive",
+      "/community",
+      "/haemil",
+      "/privacy",
+      "/terms",
+      "/robots.txt",
+      "/sitemap.xml"
+    ]
   }
 }
