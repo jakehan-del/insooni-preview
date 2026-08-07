@@ -20,10 +20,10 @@
 <meta name="twitter:card" content="summary_large_image">
 <!-- 본문 글꼴은 먼저 확실히 깐다(미뤄 봤지만 첫 화면이 빨라지지 않았다).
      제목용 서체는 화면이 뜬 뒤 들어온다 — font-display:swap이라 늦어도 글자는 보인다. -->
-<link rel="stylesheet" href="assets/fonts/body.css?v31730d1b">
-<link rel="stylesheet" href="assets/fonts/display.css?v31730d1b" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/fonts/display.css?v31730d1b"></noscript>
-<link rel="stylesheet" href="assets/css/style.min.css?v31730d1b">
+<link rel="stylesheet" href="assets/fonts/body.css?v61e6454a">
+<link rel="stylesheet" href="assets/fonts/display.css?v61e6454a" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?v61e6454a"></noscript>
+<link rel="stylesheet" href="assets/css/style.min.css?v61e6454a">
 <link rel="canonical" href="https://insooni.com/">
 <meta property="og:url" content="https://insooni.com/">
 <meta property="og:type" content="website">
@@ -42,12 +42,13 @@
 <a class="skip-link" href="#main" data-i18n="nav.skip">본문 바로가기</a>
 
 <!-- 입장 로더: 시대별 사진이 층층이 벗겨지는 액션 (세션당 1회) -->
+<link rel="preload" as="image" href="assets/img/goose-handoff.webp">
 <div class="loader" id="loader" aria-hidden="true">
       <!-- 거위의 꿈 —
-           쉬고 있는 거위가 어둠에서 떠오르고("나는 오리였어요"),
-           무대 조명 한 줄기가 스쳐 지나간 뒤,
-           날아오르며 금빛 잔상을 남기고 사이트가 열린다("꼭 백조같은 꿈").
-           총 2.1초. 같은 세션에서는 한 번만. -->
+           어둠 속에 웅크린 거위에게 빛 한 줄기가 스친다. 거위가 날아오르고,
+           화면 왼쪽 위로 활공해 멈춘다. 거기서부터는 main.js 가 이어받아
+           헤더 상표 자리에 내려앉힌다 — 거위가 이 사이트의 이름이 된다.
+           영상 3.6초 + 착지 0.82초. 새로고침할 때마다 재생한다. -->
       <video class="ld-film" id="ld-film" src="assets/media/intro-goose.mp4" autoplay muted playsinline preload="auto" aria-hidden="true"></video>
     </div>
 
@@ -137,17 +138,17 @@
   </nav>
 </footer>
 
-<script src="assets/js/config.js?v31730d1b" defer></script>
-<script src="assets/js/backend.js?v31730d1b" defer></script>
-<script src="assets/js/i18n.min.js?v31730d1b" defer></script>
-<script src="assets/js/data.min.js?v31730d1b" defer></script>
-<script src="assets/js/tracklinks.min.js?v31730d1b" defer></script>
-<script src="assets/js/albums-full.min.js?v31730d1b" defer></script>
-<script src="assets/js/albums-en.min.js?v31730d1b" defer></script>
-<script src="assets/js/song-moods.min.js?v31730d1b" defer></script>
-<script src="assets/js/main.min.js?v31730d1b" defer></script>
-<script src="assets/js/motion.min.js?v31730d1b" defer></script>
-<script src="assets/js/router.min.js?v31730d1b" defer></script>
-<script src="assets/js/deck.min.js?v31730d1b" defer></script>
+<script src="assets/js/config.js?v61e6454a" defer></script>
+<script src="assets/js/backend.js?v61e6454a" defer></script>
+<script src="assets/js/i18n.min.js?v61e6454a" defer></script>
+<script src="assets/js/data.min.js?v61e6454a" defer></script>
+<script src="assets/js/tracklinks.min.js?v61e6454a" defer></script>
+<script src="assets/js/albums-full.min.js?v61e6454a" defer></script>
+<script src="assets/js/albums-en.min.js?v61e6454a" defer></script>
+<script src="assets/js/song-moods.min.js?v61e6454a" defer></script>
+<script src="assets/js/main.min.js?v61e6454a" defer></script>
+<script src="assets/js/motion.min.js?v61e6454a" defer></script>
+<script src="assets/js/router.min.js?v61e6454a" defer></script>
+<script src="assets/js/deck.min.js?v61e6454a" defer></script>
 </body>
 </html>

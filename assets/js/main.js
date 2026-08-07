@@ -3040,26 +3040,126 @@
     });
   }
 
-  /* ---------- 홈 입장 로더: 사진이 층층이 벗겨지는 액션 (세션당 1회) ---------- */
+  /* ---------- 도입부: 거위가 어둠에서 날아올라 상표가 된다 ----------
+
+     영상(3.6초)이 어둠~활공까지 하고, 마지막 착지는 여기서 이어받는다.
+     왜 나누나 — 영상은 화면 좌표를 모른다. 창이 얼마나 넓은지, 헤더 상표가
+     어디 있는지는 영상을 렌더링할 때 존재하지 않는 정보다. 그래서 "로고 자리에
+     내려앉는다"는 영상 안에서 원리적으로 불가능하다.
+
+     이음매가 안 보이려면 인수인계 순간 두 그림이 같은 자리·같은 크기·같은
+     픽셀이어야 한다. 그래서 이어받을 그림(goose-handoff.webp)을 영상과 똑같은
+     처리를 거쳐 잘라 두었고, 아래 LAND 는 scripts/build-intro-video.py 가
+     출력하는 값이다. 둘이 어긋나면 바뀌는 순간 거위가 튄다 —
+     영상을 다시 만들면 출력된 값을 여기에 옮겨야 한다. */
+  var LAND = { nx: 0.21667, ny: 0.18236, nw: 0.11653, nh: 0.11667 };
+  var LAND_AT = 3480;   /* 영상 3.6초 중, 거위가 착지점에서 거의 멈춘 뒤 */
+  var FLIGHT = 820;     /* 상표 자리까지 — style.css 의 .ld-land.fly 와 같아야 한다 */
+
   function initLoader() {
     var box = $("#loader");
     if (!box) return;
     /* 모션을 줄이기로 한 사람에게는 연출을 하지 않는다 */
-    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      box.remove(); return;
+    }
     /* 새로고침할 때마다 재생한다(형님 지시).
-       한 번만 틀지 말지는 취향의 문제지만, 길이는 아니다 —
-       옛 사진 로더는 4~5초였고 그건 매번 보기엔 길었다. 지금은 3.2초다.
        페이지 사이 이동은 라우터가 <main> 만 갈아끼우므로 이 함수가 다시 돌지 않는다.
        즉 '진짜로 새로 열거나 새로고침했을 때'만 보인다. */
-    if (reduce) { box.remove(); return; }
+    var root = document.documentElement;
+    var film = document.getElementById("ld-film");
+    var brand = document.querySelector(".site-header .brand-mark");
+    var shown = false;
 
-    document.documentElement.classList.add("is-intro");
-    /* 영상 3.2초 — 마지막 0.25초는 이미 비어 있어 먼저 걷는다 — 여기 숫자를 바꾸면 CSS 도 함께 봐야 한다 */
-    setTimeout(function () { box.classList.add("done"); }, 3150);
+    root.classList.add("is-intro");
+
+    /* 무슨 일이 있어도 헤더는 돌아온다. 영상이 안 뜨든, 착지 계산이 틀리든,
+       중간에 예외가 나든 — 사이트가 머리 없이 남는 것이 이 연출의 유일한 진짜
+       사고다. 연출은 실패해도 되지만 사이트는 아니다. */
+    function reveal() {
+      if (shown) return;
+      shown = true;
+      root.classList.remove("is-intro");
+      box.classList.add("done");
+      setTimeout(function () { if (box.parentNode) box.remove(); }, 900);
+    }
+    var safety = setTimeout(reveal, 6200);
+    if (film) film.addEventListener("error", function () { clearTimeout(safety); reveal(); });
+
     setTimeout(function () {
-      if (box.parentNode) box.remove();
-      document.documentElement.classList.remove("is-intro");
-    }, 3620);
+      if (shown) return;
+      var ok = false;
+      try {
+        ok = film && brand && land(film, brand, box, reveal, safety);
+      } catch (e) { ok = false; }
+      if (!ok) { clearTimeout(safety); reveal(); }   /* 착지가 안 되면 그냥 연다 */
+    }, LAND_AT);
+  }
+
+  /* 영상이 멈춘 그 자리에서, 헤더 상표의 실제 좌표까지 날아가 내려앉는다. */
+  function land(film, brand, box, reveal, safety) {
+    var vb = film.getBoundingClientRect();
+    var br = brand.getBoundingClientRect();
+    if (!vb.width || !br.width) return false;
+
+    /* object-fit: contain + 1:1 영상 → 실제로 그려지는 것은 min(w,h) 정사각형이
+       가운데 놓인 것. 이 계산이 가능한 것이 contain 을 고른 진짜 이유다.
+       cover 였다면 잘려 나간 양을 알 수 없어 거위가 화면 어디 있는지 짚지 못한다. */
+    var side = Math.min(vb.width, vb.height);
+    var ox = vb.left + (vb.width - side) / 2;
+    var oy = vb.top + (vb.height - side) / 2;
+
+    /* 도착 상자는 상표를 '감싸는' 정사각형이다. 상표 비율(114x66)로 좁히면
+       거의 정사각형인 거위 그림이 눌린다. 정사각형으로 두면 SVG 의 기본
+       가운데 맞춤이 (side-높이)/2 만큼 내려 앉혀서 진짜 상표와 정확히 겹친다. */
+    var s1 = br.width;
+    var fly = document.createElement("div");
+    fly.className = "ld-land";
+    fly.setAttribute("aria-hidden", "true");
+    var bird = new Image();
+    bird.alt = "";
+    bird.src = "assets/img/goose-handoff.webp";
+    fly.appendChild(bird);
+    var mark = brand.cloneNode(true);      /* 진짜 상표를 복제한다 — 모양이 어긋날 수 없다 */
+    mark.removeAttribute("class");
+    fly.appendChild(mark);
+    document.body.appendChild(fly);
+
+    fly.style.left = (ox + LAND.nx * side) + "px";
+    fly.style.top = (oy + LAND.ny * side) + "px";
+    fly.style.width = (LAND.nw * side) + "px";
+    fly.style.height = (LAND.nh * side) + "px";
+    fly.style.opacity = "1";
+
+    /* rAF 두 번. 한 번만 하면 브라우저가 시작값과 도착값을 한 프레임에서
+       함께 보고 전환을 건너뛴다 — 거위가 순간이동한다. */
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        fly.classList.add("fly");
+        fly.style.left = br.left + "px";
+        fly.style.top = (br.top + br.height / 2 - s1 / 2) + "px";
+        fly.style.width = s1 + "px";
+        fly.style.height = s1 + "px";
+        /* 영상만 먼저 지운다. 안 그러면 날아간 뒤에도 영상 속 거위가 출발점에
+           그대로 남아 두 마리로 보인다 — 실제로 그렇게 보였다.
+           지우는 순간 그 자리를 똑같은 그림이 덮고 있으므로 아무 일도 안 일어난 것처럼
+           보인다. 어둠(배경)은 그대로 두고 조금 뒤에 따로 걷는다. */
+        film.style.transition = "opacity .12s linear";
+        film.style.opacity = "0";
+        box.classList.add("done");                        /* 어둠이 걷힌다 */
+        /* 날아가는 중에 그림 거위가 선 그림으로 바뀐다. 작고 빠르게 움직이는
+           동안이라 형태가 바뀌는 것이 변신으로 읽힌다. */
+        setTimeout(function () { fly.classList.add("marked"); }, FLIGHT * 0.44);
+      });
+    });
+
+    setTimeout(function () {
+      clearTimeout(safety);
+      reveal();                                           /* 진짜 상표가 켜진다 */
+      fly.classList.add("gone");                          /* 같은 자리·같은 모양이라 안 보인다 */
+      setTimeout(function () { if (fly.parentNode) fly.parentNode.removeChild(fly); }, 520);
+    }, FLIGHT);
+    return true;
   }
 
   /* ---------- 홈 무한 가로 필름스트립 (드래그·휠·키보드, 이음매 없는 루프) ---------- */
