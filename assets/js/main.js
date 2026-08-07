@@ -3055,12 +3055,12 @@
     try { sessionStorage.setItem(SEEN, "1"); } catch (e) {}
 
     document.documentElement.classList.add("is-intro");
-    /* CSS 타임라인 합계 2.7초 — 여기 숫자를 바꾸면 CSS 도 함께 봐야 한다 */
-    setTimeout(function () { box.classList.add("done"); }, 2700);
+    /* 영상 3.2초 — 마지막 0.25초는 이미 비어 있어 먼저 걷는다 — 여기 숫자를 바꾸면 CSS 도 함께 봐야 한다 */
+    setTimeout(function () { box.classList.add("done"); }, 2950);
     setTimeout(function () {
       if (box.parentNode) box.remove();
       document.documentElement.classList.remove("is-intro");
-    }, 3260);
+    }, 3520);
   }
 
   /* ---------- 홈 무한 가로 필름스트립 (드래그·휠·키보드, 이음매 없는 루프) ---------- */

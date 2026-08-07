@@ -3423,67 +3423,22 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
 
 
 /* ══ 거위의 꿈 — 입장 ══════════════════════════════════════
-   한 마리가 쉬고 있다가 날개를 펴고 날아오른다. 같은 손으로 그린 같은 거위다.
-   전에는 그림이 떴다가 전혀 다른 평면 도형이 날아갔다 — 그건 영화가 아니었다.
+   3.2초짜리 영상 한 편. scripts/build-intro-video.py 가 만든다 —
+   같은 화풍으로 그린 세 자세(쉼·날개 아래·날개 위)를 셀 애니메이션처럼
+   툭툭 넘겨 날갯짓을 만들었다. 자세를 길게 겹치면 거위가 두 마리로 보인다.
 
-   1) 어둠에서 떠오른다        "나는 오리였어요"       0 ~ 1.05s
-   2) 무대 조명이 스친다        빛이 그녀를 찾는다      0.62 ~ 1.6s
-   3) 날개를 편다 (겹쳐 바뀜)                          1.15 ~ 1.75s
-   4) 날아오른다 · 금빛 잔상                           1.5 ~ 2.7s
-   5) 사이트가 열린다                                  2.7 ~ 3.1s
+   전에는 그림 두 장을 CSS 로 겹쳐 바꿨는데 날갯짓이 없어 "갑자기 바뀌는" 것이었다.
    ══════════════════════════════════════════════════════ */
 .loader {
   position: fixed; inset: 0; z-index: 9999; background: #0B0B0B;
   display: grid; place-items: center; overflow: hidden;
-  /* 옛 로더의 loader-safety 애니메이션이 살아 있어 이 화면을 숨기고 있었다.
-     마크업은 지웠는데 CSS 를 안 지운 탓이다. 잔재가 또 생겨도 못 건드리게 못박는다. */
+  /* 옛 로더의 loader-safety 애니메이션이 이 화면을 숨긴 적이 있다. 못박아 둔다. */
   animation: none; opacity: 1; visibility: visible; pointer-events: auto;
-  transition: opacity .44s ease, visibility 0s linear .5s;
+  transition: opacity .42s ease, visibility 0s linear .5s;
 }
 .loader.done { opacity: 0; visibility: hidden; pointer-events: none; }
-.ld-stage { position: relative; width: min(52vmin, 400px); aspect-ratio: 1; }
-.ld-emblem, .ld-flight {
-  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
+.ld-film {
+  width: min(74vmin, 560px); height: auto; display: block;
+  /* 영상 배경(#0B0B0B)과 화면이 같은 색이라 경계가 보이지 않는다 */
 }
-
-/* 1) 쉬는 거위 — 어둠에서 떠올랐다가, 날개를 펼 때 사라진다 */
-.ld-emblem { opacity: 0; animation: ld-rest 1.9s cubic-bezier(.22,.61,.36,1) forwards; }
-@keyframes ld-rest {
-  0%   { opacity: 0; transform: scale(1.07); filter: blur(10px); }
-  38%  { opacity: 1; transform: scale(1);    filter: blur(0); }
-  62%  { opacity: 1; transform: scale(1.02); }
-  92%  { opacity: 0; transform: scale(1.08); filter: blur(3px); }
-  100% { opacity: 0; }
-}
-
-/* 2) 무대 조명 — 빛이 그녀를 찾는다 */
-.ld-sweep {
-  position: absolute; inset: -20% -60%; pointer-events: none; opacity: 0;
-  background: linear-gradient(105deg, transparent 42%,
-              rgba(212,175,55,.14) 49%, rgba(255,252,245,.34) 51%,
-              rgba(212,175,55,.14) 53%, transparent 60%);
-  transform: translateX(-64%);
-  animation: ld-sweep .98s cubic-bezier(.4,0,.2,1) .62s forwards;
-}
-@keyframes ld-sweep {
-  0% { opacity: 0; transform: translateX(-64%); }
-  24% { opacity: 1; } 100% { opacity: 0; transform: translateX(64%); }
-}
-
-/* 3~4) 날개를 펴고 날아오른다 — 같은 거위가 이어받는다 */
-.ld-flight { opacity: 0; transform-origin: 42% 62%;
-  animation: ld-flight 1.55s cubic-bezier(.34,.02,.24,1) 1.15s forwards; }
-@keyframes ld-flight {
-  0%   { opacity: 0; transform: translate(0,0) scale(.94) rotate(-1deg); filter: blur(4px); }
-  22%  { opacity: 1; transform: translate(2%,-3%) scale(1) rotate(0deg); filter: blur(0); }
-  55%  { transform: translate(26%,-38%) scale(.86) rotate(-5deg);
-         filter: drop-shadow(-18px 15px 13px rgba(212,175,55,.32))
-                 drop-shadow(-40px 32px 24px rgba(212,175,55,.15)); }
-  100% { opacity: 0; transform: translate(86%,-124%) scale(.52) rotate(-11deg);
-         filter: drop-shadow(-14px 12px 10px rgba(212,175,55,.14)); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ld-emblem, .ld-sweep, .ld-flight { animation: none; }
-  .ld-emblem { opacity: 1; } .ld-sweep, .ld-flight { display: none; }
-}
+@media (prefers-reduced-motion: reduce) { .loader { display: none; } }
