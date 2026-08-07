@@ -1257,7 +1257,6 @@ body.home .footer-min nav span { pointer-events: auto; }
 body.home .footer-min nav { justify-content: center; padding-bottom: .6rem; padding-top: 2.2rem; }
 body.home .footer-min a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 .3em; color: var(--muted); }
 
-.loader { position: fixed; inset: 0; z-index: 300; background: transparent; pointer-events: none; animation: loader-safety 6.6s ease forwards; }
 /* ── 입장 액션: 사진을 잘라내지 않는다 ──
    여덟 장 중 네 장이 세로 사진이다. 가로 화면에서 cover로 채우면 위아래가
    크게 잘려 얼굴이 날아간다. 그래서 한 장을 두 겹으로 쓴다.
@@ -1267,7 +1266,6 @@ body.home .footer-min a { display: inline-flex; align-items: center; min-height:
 
    음악 앱이 앨범 재킷을 배경으로 쓰는 방식과 같다.
    비어 보이지 않으면서 원본을 한 픽셀도 잘라내지 않는다. */
-.ld-shot {
   position: absolute; inset: 0; overflow: hidden;
   /* 넘김 간격(500ms)보다 전환이 길면 여러 장이 늘 겹쳐 있어 어느 사진도
      제대로 보이지 않는다. 전환을 간격보다 짧게 두어 한 장씩 눈에 들어오게 한다. */
@@ -1285,13 +1283,10 @@ body.home .footer-min a { display: inline-flex; align-items: center; min-height:
   filter: blur(46px) saturate(.62) brightness(.3);
   transform: scale(1.06);
 }
-.ld-shot.is-contain .ld-blur { display: block; }
-.ld-shot::after {
   /* 가장자리를 어둠에 잠기게 — 사진이 화면에 '놓여 있다'는 인상 */
   content: ""; position: absolute; inset: 0;
   background: radial-gradient(ellipse at center, transparent 42%, rgba(8,8,8,.62) 100%);
 }
-.ld-shot img {
   position: absolute; inset: 0; width: 100%; height: 100%;
   /* 기본은 화면을 꽉 채운다. 사진마다 인물이 있는 지점을 style로 지정해 두었으므로
      배경만 잘려 나가고 인순이는 늘 화면 안에 남는다. */
@@ -1302,31 +1297,18 @@ body.home .footer-min a { display: inline-flex; align-items: center; min-height:
 /* 사진 비율과 화면 비율이 너무 달라 채우면 사진의 3분의 1 이상이 날아가는 경우에만
    전체를 보여 준다(자바스크립트가 판단해 붙인다). 세로 사진을 가로 화면에,
    가로 사진을 휴대폰 세로 화면에 놓는 경우가 여기 해당한다. */
-.ld-shot.is-contain img { object-fit: contain; }
 /* 여백이 생기는 경우에만 사진 테두리를 살짝 띄워 '놓인 사진'처럼 보이게 한다 */
-.ld-shot.is-contain img { filter: drop-shadow(0 0 60px rgba(0,0,0,.85)); }
 @keyframes ld-drift { from { transform: scale(1.045); } to { transform: scale(1); } }
 
 /* 방향에 맞지 않는 세트는 자바스크립트가 지우므로 남는 장수가 달라진다.
    nth-child 대신 뒤에서부터 쌓아 순서가 어긋나지 않게 한다. */
-.loader .ld-shot { z-index: 10; }
-.loader .ld-shot:nth-child(1) { z-index: 18; }
-.loader .ld-shot:nth-child(2) { z-index: 17; }
-.loader .ld-shot:nth-child(3) { z-index: 16; }
-.loader .ld-shot:nth-child(4) { z-index: 15; }
-.loader .ld-shot:nth-child(5) { z-index: 14; }
-.loader .ld-shot:nth-child(6) { z-index: 13; }
-.loader .ld-shot:nth-child(7) { z-index: 12; }
 
 /* 위에서 아래로 걷힌다 — 무대의 막이 올라가듯 */
-.loader .ld-shot.gone { clip-path: inset(0 0 100% 0); }
-.loader-mark {
   position: absolute; inset: 0; z-index: 6; display: grid; place-items: center;
   font-family: var(--font-latin); font-weight: 600;
   font-size: clamp(1.9rem, 4.6vw, 3.2rem); letter-spacing: .34em; text-indent: .34em;
   color: var(--ivory); text-shadow: 0 2px 34px rgba(8,8,8,.85);
 }
-.loader.done { animation: none; opacity: 0; transition: opacity .55s ease; }
 @keyframes loader-safety { 0%, 90% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; } }
 @media (prefers-reduced-motion: reduce) { .loader { display: none; } }
 
@@ -1683,27 +1665,14 @@ main h3 { font-family: var(--font-mono); font-weight: 400; font-size: .85rem; le
 @media (hover: none) { .tr-play { opacity: 1; color: var(--faint); } }
 
 /* 로더 피날레: 거위가 머물다 화면이 사방으로 갈라지며 열림 */
-.lq { position: absolute; width: 50.35%; height: 50.35%; background: var(--void); z-index: 7;
-  transition: transform .85s cubic-bezier(.72, 0, .28, 1); }
-.lq-tl { top: 0; left: 0; }
-.lq-tr { top: 0; right: 0; }
-.lq-bl { bottom: 0; left: 0; }
-.lq-br { bottom: 0; right: 0; }
-.loader.split .lq-tl { transform: translate(-102%, -102%); }
-.loader.split .lq-tr { transform: translate(102%, -102%); }
-.loader.split .lq-bl { transform: translate(-102%, 102%); }
-.loader.split .lq-br { transform: translate(102%, 102%); }
-.loader-finale {
   position: absolute; inset: 0; z-index: 8; display: grid; place-content: center;
   justify-items: center; gap: 1.1rem; color: #fff;
   transition: transform .8s cubic-bezier(.6, 0, .3, 1), opacity .7s ease;
 }
-.loader-goose {
   width: clamp(84px, 10vw, 140px); height: auto;
   animation: goose-bob 1.05s ease-in-out infinite;
   transition: transform .9s cubic-bezier(.5, 0, .2, 1), opacity .8s ease;
 }
-.loader-goose .goose-wing {
   /* 회전축은 어깨다. 새 거위는 SVG 를 캔버스 코드에서 뽑아 만들었으므로
      축도 그 코드의 값(로컬 2,-7)을 그대로 viewBox 좌표로 넘긴다 —
      fill-box 의 백분율로 어림잡으면 날개가 뿌리에서 어긋난다.
@@ -1713,27 +1682,19 @@ main h3 { font-family: var(--font-mono); font-weight: 400; font-size: .85rem; le
 }
 @keyframes goose-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 @keyframes goose-flap { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-26deg); } }
-.loader-finale .loader-mark { position: static; display: block; font-size: clamp(1rem, 1.6vw, 1.35rem); text-shadow: none; }
 /* 피날레 연출: 거위가 곡선을 그리며 활공 이륙 — 금빛 잔상을 남기고,
    거위가 지나간 자리에서 화면이 사방으로 갈라진다 (거위가 무대의 막을 여는 인과) */
-.loader.split .lq { transition-delay: .12s; }
-.loader.split .goose-wing { animation-duration: .26s; }
-.loader.split .loader-goose {
   offset-path: path("M 0 0 C 90 -30, 240 -110, 460 -300 S 820 -680, 1080 -900");
   offset-rotate: auto;
   animation: goose-soar 1.05s cubic-bezier(.45, 0, .3, 1) forwards;
 }
-@keyframes goose-soar {
-  0% { offset-distance: 0%; opacity: 1; filter: none; }
   35% { filter: drop-shadow(-16px 12px 10px rgba(212, 175, 55, .38)) drop-shadow(-34px 26px 18px rgba(212, 175, 55, .18)); }
   75% { opacity: 1; }
   100% { offset-distance: 100%; opacity: 0; filter: drop-shadow(-16px 12px 10px rgba(212, 175, 55, .25)) drop-shadow(-34px 26px 18px rgba(212, 175, 55, .1)); }
 }
-.loader.split .loader-finale { transform: scale(1.12); opacity: 0; transition-delay: .18s; }
 /* offset-path 미지원 브라우저: 기존 대각 이륙으로 대체 */
 @supports not (offset-path: path("M0 0 L1 1")) {
-  .loader.split .loader-goose {
-    animation: none; transition: transform .9s cubic-bezier(.5, 0, .2, 1), opacity .8s ease;
+      animation: none; transition: transform .9s cubic-bezier(.5, 0, .2, 1), opacity .8s ease;
     transform: translate(16vw, -24vh) rotate(-8deg) scale(1.18); opacity: 0;
   }
 }
@@ -2667,9 +2628,7 @@ body.nav-open { overflow: hidden; touch-action: none; }
 /* 좁은 화면에서는 사진 비율과 화면 비율이 크게 달라 여백이 넓어진다.
    잘라내지 않는 원칙은 지키면서, 사진이 화면을 조금 더 차지하게 한다. */
 @media (max-width: 760px) {
-  .ld-shot img { padding: 0; }
-  .ld-shot::after { background: radial-gradient(ellipse at center, transparent 52%, rgba(8,8,8,.55) 100%); }
-}
+    }
 
 /* ============================================================
    이 노래, 아시죠 — 사랑방의 첫 문
@@ -3476,6 +3435,9 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
 .loader {
   position: fixed; inset: 0; z-index: 9999; background: #0B0B0B;
   display: grid; place-items: center; overflow: hidden;
+  /* 옛 로더의 loader-safety 애니메이션이 살아 있어 이 화면을 숨기고 있었다.
+     마크업은 지웠는데 CSS 를 안 지운 탓이다. 잔재가 또 생겨도 못 건드리게 못박는다. */
+  animation: none; opacity: 1; visibility: visible; pointer-events: auto;
   transition: opacity .44s ease, visibility 0s linear .5s;
 }
 .loader.done { opacity: 0; visibility: hidden; pointer-events: none; }
