@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-08-07 23:59",
+ "updated": "2026-08-08 01:59",
  "items": [
   {
    "date": "2026-08-05",
@@ -43,7 +43,7 @@
   {
    "date": "2026-07-28",
    "title": "총상금 1억 ‘인생은 오디션’, 서지오 심사 출격…인순이와 트롯 스타 발굴",
-   "source": "일간스포츠",
+   "source": "isplus.com",
    "sourceSite": "https://isplus.com",
    "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5zQ1VQT1VmdGtPLWFZQVpRQ3ZPRFlUS3hNRGxoOXhUZ2F0N1VPSDlqU2RkVHlkb29wbWJPZVhYcUVGXzZaN1RQNk4zcEhSNGQwZkdfSWdGc2V4elE?oc=5",
    "type": "방송",
@@ -80,7 +80,7 @@
   {
    "date": "2026-07-24",
    "title": "경수진 시구→인순이 애국가 '특집 불꽃야구 생중계' 고척돔 달군다",
-   "source": "네이트",
+   "source": "news.nate.com",
    "sourceSite": "https://news.nate.com",
    "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1tV0FhNmZMendjUkhqd1VCeGFXNWJzYVJzdXpiaFM2aWNOdk5yMC1FLVVvVm92SVFHRUdEQUNTYVdaSkdWX2NlNTJSenpEV1ZjU3A0?oc=5",
    "type": "공연",
