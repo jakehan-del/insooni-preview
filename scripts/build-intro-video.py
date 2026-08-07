@@ -28,7 +28,7 @@ TMP = "/tmp/insooni-intro-frames"
 W = H = 1080
 FPS = 30
 DUR = 3.2
-BG = (11, 11, 11)
+BG = (0, 0, 0)   # 순수 검정. screen 합성에서 0 이 아니면 사각형이 떠오른다
 
 POSES = ["goose-emblem.webp", "goose-mid.webp", "goose-flight.webp"]  # 쉼 · 아래 · 위
 
@@ -40,8 +40,11 @@ def load(name):
     im = Image.open(p).convert("RGB")
     # 검은 배경 위의 그림이므로, 배경을 빼서 알파를 만든다.
     # 그래야 겹쳐 넘길 때 사각형 경계가 보이지 않는다.
-    a = im.convert("L").point(lambda v: 0 if v < 26 else min(255, int((v - 26) * 1.9)))
+    a = im.convert("L").point(lambda v: 0 if v < 30 else min(255, int((v - 30) * 1.9)))
     im.putalpha(a.filter(ImageFilter.GaussianBlur(0.6)))
+    # 알파가 지워질 자리의 RGB 도 순수 검정으로 눌러 둔다.
+    # 그러지 않으면 원본의 숯빛 질감이 screen 합성에서 옅은 얼룩으로 뜬다.
+    im = Image.composite(im, Image.new("RGBA", im.size, (0, 0, 0, 0)), a.point(lambda v: 255 if v > 6 else 0))
     return im.resize((W, H), Image.LANCZOS)
 
 
@@ -123,7 +126,12 @@ def main():
     r = subprocess.run([
         "ffmpeg", "-v", "error", "-y", "-framerate", str(FPS),
         "-i", os.path.join(TMP, "f%04d.png"),
-        "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "22",
+        # 색 범위를 full 로 못박는다. 기본(limited/TV)은 검정을 16 으로 들어올려
+        # screen 합성에서 사각형이 보이게 만든다 — 실측: 모서리가 RGB(9,9,9) 였다.
+        "-vf", "scale=out_range=full",
+        "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "20",
+        "-color_range", "pc", "-colorspace", "bt709",
+        "-color_primaries", "bt709", "-color_trc", "bt709",
         "-profile:v", "high", "-movflags", "+faststart", OUT])
     if r.returncode != 0:
         print("ffmpeg 실패", file=sys.stderr); sys.exit(1)
