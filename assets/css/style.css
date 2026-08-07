@@ -3433,47 +3433,47 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
    그 어둠이 걷히면 어머니가 노래하고 있다 — 꿈을 향해 날아간 자리다.
    ══════════════════════════════════════════════════════ */
 .loader {
-  position: fixed; inset: 0; z-index: 9999; background: #000;
-  overflow: hidden; pointer-events: none;
+  position: fixed; inset: 0; z-index: 9999; overflow: hidden; pointer-events: none;
+  /* 배경이 없다. 어둠은 아래 .ld-dark 가 맡고, 그건 걷을 수 있다.
+     로더 자체가 검으면 거위는 영영 사이트 밖에서 날게 된다. */
+  background: none;
   /* 옛 loader-safety 애니메이션이 이 화면을 숨긴 적이 있다. 못박아 둔다. */
   animation: none; opacity: 1; visibility: visible;
-  transition: opacity .62s cubic-bezier(.4,0,.2,1), visibility 0s linear .7s;
+  transition: opacity .5s cubic-bezier(.4,0,.2,1), visibility 0s linear .55s;
 }
 .loader.done { opacity: 0; visibility: hidden; }
-.ld-film {
+
+/* 어둠. 순수 검정이 아니라 히어로의 무대 어둠과 같은 계열로 —
+   걷힐 때 색이 바뀌지 않아야 같은 공간처럼 보인다. */
+.ld-dark {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(120% 90% at 50% 42%, rgba(14,12,11,.86) 0%, rgba(6,6,7,.97) 58%, #050506 100%),
+    #050506;
+  will-change: opacity;
+}
+/* 무대 조명 한 줄기. 거위가 갈 쪽(왼쪽)에서 온다. */
+.ld-beam {
+  position: absolute; top: -12%; left: 0; width: 34vmin; height: 124%;
+  background: linear-gradient(90deg, rgba(255,247,230,0) 0%, rgba(255,247,230,.5) 46%,
+                              rgba(255,243,220,.62) 52%, rgba(255,247,230,0) 100%);
+  filter: blur(26px); opacity: 0; will-change: transform, opacity;
+}
+
+/* 거위. 상자는 언제나 512px 정사각형이고 크기는 scale 로만 준다 —
+   width/height 를 매 프레임 바꾸면 레이아웃이 다시 계산된다. */
+.ld-goose {
+  position: absolute; top: 0; left: 0; width: 512px; height: 512px;
+  transform-origin: 0 0; will-change: transform, opacity;
+}
+.ld-goose > img, .ld-goose > .ld-mark {
   position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: contain; display: block;
-  /* cover 는 1:1 영상을 넓은 화면에서 잘라내, 왼쪽 위로 날아간 거위가
-     화면 밖으로 사라진다. contain 이면 정사각형이 통째로 들어오고
-     로더 배경이 검정이라 여백도 눈에 띄지 않는다. */
 }
-
-/* ── 거위가 상표 자리에 내려앉는다 ─────────────────────────────
-   영상은 화면 좌표를 모른다. 창이 얼마나 넓은지, 헤더 상표가 어디 있는지는
-   영상을 만들 때 존재하지 않는 정보다. 그래서 마지막 착지만 DOM 이 맡는다.
-
-   이 상자는 #loader 바깥에 산다. 안에 두면 어둠이 걷힐 때 거위도 같이 사라진다.
-   left/top/width/height 를 직접 전환한다 — transform 으로 하면 비율이 다른
-   두 그림(거위 839x840 · 상표 114x66)이 눌린다. 요소 하나, 0.82초,
-   아직 아무도 만지지 않는 화면이므로 이 정도 레이아웃 전환은 값싸다.
-   ────────────────────────────────────────────────────────── */
-.ld-land {
-  position: fixed; z-index: 10000; pointer-events: none; opacity: 0;
-  will-change: left, top, width, height;
-}
-/* .82s 는 main.js 의 FLIGHT(820ms) 와 같아야 한다 */
-.ld-land.fly {
-  transition: left .82s cubic-bezier(.32,.02,.18,1), top .82s cubic-bezier(.32,.02,.18,1),
-              width .82s cubic-bezier(.32,.02,.18,1), height .82s cubic-bezier(.32,.02,.18,1);
-}
-.ld-land > img, .ld-land > svg {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  display: block; object-fit: contain; transition: opacity .34s ease;
-}
-.ld-land > svg { color: var(--ivory); opacity: 0; }
-.ld-land.marked > svg { opacity: 1; }
-.ld-land.marked > img { opacity: 0; }
-.ld-land.gone { opacity: 0; transition: opacity .42s ease; }
+.ld-goose > .ld-mark { color: var(--ivory); opacity: 0; }
+/* 잔상은 금빛으로. 궤적을 보여주는 것이지 거위를 하나 더 그리는 게 아니다. */
+.ld-ghost { filter: sepia(.55) saturate(1.5) hue-rotate(-8deg) brightness(1.04); }
+.ld-goose.gone { opacity: 0 !important; transition: opacity .42s ease; }
 
 /* 도입부 동안 헤더는 비워 둔다 — 거위가 두 마리로 보이면 안 된다.
    display 나 visibility 가 아니라 opacity 인 이유: 착지 좌표를 재려면
@@ -3484,5 +3484,5 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
 .brand .brand-en {
   transition: opacity .55s ease .12s, letter-spacing .8s cubic-bezier(.2,.7,.2,1) .12s;
 }
-@media (prefers-reduced-motion: reduce) { .ld-land { display: none; } }
+
 @media (prefers-reduced-motion: reduce) { .loader { display: none; } }
