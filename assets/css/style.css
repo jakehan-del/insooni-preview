@@ -3452,12 +3452,64 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
     #050506;
   will-change: opacity;
 }
+/* 품은 꿈. 거위 뒤에서 맺혀 자라다가 날아오르면 흩어진다.
+   상자는 320px 정사각형이고 크기는 scale 로만 준다. */
+.ld-glow {
+  position: absolute; top: 0; left: 0; width: 320px; height: 320px;
+  transform-origin: 0 0; opacity: 0; will-change: transform, opacity;
+  background: radial-gradient(circle at 50% 50%,
+    rgba(244,214,150,.85) 0%, rgba(232,194,122,.42) 34%, rgba(232,194,122,0) 70%);
+  filter: blur(18px);
+}
+
+/* 넘어야 하는 선. 「거위의 꿈」의 구조에서 가사 대신 남는 것 —
+   넘을 수 없다던 경계. 거위가 통과하는 순간 부서진다. */
+.ld-line {
+  position: absolute; top: 0; left: 0; width: 100%; height: 1px;
+  transform-origin: 50% 50%; opacity: 0; will-change: transform, opacity, filter;
+  background: linear-gradient(90deg, rgba(232,194,122,0) 0%, rgba(232,194,122,.28) 14%,
+    rgba(246,224,172,.92) 50%, rgba(232,194,122,.28) 86%, rgba(232,194,122,0) 100%);
+}
+
+/* 자막. 노래 가사가 아니라 어머니 이야기 — 직접 쓴 문장이다. */
+.ld-say {
+  /* 아래쪽은 히어로 문구가 쓴다 — 위 참고. 화면 위는 비어 있고(헤더는 도입부에
+     감춰진다) 거위는 가운데~왼쪽을 지나므로 여기가 유일하게 안 겹치는 자리다. */
+  position: absolute; left: 50%; top: 13%; transform: translateX(-50%);
+  margin: 0; padding: 0 6vw; max-width: 92vw; text-align: center;
+  font-size: clamp(.95rem, 2.4vw, 1.34rem); font-weight: 300;
+  letter-spacing: .22em; line-height: 1.85; color: rgba(247,244,238,.93);
+  text-shadow: 0 2px 26px rgba(0,0,0,.85);
+  opacity: 0; white-space: nowrap; will-change: opacity;
+}
+.ld-say.is-credit {
+  top: 19.5%; font-size: clamp(.72rem, 1.5vw, .9rem);
+  letter-spacing: .42em; color: var(--gold);
+}
+@media (max-width: 560px) { .ld-say { white-space: normal; letter-spacing: .14em; } }
+
+/* 먼지. 검정만 있으면 화면이 죽어 보인다 — 공기가 있어야 공간이 된다. */
+.ld-mote {
+  position: absolute; width: 2px; height: 2px; border-radius: 50%;
+  background: rgba(255,246,226,.5); filter: blur(.5px);
+  animation: ld-drift linear infinite;
+}
+@keyframes ld-drift {
+  0%   { transform: translate3d(0, 12vh, 0); opacity: 0; }
+  22%  { opacity: .8; }
+  78%  { opacity: .55; }
+  100% { transform: translate3d(3vw, -34vh, 0); opacity: 0; }
+}
+
 /* 무대 조명 한 줄기. 거위가 갈 쪽(왼쪽)에서 온다. */
 .ld-beam {
-  position: absolute; top: -12%; left: 0; width: 34vmin; height: 124%;
-  background: linear-gradient(90deg, rgba(255,247,230,0) 0%, rgba(255,247,230,.5) 46%,
-                              rgba(255,243,220,.62) 52%, rgba(255,247,230,0) 100%);
-  filter: blur(26px); opacity: 0; will-change: transform, opacity;
+  position: absolute; top: -14%; left: 0; width: 56vmin; height: 128%;
+  /* 좁고 진하면 화면 가장자리에서 사각형으로 잘린다 — 실제로 그렇게 보였다.
+     넓게·흐리게·옅게 두어야 빛줄기로 읽힌다. */
+  background: linear-gradient(90deg, rgba(255,247,230,0) 0%, rgba(255,247,230,.16) 30%,
+                              rgba(255,245,226,.5) 50%, rgba(255,247,230,.16) 70%,
+                              rgba(255,247,230,0) 100%);
+  filter: blur(58px); opacity: 0; will-change: transform, opacity;
 }
 
 /* 거위. 상자는 언제나 512px 정사각형이고 크기는 scale 로만 준다 —
@@ -3480,6 +3532,12 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
    상표가 자리를 차지하고 있어야 한다. 안 보이되 거기 있어야 한다. */
 .site-header { transition: background .3s ease, border-color .3s ease, opacity .5s ease; }
 .is-intro .site-header { opacity: 0; }
+/* 히어로 문구는 도입부에도 그냥 둔다.
+   처음엔 감추려 했다 — 자막 "그리고 날았다" 가 "그래도 꿈은 흐른다" 와 겹쳐
+   둘 다 못 읽는 화면이 나왔기 때문이다. 그런데 CSS 로도 인라인으로도 이기지
+   못했다: motion.js 의 등장 연출이 매번 opacity 를 다시 써 버린다.
+   그래서 자막을 화면 위로 옮겼다(.ld-say). 남의 연출과 싸우는 것보다
+   비어 있는 자리를 쓰는 게 낫다. */
 .is-intro .brand-en { opacity: 0; letter-spacing: .62em; }
 .brand .brand-en {
   transition: opacity .55s ease .12s, letter-spacing .8s cubic-bezier(.2,.7,.2,1) .12s;
