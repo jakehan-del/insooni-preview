@@ -3046,13 +3046,12 @@
     if (!box) return;
     /* 모션을 줄이기로 한 사람에게는 연출을 하지 않는다 */
     var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    /* 같은 세션에서 한 번만. 전에는 매 진입마다 4~5초를 붙잡아
-       두 번째 방문부터는 연출이 아니라 장애물이었다. */
-    var SEEN = "insooni.intro.seen";
-    var seen = false;
-    try { seen = sessionStorage.getItem(SEEN) === "1"; } catch (e) {}
-    if (reduce || seen) { box.remove(); return; }
-    try { sessionStorage.setItem(SEEN, "1"); } catch (e) {}
+    /* 새로고침할 때마다 재생한다(형님 지시).
+       한 번만 틀지 말지는 취향의 문제지만, 길이는 아니다 —
+       옛 사진 로더는 4~5초였고 그건 매번 보기엔 길었다. 지금은 3.2초다.
+       페이지 사이 이동은 라우터가 <main> 만 갈아끼우므로 이 함수가 다시 돌지 않는다.
+       즉 '진짜로 새로 열거나 새로고침했을 때'만 보인다. */
+    if (reduce) { box.remove(); return; }
 
     document.documentElement.classList.add("is-intro");
     /* 영상 3.2초 — 마지막 0.25초는 이미 비어 있어 먼저 걷는다 — 여기 숫자를 바꾸면 CSS 도 함께 봐야 한다 */
