@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-08-07 18:06",
+ "updated": "2026-08-07 19:58",
  "items": [
   {
    "date": "2026-08-05",
@@ -15,7 +15,7 @@
   {
    "date": "2026-08-04",
    "title": "가수 남진·인순이, KBS '가요무대'서 환상적인 듀엣 무대…",
-   "source": "youthassembly.kr",
+   "source": "유스연합",
    "sourceSite": "https://www.youthassembly.kr",
    "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE9WeVM3ZWl3bXF2S0FkQTJBUkNaV1dHdnZKdmM1QXdsRU5oczJYUXhCdDRoMVc1VUtJazBaa3BiNGk4T29RQjYzVFdjZnc4RllncEE?oc=5",
    "type": "공연",
@@ -43,7 +43,7 @@
   {
    "date": "2026-07-28",
    "title": "총상금 1억 ‘인생은 오디션’, 서지오 심사 출격…인순이와 트롯 스타 발굴",
-   "source": "일간스포츠",
+   "source": "isplus.com",
    "sourceSite": "https://isplus.com",
    "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5zQ1VQT1VmdGtPLWFZQVpRQ3ZPRFlUS3hNRGxoOXhUZ2F0N1VPSDlqU2RkVHlkb29wbWJPZVhYcUVGXzZaN1RQNk4zcEhSNGQwZkdfSWdGc2V4elE?oc=5",
    "type": "방송",
@@ -71,9 +71,9 @@
   {
    "date": "2026-07-27",
    "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
-   "source": "v.daum.net",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1ha0ZobU9TdWhIMEw1N05GX05Hd3B5UU5SSGtTZWF2ZG9xNEE3UElMVG1uVGNoVlUxSTJZeG5IZl9wYUdzOUxQa3d1bw?oc=5",
+   "source": "동아일보",
+   "sourceSite": "https://www.donga.com",
+   "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTFAwQkJha0MzSzFWQnRSTG4xd0g5b3ZMcGh3OVVTS0xvYUI5dWlfUnBJSldQQ0xZM2hSZEVHMUI3RnRWOFNCNVJJeW1FelNlckJSUjlQV3BUTHR4ZVlhelpQWlVnYVl0S3BjZkdrWTUyVTUyN3pSS1HSAWZBVV95cUxNSDU5LXd4UFZ4VXdocDRjcVprTFhYTzlsM3hMZGNTOXRoTU40bGV1Y1pIZk8ya3l6cGJTTWszVU5yQmhjbzNKTFlOQXVVMkRmSzBFdmdoY2pyTWY1V0lDd3hmSk9MNUE?oc=5",
    "type": "공연",
    "auto": true
   },
@@ -137,7 +137,7 @@
   {
    "date": "2026-05-21",
    "title": "경주 고분 콘서트 '봉황대 뮤직스퀘어' 내달 5일 개막…인순이·김태우 등",
-   "source": "뉴시스",
+   "source": "newsis.com",
    "sourceSite": "https://www.newsis.com",
    "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE1JbG9NZElJeVhQOEJURTZrT0ZzT3Z1NFRNeEowdEJFcDE5Y3hGYndJR3RvVnpudzRGVVpJRjdSYWhZNkdvbE1xaVVkM2FaMlFzRzBzV0FEdzZ5Z2xaYmJxQdIBeEFVX3lxTE5Kek82MVdOdUljaEpOYXZjdHNzR25kbkhRRVlacms0aWw5MXphM0FLMXJzUHFCVjhiZDJkWVdfc2pSSW9TUnU2d2J5VmxGMmp1bE41Tk5YZVctMnN5NUhSZE5aaU1mN1RBbEhfbFdDZVRidnBTd3EyWQ?oc=5",
    "type": "공연",
