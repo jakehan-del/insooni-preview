@@ -3423,22 +3423,47 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
 
 
 /* ══ 거위의 꿈 — 입장 ══════════════════════════════════════
-   3.2초짜리 영상 한 편. scripts/build-intro-video.py 가 만든다 —
-   같은 화풍으로 그린 세 자세(쉼·날개 아래·날개 위)를 셀 애니메이션처럼
-   툭툭 넘겨 날갯짓을 만들었다. 자세를 길게 겹치면 거위가 두 마리로 보인다.
+   거위가 사이트 "위로" 날아 들어간다. 영상이 끝난 뒤 사이트가 나오면
+   두 장면이 따로 논다 — 겹쳐야 한 장면이 된다.
 
-   전에는 그림 두 장을 CSS 로 겹쳐 바꿨는데 날갯짓이 없어 "갑자기 바뀌는" 것이었다.
+   요령은 mix-blend-mode: screen 이다. 영상 배경은 거의 검정(#0B0B0B)이고
+   거위는 밝은 아이보리다. screen 으로 겹치면 검정은 사라지고 거위만 남는다.
+   MP4 는 투명도를 담지 못하므로 이렇게 얻어낸다.
+
+   0.0~2.0  검은 장막 위에서 거위가 떠오르고 날갯짓한다
+   2.0~2.9  장막이 걷히며 사이트가 드러난다 — 거위는 계속 난다
+   2.9~3.4  거위가 사이트 위를 가로질러 사라진다
    ══════════════════════════════════════════════════════ */
 .loader {
-  position: fixed; inset: 0; z-index: 9999; background: #0B0B0B;
+  position: fixed; inset: 0; z-index: 9999; background: transparent;
   display: grid; place-items: center; overflow: hidden;
-  /* 옛 로더의 loader-safety 애니메이션이 이 화면을 숨긴 적이 있다. 못박아 둔다. */
-  animation: none; opacity: 1; visibility: visible; pointer-events: auto;
-  transition: opacity .42s ease, visibility 0s linear .5s;
+  /* 옛 loader-safety 애니메이션이 이 화면을 숨긴 적이 있다. 못박아 둔다. */
+  animation: none; opacity: 1; visibility: visible; pointer-events: none;
+  transition: opacity .34s ease, visibility 0s linear .4s;
 }
-.loader.done { opacity: 0; visibility: hidden; pointer-events: none; }
+.loader.done { opacity: 0; visibility: hidden; }
+
+/* 검은 장막 — 처음엔 사이트를 가리고, 거위가 날기 시작하면 걷힌다 */
+.ld-veil {
+  position: absolute; inset: 0; background: #0B0B0B;
+  animation: ld-veil 2.9s cubic-bezier(.4,0,.25,1) forwards;
+}
+@keyframes ld-veil {
+  0%, 62%  { opacity: 1; }
+  100%     { opacity: 0; }
+}
+
+/* 거위 — screen 으로 겹쳐 검은 배경을 지운다.
+   장막이 걷힌 뒤에도 사이트 위를 계속 난다. */
 .ld-film {
-  width: min(74vmin, 560px); height: auto; display: block;
-  /* 영상 배경(#0B0B0B)과 화면이 같은 색이라 경계가 보이지 않는다 */
+  position: relative; width: min(74vmin, 560px); height: auto; display: block;
+  mix-blend-mode: screen;
+  animation: ld-film 3.4s cubic-bezier(.36,0,.22,1) forwards;
 }
+@keyframes ld-film {
+  0%       { opacity: 1; transform: none; }
+  70%      { opacity: 1; transform: translate(-2%, -4%) scale(.98); }
+  100%     { opacity: 0; transform: translate(-26%, -34%) scale(.72); }
+}
+
 @media (prefers-reduced-motion: reduce) { .loader { display: none; } }
