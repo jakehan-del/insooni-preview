@@ -45,6 +45,9 @@ def load(name):
     # 알파가 지워질 자리의 RGB 도 순수 검정으로 눌러 둔다.
     # 그러지 않으면 원본의 숯빛 질감이 screen 합성에서 옅은 얼룩으로 뜬다.
     im = Image.composite(im, Image.new("RGBA", im.size, (0, 0, 0, 0)), a.point(lambda v: 255 if v > 6 else 0))
+    # 헤더 상표가 화면 왼쪽 위에 있으므로 거위도 왼쪽을 보고 날아야 한다.
+    # 원본 그림은 오른쪽을 보고 있어 좌우로 뒤집는다.
+    im = im.transpose(Image.FLIP_LEFT_RIGHT)
     return im.resize((W, H), Image.LANCZOS)
 
 
@@ -68,7 +71,7 @@ def sweep(canvas, t):
     if not (0.55 <= t <= 1.45):
         return
     p = (t - 0.55) / 0.90
-    x = int(-W * 0.7 + p * W * 2.1)
+    x = int(W * 1.7 - p * W * 2.1)   # 오른쪽에서 왼쪽으로
     band = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     px = band.load()
     fade = math.sin(math.pi * p)
@@ -95,11 +98,11 @@ def main():
 
         if t < 1.10:                                   # 어둠에서 떠오른다
             a = ease(min(1, t / 0.85))
-            place(c, rest, 0.80 + 0.05 * (1 - a), 0, int(14 * (1 - a)), a)
+            place(c, rest, 0.50 + 0.04 * (1 - a), 0, int(12 * (1 - a)), a)
         elif t < 1.30:                                 # 날개를 편다 (쉼 → 아래)
             p = ease((t - 1.10) / 0.20)
-            place(c, rest, 0.80, 0, 0, 1 - p)
-            place(c, down, 0.80, 0, int(-10 * p), p)
+            place(c, rest, 0.50, 0, 0, 1 - p)
+            place(c, down, 0.50, 0, int(-8 * p), p)
         elif t < 2.35:                                 # 날갯짓 두 번, 떠오른다
             p = (t - 1.30) / 1.05
             beat = (t - 1.30) / 0.2625                 # 한 번에 0.2625초 → 네 구간
@@ -111,14 +114,14 @@ def main():
             blend = 0.5 * (1 - ease(min(1.0, edge / 0.09)))
             k = raw * (1 - blend) + (1 - raw) * blend  # 전환 순간만 살짝 겹친다
             lift = ease(p)
-            dx, dy = int(120 * lift), int(-190 * lift - 10)
-            sc = 0.80 - 0.10 * lift
+            dx, dy = int(-150 * lift), int(-150 * lift - 8)   # 왼쪽 위로
+            sc = 0.50 - 0.08 * lift
             place(c, down, sc, dx, dy, 1 - k)
             place(c, up,   sc, dx, dy, k)
         else:                                          # 날아가며 사라진다
             p = ease((t - 2.35) / 0.85)
-            place(c, up, 0.70 - 0.22 * p,
-                  int(120 + 300 * p), int(-200 - 330 * p), 1 - p)
+            place(c, up, 0.42 - 0.16 * p,
+                  int(-150 - 330 * p), int(-158 - 300 * p), 1 - p)
 
         sweep(c, t)
         c.convert("RGB").save(os.path.join(TMP, "f%04d.png" % f))

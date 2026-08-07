@@ -3442,6 +3442,9 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
 .loader.done { opacity: 0; visibility: hidden; }
 .ld-film {
   position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; display: block;
+  object-fit: contain; display: block;
+  /* cover 는 1:1 영상을 넓은 화면에서 잘라내, 왼쪽 위로 날아간 거위가
+     화면 밖으로 사라진다. contain 이면 정사각형이 통째로 들어오고
+     로더 배경이 검정이라 여백도 눈에 띄지 않는다. */
 }
 @media (prefers-reduced-motion: reduce) { .loader { display: none; } }
