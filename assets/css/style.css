@@ -3464,66 +3464,64 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
 
 
 /* ══ 거위의 꿈 — 입장 ══════════════════════════════════════
-   노래 그대로다. 쉬고 있는 거위가 떠오르고, 조명이 스치고,
-   날아오르며 사이트가 열린다. 총 2.1초, 세션당 한 번.
+   한 마리가 쉬고 있다가 날개를 펴고 날아오른다. 같은 손으로 그린 같은 거위다.
+   전에는 그림이 떴다가 전혀 다른 평면 도형이 날아갔다 — 그건 영화가 아니었다.
 
-   전에는 사진 6장을 500ms 씩 넘겨 4~5초를 붙잡고 있었다.
-   두 번째 방문부터는 연출이 아니라 장애물이었다.
+   1) 어둠에서 떠오른다        "나는 오리였어요"       0 ~ 1.05s
+   2) 무대 조명이 스친다        빛이 그녀를 찾는다      0.62 ~ 1.6s
+   3) 날개를 편다 (겹쳐 바뀜)                          1.15 ~ 1.75s
+   4) 날아오른다 · 금빛 잔상                           1.5 ~ 2.7s
+   5) 사이트가 열린다                                  2.7 ~ 3.1s
    ══════════════════════════════════════════════════════ */
 .loader {
   position: fixed; inset: 0; z-index: 9999; background: #0B0B0B;
   display: grid; place-items: center; overflow: hidden;
-  transition: opacity .42s ease .28s, visibility 0s linear .7s;
+  transition: opacity .44s ease, visibility 0s linear .5s;
 }
 .loader.done { opacity: 0; visibility: hidden; pointer-events: none; }
-.ld-stage { position: relative; width: min(46vmin, 340px); aspect-ratio: 1; }
-
-/* 1) 어둠에서 떠오른다 — 쉬고 있는 거위 */
-.ld-emblem {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: contain; opacity: 0; transform: scale(1.06);
-  animation: ld-rise 1.05s cubic-bezier(.22,.61,.36,1) forwards;
-}
-@keyframes ld-rise {
-  0%   { opacity: 0; transform: scale(1.06); filter: blur(9px); }
-  100% { opacity: 1; transform: scale(1);    filter: blur(0); }
+.ld-stage { position: relative; width: min(52vmin, 400px); aspect-ratio: 1; }
+.ld-emblem, .ld-flight {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
 }
 
-/* 2) 무대 조명 한 줄기 — 그녀를 찾는 빛 */
+/* 1) 쉬는 거위 — 어둠에서 떠올랐다가, 날개를 펼 때 사라진다 */
+.ld-emblem { opacity: 0; animation: ld-rest 1.9s cubic-bezier(.22,.61,.36,1) forwards; }
+@keyframes ld-rest {
+  0%   { opacity: 0; transform: scale(1.07); filter: blur(10px); }
+  38%  { opacity: 1; transform: scale(1);    filter: blur(0); }
+  62%  { opacity: 1; transform: scale(1.02); }
+  92%  { opacity: 0; transform: scale(1.08); filter: blur(3px); }
+  100% { opacity: 0; }
+}
+
+/* 2) 무대 조명 — 빛이 그녀를 찾는다 */
 .ld-sweep {
-  position: absolute; inset: -18% -55%; pointer-events: none; opacity: 0;
+  position: absolute; inset: -20% -60%; pointer-events: none; opacity: 0;
   background: linear-gradient(105deg, transparent 42%,
-              rgba(212,175,55,.13) 49%, rgba(255,252,245,.30) 51%,
-              rgba(212,175,55,.13) 53%, transparent 60%);
-  transform: translateX(-62%);
-  animation: ld-sweep 1s cubic-bezier(.4,0,.2,1) .62s forwards;
+              rgba(212,175,55,.14) 49%, rgba(255,252,245,.34) 51%,
+              rgba(212,175,55,.14) 53%, transparent 60%);
+  transform: translateX(-64%);
+  animation: ld-sweep .98s cubic-bezier(.4,0,.2,1) .62s forwards;
 }
 @keyframes ld-sweep {
-  0%   { opacity: 0; transform: translateX(-62%); }
-  22%  { opacity: 1; }
-  100% { opacity: 0; transform: translateX(62%); }
+  0% { opacity: 0; transform: translateX(-64%); }
+  24% { opacity: 1; } 100% { opacity: 0; transform: translateX(64%); }
 }
 
-/* 3) 날아오른다 — 금빛 잔상을 남기고 */
-.ld-fly {
-  position: absolute; left: 12%; top: 42%; width: 42%; height: auto;
-  color: #EFECE4; opacity: 0;
-  animation: ld-fly 1.02s cubic-bezier(.42,0,.28,1) 1.18s forwards;
+/* 3~4) 날개를 펴고 날아오른다 — 같은 거위가 이어받는다 */
+.ld-flight { opacity: 0; transform-origin: 42% 62%;
+  animation: ld-flight 1.55s cubic-bezier(.34,.02,.24,1) 1.15s forwards; }
+@keyframes ld-flight {
+  0%   { opacity: 0; transform: translate(0,0) scale(.94) rotate(-1deg); filter: blur(4px); }
+  22%  { opacity: 1; transform: translate(2%,-3%) scale(1) rotate(0deg); filter: blur(0); }
+  55%  { transform: translate(26%,-38%) scale(.86) rotate(-5deg);
+         filter: drop-shadow(-18px 15px 13px rgba(212,175,55,.32))
+                 drop-shadow(-40px 32px 24px rgba(212,175,55,.15)); }
+  100% { opacity: 0; transform: translate(86%,-124%) scale(.52) rotate(-11deg);
+         filter: drop-shadow(-14px 12px 10px rgba(212,175,55,.14)); }
 }
-@keyframes ld-fly {
-  0%   { opacity: 0; transform: translate(0,0) scale(.9) rotate(0deg); filter: none; }
-  16%  { opacity: 1; }
-  55%  { filter: drop-shadow(-14px 11px 9px rgba(212,175,55,.34))
-                 drop-shadow(-30px 24px 17px rgba(212,175,55,.16)); }
-  100% { opacity: 0; transform: translate(128%, -168%) scale(.56) rotate(-11deg);
-         filter: drop-shadow(-14px 11px 9px rgba(212,175,55,.2)); }
-}
-/* 거위가 떠나면 문장도 함께 걷힌다 */
-.loader.done .ld-emblem { opacity: 0; transform: scale(.97); transition: opacity .38s ease, transform .5s ease; }
 
-/* 모션을 줄이기로 한 사람에게는 연출을 하지 않는다 */
 @media (prefers-reduced-motion: reduce) {
-  .ld-emblem, .ld-sweep, .ld-fly { animation: none; }
-  .ld-emblem { opacity: 1; transform: none; }
-  .ld-fly, .ld-sweep { display: none; }
+  .ld-emblem, .ld-sweep, .ld-flight { animation: none; }
+  .ld-emblem { opacity: 1; } .ld-sweep, .ld-flight { display: none; }
 }
