@@ -3128,29 +3128,70 @@
     }
     if (t < G_GLIDE) {                                /* 날갯짓하며 오른다 */
       var q = gIn((t - G_RISE) / (G_GLIDE - G_RISE));
-      return { s: S * (0.245 - 0.082 * q), x: cx - S * 0.205 * q,
-               y: cy + S * (0.009 - 0.262 * q) };
+      var sz = S * (0.245 - 0.082 * q);
+      /* 직선이 아니라 호를 그린다. 새는 먼저 뜨고 나중에 나아간다 —
+         가로와 세로에 서로 다른 이징을 주면 그 순서가 궤적에 남는다.
+         둘 다 같은 q 를 쓰던 것이 '드래그되는 느낌'의 절반이었다. */
+      var qx = q * q * (1.35 - 0.35 * q);             /* 가로는 늦게 붙는다 */
+      var qy = Math.pow(q, 0.72);                     /* 세로는 먼저 오른다 */
+      return { s: sz, x: cx - S * 0.205 * qx,
+               y: cy + S * (0.009 - 0.262 * qy) + gooseBob(t) * sz };
     }
     var u = gOut(g01((t - G_GLIDE) / (G_END - G_GLIDE)));   /* 상표로 활공, 감속 */
     var s0 = S * 0.163, x0 = cx - S * 0.205, y0 = cy - S * 0.253;
-    return { s: s0 + (st.ts - s0) * u, x: x0 + (st.tx - x0) * u, y: y0 + (st.ty - y0) * u };
+    var sz2 = s0 + (st.ts - s0) * u;
+    return { s: sz2, x: x0 + (st.tx - x0) * u,
+             y: y0 + (st.ty - y0) * u + gooseBob(t) * sz2 };
   }
 
-  /* 날개가 얼마나 펴졌나. 1 = 상표에 그려진 그대로(위), 0 = 접힘, 음수 = 아래.
-     마지막에는 반드시 정확히 1 로 돌아와야 한다 — 헤더의 상표와 같아야 하므로. */
+  /* 날갯짓 — 어깨 회전 + 접힘.
+
+     처음에는 scaleY 눌림만으로 했다. 그건 깃발이 펄럭이는 것처럼 보인다.
+     실제 날개는 어깨에서 '회전'하고, 휘두르는 동안 보는 각도 때문에 '짧아 보인다'.
+     12프레임 필름스트립으로 세 가지 각도 범위를 비교해 이 값을 골랐다 —
+     +24°~-26° 는 아래점에서도 날개가 등 위에 쐐기로 남아 모든 프레임이 백조로 읽힌다.
+     -34° 까지 내리면 날개가 몸통에 완전히 잠겨 그냥 앉은 백조가 되고, 깜빡이는 것처럼 보인다.
+
+     다운스트로크가 업스트로크보다 짧다(0.38 : 0.62) — 새는 내리칠 때 힘을 쓰고
+     올릴 때는 흘린다. 이 비대칭이 없으면 메트로놈처럼 보인다.
+
+     접힘(scaleY)은 여전히 쓴다. 다만 역할이 바뀌었다 —
+     날갯짓의 단축 표현과, 1~2막의 '날개를 접고 있음'(0.06 = 상표의 매끄러운 몸통)이다.
+     마지막에는 각도 0 · 접힘 1 로 정확히 돌아온다. 그게 헤더 상표의 자세다. */
+  var G_WUP = 24;        /* 날개 최고점 (도) */
+  var G_WDOWN = -26;     /* 날개 최저점 */
+  var G_WFLEX = 0.62;    /* 내리치는 순간의 단축 */
+  var G_DOWNSTROKE = 0.38;
+
   function gooseWing(t) {
-    /* 0.12 로 두었더니 날개가 혹처럼 남았다. 거의 0 이면 몸통의 매끄러운 선만
-       남아 「접고 있다」로 읽히고, 그래서 뒤에 날개가 나타나는 것이 사건이 된다. */
-    if (t < G_FOLD) return 0.06;                      /* 접고 있다 — #13 의 매끄러운 몸통 */
-    if (t < G_RISE) return 0.06 + 0.94 * gEase((t - G_FOLD) / (G_RISE - G_FOLD));
-    /* 0 아래로 내리지 않는다. 이 몸통은 나는 자세가 아니라 앉은 자세라서,
-       날개가 몸 밑으로 내려가면 새가 아니라 지느러미로 보인다.
-       위쪽에서만(0.30~1.00) 치는 것이 이 그림에 맞는 날갯짓이다. */
-    var k = 0.65 + 0.35 * Math.cos(2 * Math.PI * (t - G_RISE) / G_BEAT);
-    /* 닿기 직전에는 퍼덕임을 멈추고 상표의 자세로 고정한다.
-       내려앉는 새는 날개를 치지 않고, 무엇보다 헤더의 상표가 이 자세다. */
+    if (t < G_FOLD) return [0, 0.06];                 /* 접고 있다 — 상표의 매끄러운 몸통 */
+    if (t < G_RISE) {                                 /* 날개를 편다 */
+      var o = gEase((t - G_FOLD) / (G_RISE - G_FOLD));
+      return [G_WUP * o, 0.06 + 0.94 * o];
+    }
+    var u = ((t - G_RISE) / G_BEAT) % 1;
+    var ang, flex;
+    if (u < G_DOWNSTROKE) {                           /* 내리친다 — 빠르게 */
+      var p = gEase(u / G_DOWNSTROKE);
+      ang = G_WUP + (G_WDOWN - G_WUP) * p;
+      flex = 1 - (1 - G_WFLEX) * Math.sin(Math.PI * p);
+    } else {                                          /* 올린다 — 느리게 */
+      var q = gEase((u - G_DOWNSTROKE) / (1 - G_DOWNSTROKE));
+      ang = G_WDOWN + (G_WUP - G_WDOWN) * q;
+      flex = Math.min(1, G_WFLEX + (1 - G_WFLEX) * (0.55 + 0.45 * q) * q);
+    }
+    /* 닿기 직전에는 퍼덕임을 멈추고 상표의 자세(0°, 1.0)로 고정한다. */
     var gl = gEase(g01((t - (G_END - 0.62)) / 0.42));
-    return k + (1 - k) * gl;
+    return [ang * (1 - gl), flex + (1 - flex) * gl];
+  }
+
+  /* 날갯짓에 맞춘 몸의 반동. 내리치는 순간 몸이 뜬다 —
+     이게 없으면 날개만 움직이고 몸은 얼어 있어 스티커처럼 보인다.
+     위상: 다운스트로크가 끝나는 지점에서 가장 높다. 진폭은 마크 크기의 2.6%. */
+  function gooseBob(t) {
+    if (t < G_RISE || t > G_END - 0.5) return 0;
+    var u = ((t - G_RISE) / G_BEAT) % 1;
+    return -Math.sin(2 * Math.PI * (u - G_DOWNSTROKE * 0.5)) * 0.026;
   }
 
   /* 오르는 동안 살짝 기운다. 착지에서는 반드시 0 — 상표는 기울어 있지 않다. */
@@ -3158,7 +3199,7 @@
     if (t < G_RISE) return 0;
     var up = gEase(g01((t - G_RISE) / 0.55));
     var back = gEase(g01((t - (G_GLIDE - 0.15)) / 0.85));
-    return -5.5 * up * (1 - back);
+    return -8 * up * (1 - back);
   }
 
   function initLoader() {
@@ -3226,9 +3267,13 @@
     bird.className = "ld-goose";
     var svg = svgEl("svg", { viewBox: "3 7.8 96.6 72.8", "aria-hidden": "true", focusable: "false" });
     svg.appendChild(svgEl("path", { d: G_BODY, fill: "currentColor" }));
-    var wingG = svgEl("g", {});
-    wingG.appendChild(svgEl("path", { d: G_WING, fill: "currentColor" }));
-    svg.appendChild(wingG);
+    /* 두 겹으로 감싼다: 바깥이 어깨 회전, 안쪽이 접힘.
+       하나의 transform 에 몰아넣으면 회전과 접힘의 축이 엉켜 날개가 비틀린다. */
+    var wingRot = svgEl("g", {});
+    var wingFlex = svgEl("g", {});
+    wingFlex.appendChild(svgEl("path", { d: G_WING, fill: "currentColor" }));
+    wingRot.appendChild(wingFlex);
+    svg.appendChild(wingRot);
     bird.appendChild(svg);
     box.appendChild(bird);
 
@@ -3269,8 +3314,10 @@
         + ") rotate(" + gooseTilt(tc).toFixed(2) + "deg)";
       bird.style.opacity = lit.toFixed(3);
       var wk = gooseWing(tc);
-      wingG.setAttribute("transform", "translate(" + G_PIV[0] + " " + G_PIV[1]
-        + ") scale(1 " + wk.toFixed(4) + ") translate(" + (-G_PIV[0]) + " " + (-G_PIV[1]) + ")");
+      wingRot.setAttribute("transform", "rotate(" + wk[0].toFixed(2) + " "
+        + G_PIV[0] + " " + G_PIV[1] + ")");
+      wingFlex.setAttribute("transform", "translate(" + G_PIV[0] + " " + G_PIV[1]
+        + ") scale(1 " + wk[1].toFixed(4) + ") translate(" + (-G_PIV[0]) + " " + (-G_PIV[1]) + ")");
 
       /* 품은 꿈. 거위 뒤에서 금빛이 맺혀 자라고, 나는 동안은 옅게 남아
          선 그림 하나만으로는 나오지 않는 기운을 대신한다. */
