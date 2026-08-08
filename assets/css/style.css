@@ -3465,7 +3465,9 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
 /* 넘어야 하는 선. 「거위의 꿈」의 구조에서 가사 대신 남는 것 —
    넘을 수 없다던 경계. 거위가 통과하는 순간 부서진다. */
 .ld-line {
-  position: absolute; top: 0; left: 0; width: 100%; height: 1px;
+  /* 화면 폭 전체로 그으면 넘어야 할 경계가 아니라 구분선처럼 읽힌다.
+     74% 로 줄이고 양 끝을 흐려 '빛의 띠'로 남긴다. */
+  position: absolute; top: 0; left: 13%; width: 74%; height: 1px;
   transform-origin: 50% 50%; opacity: 0; will-change: transform, opacity, filter;
   background: linear-gradient(90deg, rgba(232,194,122,0) 0%, rgba(232,194,122,.28) 14%,
     rgba(246,224,172,.92) 50%, rgba(232,194,122,.28) 86%, rgba(232,194,122,0) 100%);
@@ -3480,13 +3482,32 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
   font-size: clamp(.95rem, 2.4vw, 1.34rem); font-weight: 300;
   letter-spacing: .22em; line-height: 1.85; color: rgba(247,244,238,.93);
   text-shadow: 0 2px 26px rgba(0,0,0,.85);
-  opacity: 0; white-space: nowrap; will-change: opacity;
+  opacity: 0; will-change: opacity;
+  /* 첫 장은 두 줄이다. nowrap 을 걸면 <br> 만 살고 좁은 화면에서 넘친다. */
+  white-space: normal;
+}
+/* 글자마다 흐림에서 풀리며 올라온다. transition-delay 는 main.js 가 글자별로 준다.
+   한 덩어리 페이드는 '켜졌다'로 읽히고, 이건 '쓰여진다'로 읽힌다. */
+.ld-say span {
+  display: inline-block; opacity: 0;
+  transform: translateY(.42em); filter: blur(7px);
+  transition: opacity .48s cubic-bezier(.2,.65,.25,1),
+              transform .6s cubic-bezier(.16,.72,.2,1),
+              filter .44s ease;
+}
+.ld-say br { line-height: 0; }
+.ld-say.in span { opacity: 1; transform: none; filter: blur(0); }
+/* 곡 제목은 스태거가 없으므로 전환도 짧아야 한다. 0.48초를 그대로 쓰면
+   0.61초 노출 중 0.48초를 '떠오르는 중'으로 써 버려 읽을 시간이 0.2초밖에 안 남는다. */
+.ld-say.is-credit span {
+  transition-duration: .3s, .38s, .28s;
+  transform: translateY(.22em); filter: blur(4px);
 }
 .ld-say.is-credit {
   top: 19.5%; font-size: clamp(.72rem, 1.5vw, .9rem);
   letter-spacing: .42em; color: var(--gold);
 }
-@media (max-width: 560px) { .ld-say { white-space: normal; letter-spacing: .14em; } }
+@media (max-width: 560px) { .ld-say { letter-spacing: .12em; line-height: 1.95; } }
 
 /* 먼지. 검정만 있으면 화면이 죽어 보인다 — 공기가 있어야 공간이 된다. */
 .ld-mote {
@@ -3525,7 +3546,7 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
   position: absolute; top: 0; left: 0; width: 512px; height: 512px;
   transform-origin: 50% 50%; will-change: transform, opacity;
   color: var(--ivory);
-  filter: drop-shadow(0 0 22px rgba(246,226,178,.34));
+  /* drop-shadow 는 main.js 가 날갯짓에 맞춰 매 프레임 쓴다 */
 }
 .ld-goose > svg { width: 100%; height: 100%; display: block; overflow: visible; }
 .ld-goose.gone { opacity: 0 !important; transition: opacity .42s ease; }

@@ -3095,18 +3095,27 @@
                                 이음매가 드러나지 않는다 */
 
   var G_BOX = 512;       /* 상자 기본 한 변(px). 실제 크기는 scale 로만 준다 */
-  var G_FOLD = 2.20;     /* 날개를 펴기 시작 */
-  var G_CROUCH = 2.30;   /* 웅크리기 시작 */
-  var G_RISE = 2.52;     /* 날개를 다 펴고 오르기 시작 */
-  var G_GLIDE = 3.90;    /* 무대를 떠나 상표로 향한다 */
-  var G_END = 5.10;      /* 상표에 닿는 시각 */
+  /* 막 경계. 자막을 읽을 시간에서 거꾸로 잡았다 —
+     한국어 표시 자막은 초당 9자쯤이 한계고, 어머니가 읽으신다.
+     예전엔 자막 하나가 다 쓰이기까지 1.2초 걸리는데 노출이 1.35초였다.
+     읽을 시간이 없었던 것이다. 그래서 자막을 세 장으로 줄이고 각각 넉넉히 준다. */
+  var G_FOLD = 2.55;     /* 날개를 펴기 시작 — 자막 A "날개를 접지 않았다" 가 떠 있는 동안 */
+  var G_CROUCH = 2.65;   /* 웅크리기 시작 */
+  var G_RISE = 2.95;     /* 날개를 다 펴고 오르기 시작 */
+  var G_GLIDE = 4.55;    /* 무대를 떠나 상표로 향한다 */
+  var G_END = 5.90;      /* 상표에 닿는 시각 */
   var G_BEAT = 0.37;     /* 날갯짓 한 번 */
 
   /* 자막. 노래 가사가 아니라 어머니 이야기 — 직접 쓴 문장이다. */
-  var G_SAY = [[0.50, 1.85, "아무도 보지 않던 무대가 있었다", ""],
-               [2.02, 3.14, "그 무대에서도, 날개를 접지 않았다", ""],
-               [3.62, 4.66, "그리고 날았다", ""],
-               [4.74, 5.10, "「거위의 꿈」", "is-credit"]];
+  /* [시작, 끝, 글, 클래스]. 끝-시작 이 '쓰기 시간(글자수x20ms + 480ms)' 보다
+     넉넉히 커야 읽을 수 있다. 실측으로 맞췄다 —
+       A 36자 : 노출 2.93s, 쓰기 1.20s → 완전 노출 1.73s
+       B  8자 : 노출 1.25s, 쓰기 0.64s → 완전 노출 0.61s
+       C  7자 : 스태거 없음(제목은 문장이 아니다) → 즉시 읽힘, 0.65s */
+  var G_SAY = [[0.42, 3.35, "아무도 보지 않던 무대가 있었다\n그 무대에서도, 날개를 접지 않았다", ""],
+               [3.80, 5.05, "그리고, 날았다", ""],
+               [5.25, 5.90, "「거위의 꿈」", "is-credit"]];
+  var G_STAGGER = 20;    /* 글자당 지연(ms). 34 는 다 쓰이기 전에 사라졌다 */
 
   function gEase(t) { return t * t * (3 - 2 * t); }
   function gIn(t) { return t * t * t; }                    /* 오를 때 — 가속 */
@@ -3251,13 +3260,17 @@
     if (!scrim || !line) return false;
 
     /* 먼지. 검정만 있으면 화면이 죽어 보인다 — 공기가 있어야 공간이 된다. */
-    for (var m = 0; m < 16; m++) {
+    for (var m = 0; m < 26; m++) {
       var mo = document.createElement("i");
       mo.className = "ld-mote";
-      mo.style.left = (m * 6.4 + (m % 5) * 2.1) + "%";
+      mo.style.left = (m * 3.9 + (m % 7) * 1.7) + "%";
       mo.style.top = ((m * 37) % 100) + "%";
-      mo.style.animationDelay = (-m * 0.83) + "s";
-      mo.style.animationDuration = (7 + (m % 4) * 2.5) + "s";
+      mo.style.animationDelay = (-m * 0.61) + "s";
+      mo.style.animationDuration = (7 + (m % 5) * 2.2) + "s";
+      /* 크기를 섞는다. 모두 같은 크기면 격자처럼 보여 공기가 아니라 무늬가 된다. */
+      var sz = 1 + (m % 3);
+      mo.style.width = sz + "px"; mo.style.height = sz + "px";
+      mo.style.opacity = (0.9 - (m % 3) * 0.22).toFixed(2);
       box.appendChild(mo);
     }
 
@@ -3313,6 +3326,12 @@
         + (p.y - G_BOX / 2).toFixed(1) + "px,0) scale(" + (p.s / G_BOX).toFixed(5)
         + ") rotate(" + gooseTilt(tc).toFixed(2) + "deg)";
       bird.style.opacity = lit.toFixed(3);
+      /* 내리치는 순간 빛이 한 번 뛴다. 날개만 움직이고 빛이 일정하면
+         그림이 평평하게 남는다 — 힘이 들어가는 순간을 빛도 같이 받아야 한다. */
+      var punch = tc > G_RISE && tc < G_END - 0.5
+        ? Math.max(0, Math.sin(Math.PI * (((tc - G_RISE) / G_BEAT) % 1) / G_DOWNSTROKE)) : 0;
+      bird.style.filter = "drop-shadow(0 0 " + (18 + 26 * punch).toFixed(1)
+        + "px rgba(246,226,178," + (0.30 + 0.26 * punch).toFixed(3) + "))";
       var wk = gooseWing(tc);
       wingRot.setAttribute("transform", "rotate(" + wk[0].toFixed(2) + " "
         + G_PIV[0] + " " + G_PIV[1] + ")");
@@ -3345,21 +3364,41 @@
 
       /* 자막 */
       if (say) {
-        var act = -1, alpha = 0;
+        var act = -1;
         for (var n = 0; n < G_SAY.length; n++) {
           var A = G_SAY[n];
-          if (t >= A[0] && t <= A[1]) {
-            act = n;
-            alpha = Math.min(gEase(g01((t - A[0]) / 0.38)), gEase(g01((A[1] - t) / 0.38)));
-            break;
-          }
+          if (t >= A[0] && t <= A[1]) { act = n; break; }
         }
         if (act !== lastSay) {
           lastSay = act;
-          say.textContent = act < 0 ? "" : G_SAY[act][2];
+          /* 한 덩어리로 페이드하면 자막이 '켜졌다'가 된다. 글자마다 34ms 씩
+             밀어 흐림에서 풀리게 하면 '쓰여진다'가 된다 — 같은 문장인데
+             값이 다르게 읽힌다. 매 프레임 계산하지 않고 CSS 전환에 맡긴다
+             (transition-delay 를 글자마다 다르게 주는 것으로 끝난다). */
           say.className = "ld-say " + (act < 0 ? "" : G_SAY[act][3]);
+          while (say.firstChild) say.removeChild(say.firstChild);
+          if (act >= 0) {
+            var txt = G_SAY[act][2], shown = 0;
+            /* 곡 제목은 문장이 아니다. 글자별로 쓰면 노출이 끝나기 전에
+               다 나오지 못한다 — 한 덩어리로 띄운다. */
+            var stag = G_SAY[act][3] === "is-credit" ? 0 : G_STAGGER;
+            for (var ci = 0; ci < txt.length; ci++) {
+              if (txt.charAt(ci) === "\n") { say.appendChild(document.createElement("br")); continue; }
+              var sp = document.createElement("span");
+              sp.textContent = txt.charAt(ci) === " " ? "\u00a0" : txt.charAt(ci);
+              sp.style.transitionDelay = (shown * stag) + "ms";
+              say.appendChild(sp);
+              shown++;
+            }
+            /* 넣은 프레임에 바로 켜면 브라우저가 두 상태를 합쳐 보고 전환을 건너뛴다 */
+            (function (el) {
+              requestAnimationFrame(function () { el.classList.add("in"); });
+            })(say);
+          }
         }
-        say.style.opacity = alpha.toFixed(3);
+        /* 들어오는 것은 CSS 가 글자별로 한다. 여기서는 나가는 쪽만 관리한다. */
+        say.style.opacity = (act < 0 ? 0
+          : gEase(g01((G_SAY[act][1] - t) / 0.42))).toFixed(3);
       }
 
       if (beam) {                                     /* 무대 조명 한 줄기 */
@@ -3370,7 +3409,7 @@
 
       /* 어둠을 걷는다. 선을 넘은 뒤부터 걷히기 시작해, 거위가 활공할 때는
          이미 어머니와 같은 공간을 난다 — 이것이 사이트와 하나가 되는 지점이다. */
-      scrim.style.opacity = (1 - 0.86 * gEase(g01((t - 3.10) / 1.05))
+      scrim.style.opacity = (1 - 0.86 * gEase(g01((t - 3.70) / 1.05))
                                - 0.14 * gEase(g01((t - (G_GLIDE + 0.25)) / 0.60))).toFixed(3);
 
       if (t < G_END) { requestAnimationFrame(frame); return; }
