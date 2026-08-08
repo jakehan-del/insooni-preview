@@ -3123,6 +3123,12 @@
   function gIn(t) { return t * t * t; }                    /* 오를 때 — 가속 */
   function gOut(t) { return 1 - Math.pow(1 - t, 3); }      /* 닿을 때 — 감속 */
   function g01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+  function gOut5(t) { return 1 - Math.pow(1 - t, 5); }   /* 긴 감속 꼬리 — '값비쌈'의 1차 지표 */
+  /* 끝값이 구조적으로 정확히 0 인 오버슈트 가산항.
+     (1-u) 인자 때문에 계수를 어떻게 바꿔도 bump(1) === 0 이다.
+     bump(0)=0, 최대 1.0 (u=0.5833). 착지 픽셀 정합이 이 성질 하나에 걸려 있다 —
+     감쇠 사인파(스프링)로 바꾸면 u=1 에서 목표에 0.09% 못 미쳐 0.024px 어긋난다. */
+  function bump(u) { return Math.pow(u, 1.4) * (1 - u) / 0.195917; }
 
   /* t 초에서 거위 상자의 (한 변, 중심 x, 중심 y) — 전부 화면 픽셀 */
   function goosePath(t, st) {
@@ -3143,16 +3149,28 @@
       /* 직선이 아니라 호를 그린다. 새는 먼저 뜨고 나중에 나아간다 —
          가로와 세로에 서로 다른 이징을 주면 그 순서가 궤적에 남는다.
          둘 다 같은 q 를 쓰던 것이 '드래그되는 느낌'의 절반이었다. */
-      var qx = q * q * (1.35 - 0.35 * q);             /* 가로는 늦게 붙는다 */
-      var qy = Math.pow(q, 0.72);                     /* 세로는 먼저 오른다 */
-      return { s: sz, x: cx - S * 0.205 * qx,
-               y: cy + S * (0.009 - 0.262 * qy) + gooseBob(t) * sz };
+      /* 상승을 거의 수직으로. 이것이 결함 B(부리는 오른쪽을 보는데 진행은 왼쪽)에
+         대한 유일하게 안전한 개입이다 — 미러도, 나는 자세 몸통도 만들지 않고,
+         관객이 방향을 읽는 구간에서 어긋남을 3분의 1로 줄인다.
+         가로 이동 0.205 → 0.075, 줄어든 몫은 활공 구간이 담당한다. */
+      var qx = Math.pow(q, 2.40);                     /* 가로는 뒤로 몰린다 */
+      var qy = 1 - Math.pow(1 - q, 1.45);             /* 세로는 먼저 오른다 */
+      return { s: sz, x: cx - S * 0.135 * qx,
+               y: cy + S * (0.009 - 0.285 * qy) + gooseBob(t - 0.067) * sz };
     }
-    var u = gOut(g01((t - G_GLIDE) / (G_END - G_GLIDE)));   /* 상표로 활공, 감속 */
-    var s0 = S * 0.163, x0 = cx - S * 0.205, y0 = cy - S * 0.253;
-    var sz2 = s0 + (st.ts - s0) * u;
-    return { s: sz2, x: x0 + (st.tx - x0) * u,
-             y: y0 + (st.ty - y0) * u + gooseBob(t) * sz2 };
+    /* 활공 → 착지. 위치와 크기에 서로 다른 꼬리를 주고, 오버슈트는 끝값이
+       정확히 0 인 가산항으로 넣는다. 위치 +2.55%, 크기 +0.84% —
+       크기가 크게 튀면 로고가 젤리로 읽힌다. */
+    var uu = g01((t - G_GLIDE) / (G_END - G_GLIDE));
+    var u = gOut5(uu), us = gOut(uu), b = bump(uu);
+    var s0 = S * 0.163, x0 = cx - S * 0.135, y0 = cy - S * 0.276;
+    /* 오버슈트 계수는 '이동 거리' 에 곱해진다. 0.030 은 데스크톱에서 13px 이 되고
+       그건 27px 마크의 절반이다 — 고무처럼 읽힌다. 0.014 면 약 6px. */
+    var sz2 = s0 + (st.ts - s0) * (us + 0.008 * b);
+    return { s: sz2,
+             x: x0 + (st.tx - x0) * (u + 0.014 * b),
+             y: y0 + (st.ty - y0) * (u + 0.014 * b)
+                + gooseBob(t - 0.067) * sz2 * (1 - uu) };   /* 반동은 u=1 에서 정확히 0 */
   }
 
   /* 날갯짓 — 어깨 회전 + 접힘.
@@ -3163,8 +3181,10 @@
      +24°~-26° 는 아래점에서도 날개가 등 위에 쐐기로 남아 모든 프레임이 백조로 읽힌다.
      -34° 까지 내리면 날개가 몸통에 완전히 잠겨 그냥 앉은 백조가 되고, 깜빡이는 것처럼 보인다.
 
-     다운스트로크가 업스트로크보다 짧다(0.38 : 0.62) — 새는 내리칠 때 힘을 쓰고
-     올릴 때는 흘린다. 이 비대칭이 없으면 메트로놈처럼 보인다.
+     다운스트로크가 업스트로크보다 **길다**(0.57 : 0.43). 내리칠 때는 힘을 실어
+     길게 쓸고, 올릴 때는 날개를 접어 관성모멘트를 줄여 빨리 회수한다 —
+     거위는 업스트로크에 공기역학적으로 비활성이다.
+     예전에 0.38 로 두고 주석까지 반대로 적어 두었다. 되돌리지 말 것.
 
      접힘(scaleY)은 여전히 쓴다. 다만 역할이 바뀌었다 —
      날갯짓의 단축 표현과, 1~2막의 '날개를 접고 있음'(0.06 = 상표의 매끄러운 몸통)이다.
@@ -3172,7 +3192,7 @@
   var G_WUP = 24;        /* 날개 최고점 (도) */
   var G_WDOWN = -26;     /* 날개 최저점 */
   var G_WFLEX = 0.62;    /* 내리치는 순간의 단축 */
-  var G_DOWNSTROKE = 0.38;
+  var G_DOWNSTROKE = 0.57;
 
   function gooseWing(t) {
     if (t < G_FOLD) return [0, 0.06];                 /* 접고 있다 — 상표의 매끄러운 몸통 */
@@ -3181,16 +3201,17 @@
       return [G_WUP * o, 0.06 + 0.94 * o];
     }
     var u = ((t - G_RISE) / G_BEAT) % 1;
-    var ang, flex;
-    if (u < G_DOWNSTROKE) {                           /* 내리친다 — 빠르게 */
-      var p = gEase(u / G_DOWNSTROKE);
-      ang = G_WUP + (G_WDOWN - G_WUP) * p;
-      flex = 1 - (1 - G_WFLEX) * Math.sin(Math.PI * p);
-    } else {                                          /* 올린다 — 느리게 */
-      var q = gEase((u - G_DOWNSTROKE) / (1 - G_DOWNSTROKE));
-      ang = G_WDOWN + (G_WUP - G_WDOWN) * q;
-      flex = Math.min(1, G_WFLEX + (1 - G_WFLEX) * (0.55 + 0.45 * q) * q);
+    var ang;
+    if (u < G_DOWNSTROKE) {                           /* 내리친다 — 길게, 힘을 실어 */
+      ang = G_WUP + (G_WDOWN - G_WUP) * gEase(u / G_DOWNSTROKE);
+    } else {                                          /* 올린다 — 짧게, 접어서 회수 */
+      ang = G_WDOWN + (G_WUP - G_WDOWN) * gEase((u - G_DOWNSTROKE) / (1 - G_DOWNSTROKE));
     }
+    /* 접힘 위상이 반대였다. `1 - (1-0.62)*sin(pi*p)` 는 다운스트로크 중간
+       — 양력이 가장 큰 순간 — 에 날개를 0.62 로 가장 작게 만들었다.
+       실제로는 그때 날개가 활짝 펴져 면적이 최대다. 위상을 뒤집는다:
+       다운스트로크 중간 1.00, 업스트로크 중간 0.72. */
+    var flex = 0.86 + 0.14 * Math.cos(2 * Math.PI * (u - G_DOWNSTROKE * 0.5));
     /* 닿기 직전에는 퍼덕임을 멈추고 상표의 자세(0°, 1.0)로 고정한다. */
     var gl = gEase(g01((t - (G_END - 0.62)) / 0.42));
     return [ang * (1 - gl), flex + (1 - flex) * gl];
@@ -3201,16 +3222,23 @@
      위상: 다운스트로크가 끝나는 지점에서 가장 높다. 진폭은 마크 크기의 2.6%. */
   function gooseBob(t) {
     if (t < G_RISE || t > G_END - 0.5) return 0;
+    /* 양력 최대(다운스트로크 중간) = 가속 최대 = 변위 최소. a = -w^2 y 이므로
+       몸의 최저점이 다운스트로크 중간에 와야 한다. sin 에 0.19 를 쓰던 것은
+       3분의 1 주기 어긋난 값이었다. */
     var u = ((t - G_RISE) / G_BEAT) % 1;
-    return -Math.sin(2 * Math.PI * (u - G_DOWNSTROKE * 0.5)) * 0.026;
+    return -Math.cos(2 * Math.PI * (u - (G_DOWNSTROKE * 0.5 + 0.25))) * 0.026;
   }
 
-  /* 오르는 동안 살짝 기운다. 착지에서는 반드시 0 — 상표는 기울어 있지 않다. */
+  /* 코를 든다. 기울기가 크면 부리가 진행방향(왼쪽 위)에 가까워져 방향 모순이
+     줄고, 활공이 '비행'이 아니라 '착지 플레어'로 읽힌다. 실제 거위 이륙의
+     몸통 피치는 3타째에 20도 대에서 안정된다.
+     끝값은 정확히 0 이어야 한다 — 상표는 기울어 있지 않다.
+     검증: gEase(1)=1 로 첫 항 0, bump(1)=0 으로 둘째 항 0. */
   function gooseTilt(t) {
     if (t < G_RISE) return 0;
-    var up = gEase(g01((t - G_RISE) / 0.55));
-    var back = gEase(g01((t - (G_GLIDE - 0.15)) / 0.85));
-    return -8 * up * (1 - back);
+    if (t < G_GLIDE) return -26 * gEase(g01((t - G_RISE) / 0.60));
+    var u = g01((t - G_GLIDE) / (G_END - G_GLIDE));
+    return -26 * (1 - gEase(g01((t - G_GLIDE) / 1.15))) + 4.0 * bump(u);
   }
 
   function initLoader() {
@@ -3355,6 +3383,12 @@
       var st = { S: Math.min(vw, vh), cx: vw / 2, cy: vh / 2,
                  ts: br.width, tx: br.left + br.width / 2, ty: br.top + br.height / 2 };
 
+      /* 겹침(overlapping action). 어깨가 먼저 움직이고 몸이 뒤따르고 기울기가
+         더 뒤진다 — 프로와 아마추어를 가르는 지점이다. 채널이 전부 같은 tc 를
+         읽고 있었다. 60fps 프레임 단위로 못박는다: 기울기 9프레임, 빛 16프레임.
+         (몸의 반동은 goosePath 안에서 이미 4프레임 뒤진다.) */
+      var tTilt = Math.max(0, tc - 0.150);
+      var tGlow = Math.max(0, tc - 0.267);
       var p = goosePath(tc, st);
       /* 어둠 속에서는 실루엣으로만 보이다가, 조명이 스치며 드러난다 */
       var lit = 0.14 + 0.86 * gEase(g01((t - 1.05) / 0.95));
@@ -3362,9 +3396,9 @@
       /* 원점을 상자 가운데로 두었다. 예전엔 0 0 이라 축소할 때마다 상자가
          왼쪽 위로 쏠려, 거위와 빛이 각각 한 번씩 엉뚱한 자리로 갔다.
          가운데 원점이면 '중심 - 절반' 같은 보정이 아예 필요 없다. */
-      bird.style.transform = "translate3d(" + (p.x - G_BOX / 2).toFixed(1) + "px,"
-        + (p.y - G_BOX / 2).toFixed(1) + "px,0) scale(" + (p.s / G_BOX).toFixed(5)
-        + ") rotate(" + gooseTilt(tc).toFixed(2) + "deg)";
+      bird.style.transform = "translate3d(" + (p.x - G_BOX / 2).toFixed(3) + "px,"
+        + (p.y - G_BOX / 2).toFixed(3) + "px,0) scale(" + (p.s / G_BOX).toFixed(6)
+        + ") rotate(" + gooseTilt(tc < G_GLIDE ? tTilt : tc).toFixed(3) + "deg)";
       bird.style.opacity = lit.toFixed(3);
       /* 내리치는 순간 빛이 한 번 뛴다. 다만 매 프레임 값을 바꾸면 512px 요소의
          휘도가 3~4Hz 로 진동한다 — 광민감성 발작 대역이다. 어머니는 70대다.
@@ -3388,9 +3422,13 @@
          선 그림 하나만으로는 나오지 않는 기운을 대신한다. */
       if (glow) {
         var ga = gEase(g01((t - 1.45) / 0.95)) * (1 - 0.62 * gEase(g01((t - G_RISE) / 1.10)));
-        var gs = (0.55 + 0.85 * gEase(g01((t - 1.45) / 1.30))) * p.s / 320;
-        glow.style.transform = "translate3d(" + (p.x - 160).toFixed(1) + "px,"
-          + (p.y - 160).toFixed(1) + "px,0) scale(" + gs.toFixed(3) + ")";
+        /* 빛이 거위 좌표를 배수 1.000 으로 그대로 따라가면 후광 스티커로 읽힌다.
+           16프레임 뒤지게 하고 이동폭을 0.82 로 줄여, 빛이 거위를 '따라온다'. */
+        var gq = goosePath(tGlow, st);
+        var gs = (0.55 + 0.85 * gEase(g01((t - 1.45) / 1.30))) * gq.s / 320;
+        var gcx = st.cx + (gq.x - st.cx) * 0.82, gcy = st.cy + (gq.y - st.cy) * 0.82;
+        glow.style.transform = "translate3d(" + (gcx - 160).toFixed(2) + "px,"
+          + (gcy - 160).toFixed(2) + "px,0) scale(" + gs.toFixed(3) + ")";
         glow.style.opacity = (ga * 0.58).toFixed(3);
       }
 
@@ -3459,6 +3497,19 @@
                                - 0.14 * gEase(g01((t - (G_GLIDE + 0.25)) / 0.60))).toFixed(3);
 
       if (t < G_END) { requestAnimationFrame(frame); return; }
+
+      /* 마지막 프레임을 손으로 못박는다. rAF 프레임은 G_END 에 정확히 떨어지지
+         않으므로 렌더되는 마지막 값에 기울기 0.3도쯤이 남는다 — 상표는 기울어
+         있지 않다. 여기서 t = G_END 의 값을 그대로 써 회전 0 을 보장한다. */
+      var pf = goosePath(G_END, st);
+      bird.style.transform = "translate3d(" + (pf.x - G_BOX / 2).toFixed(3) + "px,"
+        + (pf.y - G_BOX / 2).toFixed(3) + "px,0) scale(" + (pf.s / G_BOX).toFixed(6)
+        + ") rotate(0deg)";
+      var wf = gooseWing(G_END);
+      wingRot.setAttribute("transform", "rotate(" + wf[0].toFixed(2) + " "
+        + G_PIV[0] + " " + G_PIV[1] + ")");
+      wingFlex.setAttribute("transform", "translate(" + G_PIV[0] + " " + G_PIV[1]
+        + ") scale(1 " + wf[1].toFixed(4) + ") translate(" + (-G_PIV[0]) + " " + (-G_PIV[1]) + ")");
 
       /* 순서가 중요하다. clearTimeout 을 먼저 부르고 그 뒤에서 예외가 나면
          헤더가 영구히 사라진다 — '무슨 일이 있어도 헤더는 돌아온다' 가 깨진다.
