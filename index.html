@@ -20,10 +20,10 @@
 <meta name="twitter:card" content="summary_large_image">
 <!-- 본문 글꼴은 먼저 확실히 깐다(미뤄 봤지만 첫 화면이 빨라지지 않았다).
      제목용 서체는 화면이 뜬 뒤 들어온다 — font-display:swap이라 늦어도 글자는 보인다. -->
-<link rel="stylesheet" href="assets/fonts/body.css?ved6b1c57">
-<link rel="stylesheet" href="assets/fonts/display.css?ved6b1c57" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/fonts/display.css?ved6b1c57"></noscript>
-<link rel="stylesheet" href="assets/css/style.min.css?ved6b1c57">
+<link rel="stylesheet" href="assets/fonts/body.css?ve214f776">
+<link rel="stylesheet" href="assets/fonts/display.css?ve214f776" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?ve214f776"></noscript>
+<link rel="stylesheet" href="assets/css/style.min.css?ve214f776">
 <link rel="canonical" href="https://insooni.com/">
 <meta property="og:url" content="https://insooni.com/">
 <meta property="og:type" content="website">
@@ -41,24 +41,12 @@
 <body class="home" data-page="index">
 <a class="skip-link" href="#main" data-i18n="nav.skip">본문 바로가기</a>
 
-<!-- 입장 로더: 시대별 사진이 층층이 벗겨지는 액션 (세션당 1회) -->
-<script>try{var _d=document.documentElement;if(!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)){_d.classList.add("is-intro");setTimeout(function(){_d.classList.remove("is-intro")},7000)}}catch(e){}</script>
+<!-- 입장 로더: 뭉친 거위가 갈라져 흩어지고 한 마리가 상표에 앉는다 (1.6초)
+     beyonce.com 실측 기법 — 중앙에 겹친 표식이 갈라져 제자리로 흩어진다.
+     이야기·자막·넘을 선은 두지 않는다. 어디든 누르면 건너뛴다. -->
+<script>try{var _d=document.documentElement;if(!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)){_d.classList.add("is-intro");setTimeout(function(){_d.classList.remove("is-intro")},2600)}}catch(e){}</script>
 <div class="loader" id="loader" aria-hidden="true">
-      <!-- 거위의 꿈 — 다섯 막
-           1 어둠. 먼지만 떠다닌다. 거위는 실루엣, 날개는 접혀 있다
-           2 조명이 스치고 드러난다. 머리 위로 넘어야 하는 선이 그어진다
-           3 웅크리며 날개를 편다 — 뛰기 전에 낮아진다
-           4 날갯짓하며 올라 선을 넘는다. 선이 부서진다
-           5 어둠이 걷혀 어머니가 드러나고, 거위가 상표 자리에 앉는다
-           거위는 아래 .brand-mark 와 같은 선 그림이다 — main.js 가 날개만
-           떼어 리깅한다. 상표 패스를 고치면 main.js 의 G_BODY/G_WING 도 함께.
-           자막은 노래 가사가 아니다 — 가사는 원작자 저작권이라 쓸 수 없다.
-           5.1초, 어디든 누르면 건너뜀. -->
       <div class="ld-dark"></div>
-      <div class="ld-glow"></div>
-      <div class="ld-line"></div>
-      <div class="ld-beam"></div>
-      <p class="ld-say"></p>
     </div>
 
 <header class="site-header">
@@ -73,6 +61,7 @@
         <li><a href="music.html" data-i18n="nav.music">음악</a></li>
         <li><a href="schedule.html" data-i18n="nav.schedule">공연</a></li>
         <li><a href="news.html" data-i18n="nav.news">소식</a></li>
+        <li class="nav-mark"><a href="index.html" aria-label="인순이 홈" data-i18n-aria="aria.home"><svg class="mark-goose" viewBox="3 7.8 96.6 72.8" aria-hidden="true" focusable="false"><path fill="currentColor" d="M3 74 C3 63 16 55 35 54.4 C47 54 56 55.6 61 57.8 C59 50 59 40 62 31 C66 19.4 73 11.6 81 8.6 C85.6 7 89.4 8 91 11.2 L99.6 13.6 L90.8 16.8 C89.2 19.8 86.2 21.4 82.6 20.8 C78.2 20.2 74.8 24.8 72.6 33 C70.2 42 70.2 52 72.8 61 C73.6 64 72.6 67 69 70 C61 77 44 81 26 80.6 C16 80.4 8 79 3 74 Z M3 74 C8 70 16 64 26 60 C18 66 10 71 3 74 Z"/><path fill="currentColor" d="M68 52 C60 39 46 29 27 25 C30 38 35 49 43 57 C52 66 63 64 68 52 Z"/></svg></a></li>
         <li><a href="archive.html" data-i18n="nav.archive">아카이브</a></li>
         <li><a href="haemil.html" data-i18n="nav.haemil">해밀학교</a></li>
         <li><a href="community.html" data-i18n="nav.community">사랑방</a></li>
@@ -147,17 +136,17 @@
   </nav>
 </footer>
 
-<script src="assets/js/config.js?ved6b1c57" defer></script>
-<script src="assets/js/backend.js?ved6b1c57" defer></script>
-<script src="assets/js/i18n.min.js?ved6b1c57" defer></script>
-<script src="assets/js/data.min.js?ved6b1c57" defer></script>
-<script src="assets/js/tracklinks.min.js?ved6b1c57" defer></script>
-<script src="assets/js/albums-full.min.js?ved6b1c57" defer></script>
-<script src="assets/js/albums-en.min.js?ved6b1c57" defer></script>
-<script src="assets/js/song-moods.min.js?ved6b1c57" defer></script>
-<script src="assets/js/main.min.js?ved6b1c57" defer></script>
-<script src="assets/js/motion.min.js?ved6b1c57" defer></script>
-<script src="assets/js/router.min.js?ved6b1c57" defer></script>
-<script src="assets/js/deck.min.js?ved6b1c57" defer></script>
+<script src="assets/js/config.js?ve214f776" defer></script>
+<script src="assets/js/backend.js?ve214f776" defer></script>
+<script src="assets/js/i18n.min.js?ve214f776" defer></script>
+<script src="assets/js/data.min.js?ve214f776" defer></script>
+<script src="assets/js/tracklinks.min.js?ve214f776" defer></script>
+<script src="assets/js/albums-full.min.js?ve214f776" defer></script>
+<script src="assets/js/albums-en.min.js?ve214f776" defer></script>
+<script src="assets/js/song-moods.min.js?ve214f776" defer></script>
+<script src="assets/js/main.min.js?ve214f776" defer></script>
+<script src="assets/js/motion.min.js?ve214f776" defer></script>
+<script src="assets/js/router.min.js?ve214f776" defer></script>
+<script src="assets/js/deck.min.js?ve214f776" defer></script>
 </body>
 </html>

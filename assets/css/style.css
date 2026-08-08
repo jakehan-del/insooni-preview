@@ -1551,6 +1551,11 @@ button.show-cell:hover .show-cta, button.show-cell:focus-visible .show-cta { col
    가로 내비(데스크톱)에서는 글자 항목과 같은 높이여야 한 줄로 반듯하고,
    세로 오버레이(모바일)에서는 다른 항목처럼 가운데에 놓여야 한다.
    li를 flex로 만들면 세로 메뉴에서 마크가 왼쪽에 붙어 버리므로, 가로일 때만 적용한다. */
+/* 정중앙 거위의 크기. 글자 항목(0.72rem 대문자)과 눈으로 같은 무게가 되는 값이다 —
+   좌측 상표(.brand-mark)의 27px 보다 살짝 크게 두는 이유는, 가운데에 홀로 서면
+   같은 크기라도 작아 보이기 때문이다(주변에 글자가 없다). */
+.mark-goose { width: 30px; height: auto; display: block; color: var(--ivory); transition: color .3s ease; }
+.nav-mark a:hover .mark-goose, .nav-mark a:focus-visible .mark-goose { color: var(--gold); }
 .nav-mark a { color: #fff !important; padding: 0 .4em !important; display: inline-flex; align-items: center; }
 @media (min-width: 1081px) {
   .main-nav li { display: flex; align-items: center; }
@@ -2458,8 +2463,14 @@ button.sr-row .sr-play { color: var(--gold); }
   display: inline-flex; align-items: center; min-height: 44px; padding: 0 .2em;
 }
 .footer-min nav { row-gap: .2rem; }
-/* 헤더 브랜드(로고) — 27px였다 */
-.brand { display: inline-flex; align-items: center; min-height: 44px; }
+/* 헤더 브랜드(로고) — 27px였다.
+   ⚠️ 반드시 1080px 이하로 한정한다. 이 규칙이 전역이었을 때,
+   같은 특이도의 뒤 규칙이라 데스크톱 미디어쿼리의 `.brand{display:none}`(위)을
+   이겨 버렸다. 그 결과 1081px 이상에서 좌측 상표와 내비 정중앙 거위가 함께 떠
+   헤더에 거위가 두 마리였다. 터치 타깃은 손으로 누르는 폭에서만 필요하다. */
+@media (max-width: 1080px) {
+  .brand { display: inline-flex; align-items: center; min-height: 44px; }
+}
 /* 스트립 캡션의 곡 제목 링크 */
 .sc-title { display: inline-flex; align-items: center; min-height: 44px; }
 /* 본문 안의 단독 링크(해밀 공식 홈페이지 등) */

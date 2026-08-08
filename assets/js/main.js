@@ -3090,163 +3090,15 @@
      한 픽셀도 다르면 안 되기 때문이다. */
   var G_BODY = "M3 74 C3 63 16 55 35 54.4 C47 54 56 55.6 61 57.8 C59 50 59 40 62 31 C66 19.4 73 11.6 81 8.6 C85.6 7 89.4 8 91 11.2 L99.6 13.6 L90.8 16.8 C89.2 19.8 86.2 21.4 82.6 20.8 C78.2 20.2 74.8 24.8 72.6 33 C70.2 42 70.2 52 72.8 61 C73.6 64 72.6 67 69 70 C61 77 44 81 26 80.6 C16 80.4 8 79 3 74 Z M3 74 C8 70 16 64 26 60 C18 66 10 71 3 74 Z";
   var G_WING = "M68 52 C60 39 46 29 27 25 C30 38 35 49 43 57 C52 66 63 64 68 52 Z";
-  /* 부리의 위치 — 상자 한 변에 대한 비율. viewBox 중심(51.3,44.2) 에서
-     부리(99.6,13.6) 까지 (+48.3, -30.6) 유닛이고, 512px 상자에 배율 512/96.6
-     = 5.3002 이므로 (+0.5, -0.31680) 이다 (48.3x5.3002 = 256 = 512/2 정확).
-     예전엔 0.36 하나로 근사했고 기울기를 반영하지 않아 착지 지점에서 26px 어긋났다. */
-  var G_BEAK = [0.5, -0.31680];
-  var G_PIV = [66, 55];      /* 날개 밑동(어깨) — 여기를 축으로 접히고 펴진다.
-                                밑동이 몸통 안에 묻혀 있으므로 어떤 값에서도
-                                이음매가 드러나지 않는다 */
-
   var G_BOX = 512;       /* 상자 기본 한 변(px). 실제 크기는 scale 로만 준다 */
-  /* 막 경계. 자막을 읽을 시간에서 거꾸로 잡았다 —
-     한국어 표시 자막은 초당 9자쯤이 한계고, 어머니가 읽으신다.
-     예전엔 자막 하나가 다 쓰이기까지 1.2초 걸리는데 노출이 1.35초였다.
-     읽을 시간이 없었던 것이다. 그래서 자막을 세 장으로 줄이고 각각 넉넉히 준다. */
-  var G_FOLD = 2.55;     /* 날개를 펴기 시작 — 자막 A "날개를 접지 않았다" 가 떠 있는 동안 */
-  var G_CROUCH = 2.65;   /* 웅크리기 시작 */
-  var G_RISE = 2.95;     /* 날개를 다 펴고 오르기 시작 */
-  var G_GLIDE = 4.55;    /* 무대를 떠나 상표로 향한다 */
-  var G_END = 5.90;      /* 상표에 닿는 시각 */
-  var G_BEAT = 0.37;     /* 날갯짓 한 번 */
-
-  /* 자막. 노래 가사가 아니라 어머니 이야기 — 직접 쓴 문장이다. */
-  /* [시작, 끝, 글, 클래스]. 끝-시작 이 '쓰기 시간(글자수x20ms + 480ms)' 보다
-     넉넉히 커야 읽을 수 있다. 실측으로 맞췄다 —
-       A 36자 : 노출 2.93s, 쓰기 1.20s → 완전 노출 1.73s
-       B  8자 : 노출 1.25s, 쓰기 0.64s → 완전 노출 0.61s
-       C  7자 : 스태거 없음(제목은 문장이 아니다) → 즉시 읽힘, 0.65s */
-  var G_SAY = [[0.42, 3.35, "아무도 보지 않던 무대가 있었다\n그 무대에서도, 날개를 접지 않았다", ""],
-               [3.80, 5.05, "그리고, 날았다", ""],
-               [5.25, 5.90, "「거위의 꿈」", "is-credit"]];
-  var G_STAGGER = 12;    /* 글자당 지연(ms). 34 는 다 쓰이기 전에 사라졌고,
-                              20 은 36자 카드에서 다 쓰이기까지 1.09초를 먹었다.
-                              12 면 0.91초 — 읽을 시간이 그만큼 늘어난다. */
+  var G_END = 2.10;      /* 갈라짐 → V자 → 흩어짐 → 착지 가 끝나는 시각(초) */
 
   function gEase(t) { return t * t * (3 - 2 * t); }
-  function gIn(t) { return t * t * t; }                    /* 오를 때 — 가속 */
-  function gOut(t) { return 1 - Math.pow(1 - t, 3); }      /* 닿을 때 — 감속 */
   function g01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
   function gOut5(t) { return 1 - Math.pow(1 - t, 5); }   /* 긴 감속 꼬리 — '값비쌈'의 1차 지표 */
   function gQ4io(t) { return t < 0.5 ? 8*t*t*t*t : 1 - Math.pow(-2*t + 2, 4) / 2; }
-  /* 끝값이 구조적으로 정확히 0 인 오버슈트 가산항.
-     (1-u) 인자 때문에 계수를 어떻게 바꿔도 bump(1) === 0 이다.
-     bump(0)=0, 최대 1.0 (u=0.5833). 착지 픽셀 정합이 이 성질 하나에 걸려 있다 —
-     감쇠 사인파(스프링)로 바꾸면 u=1 에서 목표에 0.09% 못 미쳐 0.024px 어긋난다. */
-  function bump(u) { return Math.pow(u, 1.4) * (1 - u) / 0.195917; }
 
   /* t 초에서 거위 상자의 (한 변, 중심 x, 중심 y) — 전부 화면 픽셀 */
-  function goosePath(t, st) {
-    var S = st.S, cx = st.cx + st.S * 0.035, cy = st.cy + st.S * 0.055;
-    if (t < G_CROUCH) {                               /* 어둠 속. 숨을 쉰다 */
-      var r = gEase(g01(t / 1.10));
-      return { s: S * (0.245 + 0.022 * (1 - r)), x: cx,
-               y: cy + S * (0.016 * (1 - r) - 0.010 * r) + Math.sin(t * 1.9) * S * 0.0024 };
-    }
-    if (t < G_RISE) {                                 /* 웅크린다 — anticipation.
-                                                         없으면 갑자기 붕 뜬다 */
-      var a = gEase((t - G_CROUCH) / (G_RISE - G_CROUCH));
-      return { s: S * (0.245 - 0.008 * a), x: cx, y: cy + S * (-0.010 + 0.019 * a) };
-    }
-    if (t < G_GLIDE) {                                /* 날갯짓하며 오른다 */
-      var q = gIn((t - G_RISE) / (G_GLIDE - G_RISE));
-      var sz = S * (0.245 - 0.082 * q);
-      /* 직선이 아니라 호를 그린다. 새는 먼저 뜨고 나중에 나아간다 —
-         가로와 세로에 서로 다른 이징을 주면 그 순서가 궤적에 남는다.
-         둘 다 같은 q 를 쓰던 것이 '드래그되는 느낌'의 절반이었다. */
-      /* 상승을 거의 수직으로. 이것이 결함 B(부리는 오른쪽을 보는데 진행은 왼쪽)에
-         대한 유일하게 안전한 개입이다 — 미러도, 나는 자세 몸통도 만들지 않고,
-         관객이 방향을 읽는 구간에서 어긋남을 3분의 1로 줄인다.
-         가로 이동 0.205 → 0.075, 줄어든 몫은 활공 구간이 담당한다. */
-      var qx = Math.pow(q, 2.40);                     /* 가로는 뒤로 몰린다 */
-      var qy = 1 - Math.pow(1 - q, 1.45);             /* 세로는 먼저 오른다 */
-      return { s: sz, x: cx - S * 0.135 * qx,
-               y: cy + S * (0.009 - 0.285 * qy) + gooseBob(t - 0.067) * sz };
-    }
-    /* 활공 → 착지. 위치와 크기에 서로 다른 꼬리를 주고, 오버슈트는 끝값이
-       정확히 0 인 가산항으로 넣는다. 위치 +2.55%, 크기 +0.84% —
-       크기가 크게 튀면 로고가 젤리로 읽힌다. */
-    var uu = g01((t - G_GLIDE) / (G_END - G_GLIDE));
-    var u = gOut5(uu), us = gOut(uu), b = bump(uu);
-    var s0 = S * 0.163, x0 = cx - S * 0.135, y0 = cy - S * 0.276;
-    /* 오버슈트 계수는 '이동 거리' 에 곱해진다. 0.030 은 데스크톱에서 13px 이 되고
-       그건 27px 마크의 절반이다 — 고무처럼 읽힌다. 0.014 면 약 6px. */
-    var sz2 = s0 + (st.ts - s0) * (us + 0.008 * b);
-    return { s: sz2,
-             x: x0 + (st.tx - x0) * (u + 0.014 * b),
-             y: y0 + (st.ty - y0) * (u + 0.014 * b)
-                + gooseBob(t - 0.067) * sz2 * (1 - uu) };   /* 반동은 u=1 에서 정확히 0 */
-  }
-
-  /* 날갯짓 — 어깨 회전 + 접힘.
-
-     처음에는 scaleY 눌림만으로 했다. 그건 깃발이 펄럭이는 것처럼 보인다.
-     실제 날개는 어깨에서 '회전'하고, 휘두르는 동안 보는 각도 때문에 '짧아 보인다'.
-     12프레임 필름스트립으로 세 가지 각도 범위를 비교해 이 값을 골랐다 —
-     +24°~-26° 는 아래점에서도 날개가 등 위에 쐐기로 남아 모든 프레임이 백조로 읽힌다.
-     -34° 까지 내리면 날개가 몸통에 완전히 잠겨 그냥 앉은 백조가 되고, 깜빡이는 것처럼 보인다.
-
-     다운스트로크가 업스트로크보다 **길다**(0.57 : 0.43). 내리칠 때는 힘을 실어
-     길게 쓸고, 올릴 때는 날개를 접어 관성모멘트를 줄여 빨리 회수한다 —
-     거위는 업스트로크에 공기역학적으로 비활성이다.
-     예전에 0.38 로 두고 주석까지 반대로 적어 두었다. 되돌리지 말 것.
-
-     접힘(scaleY)은 여전히 쓴다. 다만 역할이 바뀌었다 —
-     날갯짓의 단축 표현과, 1~2막의 '날개를 접고 있음'(0.06 = 상표의 매끄러운 몸통)이다.
-     마지막에는 각도 0 · 접힘 1 로 정확히 돌아온다. 그게 헤더 상표의 자세다. */
-  var G_WUP = 24;        /* 날개 최고점 (도) */
-  var G_WDOWN = -26;     /* 날개 최저점 */
-  var G_WFLEX = 0.62;    /* 내리치는 순간의 단축 */
-  var G_DOWNSTROKE = 0.57;
-
-  function gooseWing(t) {
-    if (t < G_FOLD) return [0, 0.06];                 /* 접고 있다 — 상표의 매끄러운 몸통 */
-    if (t < G_RISE) {                                 /* 날개를 편다 */
-      var o = gEase((t - G_FOLD) / (G_RISE - G_FOLD));
-      return [G_WUP * o, 0.06 + 0.94 * o];
-    }
-    var u = ((t - G_RISE) / G_BEAT) % 1;
-    var ang;
-    if (u < G_DOWNSTROKE) {                           /* 내리친다 — 길게, 힘을 실어 */
-      ang = G_WUP + (G_WDOWN - G_WUP) * gEase(u / G_DOWNSTROKE);
-    } else {                                          /* 올린다 — 짧게, 접어서 회수 */
-      ang = G_WDOWN + (G_WUP - G_WDOWN) * gEase((u - G_DOWNSTROKE) / (1 - G_DOWNSTROKE));
-    }
-    /* 접힘 위상이 반대였다. `1 - (1-0.62)*sin(pi*p)` 는 다운스트로크 중간
-       — 양력이 가장 큰 순간 — 에 날개를 0.62 로 가장 작게 만들었다.
-       실제로는 그때 날개가 활짝 펴져 면적이 최대다. 위상을 뒤집는다:
-       다운스트로크 중간 1.00, 업스트로크 중간 0.72. */
-    var flex = 0.86 + 0.14 * Math.cos(2 * Math.PI * (u - G_DOWNSTROKE * 0.5));
-    /* 닿기 직전에는 퍼덕임을 멈추고 상표의 자세(0°, 1.0)로 고정한다. */
-    var gl = gEase(g01((t - (G_END - 0.62)) / 0.42));
-    return [ang * (1 - gl), flex + (1 - flex) * gl];
-  }
-
-  /* 날갯짓에 맞춘 몸의 반동. 내리치는 순간 몸이 뜬다 —
-     이게 없으면 날개만 움직이고 몸은 얼어 있어 스티커처럼 보인다.
-     위상: 다운스트로크가 끝나는 지점에서 가장 높다. 진폭은 마크 크기의 2.6%. */
-  function gooseBob(t) {
-    if (t < G_RISE || t > G_END - 0.5) return 0;
-    /* 양력 최대(다운스트로크 중간) = 가속 최대 = 변위 최소. a = -w^2 y 이므로
-       몸의 최저점이 다운스트로크 중간에 와야 한다. sin 에 0.19 를 쓰던 것은
-       3분의 1 주기 어긋난 값이었다. */
-    var u = ((t - G_RISE) / G_BEAT) % 1;
-    return -Math.cos(2 * Math.PI * (u - (G_DOWNSTROKE * 0.5 + 0.25))) * 0.026;
-  }
-
-  /* 코를 든다. 기울기가 크면 부리가 진행방향(왼쪽 위)에 가까워져 방향 모순이
-     줄고, 활공이 '비행'이 아니라 '착지 플레어'로 읽힌다. 실제 거위 이륙의
-     몸통 피치는 3타째에 20도 대에서 안정된다.
-     끝값은 정확히 0 이어야 한다 — 상표는 기울어 있지 않다.
-     검증: gEase(1)=1 로 첫 항 0, bump(1)=0 으로 둘째 항 0. */
-  function gooseTilt(t) {
-    if (t < G_RISE) return 0;
-    if (t < G_GLIDE) return -26 * gEase(g01((t - G_RISE) / 0.60));
-    var u = g01((t - G_GLIDE) / (G_END - G_GLIDE));
-    return -26 * (1 - gEase(g01((t - G_GLIDE) / 1.15))) + 4.0 * bump(u);
-  }
-
   function initLoader() {
     var box = $("#loader");
     if (!box) return;
@@ -3258,7 +3110,19 @@
        <main> 만 갈아끼우므로 이 함수가 다시 돌지 않는다 — 즉 '진짜로 새로
        열거나 새로고침했을 때'만 보인다. */
     var root = document.documentElement;
-    var brand = document.querySelector(".site-header .brand-mark");
+    /* 착지 목표는 '지금 화면에 보이는' 마크다.
+       헤더에는 마크가 둘 있다 — 좌측 상표(.brand-mark)와 내비 정중앙(.mark-goose).
+       1081px 이상에서는 .brand 가 display:none 이라 좌측 상표는 자리를 갖지 않는다.
+       예전 코드가 .brand-mark 만 보고 있어서, 데스크톱에서는 폭 0 인 상자를
+       목표로 삼아 거위가 왼쪽 위 구석으로 빨려 들어갔다. 폭으로 판정한다. */
+    var brand = (function () {
+      var cands = [document.querySelector(".site-header .mark-goose"),
+                   document.querySelector(".site-header .brand-mark")];
+      for (var i = 0; i < cands.length; i++) {
+        if (cands[i] && cands[i].getBoundingClientRect().width > 1) return cands[i];
+      }
+      return cands[0] || cands[1];
+    })();
     var shown = false;
 
     root.classList.add("is-intro");
@@ -3288,59 +3152,48 @@
     return e;
   }
 
-  /* 어둠에서 상표까지, 한 번도 끊기지 않고 */
+  /* 뭉친 것이 갈라지고, 하나가 상표 자리에 앉는다.
+
+     beyonce.com 실측(2026-08-09, Chrome): 로더 안에 별 다섯이
+     .site-loader__stars-center 로 화면 한가운데 겹쳐 있다가,
+     .site-loader__stars-outer 로 네 변 한가운데(위 756,21 · 오른쪽 1491,387 ·
+     아래 758,750 · 왼쪽 22,387 / 1512x772)로 흩어진다. 흩어진 그 자리가
+     그대로 사이트의 영구 테두리 별(.site-border__stars)이다.
+     이야기도 자막도 넘을 선도 없다 — 뭉친 것이 갈라질 뿐이다.
+
+     우리의 영구 표식은 헤더의 거위 하나뿐이다. 그래서 다섯 중 하나만
+     상표에 앉히고 넷은 화면 밖으로 보낸다. 착지 좌표는 매 프레임 헤더에서
+     다시 재므로 창 크기가 바뀌어도 어긋나지 않는다. */
   function flyGoose(box, brand, reveal, safety) {
     var scrim = box.querySelector(".ld-dark");
-    var beam = box.querySelector(".ld-beam");
-    var glow = box.querySelector(".ld-glow");
-    var line = box.querySelector(".ld-line");
-    var say = box.querySelector(".ld-say");
-    if (!scrim || !line) return false;
+    if (!scrim) return false;
 
-    /* 먼지. 검정만 있으면 화면이 죽어 보인다 — 공기가 있어야 공간이 된다. */
-    for (var m = 0; m < 26; m++) {
-      var mo = document.createElement("i");
-      mo.className = "ld-mote";
-      mo.style.left = (m * 3.9 + (m % 7) * 1.7) + "%";
-      mo.style.top = ((m * 37) % 100) + "%";
-      mo.style.animationDelay = (-m * 0.61) + "s";
-      mo.style.animationDuration = (7 + (m % 5) * 2.2) + "s";
-      /* 크기를 섞는다. 모두 같은 크기면 격자처럼 보여 공기가 아니라 무늬가 된다. */
-      var sz = 1 + (m % 3);
-      mo.style.width = sz + "px"; mo.style.height = sz + "px";
-      mo.style.opacity = (0.9 - (m % 3) * 0.22).toFixed(2);
-      box.appendChild(mo);
+    function makeBird() {
+      var b = document.createElement("div");
+      b.className = "ld-goose";
+      var svg = svgEl("svg", { viewBox: "3 7.8 96.6 72.8", "aria-hidden": "true", focusable: "false" });
+      svg.appendChild(svgEl("path", { d: G_BODY, fill: "currentColor" }));
+      /* 날개만 따로 묶는다 — 나는 동안 젓고, 앉으면서 정확히 0 으로 잦아든다.
+         0 이 아니면 상표와 다른 그림으로 끝나 착지가 어긋나 보인다. */
+      var wg = svgEl("g", {});
+      wg.appendChild(svgEl("path", { d: G_WING, fill: "currentColor" }));
+      svg.appendChild(wg);
+      b.appendChild(svg);
+      box.appendChild(b);
+      return { el: b, wing: wg };
     }
 
-    /* 상표를 날개만 따로 떼어 다시 조립한다. 헤더의 상표는 서브패스 둘이 한
-       패스로 붙어 있어 날개를 따로 움직일 수 없다 — 그래서 여기서만 나눈다. */
-    var bird = document.createElement("div");
-    bird.className = "ld-goose";
-    var svg = svgEl("svg", { viewBox: "3 7.8 96.6 72.8", "aria-hidden": "true", focusable: "false" });
-    svg.appendChild(svgEl("path", { d: G_BODY, fill: "currentColor" }));
-    /* 두 겹으로 감싼다: 바깥이 어깨 회전, 안쪽이 접힘.
-       하나의 transform 에 몰아넣으면 회전과 접힘의 축이 엉켜 날개가 비틀린다. */
-    var wingRot = svgEl("g", {});
-    var wingFlex = svgEl("g", {});
-    wingFlex.appendChild(svgEl("path", { d: G_WING, fill: "currentColor" }));
-    wingRot.appendChild(wingFlex);
-    svg.appendChild(wingRot);
-    bird.appendChild(svg);
-    box.appendChild(bird);
+    var lander = makeBird();
+    /* 흩어지는 넷. [각도(도), 지연]. -90 이 위 — 그쪽은 상표가 쓰므로 비운다. */
+    var FAN = [[-146, 0.00], [-34, 0.05], [146, 0.03], [34, 0.08]];
+    var fan = [], fi;
+    for (fi = 0; fi < FAN.length; fi++) fan.push(makeBird());
 
     /* ── 건너뛰기 ──
-       매번 6초를 강요하지 않는다. 마지막 0.45초로 건너뛴다 — 끊지 않는 이유는
-       상표에 앉는 것으로 끝나야 말이 되기 때문이다.
-
-       고친 것 셋:
-       ① {once:true} 를 뺐다. 탭 한 번에 pointerdown 과 touchstart 가 함께
-          발화하므로, 첫 rAF 이전(0~32ms)의 탭 하나가 네 채널 중 둘을
-          조용히 소모하고 그 뒤로는 건너뛰기가 죽어 있었다.
-       ② t0 를 뒤로 당기던 것을 고정 오프셋(boost)으로 바꿨다. 예전 방식은
-          t > G_END-0.45 에서 시계가 뒤로 감겼다.
-       ③ 로더는 pointer-events:none 이라 탭이 그대로 통과해 아래 필름스트립을
-          누른다 — 영상 라이트박스가 열리거나 다른 페이지로 이동했다.
-          건너뛴 직후의 click 한 번만 캡처 단계에서 삼킨다. */
+       {once:true} 를 쓰지 않는다: 탭 한 번에 pointerdown 과 touchstart 가 함께
+       발화해 채널을 조용히 소모하고 그 뒤로 건너뛰기가 죽는다.
+       로더는 pointer-events:none 이라 탭이 아래 필름스트립으로 새어 나가므로,
+       건너뛴 직후의 click 한 번만 캡처 단계에서 삼킨다. */
     var t0 = 0, skipped = false, boost = 0;
     function swallow(ev) {
       ev.preventDefault(); ev.stopPropagation();
@@ -3349,7 +3202,7 @@
     function skip() {
       if (skipped) return;
       skipped = true;
-      if (t0) boost = Math.max(0, (G_END - 0.45) - (performance.now() - t0) / 1000);
+      if (t0) boost = Math.max(0, (G_END - 0.30) - (performance.now() - t0) / 1000);
       document.addEventListener("click", swallow, true);
       setTimeout(function () { document.removeEventListener("click", swallow, true); }, 700);
     }
@@ -3357,189 +3210,126 @@
     for (var k = 0; k < SKIPS.length; k++) {
       window.addEventListener(SKIPS[k], skip, { passive: true });
     }
-
-    /* 보이는 문. WCAG 2.2.2 는 자동 모션에 정지 수단을 요구하고,
-       '아무 데나 누르세요' 는 아무도 모르는 제스처다. */
+    /* WCAG 2.2.2 는 자동 모션에 정지 수단을 요구한다.
+       '아무 데나 누르세요' 는 아무도 모르는 제스처라 보이는 문을 따로 둔다. */
     var sk = document.createElement("button");
     sk.type = "button";
     sk.className = "ld-skip";
     sk.textContent = "건너뛰기";
     sk.addEventListener("click", function (ev) { ev.stopPropagation(); skip(); });
     document.body.appendChild(sk);
-    setTimeout(function () { sk.classList.add("on"); }, 1200);
+    setTimeout(function () { sk.classList.add("on"); }, 700);
 
-    var lastSay = -1, lastBand = -1, tCross = 0;
-    /* frame 은 감싸여 있지 않았다. .ld-dark 는 기본이 불투명 검정이므로
-       루프가 한 번 던지면 관객은 8초 동안 검은 화면을 본다.
-       연출은 잘려도 되지만 사이트는 즉시 살아나야 한다. */
     function frame(now) {
       try { frameBody(now); }
       catch (e) { clearTimeout(safety); reveal(); }
     }
     function frameBody(now) {
       if (!t0) t0 = now;
-      /* 벽시계 + 고정 오프셋. 프레임 적산이 아니라 벽시계를 쓰는 이유:
-         느린 기기에서 프레임을 잃어도 6초는 지켜져 안전망에 걸리지 않는다. */
+      /* 프레임 적산이 아니라 벽시계를 쓴다 — 느린 기기에서 프레임을 잃어도
+         끝나는 시각은 지켜져 안전망(8초)에 걸리지 않는다. */
       var t = (now - t0) / 1000 + boost;
       var tc = Math.min(t, G_END);
 
-      /* 무대와 목적지는 매 프레임 다시 잰다 — 도중에 창을 바꿔도 상표를 놓치지 않는다 */
       var vw = window.innerWidth, vh = window.innerHeight;
       var br = brand.getBoundingClientRect();
-      var st = { S: Math.min(vw, vh), cx: vw / 2, cy: vh / 2,
-                 ts: br.width, tx: br.left + br.width / 2, ty: br.top + br.height / 2 };
+      var S = Math.min(vw, vh);
+      /* 뭉쳐 있는 자리와 크기 */
+      var cx = vw / 2, cy = vh * 0.52, cs = S * 0.22;
 
-      /* 겹침(overlapping action). 어깨가 먼저 움직이고 몸이 뒤따르고 기울기가
-         더 뒤진다 — 프로와 아마추어를 가르는 지점이다. 채널이 전부 같은 tc 를
-         읽고 있었다. 60fps 프레임 단위로 못박는다: 기울기 9프레임, 빛 16프레임.
-         (몸의 반동은 goosePath 안에서 이미 4프레임 뒤진다.) */
-      var tTilt = Math.max(0, tc - 0.150);
-      var tGlow = Math.max(0, tc - 0.267);
-      var p = goosePath(tc, st);
-      /* 어둠 속에서는 실루엣으로만 보이다가, 조명이 스치며 드러난다 */
-      var lit = 0.14 + 0.86 * gEase(g01((t - 1.05) / 0.95));
+      /* 세 박자다.
+         ① 0 ~ HOLD      겹쳐 있다 — 한 마리로 보인다
+         ② HOLD ~ VEE    갈라져 기러기 V자를 이룬다
+         ③ VEE ~ G_END   대열이 풀리며 넷은 나가고 하나는 상표에 앉는다
 
-      /* 원점을 상자 가운데로 두었다. 예전엔 0 0 이라 축소할 때마다 상자가
-         왼쪽 위로 쏠려, 거위와 빛이 각각 한 번씩 엉뚱한 자리로 갔다.
-         가운데 원점이면 '중심 - 절반' 같은 보정이 아예 필요 없다. */
-      bird.style.transform = "translate3d(" + (p.x - G_BOX / 2).toFixed(3) + "px,"
-        + (p.y - G_BOX / 2).toFixed(3) + "px,0) scale(" + (p.s / G_BOX).toFixed(6)
-        + ") rotate(" + gooseTilt(tc < G_GLIDE ? tTilt : tc).toFixed(3) + "deg)";
-      bird.style.opacity = lit.toFixed(3);
-      /* 내리치는 순간 빛이 한 번 뛴다. 다만 매 프레임 값을 바꾸면 512px 요소의
-         휘도가 3~4Hz 로 진동한다 — 광민감성 발작 대역이다. 어머니는 70대다.
-         그래서 4단계로 양자화하고 단계가 바뀔 때만 쓴다. 진폭도 18~44px 에서
-         22~31px 로, 알파도 0.30~0.56 에서 0.32~0.38 로 줄였다. */
-      var punch = tc > G_RISE && tc < G_END - 0.5
-        ? Math.max(0, Math.sin(Math.PI * (((tc - G_RISE) / G_BEAT) % 1) / G_DOWNSTROKE)) : 0;
-      var band = Math.round(punch * 3);
-      if (band !== lastBand) {
-        lastBand = band;
-        bird.style.filter = "drop-shadow(0 0 " + (22 + 3 * band)
-          + "px rgba(246,226,178," + (0.32 + 0.02 * band).toFixed(2) + "))";
-      }
-      var wk = gooseWing(tc);
-      wingRot.setAttribute("transform", "rotate(" + wk[0].toFixed(2) + " "
-        + G_PIV[0] + " " + G_PIV[1] + ")");
-      wingFlex.setAttribute("transform", "translate(" + G_PIV[0] + " " + G_PIV[1]
-        + ") scale(1 " + wk[1].toFixed(4) + ") translate(" + (-G_PIV[0]) + " " + (-G_PIV[1]) + ")");
+         비욘세의 별은 갈라져 흩어지기만 한다. 우리 거위는 흩어지기 전에
+         잠깐 대열을 이룬다 — 기러기가 실제로 나는 모양이고, 이 사이트가
+         이미 품고 있는 뜻이다(앞선 새의 상승기류에 기대어 함께 간다).
+         자막으로 설명하지 않는다. 모양이 말하게 둔다. */
+      var HOLD = 0.16, VEE = 0.92;
+      var uV = g01((tc - HOLD) / (VEE - HOLD));      /* 모이는 국면 */
+      var uS = g01((tc - VEE) / (G_END - VEE));      /* 풀리는 국면 */
+      var eV = gOut5(uV), eS = gOut5(uS);
 
-      /* 품은 꿈. 거위 뒤에서 금빛이 맺혀 자라고, 나는 동안은 옅게 남아
-         선 그림 하나만으로는 나오지 않는 기운을 대신한다. */
-      if (glow) {
-        var ga = gEase(g01((t - 1.45) / 0.95)) * (1 - 0.62 * gEase(g01((t - G_RISE) / 1.10)));
-        /* 빛이 거위 좌표를 배수 1.000 으로 그대로 따라가면 후광 스티커로 읽힌다.
-           16프레임 뒤지게 하고 이동폭을 0.82 로 줄여, 빛이 거위를 '따라온다'. */
-        var gq = goosePath(tGlow, st);
-        var gs = (0.55 + 0.85 * gEase(g01((t - 1.45) / 1.30))) * gq.s / 320;
-        var gcx = st.cx + (gq.x - st.cx) * 0.82, gcy = st.cy + (gq.y - st.cy) * 0.82;
-        glow.style.transform = "translate3d(" + (gcx - 160).toFixed(2) + "px,"
-          + (gcy - 160).toFixed(2) + "px,0) scale(" + gs.toFixed(3) + ")";
-        glow.style.opacity = (ga * 0.58).toFixed(3);
-      }
+      /* 나타남. 검정에서 그냥 켜지면 '떴다'가 되므로 짧게 밝아진다. */
+      var lit = gEase(g01(tc / 0.30));
 
-      /* 넘어야 하는 선. 2막에서 그려지고, 거위가 통과하는 순간 부서진다.
-         시각으로 묶었더니 정지한 거위의 몸통을 관통해 '거위에 그은 줄'로 보였다 —
-         그래서 위치로 묶는다. 부리의 실제 좌표를 기울기까지 반영해 계산한다:
-         상자 비율 (0.5, -0.3168) 을 tilt 만큼 회전시켜 더한다.
-         0.36 하나로 근사하던 것은 착지 지점에서 26px 어긋났다. */
-      var th = gooseTilt(tc) * Math.PI / 180;
-      var ly = st.cy - st.S * 0.20;
-      var hy = p.y + p.s * (G_BEAK[0] * Math.sin(th) + G_BEAK[1] * Math.cos(th));
-      var over = (ly - hy) / (st.S * 0.055);
-      var draw = gEase(g01((t - 1.00) / 1.05));
-      var burst = gEase(g01(over));
-      /* 부서지는 계수가 곧 지우는 계수였다 — opacity = 0.85*draw*(1-burst) 이므로
-         burst 가 오를수록 선이 사라져, 클라이맥스가 '번쩍'이 아니라 페이드아웃이었다.
-         밝아지는 국면과 사라지는 국면을 나눈다: 앞의 40% 는 밝아지고 뒤에서 사라진다. */
-      var flash = Math.min(1, burst / 0.4);
-      var fade = g01((burst - 0.4) / 0.6);
-      line.style.transform = "translate3d(0," + ly.toFixed(1) + "px,0) scaleX("
-        + (draw * (1 + burst * 0.06)).toFixed(4) + ")";
-      line.style.opacity = (draw * (0.85 + 1.9 * flash) * (1 - fade)).toFixed(3);
-      line.style.filter = "blur(" + (0.4 + burst * 9).toFixed(2) + "px) brightness("
-        + (1 + flash * 2.2).toFixed(2) + ")";
+      /* V자 자리. 선두가 앞서고 뒤로 갈수록 비스듬히 처진다.
+         [열, 위아래] — 열이 0 인 선두가 상표로 갈 한 마리다. */
+      var VPOS = [[0, 0], [-1, -1], [-1, 1], [-2, -2], [-2, 2]];
+      var gapX = S * 0.085, gapY = S * 0.052;
+      /* 대열은 화면 가운데보다 살짝 왼쪽에서 오른쪽 위(상표 쪽)를 본다 */
+      var fcx = cx - S * 0.02, fcy = cy;
 
-      /* 어둠은 '넘은 뒤에' 걷혀야 한다. 상수 3.70 으로 두었더니 부리가 선을
-         넘는 것은 4.36초인데 어둠은 3.70초에 열리기 시작했다 — 0.66초 먼저
-         세상이 열리면 넘는 일이 무의미해진다. 통과 시각을 래치해서 거기에 묶는다.
-         안전 바닥을 두어, 판정이 어떤 이유로 안 걸려도 연출이 멈추지 않는다. */
-      if (!tCross && over >= 0) tCross = t;
-      if (!tCross && t >= G_GLIDE - 0.55) tCross = G_GLIDE - 0.55;
-      var sc = 1;
-      if (tCross) {
-        sc = 1 - 0.86 * gQ4io(g01((t - tCross) / 1.05))
-               - 0.14 * gQ4io(g01((t - (G_GLIDE + 0.45)) / 0.70));
-      }
-      scrim.style.opacity = Math.max(0, sc).toFixed(3);
+      var tw = br.width, tx = br.left + br.width / 2, ty = br.top + br.height / 2;
 
-      /* 자막 */
-      if (say) {
-        var act = -1;
-        for (var n = 0; n < G_SAY.length; n++) {
-          var A = G_SAY[n];
-          if (t >= A[0] && t <= A[1]) { act = n; break; }
+      for (var i = 0; i < 5; i++) {
+        var bird = i === 0 ? lander : fan[i - 1];
+        /* 모이는 국면: 겹친 자리 → V자 자리 */
+        var vx = fcx + VPOS[i][0] * gapX;
+        var vy = fcy + VPOS[i][1] * gapY;
+        var px = cx + (vx - cx) * eV;
+        var py = cy + (vy - cy) * eV;
+        /* 뒤로 갈수록 조금 작다 — 같은 크기 다섯이면 복사본으로 읽힌다.
+           크기 차이가 거리를 만든다. */
+        var depth = 1 - Math.abs(VPOS[i][0]) * 0.10;
+        var pw = cs * depth;
+        var prot = -6 * (1 - eV);
+        var pop = lit * (1 - Math.abs(VPOS[i][0]) * 0.13);
+
+        if (i === 0) {
+          /* 선두는 대열을 이끌다가 그대로 상표 자리로 올라가 앉는다 */
+          px = px + (tx - px) * eS;
+          py = py + (ty - py) * eS - Math.sin(Math.PI * eS) * S * 0.05;
+          pw = pw + (tw - pw) * eS;
+          prot = prot * (1 - eS);      /* 착지에서 정확히 0 */
+        } else {
+          /* 나머지는 대열을 유지한 채 각자의 방향으로 화면을 빠져나간다 */
+          var ang = Math.atan2(VPOS[i][1], VPOS[i][0] - 0.35);
+          var dist = S * 1.15 * eS;
+          px += Math.cos(ang) * dist;
+          py += Math.sin(ang) * dist;
+          pw *= (1 - 0.34 * eS);
+          pop *= (1 - gEase(g01((eS - 0.30) / 0.70)));
         }
-        if (act !== lastSay) {
-          lastSay = act;
-          /* 한 덩어리로 페이드하면 자막이 '켜졌다'가 된다. 글자마다 34ms 씩
-             밀어 흐림에서 풀리게 하면 '쓰여진다'가 된다 — 같은 문장인데
-             값이 다르게 읽힌다. 매 프레임 계산하지 않고 CSS 전환에 맡긴다
-             (transition-delay 를 글자마다 다르게 주는 것으로 끝난다). */
-          say.className = "ld-say " + (act < 0 ? "" : G_SAY[act][3]);
-          while (say.firstChild) say.removeChild(say.firstChild);
-          if (act >= 0) {
-            var txt = G_SAY[act][2], shown = 0;
-            /* 곡 제목은 문장이 아니다. 글자별로 쓰면 노출이 끝나기 전에
-               다 나오지 못한다 — 한 덩어리로 띄운다. */
-            var stag = G_SAY[act][3] === "is-credit" ? 0 : G_STAGGER;
-            for (var ci = 0; ci < txt.length; ci++) {
-              if (txt.charAt(ci) === "\n") { say.appendChild(document.createElement("br")); continue; }
-              var sp = document.createElement("span");
-              sp.textContent = txt.charAt(ci) === " " ? "\u00a0" : txt.charAt(ci);
-              sp.style.transitionDelay = (shown * stag) + "ms";
-              say.appendChild(sp);
-              shown++;
-            }
-            /* 넣은 프레임에 바로 켜면 브라우저가 두 상태를 합쳐 보고 전환을 건너뛴다 */
-            (function (el) {
-              requestAnimationFrame(function () { el.classList.add("in"); });
-            })(say);
-          }
-        }
-        /* 들어오는 것은 CSS 가 글자별로 한다. 여기서는 나가는 쪽만 관리한다. */
-        say.style.opacity = (act < 0 ? 0
-          : gEase(g01((G_SAY[act][1] - t) / 0.42))).toFixed(3);
+
+        bird.el.style.transform = "translate3d(" + (px - G_BOX / 2).toFixed(2) + "px,"
+          + (py - G_BOX / 2).toFixed(2) + "px,0) scale(" + (pw / G_BOX).toFixed(6)
+          + ") rotate(" + prot.toFixed(3) + "deg)";
+        bird.el.style.opacity = pop.toFixed(3);
+
+        /* 날갯짓. 선두는 앉으면서 정확히 0 으로 잦아든다 —
+           0 이 아니면 상표와 다른 그림으로 끝나 착지가 어긋나 보인다.
+           뒤따르는 넷은 위상을 어긋내 대열이 기계처럼 보이지 않게 한다. */
+        var damp = i === 0 ? (1 - gEase(g01((uS - 0.30) / 0.70))) : 1;
+        var flap = Math.sin(tc * 8.2 + i * 0.9) * 14 * damp;
+        bird.wing.setAttribute("transform", "rotate(" + flap.toFixed(2) + " 66 55)");
       }
 
-      if (beam) {                                     /* 무대 조명 한 줄기 */
-        var bp = g01((t - 1.05) / 1.05);
-        beam.style.opacity = (t > 1.05 && t < 2.10 ? Math.pow(Math.sin(Math.PI * bp), 1.3) * 0.34 : 0).toFixed(3);
-        beam.style.transform = "translate3d(" + ((1.35 - bp * 2.35) * vw).toFixed(0) + "px,0,0)";
-      }
+      /* ④ 어둠은 갈라지기 시작할 때 함께 걷힌다 */
+      scrim.style.opacity = (1 - gQ4io(g01((tc - HOLD - 0.06) / (G_END - HOLD - 0.30)))).toFixed(3);
 
       if (t < G_END) { requestAnimationFrame(frame); return; }
 
-      /* 마지막 프레임을 손으로 못박는다. rAF 프레임은 G_END 에 정확히 떨어지지
-         않으므로 렌더되는 마지막 값에 기울기 0.3도쯤이 남는다 — 상표는 기울어
-         있지 않다. 여기서 t = G_END 의 값을 그대로 써 회전 0 을 보장한다. */
-      var pf = goosePath(G_END, st);
-      bird.style.transform = "translate3d(" + (pf.x - G_BOX / 2).toFixed(3) + "px,"
-        + (pf.y - G_BOX / 2).toFixed(3) + "px,0) scale(" + (pf.s / G_BOX).toFixed(6)
-        + ") rotate(0deg)";
-      var wf = gooseWing(G_END);
-      wingRot.setAttribute("transform", "rotate(" + wf[0].toFixed(2) + " "
-        + G_PIV[0] + " " + G_PIV[1] + ")");
-      wingFlex.setAttribute("transform", "translate(" + G_PIV[0] + " " + G_PIV[1]
-        + ") scale(1 " + wf[1].toFixed(4) + ") translate(" + (-G_PIV[0]) + " " + (-G_PIV[1]) + ")");
+      /* 마지막 프레임을 손으로 못박는다. rAF 는 G_END 에 정확히 떨어지지 않아
+         회전 0.3도쯤이 남는데, 상표는 기울어 있지 않다. */
+      lander.el.style.transform = "translate3d(" + (tx - G_BOX / 2).toFixed(2) + "px,"
+        + (ty - G_BOX / 2).toFixed(2) + "px,0) scale(" + (tw / G_BOX).toFixed(6) + ") rotate(0deg)";
+      lander.wing.setAttribute("transform", "rotate(0 66 55)");
+      scrim.style.opacity = "0";
 
       /* 순서가 중요하다. clearTimeout 을 먼저 부르고 그 뒤에서 예외가 나면
-         헤더가 영구히 사라진다 — '무슨 일이 있어도 헤더는 돌아온다' 가 깨진다.
-         그래서 안전망 해제를 맨 마지막에 둔다. */
+         헤더가 영구히 사라진다 — 안전망 해제를 맨 마지막에 둔다. */
       if (sk.parentNode) sk.parentNode.removeChild(sk);
-      reveal();                     /* 진짜 상표가 켜진다 */
-      bird.classList.add("gone");   /* 같은 그림·같은 자리·같은 크기라 안 보인다 */
-      setTimeout(function () { if (bird.parentNode) bird.parentNode.removeChild(bird); }, 520);
+      reveal();                              /* 진짜 상표가 켜진다 */
+      lander.el.classList.add("gone");       /* 같은 그림·같은 자리·같은 크기라 안 보인다 */
+      for (i = 0; i < fan.length; i++) fan[i].el.classList.add("gone");
+      setTimeout(function () {
+        if (lander.el.parentNode) lander.el.parentNode.removeChild(lander.el);
+        for (var q = 0; q < fan.length; q++) {
+          if (fan[q].el.parentNode) fan[q].el.parentNode.removeChild(fan[q].el);
+        }
+      }, 520);
       clearTimeout(safety);
     }
     requestAnimationFrame(frame);
