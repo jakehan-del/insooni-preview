@@ -3115,7 +3115,9 @@
   var G_SAY = [[0.42, 3.35, "아무도 보지 않던 무대가 있었다\n그 무대에서도, 날개를 접지 않았다", ""],
                [3.80, 5.05, "그리고, 날았다", ""],
                [5.25, 5.90, "「거위의 꿈」", "is-credit"]];
-  var G_STAGGER = 20;    /* 글자당 지연(ms). 34 는 다 쓰이기 전에 사라졌다 */
+  var G_STAGGER = 12;    /* 글자당 지연(ms). 34 는 다 쓰이기 전에 사라졌고,
+                              20 은 36자 카드에서 다 쓰이기까지 1.09초를 먹었다.
+                              12 면 0.91초 — 읽을 시간이 그만큼 늘어난다. */
 
   function gEase(t) { return t * t * (3 - 2 * t); }
   function gIn(t) { return t * t * t; }                    /* 오를 때 — 가속 */
@@ -3234,6 +3236,8 @@
       if (shown) return;
       shown = true;
       root.classList.remove("is-intro");
+      var b = document.querySelector(".ld-skip");
+      if (b && b.parentNode) b.parentNode.removeChild(b);
       box.classList.add("done");
       setTimeout(function () { if (box.parentNode) box.remove(); }, 900);
     }
@@ -3290,23 +3294,59 @@
     bird.appendChild(svg);
     box.appendChild(bird);
 
-    /* 매번 5초를 강요하지 않는다. 어디든 누르면 마지막 0.45초로 건너뛴다 —
-       끊지 않고 건너뛰는 이유는, 상표에 앉는 것으로 끝나야 말이 되기 때문이다. */
-    var t0 = 0, skipped = false;
+    /* ── 건너뛰기 ──
+       매번 6초를 강요하지 않는다. 마지막 0.45초로 건너뛴다 — 끊지 않는 이유는
+       상표에 앉는 것으로 끝나야 말이 되기 때문이다.
+
+       고친 것 셋:
+       ① {once:true} 를 뺐다. 탭 한 번에 pointerdown 과 touchstart 가 함께
+          발화하므로, 첫 rAF 이전(0~32ms)의 탭 하나가 네 채널 중 둘을
+          조용히 소모하고 그 뒤로는 건너뛰기가 죽어 있었다.
+       ② t0 를 뒤로 당기던 것을 고정 오프셋(boost)으로 바꿨다. 예전 방식은
+          t > G_END-0.45 에서 시계가 뒤로 감겼다.
+       ③ 로더는 pointer-events:none 이라 탭이 그대로 통과해 아래 필름스트립을
+          누른다 — 영상 라이트박스가 열리거나 다른 페이지로 이동했다.
+          건너뛴 직후의 click 한 번만 캡처 단계에서 삼킨다. */
+    var t0 = 0, skipped = false, boost = 0;
+    function swallow(ev) {
+      ev.preventDefault(); ev.stopPropagation();
+      document.removeEventListener("click", swallow, true);
+    }
     function skip() {
-      if (skipped || !t0) return;
+      if (skipped) return;
       skipped = true;
-      t0 -= (G_END - 0.45) * 1000 - (performance.now() - t0);
+      if (t0) boost = Math.max(0, (G_END - 0.45) - (performance.now() - t0) / 1000);
+      document.addEventListener("click", swallow, true);
+      setTimeout(function () { document.removeEventListener("click", swallow, true); }, 700);
     }
     var SKIPS = ["pointerdown", "keydown", "wheel", "touchstart"];
     for (var k = 0; k < SKIPS.length; k++) {
-      window.addEventListener(SKIPS[k], skip, { passive: true, once: true });
+      window.addEventListener(SKIPS[k], skip, { passive: true });
     }
 
-    var lastSay = -1;
+    /* 보이는 문. WCAG 2.2.2 는 자동 모션에 정지 수단을 요구하고,
+       '아무 데나 누르세요' 는 아무도 모르는 제스처다. */
+    var sk = document.createElement("button");
+    sk.type = "button";
+    sk.className = "ld-skip";
+    sk.textContent = "건너뛰기";
+    sk.addEventListener("click", function (ev) { ev.stopPropagation(); skip(); });
+    document.body.appendChild(sk);
+    setTimeout(function () { sk.classList.add("on"); }, 1200);
+
+    var lastSay = -1, lastBand = -1;
+    /* frame 은 감싸여 있지 않았다. .ld-dark 는 기본이 불투명 검정이므로
+       루프가 한 번 던지면 관객은 8초 동안 검은 화면을 본다.
+       연출은 잘려도 되지만 사이트는 즉시 살아나야 한다. */
     function frame(now) {
+      try { frameBody(now); }
+      catch (e) { clearTimeout(safety); reveal(); }
+    }
+    function frameBody(now) {
       if (!t0) t0 = now;
-      var t = (now - t0) / 1000;
+      /* 벽시계 + 고정 오프셋. 프레임 적산이 아니라 벽시계를 쓰는 이유:
+         느린 기기에서 프레임을 잃어도 6초는 지켜져 안전망에 걸리지 않는다. */
+      var t = (now - t0) / 1000 + boost;
       var tc = Math.min(t, G_END);
 
       /* 무대와 목적지는 매 프레임 다시 잰다 — 도중에 창을 바꿔도 상표를 놓치지 않는다 */
@@ -3326,12 +3366,18 @@
         + (p.y - G_BOX / 2).toFixed(1) + "px,0) scale(" + (p.s / G_BOX).toFixed(5)
         + ") rotate(" + gooseTilt(tc).toFixed(2) + "deg)";
       bird.style.opacity = lit.toFixed(3);
-      /* 내리치는 순간 빛이 한 번 뛴다. 날개만 움직이고 빛이 일정하면
-         그림이 평평하게 남는다 — 힘이 들어가는 순간을 빛도 같이 받아야 한다. */
+      /* 내리치는 순간 빛이 한 번 뛴다. 다만 매 프레임 값을 바꾸면 512px 요소의
+         휘도가 3~4Hz 로 진동한다 — 광민감성 발작 대역이다. 어머니는 70대다.
+         그래서 4단계로 양자화하고 단계가 바뀔 때만 쓴다. 진폭도 18~44px 에서
+         22~31px 로, 알파도 0.30~0.56 에서 0.32~0.38 로 줄였다. */
       var punch = tc > G_RISE && tc < G_END - 0.5
         ? Math.max(0, Math.sin(Math.PI * (((tc - G_RISE) / G_BEAT) % 1) / G_DOWNSTROKE)) : 0;
-      bird.style.filter = "drop-shadow(0 0 " + (18 + 26 * punch).toFixed(1)
-        + "px rgba(246,226,178," + (0.30 + 0.26 * punch).toFixed(3) + "))";
+      var band = Math.round(punch * 3);
+      if (band !== lastBand) {
+        lastBand = band;
+        bird.style.filter = "drop-shadow(0 0 " + (22 + 3 * band)
+          + "px rgba(246,226,178," + (0.32 + 0.02 * band).toFixed(2) + "))";
+      }
       var wk = gooseWing(tc);
       wingRot.setAttribute("transform", "rotate(" + wk[0].toFixed(2) + " "
         + G_PIV[0] + " " + G_PIV[1] + ")");
@@ -3414,10 +3460,14 @@
 
       if (t < G_END) { requestAnimationFrame(frame); return; }
 
-      clearTimeout(safety);
+      /* 순서가 중요하다. clearTimeout 을 먼저 부르고 그 뒤에서 예외가 나면
+         헤더가 영구히 사라진다 — '무슨 일이 있어도 헤더는 돌아온다' 가 깨진다.
+         그래서 안전망 해제를 맨 마지막에 둔다. */
+      if (sk.parentNode) sk.parentNode.removeChild(sk);
       reveal();                     /* 진짜 상표가 켜진다 */
       bird.classList.add("gone");   /* 같은 그림·같은 자리·같은 크기라 안 보인다 */
       setTimeout(function () { if (bird.parentNode) bird.parentNode.removeChild(bird); }, 520);
+      clearTimeout(safety);
     }
     requestAnimationFrame(frame);
     return true;
