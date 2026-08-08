@@ -3090,6 +3090,11 @@
      한 픽셀도 다르면 안 되기 때문이다. */
   var G_BODY = "M3 74 C3 63 16 55 35 54.4 C47 54 56 55.6 61 57.8 C59 50 59 40 62 31 C66 19.4 73 11.6 81 8.6 C85.6 7 89.4 8 91 11.2 L99.6 13.6 L90.8 16.8 C89.2 19.8 86.2 21.4 82.6 20.8 C78.2 20.2 74.8 24.8 72.6 33 C70.2 42 70.2 52 72.8 61 C73.6 64 72.6 67 69 70 C61 77 44 81 26 80.6 C16 80.4 8 79 3 74 Z M3 74 C8 70 16 64 26 60 C18 66 10 71 3 74 Z";
   var G_WING = "M68 52 C60 39 46 29 27 25 C30 38 35 49 43 57 C52 66 63 64 68 52 Z";
+  /* 부리의 위치 — 상자 한 변에 대한 비율. viewBox 중심(51.3,44.2) 에서
+     부리(99.6,13.6) 까지 (+48.3, -30.6) 유닛이고, 512px 상자에 배율 512/96.6
+     = 5.3002 이므로 (+0.5, -0.31680) 이다 (48.3x5.3002 = 256 = 512/2 정확).
+     예전엔 0.36 하나로 근사했고 기울기를 반영하지 않아 착지 지점에서 26px 어긋났다. */
+  var G_BEAK = [0.5, -0.31680];
   var G_PIV = [66, 55];      /* 날개 밑동(어깨) — 여기를 축으로 접히고 펴진다.
                                 밑동이 몸통 안에 묻혀 있으므로 어떤 값에서도
                                 이음매가 드러나지 않는다 */
@@ -3124,6 +3129,7 @@
   function gOut(t) { return 1 - Math.pow(1 - t, 3); }      /* 닿을 때 — 감속 */
   function g01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
   function gOut5(t) { return 1 - Math.pow(1 - t, 5); }   /* 긴 감속 꼬리 — '값비쌈'의 1차 지표 */
+  function gQ4io(t) { return t < 0.5 ? 8*t*t*t*t : 1 - Math.pow(-2*t + 2, 4) / 2; }
   /* 끝값이 구조적으로 정확히 0 인 오버슈트 가산항.
      (1-u) 인자 때문에 계수를 어떻게 바꿔도 bump(1) === 0 이다.
      bump(0)=0, 최대 1.0 (u=0.5833). 착지 픽셀 정합이 이 성질 하나에 걸려 있다 —
@@ -3362,7 +3368,7 @@
     document.body.appendChild(sk);
     setTimeout(function () { sk.classList.add("on"); }, 1200);
 
-    var lastSay = -1, lastBand = -1;
+    var lastSay = -1, lastBand = -1, tCross = 0;
     /* frame 은 감싸여 있지 않았다. .ld-dark 는 기본이 불투명 검정이므로
        루프가 한 번 던지면 관객은 8초 동안 검은 화면을 본다.
        연출은 잘려도 되지만 사이트는 즉시 살아나야 한다. */
@@ -3433,18 +3439,39 @@
       }
 
       /* 넘어야 하는 선. 2막에서 그려지고, 거위가 통과하는 순간 부서진다.
-         선을 시각으로 묶었더니 정지한 거위의 몸통을 관통해서, 넘어야 할 것이
-         아니라 거위에 그은 줄처럼 보였다. 그래서 위치로 묶는다 — 부서지는
-         정도는 '머리가 선을 얼마나 지났나'다. 궤적을 바꿔도 어긋나지 않는다. */
+         시각으로 묶었더니 정지한 거위의 몸통을 관통해 '거위에 그은 줄'로 보였다 —
+         그래서 위치로 묶는다. 부리의 실제 좌표를 기울기까지 반영해 계산한다:
+         상자 비율 (0.5, -0.3168) 을 tilt 만큼 회전시켜 더한다.
+         0.36 하나로 근사하던 것은 착지 지점에서 26px 어긋났다. */
+      var th = gooseTilt(tc) * Math.PI / 180;
       var ly = st.cy - st.S * 0.20;
-      var over = (ly - (p.y - p.s * 0.36)) / (st.S * 0.085);
+      var hy = p.y + p.s * (G_BEAK[0] * Math.sin(th) + G_BEAK[1] * Math.cos(th));
+      var over = (ly - hy) / (st.S * 0.055);
       var draw = gEase(g01((t - 1.00) / 1.05));
       var burst = gEase(g01(over));
+      /* 부서지는 계수가 곧 지우는 계수였다 — opacity = 0.85*draw*(1-burst) 이므로
+         burst 가 오를수록 선이 사라져, 클라이맥스가 '번쩍'이 아니라 페이드아웃이었다.
+         밝아지는 국면과 사라지는 국면을 나눈다: 앞의 40% 는 밝아지고 뒤에서 사라진다. */
+      var flash = Math.min(1, burst / 0.4);
+      var fade = g01((burst - 0.4) / 0.6);
       line.style.transform = "translate3d(0," + ly.toFixed(1) + "px,0) scaleX("
         + (draw * (1 + burst * 0.06)).toFixed(4) + ")";
-      line.style.opacity = ((0.85 * draw) * (1 - burst)).toFixed(3);
+      line.style.opacity = (draw * (0.85 + 1.9 * flash) * (1 - fade)).toFixed(3);
       line.style.filter = "blur(" + (0.4 + burst * 9).toFixed(2) + "px) brightness("
-        + (1 + burst * 2.4).toFixed(2) + ")";
+        + (1 + flash * 2.2).toFixed(2) + ")";
+
+      /* 어둠은 '넘은 뒤에' 걷혀야 한다. 상수 3.70 으로 두었더니 부리가 선을
+         넘는 것은 4.36초인데 어둠은 3.70초에 열리기 시작했다 — 0.66초 먼저
+         세상이 열리면 넘는 일이 무의미해진다. 통과 시각을 래치해서 거기에 묶는다.
+         안전 바닥을 두어, 판정이 어떤 이유로 안 걸려도 연출이 멈추지 않는다. */
+      if (!tCross && over >= 0) tCross = t;
+      if (!tCross && t >= G_GLIDE - 0.55) tCross = G_GLIDE - 0.55;
+      var sc = 1;
+      if (tCross) {
+        sc = 1 - 0.86 * gQ4io(g01((t - tCross) / 1.05))
+               - 0.14 * gQ4io(g01((t - (G_GLIDE + 0.45)) / 0.70));
+      }
+      scrim.style.opacity = Math.max(0, sc).toFixed(3);
 
       /* 자막 */
       if (say) {
@@ -3490,11 +3517,6 @@
         beam.style.opacity = (t > 1.05 && t < 2.10 ? Math.pow(Math.sin(Math.PI * bp), 1.3) * 0.34 : 0).toFixed(3);
         beam.style.transform = "translate3d(" + ((1.35 - bp * 2.35) * vw).toFixed(0) + "px,0,0)";
       }
-
-      /* 어둠을 걷는다. 선을 넘은 뒤부터 걷히기 시작해, 거위가 활공할 때는
-         이미 어머니와 같은 공간을 난다 — 이것이 사이트와 하나가 되는 지점이다. */
-      scrim.style.opacity = (1 - 0.86 * gEase(g01((t - 3.70) / 1.05))
-                               - 0.14 * gEase(g01((t - (G_GLIDE + 0.25)) / 0.60))).toFixed(3);
 
       if (t < G_END) { requestAnimationFrame(frame); return; }
 
