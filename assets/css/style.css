@@ -3456,7 +3456,7 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
    상자는 320px 정사각형이고 크기는 scale 로만 준다. */
 .ld-glow {
   position: absolute; top: 0; left: 0; width: 320px; height: 320px;
-  transform-origin: 0 0; opacity: 0; will-change: transform, opacity;
+  transform-origin: 50% 50%; opacity: 0; will-change: transform, opacity;
   background: radial-gradient(circle at 50% 50%,
     rgba(244,214,150,.85) 0%, rgba(232,194,122,.42) 34%, rgba(232,194,122,0) 70%);
   filter: blur(18px);
@@ -3512,19 +3512,22 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
   filter: blur(58px); opacity: 0; will-change: transform, opacity;
 }
 
-/* 거위. 상자는 언제나 512px 정사각형이고 크기는 scale 로만 준다 —
-   width/height 를 매 프레임 바꾸면 레이아웃이 다시 계산된다. */
+/* 거위 = 헤더 상표 그 자체. 날개만 따로 떼어 밑동을 축으로 접히고 펴진다
+   (조립은 main.js 의 flyGoose 에서). 사실적으로 그린 백조는 어둠에서 다가올 때
+   위협으로 읽혀 "무섭다"는 피드백을 받았다 — 선 그림은 그렇지 않고,
+   처음부터 상표이므로 착지에 변신 장치가 필요 없다.
+
+   상자는 언제나 512px 정사각형이고 크기는 scale 로만 준다 —
+   width/height 를 매 프레임 바꾸면 레이아웃이 다시 계산된다.
+   원점을 가운데로 둔 이유: 0 0 이면 축소할 때마다 상자가 왼쪽 위로 쏠려
+   '중심 - 줄어든 절반' 같은 보정이 필요해지고, 실제로 두 번 틀렸다. */
 .ld-goose {
   position: absolute; top: 0; left: 0; width: 512px; height: 512px;
-  transform-origin: 0 0; will-change: transform, opacity;
+  transform-origin: 50% 50%; will-change: transform, opacity;
+  color: var(--ivory);
+  filter: drop-shadow(0 0 22px rgba(246,226,178,.34));
 }
-.ld-goose > img, .ld-goose > .ld-mark {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: contain; display: block;
-}
-.ld-goose > .ld-mark { color: var(--ivory); opacity: 0; }
-/* 잔상은 금빛으로. 궤적을 보여주는 것이지 거위를 하나 더 그리는 게 아니다. */
-.ld-ghost { filter: sepia(.55) saturate(1.5) hue-rotate(-8deg) brightness(1.04); }
+.ld-goose > svg { width: 100%; height: 100%; display: block; overflow: visible; }
 .ld-goose.gone { opacity: 0 !important; transition: opacity .42s ease; }
 
 /* 도입부 동안 헤더는 비워 둔다 — 거위가 두 마리로 보이면 안 된다.

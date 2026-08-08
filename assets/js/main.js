@@ -3042,30 +3042,42 @@
 
   /* ---------- 도입부: 다섯 막 ----------
 
-     ■ 왜 이렇게 만드나
-     「거위의 꿈」의 힘은 문장이 아니라 구조에 있다 —
-     아무도 인정하지 않던 존재 · 그럼에도 접지 않은 날개 ·
-     넘을 수 없다던 선 · 그것을 넘는 순간.
+     ■ 무엇을 그리나 (2026-08-08, 사실적인 백조 그림을 버렸다)
+     처음엔 사실적으로 그린 백조 사진 같은 그림 세 장을 썼다. "너무 무섭다"는
+     피드백을 받았고, 맞는 지적이었다 — 실사에 가까운 큰 새가 어둠에서
+     다가오는 것은 위협으로 읽힌다. 상표인 선 그림은 그렇지 않다.
 
-     가사는 쓸 수 없다. 작사 저작권이 원작자에게 있고, 실연자가 어머니라도
-     게시에는 별도 허락이 필요하다. 그래서 문장을 빌리지 않고 구조만 그린다 —
-     넘어야 하는 '선'을 화면에 실제로 하나 긋고, 거위가 통과하는 순간
-     그 선이 부서진다. 자막은 노래가 아니라 어머니 이야기를 한다 (직접 쓴 문장).
+     그래서 도입부의 거위를 헤더 상표 그 자체로 바꿨다. 상표 패스를 들여다보니
+     서브패스가 둘이었다 — 몸통·목 선 하나, 그리고 날개 하나. 이미 리깅이
+     가능한 구조였다. 날개를 떼어 밑동을 축으로 scaleY 하면
+     접힘(0.12) → 펴짐(1) → 아래로(-0.72) 로 선 그림 그대로 날갯짓이 된다.
 
-     ■ 왜 영상이 아니라 여기서 그리나 (2026-08-07, 앞의 설계를 뒤집었다)
+     덕분에 사라진 것들 —
+       · 그림 세 장(213KB)과 그것을 굽는 스크립트
+       · 마지막의 '그림 거위 → 선 그림' 변신 장치. 처음부터 상표이므로
+         착지는 그냥 제자리에 놓이는 것이다. 이음매가 있을 수 없다
+       · 금빛 잔상 셋. 상표를 여러 장 겹치면 트레이드마크가 흐려진다.
+         에너지는 뒤의 빛(.ld-glow)이 대신 낸다
+     그리고 벡터이므로 어느 해상도에서도 완벽하다.
+
+     ■ 왜 영상이 아니라 여기서 그리나
      영상은 불투명한 사각형이다. 검은 배경 위의 거위를 얹으면 그 사각형이
-     사이트를 가린다 — 어머니가 노래하는 히어로 위에 검은 상자가 뜨는 셈이라,
-     화면 전체를 덮어 "가리는 게 아니라 장면인 척" 하고 있었을 뿐이다.
+     사이트를 가린다 — 어머니가 노래하는 히어로 위에 검은 상자가 뜨는 셈이다.
      투명 영상(VP9 alpha)은 이 환경의 ffmpeg 가 지원한다고 보고하면서 실제로는
-     내보내지 않았다. 이 연출은 결국 '그림 세 장 + 위치·크기·자세'이므로
-     브라우저가 직접 그린다. 그러면 거위가 어머니와 같은 공간을 난다.
+     내보내지 않았다. 브라우저가 직접 그리면 거위가 어머니와 같은 공간을 난다.
+
+     ■ 가사를 쓰지 않는 이유
+     「거위의 꿈」 작사 저작권은 원작자에게 있다. 실연자가 어머니라도 게시에는
+     별도 허락이 필요하다. 그래서 문장을 빌리지 않고 구조만 그린다 —
+     넘어야 하는 '선'을 화면에 실제로 긋고, 거위가 통과할 때 그 선이 부서진다.
+     자막은 노래가 아니라 어머니 이야기를 한다 (직접 쓴 문장).
 
      ■ 다섯 막
-       1막 0.0~1.0  어둠. 먼지만 떠다닌다. 거위는 실루엣
-       2막 1.0~2.3  조명이 스치고 거위가 드러난다. 넘어야 하는 선이 그려진다
-       3막 2.3~2.5  웅크린다 (anticipation) — 뛰기 전에 낮아진다
-       4막 2.5~3.9  날갯짓하며 오른다. 3.25초에 선을 넘고, 선이 부서진다
-       5막 3.9~5.1  어둠이 걷혀 어머니가 드러나고, 거위는 상표가 된다
+       1막 0.0~1.0  어둠. 먼지만. 거위는 실루엣, 날개는 접혀 있다
+       2막 1.0~2.2  조명이 스치고 드러난다. 머리 위로 넘어야 할 선이 그어진다
+       3막 2.2~2.5  웅크리며 날개를 편다 (anticipation)
+       4막 2.5~3.9  날갯짓하며 오른다. 선을 넘고, 선이 부서진다
+       5막 3.9~5.1  어둠이 걷혀 어머니가 드러나고, 거위가 상표 자리에 앉는다
      어디든 누르면 마지막 0.45초로 건너뛴다 — 매번 5초를 강요하지 않는다.
 
      ■ 무대 좌표
@@ -3073,15 +3085,22 @@
      창 비율이 달라도 연출이 같아 보이게. 마지막 활공만 무대를 떠나
      헤더 상표의 실제 좌표로 향한다. */
 
-  var GOOSE_POSES = ["assets/img/goose-rest.webp",     /* 쉼 */
-                     "assets/img/goose-down.webp",     /* 날개 아래 */
-                     "assets/img/goose-up.webp"];      /* 날개 위 · 활공 */
-  var G_BASE = 512;      /* 상자 기본 한 변(px). 실제 크기는 scale 로만 준다 */
+  /* 헤더 상표(index.html 의 .brand-mark)의 두 서브패스를 그대로 떼어 왔다.
+     상표를 고치면 여기도 같이 고쳐야 한다 — 착지한 거위가 헤더의 상표와
+     한 픽셀도 다르면 안 되기 때문이다. */
+  var G_BODY = "M2 58 C14 56 28 51.6 42 46 C54 41.4 64 36 72 31 C76.6 28.2 81 25.6 "
+             + "85 24 C89 22.4 92.4 23.4 94 26.2 L106 27.6 L94.6 31 C93 33.6 89.6 34.8 "
+             + "85.6 34.2 C81 33.6 76 35.2 70 38 C60 42.8 48 48.4 36 53 C24 57.6 11 60.4 2 58 Z";
+  var G_WING = "M36 49.6 C28 37 26 20 33 6 C43 17 52 35 55 48 C49 50.4 42 51 36 49.6 Z";
+  var G_PIV = [45.5, 48.8];   /* 날개 밑동 — 여기를 축으로 접히고 펴진다 */
+
+  var G_BOX = 512;       /* 상자 기본 한 변(px). 실제 크기는 scale 로만 준다 */
+  var G_FOLD = 2.20;     /* 날개를 펴기 시작 */
   var G_CROUCH = 2.30;   /* 웅크리기 시작 */
   var G_RISE = 2.52;     /* 날개를 다 펴고 오르기 시작 */
-  var G_CROSS = 3.25;    /* 선을 넘는 순간 */
   var G_GLIDE = 3.90;    /* 무대를 떠나 상표로 향한다 */
   var G_END = 5.10;      /* 상표에 닿는 시각 */
+  var G_BEAT = 0.37;     /* 날갯짓 한 번 */
 
   /* 자막. 노래 가사가 아니라 어머니 이야기 — 직접 쓴 문장이다. */
   var G_SAY = [[0.50, 1.85, "아무도 보지 않던 무대가 있었다", ""],
@@ -3099,40 +3118,44 @@
     var S = st.S, cx = st.cx + st.S * 0.035, cy = st.cy + st.S * 0.055;
     if (t < G_CROUCH) {                               /* 어둠 속. 숨을 쉰다 */
       var r = gEase(g01(t / 1.10));
-      return { s: S * (0.325 + 0.030 * (1 - r)), x: cx,
+      return { s: S * (0.285 + 0.026 * (1 - r)), x: cx,
                y: cy + S * (0.016 * (1 - r) - 0.010 * r) + Math.sin(t * 1.9) * S * 0.0024 };
     }
     if (t < G_RISE) {                                 /* 웅크린다 — anticipation.
                                                          없으면 갑자기 붕 뜬다 */
       var a = gEase((t - G_CROUCH) / (G_RISE - G_CROUCH));
-      return { s: S * (0.325 - 0.010 * a), x: cx, y: cy + S * (-0.010 + 0.019 * a) };
+      return { s: S * (0.285 - 0.009 * a), x: cx, y: cy + S * (-0.010 + 0.019 * a) };
     }
     if (t < G_GLIDE) {                                /* 날갯짓하며 오른다 */
       var q = gIn((t - G_RISE) / (G_GLIDE - G_RISE));
-      return { s: S * (0.325 - 0.110 * q), x: cx - S * 0.205 * q,
+      return { s: S * (0.285 - 0.096 * q), x: cx - S * 0.205 * q,
                y: cy + S * (0.009 - 0.262 * q) };
     }
     var u = gOut(g01((t - G_GLIDE) / (G_END - G_GLIDE)));   /* 상표로 활공, 감속 */
-    var s0 = S * 0.215, x0 = cx - S * 0.205, y0 = cy - S * 0.253;
+    var s0 = S * 0.189, x0 = cx - S * 0.205, y0 = cy - S * 0.253;
     return { s: s0 + (st.ts - s0) * u, x: x0 + (st.tx - x0) * u, y: y0 + (st.ty - y0) * u };
   }
 
-  /* 세 자세를 각각 얼마나 섞을지 — (쉼, 아래, 위) */
-  function goosePose(t) {
-    if (t < G_CROUCH) return [1, 0, 0];
-    if (t < G_RISE) { var p = gEase((t - G_CROUCH) / (G_RISE - G_CROUCH)); return [1 - p, p, 0]; }
-    /* 두 자세를 길게 겹치면 거위가 두 마리로 보인다. 실제 셀 애니메이션은
-       자세를 툭툭 바꾼다 — 겹침은 전환점 앞뒤로만 아주 짧게 준다. */
-    var ph = ((t - G_RISE) / 0.185) % 2;              /* 한 왕복 0.37초 */
-    var raw = ph < 1 ? 1 : 0;
-    var edge = Math.min(ph % 1, 1 - (ph % 1));
-    var bl = 0.5 * (1 - gEase(Math.min(1, edge / 0.085)));
-    var k = raw * (1 - bl) + (1 - raw) * bl;
-    /* 닿기 직전에는 퍼덕임을 멈추고 활공 자세로 고정한다.
-       내려앉는 새는 날개를 치지 않고, 상표로 넘어갈 형태도 이 자세라야 한다. */
-    var gl = gEase(g01((t - (G_END - 0.62)) / 0.32));
-    k = k + (1 - k) * gl;
-    return [0, 1 - k, k];
+  /* 날개가 얼마나 펴졌나. 1 = 상표에 그려진 그대로(위), 0 = 접힘, 음수 = 아래.
+     마지막에는 반드시 정확히 1 로 돌아와야 한다 — 헤더의 상표와 같아야 하므로. */
+  function gooseWing(t) {
+    /* 0.12 로 두었더니 날개가 혹처럼 남았다. 거의 0 이면 몸통의 매끄러운 선만
+       남아 「접고 있다」로 읽히고, 그래서 뒤에 날개가 나타나는 것이 사건이 된다. */
+    if (t < G_FOLD) return 0.035;
+    if (t < G_RISE) return 0.035 + 0.965 * gEase((t - G_FOLD) / (G_RISE - G_FOLD));
+    var k = 0.14 + 0.86 * Math.cos(2 * Math.PI * (t - G_RISE) / G_BEAT);
+    /* 닿기 직전에는 퍼덕임을 멈추고 상표의 자세로 고정한다.
+       내려앉는 새는 날개를 치지 않고, 무엇보다 헤더의 상표가 이 자세다. */
+    var gl = gEase(g01((t - (G_END - 0.62)) / 0.42));
+    return k + (1 - k) * gl;
+  }
+
+  /* 오르는 동안 살짝 기운다. 착지에서는 반드시 0 — 상표는 기울어 있지 않다. */
+  function gooseTilt(t) {
+    if (t < G_RISE) return 0;
+    var up = gEase(g01((t - G_RISE) / 0.55));
+    var back = gEase(g01((t - (G_GLIDE - 0.15)) / 0.85));
+    return -7.5 * up * (1 - back);
   }
 
   function initLoader() {
@@ -3151,9 +3174,9 @@
 
     root.classList.add("is-intro");
 
-    /* 무슨 일이 있어도 헤더는 돌아온다. 그림이 안 뜨든, 좌표가 틀리든,
-       예외가 나든 — 사이트가 머리 없이 남는 것이 이 연출의 유일한 진짜
-       사고다. 연출은 실패해도 되지만 사이트는 아니다. */
+    /* 무슨 일이 있어도 헤더는 돌아온다. 좌표가 틀리든 예외가 나든 —
+       사이트가 머리 없이 남는 것이 이 연출의 유일한 진짜 사고다.
+       연출은 실패해도 되지만 사이트는 아니다. */
     function reveal() {
       if (shown) return;
       shown = true;
@@ -3166,6 +3189,12 @@
     try {
       if (!brand || !flyGoose(box, brand, reveal, safety)) { clearTimeout(safety); reveal(); }
     } catch (e) { clearTimeout(safety); reveal(); }
+  }
+
+  function svgEl(name, attrs) {
+    var e = document.createElementNS("http://www.w3.org/2000/svg", name);
+    for (var k in attrs) if (attrs.hasOwnProperty(k)) e.setAttribute(k, attrs[k]);
+    return e;
   }
 
   /* 어둠에서 상표까지, 한 번도 끊기지 않고 */
@@ -3188,31 +3217,20 @@
       box.appendChild(mo);
     }
 
-    /* 거위 층 셋: 본체 + 잔상 둘. 잔상은 '그때의 자세'가 아니라 '그때의 자리'를
-       보여준다 — 옛 자세까지 되살리면 거위가 여러 마리로 보인다. */
-    var layers = [];
-    for (var i = 0; i < 3; i++) {
-      var el = document.createElement("div");
-      el.className = "ld-goose" + (i ? " ld-ghost" : "");
-      for (var j = 0; j < 3; j++) {
-        var im = new Image();
-        im.src = GOOSE_POSES[j];
-        im.alt = "";
-        el.appendChild(im);
-      }
-      if (!i) {
-        /* 진짜 상표를 복제해 같은 상자에 넣는다. 마지막에 그림 거위가 이것으로
-           바뀌면서 내려앉는다 — 복제본이므로 모양이 어긋날 수 없다. */
-        var mk = brand.cloneNode(true);
-        mk.setAttribute("class", "ld-mark");
-        el.appendChild(mk);
-      }
-      box.appendChild(el);
-      layers.push(el);
-    }
+    /* 상표를 날개만 따로 떼어 다시 조립한다. 헤더의 상표는 서브패스 둘이 한
+       패스로 붙어 있어 날개를 따로 움직일 수 없다 — 그래서 여기서만 나눈다. */
+    var bird = document.createElement("div");
+    bird.className = "ld-goose";
+    var svg = svgEl("svg", { viewBox: "0 0 114 66", "aria-hidden": "true", focusable: "false" });
+    svg.appendChild(svgEl("path", { d: G_BODY, fill: "currentColor" }));
+    var wingG = svgEl("g", {});
+    wingG.appendChild(svgEl("path", { d: G_WING, fill: "currentColor" }));
+    svg.appendChild(wingG);
+    bird.appendChild(svg);
+    box.appendChild(bird);
 
     /* 매번 5초를 강요하지 않는다. 어디든 누르면 마지막 0.45초로 건너뛴다 —
-       끊지 않고 건너뛰는 이유는, 상표에 내려앉는 것으로 끝나야 말이 되기 때문이다. */
+       끊지 않고 건너뛰는 이유는, 상표에 앉는 것으로 끝나야 말이 되기 때문이다. */
     var t0 = 0, skipped = false;
     function skip() {
       if (skipped || !t0) return;
@@ -3236,48 +3254,37 @@
       var st = { S: Math.min(vw, vh), cx: vw / 2, cy: vh / 2,
                  ts: br.width, tx: br.left + br.width / 2, ty: br.top + br.height / 2 };
 
-      var pose = goosePose(tc);
+      var p = goosePath(tc, st);
       /* 어둠 속에서는 실루엣으로만 보이다가, 조명이 스치며 드러난다 */
-      var lit = 0.12 + 0.88 * gEase(g01((t - 1.05) / 0.95));
+      var lit = 0.14 + 0.86 * gEase(g01((t - 1.05) / 0.95));
 
-      for (var i = 0; i < layers.length; i++) {
-        var p = goosePath(Math.max(0, tc - i * 0.085), st);   /* 잔상은 지나온 자리에 */
-        var w = i === 0 ? 1 : (t < G_RISE ? 0 : (i === 1 ? 0.17 : 0.08));
-        var L = layers[i];
-        /* transform-origin 이 0 0 이므로 축소하면 상자가 왼쪽 위로 쏠린다.
-           빼야 할 것은 512 의 절반이 아니라 '줄어든 뒤 크기'의 절반이다 —
-           256 을 빼서 거위가 상표가 아니라 화면 밖으로 날아간 적이 있다. */
-        L.style.transform = "translate3d(" + (p.x - p.s / 2).toFixed(1) + "px,"
-          + (p.y - p.s / 2).toFixed(1) + "px,0) scale(" + (p.s / G_BASE).toFixed(5) + ")";
-        L.style.opacity = (lit * w).toFixed(3);
-        var kids = L.children;
-        /* 활공 후반에 그림 거위가 선 그림(상표)으로 바뀐다. 작고 빠르게
-           움직이는 동안이라 형태가 바뀌는 것이 변신으로 읽힌다. */
-        var mm = i === 0 && kids[3] ? gEase(g01((t - (G_END - 0.85)) / 0.45)) : 0;
-        for (var q = 0; q < 3; q++) kids[q].style.opacity = (pose[q] * (1 - mm)).toFixed(3);
-        if (kids[3]) kids[3].style.opacity = mm.toFixed(3);
-      }
+      /* 원점을 상자 가운데로 두었다. 예전엔 0 0 이라 축소할 때마다 상자가
+         왼쪽 위로 쏠려, 거위와 빛이 각각 한 번씩 엉뚱한 자리로 갔다.
+         가운데 원점이면 '중심 - 절반' 같은 보정이 아예 필요 없다. */
+      bird.style.transform = "translate3d(" + (p.x - G_BOX / 2).toFixed(1) + "px,"
+        + (p.y - G_BOX / 2).toFixed(1) + "px,0) scale(" + (p.s / G_BOX).toFixed(5)
+        + ") rotate(" + gooseTilt(tc).toFixed(2) + "deg)";
+      bird.style.opacity = lit.toFixed(3);
+      var wk = gooseWing(tc);
+      wingG.setAttribute("transform", "translate(" + G_PIV[0] + " " + G_PIV[1]
+        + ") scale(1 " + wk.toFixed(4) + ") translate(" + (-G_PIV[0]) + " " + (-G_PIV[1]) + ")");
 
-      /* 품은 꿈. 거위 뒤에서 금빛이 맺혀 자라다가, 날아오르면 흩어진다. */
+      /* 품은 꿈. 거위 뒤에서 금빛이 맺혀 자라고, 나는 동안은 옅게 남아
+         선 그림 하나만으로는 나오지 않는 기운을 대신한다. */
       if (glow) {
-        var gp = goosePath(tc, st);
-        var ga = gEase(g01((t - 1.45) / 0.95)) * (1 - gEase(g01((t - G_RISE) / 1.10)));
-        var gs = (0.55 + 0.85 * gEase(g01((t - 1.45) / 1.30))) * gp.s / 320;
-        /* 거위와 같은 함정: 원점이 0 0 이라 축소하면 상자가 왼쪽 위로 쏠린다.
-           160 이 아니라 '줄어든 뒤 절반'을 빼야 빛이 거위 가운데에 앉는다. */
-        glow.style.transform = "translate3d(" + (gp.x - 160 * gs).toFixed(1) + "px,"
-          + (gp.y - 160 * gs).toFixed(1) + "px,0) scale(" + gs.toFixed(3) + ")";
-        glow.style.opacity = (ga * 0.62).toFixed(3);
+        var ga = gEase(g01((t - 1.45) / 0.95)) * (1 - 0.62 * gEase(g01((t - G_RISE) / 1.10)));
+        var gs = (0.55 + 0.85 * gEase(g01((t - 1.45) / 1.30))) * p.s / 320;
+        glow.style.transform = "translate3d(" + (p.x - 160).toFixed(1) + "px,"
+          + (p.y - 160).toFixed(1) + "px,0) scale(" + gs.toFixed(3) + ")";
+        glow.style.opacity = (ga * 0.58).toFixed(3);
       }
 
       /* 넘어야 하는 선. 2막에서 그려지고, 거위가 통과하는 순간 부서진다.
-         선을 시각(3.25초)으로 묶었더니 정지한 거위의 몸통을 관통해서, 넘어야 할
-         것이 아니라 거위에 그은 줄처럼 보였다. 그래서 위치로 묶는다 —
-         선은 거위 머리 위에 있고, 부서지는 정도는 '머리가 선을 얼마나 지났나'다.
-         이러면 궤적을 바꿔도 둘이 어긋나지 않는다. */
-      var gpN = goosePath(tc, st);
+         선을 시각으로 묶었더니 정지한 거위의 몸통을 관통해서, 넘어야 할 것이
+         아니라 거위에 그은 줄처럼 보였다. 그래서 위치로 묶는다 — 부서지는
+         정도는 '머리가 선을 얼마나 지났나'다. 궤적을 바꿔도 어긋나지 않는다. */
       var ly = st.cy - st.S * 0.20;
-      var over = (ly - (gpN.y - gpN.s / 2)) / (st.S * 0.085);   /* 머리가 선을 지난 양 */
+      var over = (ly - (p.y - p.s * 0.26)) / (st.S * 0.085);
       var draw = gEase(g01((t - 1.00) / 1.05));
       var burst = gEase(g01(over));
       line.style.transform = "translate3d(0," + ly.toFixed(1) + "px,0) scaleX("
@@ -3313,19 +3320,15 @@
 
       /* 어둠을 걷는다. 선을 넘은 뒤부터 걷히기 시작해, 거위가 활공할 때는
          이미 어머니와 같은 공간을 난다 — 이것이 사이트와 하나가 되는 지점이다. */
-      scrim.style.opacity = (1 - 0.86 * gEase(g01((t - (G_CROSS - 0.15)) / 1.05))
+      scrim.style.opacity = (1 - 0.86 * gEase(g01((t - 3.10) / 1.05))
                                - 0.14 * gEase(g01((t - (G_GLIDE + 0.25)) / 0.60))).toFixed(3);
 
       if (t < G_END) { requestAnimationFrame(frame); return; }
 
       clearTimeout(safety);
-      reveal();                                       /* 진짜 상표가 켜진다 */
-      layers[0].classList.add("gone");                /* 같은 자리·같은 모양이라 안 보인다 */
-      setTimeout(function () {
-        for (var i = 0; i < layers.length; i++) {
-          if (layers[i].parentNode) layers[i].parentNode.removeChild(layers[i]);
-        }
-      }, 520);
+      reveal();                     /* 진짜 상표가 켜진다 */
+      bird.classList.add("gone");   /* 같은 그림·같은 자리·같은 크기라 안 보인다 */
+      setTimeout(function () { if (bird.parentNode) bird.parentNode.removeChild(bird); }, 520);
     }
     requestAnimationFrame(frame);
     return true;

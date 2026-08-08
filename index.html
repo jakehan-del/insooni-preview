@@ -20,10 +20,10 @@
 <meta name="twitter:card" content="summary_large_image">
 <!-- 본문 글꼴은 먼저 확실히 깐다(미뤄 봤지만 첫 화면이 빨라지지 않았다).
      제목용 서체는 화면이 뜬 뒤 들어온다 — font-display:swap이라 늦어도 글자는 보인다. -->
-<link rel="stylesheet" href="assets/fonts/body.css?vf9fbbded">
-<link rel="stylesheet" href="assets/fonts/display.css?vf9fbbded" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/fonts/display.css?vf9fbbded"></noscript>
-<link rel="stylesheet" href="assets/css/style.min.css?vf9fbbded">
+<link rel="stylesheet" href="assets/fonts/body.css?vf38cea6e">
+<link rel="stylesheet" href="assets/fonts/display.css?vf38cea6e" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?vf38cea6e"></noscript>
+<link rel="stylesheet" href="assets/css/style.min.css?vf38cea6e">
 <link rel="canonical" href="https://insooni.com/">
 <meta property="og:url" content="https://insooni.com/">
 <meta property="og:type" content="website">
@@ -43,17 +43,17 @@
 
 <!-- 입장 로더: 시대별 사진이 층층이 벗겨지는 액션 (세션당 1회) -->
 <script>try{var _d=document.documentElement;if(!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)){_d.classList.add("is-intro");setTimeout(function(){_d.classList.remove("is-intro")},7000)}}catch(e){}</script>
-<link rel="preload" as="image" href="assets/img/goose-rest.webp">
 <div class="loader" id="loader" aria-hidden="true">
       <!-- 거위의 꿈 — 다섯 막
-           1 어둠. 먼지만 떠다닌다. 거위는 실루엣
-           2 조명이 스치고 거위가 드러난다. 넘어야 하는 선이 그려진다
-           3 웅크린다 — 뛰기 전에 낮아진다
+           1 어둠. 먼지만 떠다닌다. 거위는 실루엣, 날개는 접혀 있다
+           2 조명이 스치고 드러난다. 머리 위로 넘어야 하는 선이 그어진다
+           3 웅크리며 날개를 편다 — 뛰기 전에 낮아진다
            4 날갯짓하며 올라 선을 넘는다. 선이 부서진다
-           5 어둠이 걷혀 어머니가 드러나고, 거위는 헤더 상표가 된다
+           5 어둠이 걷혀 어머니가 드러나고, 거위가 상표 자리에 앉는다
+           거위는 아래 .brand-mark 와 같은 선 그림이다 — main.js 가 날개만
+           떼어 리깅한다. 상표 패스를 고치면 main.js 의 G_BODY/G_WING 도 함께.
            자막은 노래 가사가 아니다 — 가사는 원작자 저작권이라 쓸 수 없다.
-           어머니 이야기를 직접 쓴 문장으로 한다.
-           움직임은 전부 main.js 의 initLoader() 가 그린다. 5.1초, 누르면 건너뜀. -->
+           5.1초, 어디든 누르면 건너뜀. -->
       <div class="ld-dark"></div>
       <div class="ld-glow"></div>
       <div class="ld-line"></div>
@@ -147,17 +147,17 @@
   </nav>
 </footer>
 
-<script src="assets/js/config.js?vf9fbbded" defer></script>
-<script src="assets/js/backend.js?vf9fbbded" defer></script>
-<script src="assets/js/i18n.min.js?vf9fbbded" defer></script>
-<script src="assets/js/data.min.js?vf9fbbded" defer></script>
-<script src="assets/js/tracklinks.min.js?vf9fbbded" defer></script>
-<script src="assets/js/albums-full.min.js?vf9fbbded" defer></script>
-<script src="assets/js/albums-en.min.js?vf9fbbded" defer></script>
-<script src="assets/js/song-moods.min.js?vf9fbbded" defer></script>
-<script src="assets/js/main.min.js?vf9fbbded" defer></script>
-<script src="assets/js/motion.min.js?vf9fbbded" defer></script>
-<script src="assets/js/router.min.js?vf9fbbded" defer></script>
-<script src="assets/js/deck.min.js?vf9fbbded" defer></script>
+<script src="assets/js/config.js?vf38cea6e" defer></script>
+<script src="assets/js/backend.js?vf38cea6e" defer></script>
+<script src="assets/js/i18n.min.js?vf38cea6e" defer></script>
+<script src="assets/js/data.min.js?vf38cea6e" defer></script>
+<script src="assets/js/tracklinks.min.js?vf38cea6e" defer></script>
+<script src="assets/js/albums-full.min.js?vf38cea6e" defer></script>
+<script src="assets/js/albums-en.min.js?vf38cea6e" defer></script>
+<script src="assets/js/song-moods.min.js?vf38cea6e" defer></script>
+<script src="assets/js/main.min.js?vf38cea6e" defer></script>
+<script src="assets/js/motion.min.js?vf38cea6e" defer></script>
+<script src="assets/js/router.min.js?vf38cea6e" defer></script>
+<script src="assets/js/deck.min.js?vf38cea6e" defer></script>
 </body>
 </html>
