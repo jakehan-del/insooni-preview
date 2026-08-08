@@ -3088,11 +3088,11 @@
   /* 헤더 상표(index.html 의 .brand-mark)의 두 서브패스를 그대로 떼어 왔다.
      상표를 고치면 여기도 같이 고쳐야 한다 — 착지한 거위가 헤더의 상표와
      한 픽셀도 다르면 안 되기 때문이다. */
-  var G_BODY = "M2 58 C14 56 28 51.6 42 46 C54 41.4 64 36 72 31 C76.6 28.2 81 25.6 "
-             + "85 24 C89 22.4 92.4 23.4 94 26.2 L106 27.6 L94.6 31 C93 33.6 89.6 34.8 "
-             + "85.6 34.2 C81 33.6 76 35.2 70 38 C60 42.8 48 48.4 36 53 C24 57.6 11 60.4 2 58 Z";
-  var G_WING = "M36 49.6 C28 37 26 20 33 6 C43 17 52 35 55 48 C49 50.4 42 51 36 49.6 Z";
-  var G_PIV = [45.5, 48.8];   /* 날개 밑동 — 여기를 축으로 접히고 펴진다 */
+  var G_BODY = "M3 74 C3 63 16 55 35 54.4 C47 54 56 55.6 61 57.8 C59 50 59 40 62 31 C66 19.4 73 11.6 81 8.6 C85.6 7 89.4 8 91 11.2 L99.6 13.6 L90.8 16.8 C89.2 19.8 86.2 21.4 82.6 20.8 C78.2 20.2 74.8 24.8 72.6 33 C70.2 42 70.2 52 72.8 61 C73.6 64 72.6 67 69 70 C61 77 44 81 26 80.6 C16 80.4 8 79 3 74 Z M3 74 C8 70 16 64 26 60 C18 66 10 71 3 74 Z";
+  var G_WING = "M68 52 C60 39 46 29 27 25 C30 38 35 49 43 57 C52 66 63 64 68 52 Z";
+  var G_PIV = [66, 55];      /* 날개 밑동(어깨) — 여기를 축으로 접히고 펴진다.
+                                밑동이 몸통 안에 묻혀 있으므로 어떤 값에서도
+                                이음매가 드러나지 않는다 */
 
   var G_BOX = 512;       /* 상자 기본 한 변(px). 실제 크기는 scale 로만 준다 */
   var G_FOLD = 2.20;     /* 날개를 펴기 시작 */
@@ -3118,21 +3118,21 @@
     var S = st.S, cx = st.cx + st.S * 0.035, cy = st.cy + st.S * 0.055;
     if (t < G_CROUCH) {                               /* 어둠 속. 숨을 쉰다 */
       var r = gEase(g01(t / 1.10));
-      return { s: S * (0.285 + 0.026 * (1 - r)), x: cx,
+      return { s: S * (0.245 + 0.022 * (1 - r)), x: cx,
                y: cy + S * (0.016 * (1 - r) - 0.010 * r) + Math.sin(t * 1.9) * S * 0.0024 };
     }
     if (t < G_RISE) {                                 /* 웅크린다 — anticipation.
                                                          없으면 갑자기 붕 뜬다 */
       var a = gEase((t - G_CROUCH) / (G_RISE - G_CROUCH));
-      return { s: S * (0.285 - 0.009 * a), x: cx, y: cy + S * (-0.010 + 0.019 * a) };
+      return { s: S * (0.245 - 0.008 * a), x: cx, y: cy + S * (-0.010 + 0.019 * a) };
     }
     if (t < G_GLIDE) {                                /* 날갯짓하며 오른다 */
       var q = gIn((t - G_RISE) / (G_GLIDE - G_RISE));
-      return { s: S * (0.285 - 0.096 * q), x: cx - S * 0.205 * q,
+      return { s: S * (0.245 - 0.082 * q), x: cx - S * 0.205 * q,
                y: cy + S * (0.009 - 0.262 * q) };
     }
     var u = gOut(g01((t - G_GLIDE) / (G_END - G_GLIDE)));   /* 상표로 활공, 감속 */
-    var s0 = S * 0.189, x0 = cx - S * 0.205, y0 = cy - S * 0.253;
+    var s0 = S * 0.163, x0 = cx - S * 0.205, y0 = cy - S * 0.253;
     return { s: s0 + (st.ts - s0) * u, x: x0 + (st.tx - x0) * u, y: y0 + (st.ty - y0) * u };
   }
 
@@ -3141,9 +3141,12 @@
   function gooseWing(t) {
     /* 0.12 로 두었더니 날개가 혹처럼 남았다. 거의 0 이면 몸통의 매끄러운 선만
        남아 「접고 있다」로 읽히고, 그래서 뒤에 날개가 나타나는 것이 사건이 된다. */
-    if (t < G_FOLD) return 0.035;
-    if (t < G_RISE) return 0.035 + 0.965 * gEase((t - G_FOLD) / (G_RISE - G_FOLD));
-    var k = 0.14 + 0.86 * Math.cos(2 * Math.PI * (t - G_RISE) / G_BEAT);
+    if (t < G_FOLD) return 0.06;                      /* 접고 있다 — #13 의 매끄러운 몸통 */
+    if (t < G_RISE) return 0.06 + 0.94 * gEase((t - G_FOLD) / (G_RISE - G_FOLD));
+    /* 0 아래로 내리지 않는다. 이 몸통은 나는 자세가 아니라 앉은 자세라서,
+       날개가 몸 밑으로 내려가면 새가 아니라 지느러미로 보인다.
+       위쪽에서만(0.30~1.00) 치는 것이 이 그림에 맞는 날갯짓이다. */
+    var k = 0.65 + 0.35 * Math.cos(2 * Math.PI * (t - G_RISE) / G_BEAT);
     /* 닿기 직전에는 퍼덕임을 멈추고 상표의 자세로 고정한다.
        내려앉는 새는 날개를 치지 않고, 무엇보다 헤더의 상표가 이 자세다. */
     var gl = gEase(g01((t - (G_END - 0.62)) / 0.42));
@@ -3155,7 +3158,7 @@
     if (t < G_RISE) return 0;
     var up = gEase(g01((t - G_RISE) / 0.55));
     var back = gEase(g01((t - (G_GLIDE - 0.15)) / 0.85));
-    return -7.5 * up * (1 - back);
+    return -5.5 * up * (1 - back);
   }
 
   function initLoader() {
@@ -3221,7 +3224,7 @@
        패스로 붙어 있어 날개를 따로 움직일 수 없다 — 그래서 여기서만 나눈다. */
     var bird = document.createElement("div");
     bird.className = "ld-goose";
-    var svg = svgEl("svg", { viewBox: "0 0 114 66", "aria-hidden": "true", focusable: "false" });
+    var svg = svgEl("svg", { viewBox: "3 7.8 96.6 72.8", "aria-hidden": "true", focusable: "false" });
     svg.appendChild(svgEl("path", { d: G_BODY, fill: "currentColor" }));
     var wingG = svgEl("g", {});
     wingG.appendChild(svgEl("path", { d: G_WING, fill: "currentColor" }));
@@ -3284,7 +3287,7 @@
          아니라 거위에 그은 줄처럼 보였다. 그래서 위치로 묶는다 — 부서지는
          정도는 '머리가 선을 얼마나 지났나'다. 궤적을 바꿔도 어긋나지 않는다. */
       var ly = st.cy - st.S * 0.20;
-      var over = (ly - (p.y - p.s * 0.26)) / (st.S * 0.085);
+      var over = (ly - (p.y - p.s * 0.36)) / (st.S * 0.085);
       var draw = gEase(g01((t - 1.00) / 1.05));
       var burst = gEase(g01(over));
       line.style.transform = "translate3d(0," + ly.toFixed(1) + "px,0) scaleX("
