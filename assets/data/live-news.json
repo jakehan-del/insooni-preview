@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-08-09 19:41",
+ "updated": "2026-08-09 22:04",
  "items": [
   {
    "date": "2026-08-05",
@@ -43,7 +43,7 @@
   {
    "date": "2026-07-28",
    "title": "총상금 1억 ‘인생은 오디션’, 서지오 심사 출격…인순이와 트롯 스타 발굴",
-   "source": "isplus.com",
+   "source": "일간스포츠",
    "sourceSite": "https://isplus.com",
    "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5zQ1VQT1VmdGtPLWFZQVpRQ3ZPRFlUS3hNRGxoOXhUZ2F0N1VPSDlqU2RkVHlkb29wbWJPZVhYcUVGXzZaN1RQNk4zcEhSNGQwZkdfSWdGc2V4elE?oc=5",
    "type": "방송",
