@@ -1,12 +1,12 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-08-10 03:51",
+ "updated": "2026-08-10 05:40",
  "items": [
   {
    "date": "2026-08-05",
    "title": "안동문화예술의전당 어버이날 특별기획 가수 인순이 & 명창 유지숙 `두 사랑 이야기`",
-   "source": "경북뉴스",
+   "source": "kbnews.kr",
    "sourceSite": "http://www.kbnews.kr",
    "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPMXRuVmxnUDIteHB5VEpoWFotZ2JYdUpidS1PSHJQRllfVXpQamdZZTV5MV82ZWNITVctVnZnZHkyLVNDMnVYYnMzR3ZEOGFNc1pVN292TFZPOGxGNmFId3h5eVdJTXNmV190NHZjNmJGUTBKVm5mQjBiWldQdndpaGVvOV9YTEkwUDllc0xNS3poam9pZEZod21lZ2NVOEhxOW5ZSXFrTl9yRFdPT19zNlFB?oc=5",
    "type": "보도",
@@ -43,7 +43,7 @@
   {
    "date": "2026-07-28",
    "title": "총상금 1억 ‘인생은 오디션’, 서지오 심사 출격…인순이와 트롯 스타 발굴",
-   "source": "일간스포츠",
+   "source": "isplus.com",
    "sourceSite": "https://isplus.com",
    "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5zQ1VQT1VmdGtPLWFZQVpRQ3ZPRFlUS3hNRGxoOXhUZ2F0N1VPSDlqU2RkVHlkb29wbWJPZVhYcUVGXzZaN1RQNk4zcEhSNGQwZkdfSWdGc2V4elE?oc=5",
    "type": "방송",
@@ -110,7 +110,7 @@
   {
    "date": "2026-06-17",
    "title": "\"왜 이렇게 눈물이 날까요\" 인순이가 완성한 축제의 대미",
-   "source": "star.ohmynews.com",
+   "source": "오마이스타",
    "sourceSite": "https://star.ohmynews.com",
    "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTFBLMEJuXy1BejFxbDJZYmQ3X3ljWE9jamdaU2tlSlhRem5CMXJGLXNlRDA2S0p4UmI0dkh5Wmdqb1N5VWdGd000NldvamFxWERpZk9FMXdpOWxGTExlN1htR2tZVTVVU2ViQ2hjZUpXYjRFS01ZdlRUdHRRR1lyQQ?oc=5",
    "type": "공연",
