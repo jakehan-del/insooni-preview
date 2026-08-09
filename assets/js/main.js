@@ -3116,12 +3116,24 @@
        예전 코드가 .brand-mark 만 보고 있어서, 데스크톱에서는 폭 0 인 상자를
        목표로 삼아 거위가 왼쪽 위 구석으로 빨려 들어갔다. 폭으로 판정한다. */
     var brand = (function () {
+      /* 폭만 보면 안 된다. 닫힌 모바일 메뉴 속 거위도 폭 30px 을 그대로
+         보고하기 때문이다(visibility:hidden 인 조상 아래에 있어도 레이아웃은
+         잡혀 있다). checkVisibility 는 그 경우를 false 로 돌려준다. */
+      function seen(el) {
+        if (!el) return false;
+        var r = el.getBoundingClientRect();
+        if (r.width < 1 || r.height < 1) return false;
+        if (el.checkVisibility) return el.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true });
+        for (var p = el; p && p !== document.body; p = p.parentElement) {
+          var c = getComputedStyle(p);
+          if (c.display === "none" || c.visibility === "hidden" || +c.opacity === 0) return false;
+        }
+        return true;
+      }
       var cands = [document.querySelector(".site-header .mark-goose"),
                    document.querySelector(".site-header .brand-mark")];
-      for (var i = 0; i < cands.length; i++) {
-        if (cands[i] && cands[i].getBoundingClientRect().width > 1) return cands[i];
-      }
-      return cands[0] || cands[1];
+      for (var i = 0; i < cands.length; i++) if (seen(cands[i])) return cands[i];
+      return null;      /* 폰: 헤더에 마크가 없다 — 앉을 자리가 없다 */
     })();
     var shown = false;
 
@@ -3142,7 +3154,7 @@
     var safety = setTimeout(reveal, 8000);
 
     try {
-      if (!brand || !flyGoose(box, brand, reveal, safety)) { clearTimeout(safety); reveal(); }
+      if (!flyGoose(box, brand, reveal, safety)) { clearTimeout(safety); reveal(); }
     } catch (e) { clearTimeout(safety); reveal(); }
   }
 
@@ -3232,7 +3244,8 @@
       var tc = Math.min(t, G_END);
 
       var vw = window.innerWidth, vh = window.innerHeight;
-      var br = brand.getBoundingClientRect();
+      var br = brand ? brand.getBoundingClientRect()
+                     : { left: vw / 2, top: -vh * 0.2, width: 0, height: 0 };
       var S = Math.min(vw, vh);
       /* 뭉쳐 있는 자리와 크기 */
       var cx = vw / 2, cy = vh * 0.52, cs = S * 0.22;
@@ -3262,6 +3275,9 @@
       var fcx = cx - S * 0.02, fcy = cy;
 
       var tw = br.width, tx = br.left + br.width / 2, ty = br.top + br.height / 2;
+      /* 폰에는 헤더에 마크가 없다. 앉을 자리가 없으면 앉는 척하지 않는다 —
+         선두도 나머지처럼 위로 빠져나가고, 사이트가 드러나는 것으로 끝난다. */
+      var hasSeat = !!brand;
 
       for (var i = 0; i < 5; i++) {
         var bird = i === 0 ? lander : fan[i - 1];
@@ -3277,12 +3293,18 @@
         var prot = -6 * (1 - eV);
         var pop = lit * (1 - Math.abs(VPOS[i][0]) * 0.13);
 
-        if (i === 0) {
+        if (i === 0 && hasSeat) {
           /* 선두는 대열을 이끌다가 그대로 상표 자리로 올라가 앉는다 */
           px = px + (tx - px) * eS;
           py = py + (ty - py) * eS - Math.sin(Math.PI * eS) * S * 0.05;
           pw = pw + (tw - pw) * eS;
           prot = prot * (1 - eS);      /* 착지에서 정확히 0 */
+        } else if (i === 0) {
+          /* 앉을 자리가 없다 — 선두는 위로 빠져나간다 */
+          py -= S * 1.15 * eS;
+          px += S * 0.10 * eS;
+          pw *= (1 - 0.30 * eS);
+          pop *= (1 - gEase(g01((eS - 0.30) / 0.70)));
         } else {
           /* 나머지는 대열을 유지한 채 각자의 방향으로 화면을 빠져나간다 */
           var ang = Math.atan2(VPOS[i][1], VPOS[i][0] - 0.35);
@@ -3301,7 +3323,7 @@
         /* 날갯짓. 선두는 앉으면서 정확히 0 으로 잦아든다 —
            0 이 아니면 상표와 다른 그림으로 끝나 착지가 어긋나 보인다.
            뒤따르는 넷은 위상을 어긋내 대열이 기계처럼 보이지 않게 한다. */
-        var damp = i === 0 ? (1 - gEase(g01((uS - 0.30) / 0.70))) : 1;
+        var damp = (i === 0 && hasSeat) ? (1 - gEase(g01((uS - 0.30) / 0.70))) : 1;
         var flap = Math.sin(tc * 8.2 + i * 0.9) * 14 * damp;
         bird.wing.setAttribute("transform", "rotate(" + flap.toFixed(2) + " 66 55)");
       }
@@ -3313,9 +3335,15 @@
 
       /* 마지막 프레임을 손으로 못박는다. rAF 는 G_END 에 정확히 떨어지지 않아
          회전 0.3도쯤이 남는데, 상표는 기울어 있지 않다. */
-      lander.el.style.transform = "translate3d(" + (tx - G_BOX / 2).toFixed(2) + "px,"
-        + (ty - G_BOX / 2).toFixed(2) + "px,0) scale(" + (tw / G_BOX).toFixed(6) + ") rotate(0deg)";
-      lander.wing.setAttribute("transform", "rotate(0 66 55)");
+      if (brand) {
+        var fr = brand.getBoundingClientRect();
+        lander.el.style.transform = "translate3d(" + (fr.left + fr.width / 2 - G_BOX / 2).toFixed(2) + "px,"
+          + (fr.top + fr.height / 2 - G_BOX / 2).toFixed(2) + "px,0) scale("
+          + (fr.width / G_BOX).toFixed(6) + ") rotate(0deg)";
+        lander.wing.setAttribute("transform", "rotate(0 66 55)");
+      } else {
+        lander.el.style.opacity = "0";
+      }
       scrim.style.opacity = "0";
 
       /* 순서가 중요하다. clearTimeout 을 먼저 부르고 그 뒤에서 예외가 나면

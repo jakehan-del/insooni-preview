@@ -286,7 +286,7 @@ html.js-anim .reveal.in { opacity: 1; transform: none; transition: opacity .9s v
 @media (max-width: 480px) {
   .header-inner { gap: .6rem; padding: 0 14px; min-height: 64px; }
   .brand .brand-en { font-size: 16px; }
-  .lang-toggle { min-height: 44px; padding: 6px 6px; font-size: 11px; }
+  .lang-toggle { min-height: 44px; padding: 6px 6px; font-size: 12.5px; }
   .nav-toggle { width: 44px; height: 44px; }
   .main-nav { inset: 64px 0 auto 0; }
 }
@@ -2470,7 +2470,23 @@ button.sr-row .sr-play { color: var(--gold); }
    헤더에 거위가 두 마리였다. 터치 타깃은 손으로 누르는 폭에서만 필요하다. */
 @media (max-width: 1080px) {
   .brand { display: inline-flex; align-items: center; min-height: 44px; }
+  /* 메뉴 안의 거위. 데스크톱 30px 를 그대로 쓰면 세로 메뉴의
+     글자 항목(0.95rem)보다 확실히 커서 목록의 리듬을 깬다. */
+  .mark-goose { width: 22px; }
 }
+/* 폰에서만 INSOONI 글자만 둔다.
+   좁은 헤더에 거위와 글자가 나란히 서면 27px 마크가 옆 글자보다 커서
+   시선이 마크에 먼저 가고 이름이 뒤로 밀린다. 태블릿은 폭이 남으므로
+   그대로 둔다 — 720px 은 세로 폰(최대 428px)과 태블릿(768px+) 사이다.
+   거위는 메뉴를 열면 그 안에 있다. */
+@media (max-width: 720px) {
+  .brand-mark { display: none; }
+}
+/* 소속사 연락처(전화·메일)와 구독 안내의 개인정보 링크 — 실측 20px 였다.
+   목록 안 링크라 놓치기 쉽다. 어르신 손끝 기준 44px 을 보장한다. */
+.agency-lines a, .form-hint a { display: inline-flex; align-items: center; min-height: 44px; }
+/* 구독 안내문 — 데스크톱에서 한 줄 71자까지 늘어져 읽기 피로하다. */
+.form-hint { max-width: 46ch; }
 /* 스트립 캡션의 곡 제목 링크 */
 .sc-title { display: inline-flex; align-items: center; min-height: 44px; }
 /* 본문 안의 단독 링크(해밀 공식 홈페이지 등) */
