@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-08-10 01:43",
- "count": 27,
+ "updated": "2026-08-10 03:51",
+ "count": 28,
  "items": [
   {
    "date": "2026-08-05",
@@ -74,6 +74,15 @@
    "type": "방송",
    "auto": true,
    "ai": true
+  },
+  {
+   "date": "2026-07-29",
+   "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE5PdnVpdURVSXh5MXE2OWYtWV9Belp0RHVKQXhCOFZfcmxyZVduclFWSjhrYnY5VEJJaXZndUozMU5vZjlxYWc?oc=5",
+   "type": "방송",
+   "auto": true
   },
   {
    "date": "2026-07-28",

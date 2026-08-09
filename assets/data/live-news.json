@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-08-10 01:43",
+ "updated": "2026-08-10 03:51",
  "items": [
   {
    "date": "2026-08-05",
@@ -36,7 +36,7 @@
    "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
    "source": "v.daum.net",
    "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE9kLTZJcnFMUmF6Vkl2TWxKejBVblBxS0RTU0NYbkhhNlJPc3FfU2dBTGd0NG1RLVBaX3NybTZMR2owdXVidjdYTzYxMVBxNlhpOEkyaQ?oc=5",
+   "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE5PdnVpdURVSXh5MXE2OWYtWV9Belp0RHVKQXhCOFZfcmxyZVduclFWSjhrYnY5VEJJaXZndUozMU5vZjlxYWc?oc=5",
    "type": "방송",
    "auto": true
   },
@@ -51,22 +51,22 @@
   },
   {
    "date": "2026-07-28",
-   "title": "한강 X 문초희, '이제는', 고음과 안무에도 빛난 듀엣 호흡! 인순이 X 서지오 심사평은? [인생은 오디션]",
-   "source": "sbs.co.kr",
-   "sourceSite": "https://programs.sbs.co.kr",
-   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFAxUHNaU29ORTRFc1VEUVBxQ0Vid2xTY0stTDZFbXVvWUZrUGNOZWxfRlZzcENhU1U4eGxSdFpkc1JCVU50OW9MUUZXdVZodkp5UGROeGpJT1N2YzZMVzZYeHo4Q0U1elpIbXJZQ2VwNXpIeGcxb1Z3?oc=5",
-   "type": "방송",
-   "auto": true
-  },
-  {
-   "date": "2026-07-28",
    "title": "듀엣 경연의 핵심은 둘의 호흡과 개성?! 심사위원 인순이 X 서지오가 말하는 심사 포인트! [인생은 오디션]",
    "source": "sbs.co.kr",
    "sourceSite": "https://programs.sbs.co.kr",
    "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBPQ041WGZ5MlRYTXZOOTdtdHBWWGRLTDkyWXc0SmhGU3ZrWnY1N2huSU5rbVd4WlY2SWxRb1Jha0pHZ0hFZ3dFWmNNOU45YjBpa3VKMFBmeWRUcGVOVUN2dUZTaDU5QWZ4QnhXYlpHRDFfaWNJTTN3?oc=5",
    "type": "방송",
    "auto": true,
-   "also": 1
+   "also": 2
+  },
+  {
+   "date": "2026-07-28",
+   "title": "한강 X 문초희, '이제는', 고음과 안무에도 빛난 듀엣 호흡! 인순이 X 서지오 심사평은? [인생은 오디션]",
+   "source": "sbs.co.kr",
+   "sourceSite": "https://programs.sbs.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFAxUHNaU29ORTRFc1VEUVBxQ0Vid2xTY0stTDZFbXVvWUZrUGNOZWxfRlZzcENhU1U4eGxSdFpkc1JCVU50OW9MUUZXdVZodkp5UGROeGpJT1N2YzZMVzZYeHo4Q0U1elpIbXJZQ2VwNXpIeGcxb1Z3?oc=5",
+   "type": "방송",
+   "auto": true
   },
   {
    "date": "2026-07-27",
@@ -110,7 +110,7 @@
   {
    "date": "2026-06-17",
    "title": "\"왜 이렇게 눈물이 날까요\" 인순이가 완성한 축제의 대미",
-   "source": "오마이스타",
+   "source": "star.ohmynews.com",
    "sourceSite": "https://star.ohmynews.com",
    "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTFBLMEJuXy1BejFxbDJZYmQ3X3ljWE9jamdaU2tlSlhRem5CMXJGLXNlRDA2S0p4UmI0dkh5Wmdqb1N5VWdGd000NldvamFxWERpZk9FMXdpOWxGTExlN1htR2tZVTVVU2ViQ2hjZUpXYjRFS01ZdlRUdHRRR1lyQQ?oc=5",
    "type": "공연",
