@@ -3091,7 +3091,6 @@
   var G_BODY = "M3 74 C3 63 16 55 35 54.4 C47 54 56 55.6 61 57.8 C59 50 59 40 62 31 C66 19.4 73 11.6 81 8.6 C85.6 7 89.4 8 91 11.2 L99.6 13.6 L90.8 16.8 C89.2 19.8 86.2 21.4 82.6 20.8 C78.2 20.2 74.8 24.8 72.6 33 C70.2 42 70.2 52 72.8 61 C73.6 64 72.6 67 69 70 C61 77 44 81 26 80.6 C16 80.4 8 79 3 74 Z M3 74 C8 70 16 64 26 60 C18 66 10 71 3 74 Z";
   var G_WING = "M68 52 C60 39 46 29 27 25 C30 38 35 49 43 57 C52 66 63 64 68 52 Z";
   var G_BOX = 512;       /* 상자 기본 한 변(px). 실제 크기는 scale 로만 준다 */
-  var G_END = 2.10;      /* 갈라짐 → V자 → 흩어짐 → 착지 가 끝나는 시각(초) */
 
   function gEase(t) { return t * t * (3 - 2 * t); }
   function g01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
@@ -3116,17 +3115,20 @@
        예전 코드가 .brand-mark 만 보고 있어서, 데스크톱에서는 폭 0 인 상자를
        목표로 삼아 거위가 왼쪽 위 구석으로 빨려 들어갔다. 폭으로 판정한다. */
     var brand = (function () {
-      /* 폭만 보면 안 된다. 닫힌 모바일 메뉴 속 거위도 폭 30px 을 그대로
-         보고하기 때문이다(visibility:hidden 인 조상 아래에 있어도 레이아웃은
-         잡혀 있다). checkVisibility 는 그 경우를 false 로 돌려준다. */
+      /* 폭만 보면 안 된다 — 닫힌 모바일 메뉴 속 거위도 폭 30px 을 그대로
+         보고한다(visibility:hidden 조상 아래여도 레이아웃은 잡혀 있다).
+         단, opacity 는 절대 판정에 넣지 않는다: 도입부 동안 헤더 전체가
+         .is-intro 로 opacity:0 이다. checkOpacity 를 켰더니 데스크톱에서도
+         목표가 null 이 되어 거위가 앉지 못하고 위로 빠져나갔다 — 형님이 본
+         "로고에 안 들어가는" 증상의 진짜 원인이 이 한 옵션이었다. */
       function seen(el) {
         if (!el) return false;
         var r = el.getBoundingClientRect();
         if (r.width < 1 || r.height < 1) return false;
-        if (el.checkVisibility) return el.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true });
+        if (el.checkVisibility) return el.checkVisibility({ checkVisibilityCSS: true });
         for (var p = el; p && p !== document.body; p = p.parentElement) {
           var c = getComputedStyle(p);
-          if (c.display === "none" || c.visibility === "hidden" || +c.opacity === 0) return false;
+          if (c.display === "none" || c.visibility === "hidden") return false;
         }
         return true;
       }
@@ -3164,57 +3166,85 @@
     return e;
   }
 
-  /* 뭉친 것이 갈라지고, 하나가 상표 자리에 앉는다.
+  /* 사진들이 스치고, 거위가 날아올라 상표에 앉는다.
 
-     beyonce.com 실측(2026-08-09, Chrome): 로더 안에 별 다섯이
-     .site-loader__stars-center 로 화면 한가운데 겹쳐 있다가,
-     .site-loader__stars-outer 로 네 변 한가운데(위 756,21 · 오른쪽 1491,387 ·
-     아래 758,750 · 왼쪽 22,387 / 1512x772)로 흩어진다. 흩어진 그 자리가
-     그대로 사이트의 영구 테두리 별(.site-border__stars)이다.
-     이야기도 자막도 넘을 선도 없다 — 뭉친 것이 갈라질 뿐이다.
+     beyonce.com 의 로더 실측(2026-08-09, Chrome): .site-loader 안에
+     .loader-item 전면 레이어 11장이 z1~11 로 겹쳐 있고 — 사진이 연달아
+     스치는 몽타주다 — 별들은 중앙에 뭉쳤다가 제자리로 흩어진다.
+     형님 지시(2026-08-10): "어머니 여러 사진들 나오면서 거위가 마지막에
+     날아오르면서 들어가야지."
 
-     우리의 영구 표식은 헤더의 거위 하나뿐이다. 그래서 다섯 중 하나만
-     상표에 앉히고 넷은 화면 밖으로 보낸다. 착지 좌표는 매 프레임 헤더에서
-     다시 재므로 창 크기가 바뀌어도 어긋나지 않는다. */
+     그래서 세 국면이다.
+       ① 몽타주   사진 여섯이 0.26초씩 스친다 (근래 무대·화보·시상·MV 순)
+       ② 상승     어둠에서 거위 하나가 날갯짓하며 호를 그리고 오른다
+       ③ 안착     헤더의 상표 자리에 크기·색까지 정확히 겹치며 앉는다
+
+     '알맞게 들어가기'의 세 가지 조건 — 전에 어긋났던 것들:
+       크기   매 프레임 상표 rect 를 다시 재고, 마지막 프레임을 손으로 못박는다
+       색     연출 거위는 --ivory(#F3EFE7), 정중앙 상표는 #fff 였다.
+              앉는 순간 색이 튀었다 — 시작할 때 목표의 계산된 색을 그대로 입힌다
+       광륜   금빛 drop-shadow 가 착지 순간 뚝 끊겼다 — 다가가며 4단계로 걷는다
+              (연속 보간이 아니라 단계 전환인 이유: 512px 레이어의 휘도가
+              매 프레임 흔들리면 광민감성 대역이다. 단조 감소 4단계면 충분하다) */
   function flyGoose(box, brand, reveal, safety) {
     var scrim = box.querySelector(".ld-dark");
     if (!scrim) return false;
 
-    function makeBird() {
+    /* ── 몽타주 사진. 전부 이 사이트가 이미 쓰는 큰 원본(≥1067px)이다 —
+       작은 스캔을 전면으로 늘리지 않는다(원본보다 늘리지 않는 규칙).
+       합계 약 330KB. 순서는 무대 뒤 → 화보 → 시상 → MV, 지금을 향해 간다. */
+    var SHOTS = ["assets/img/photos/kakao26.webp",
+                 "assets/img/photos/seasons-1.webp",
+                 "assets/img/photos/kakao25.webp",
+                 "assets/img/photos/hinkchi5.webp",
+                 "assets/img/photos/hanteo-1.webp",
+                 "assets/img/hero.webp"];
+    var layers = [], ready = [], li;
+    for (li = 0; li < SHOTS.length; li++) {
+      var im = document.createElement("img");
+      im.className = "ld-photo";
+      im.alt = ""; im.decoding = "async";
+      im.src = SHOTS[li];
+      box.appendChild(im);
+      layers.push(im); ready.push(false);
+    }
+    var vig = document.createElement("div");
+    vig.className = "ld-vig";
+    box.appendChild(vig);
+
+    var bird = (function () {
       var b = document.createElement("div");
       b.className = "ld-goose";
       var svg = svgEl("svg", { viewBox: "3 7.8 96.6 72.8", "aria-hidden": "true", focusable: "false" });
       svg.appendChild(svgEl("path", { d: G_BODY, fill: "currentColor" }));
-      /* 날개만 따로 묶는다 — 나는 동안 젓고, 앉으면서 정확히 0 으로 잦아든다.
-         0 이 아니면 상표와 다른 그림으로 끝나 착지가 어긋나 보인다. */
       var wg = svgEl("g", {});
       wg.appendChild(svgEl("path", { d: G_WING, fill: "currentColor" }));
       svg.appendChild(wg);
       b.appendChild(svg);
       box.appendChild(b);
       return { el: b, wing: wg };
-    }
-
-    var lander = makeBird();
-    /* 흩어지는 넷. [각도(도), 지연]. -90 이 위 — 그쪽은 상표가 쓰므로 비운다. */
-    var FAN = [[-146, 0.00], [-34, 0.05], [146, 0.03], [34, 0.08]];
-    var fan = [], fi;
-    for (fi = 0; fi < FAN.length; fi++) fan.push(makeBird());
+    })();
+    bird.el.style.opacity = "0";
+    /* 색 맞추기 — 조건 둘째. 목표가 없으면(폰) 기본 ivory 그대로. */
+    if (brand) bird.el.style.color = getComputedStyle(brand).color;
 
     /* ── 건너뛰기 ──
-       {once:true} 를 쓰지 않는다: 탭 한 번에 pointerdown 과 touchstart 가 함께
-       발화해 채널을 조용히 소모하고 그 뒤로 건너뛰기가 죽는다.
-       로더는 pointer-events:none 이라 탭이 아래 필름스트립으로 새어 나가므로,
-       건너뛴 직후의 click 한 번만 캡처 단계에서 삼킨다. */
-    var t0 = 0, skipped = false, boost = 0;
+       {once:true} 금지: 탭 한 번에 pointerdown 과 touchstart 가 함께 발화해
+       채널을 소모하고 그 뒤 건너뛰기가 죽는다. 건너뛴 직후의 click 한 번은
+       아래 필름스트립으로 새므로 캡처 단계에서 삼킨다. */
+    var t0 = 0, skipped = false, boost = 0, started = false;
+    var EACH = 0.26, M_END = 0, T_END = 0;   /* begin() 에서 확정 */
     function swallow(ev) {
       ev.preventDefault(); ev.stopPropagation();
       document.removeEventListener("click", swallow, true);
     }
     function skip() {
       if (skipped) return;
+      /* 시작 게이트(사진 대기) 중에 눌러도 듣는다 — 그 자리에서 시작시키고
+         끝 0.3초 앞으로 점프한다. t0 가 아직 0 이면 첫 프레임이 곧 끝이다. */
+      if (!started) begin();
       skipped = true;
-      if (t0) boost = Math.max(0, (G_END - 0.30) - (performance.now() - t0) / 1000);
+      boost = Math.max(0, (T_END - 0.30) - (t0 ? (performance.now() - t0) / 1000 : 0));
       document.addEventListener("click", swallow, true);
       setTimeout(function () { document.removeEventListener("click", swallow, true); }, 700);
     }
@@ -3222,145 +3252,140 @@
     for (var k = 0; k < SKIPS.length; k++) {
       window.addEventListener(SKIPS[k], skip, { passive: true });
     }
-    /* WCAG 2.2.2 는 자동 모션에 정지 수단을 요구한다.
-       '아무 데나 누르세요' 는 아무도 모르는 제스처라 보이는 문을 따로 둔다. */
+    /* WCAG 2.2.2 — 자동 모션에는 보이는 정지 수단. */
     var sk = document.createElement("button");
     sk.type = "button";
     sk.className = "ld-skip";
-    sk.textContent = "건너뛰기";
+    sk.textContent = document.documentElement.getAttribute("lang") === "en" ? "Skip" : "건너뛰기";
     sk.addEventListener("click", function (ev) { ev.stopPropagation(); skip(); });
     document.body.appendChild(sk);
     setTimeout(function () { sk.classList.add("on"); }, 700);
 
+    /* ── 시작 게이트 ──
+       사진이 하나도 안 왔는데 몽타주 슬롯부터 돌리면 검은 화면이 스친다.
+       석 장이 준비되거나 0.9초가 지나면, '그때 준비된 것만'으로 시작한다.
+       느린 회선에서는 사진 없이 거위만 오른다 — 연출은 줄어도 사이트는 뜬다. */
+    var order = [];
+    function begin() {
+      if (started) return;
+      started = true;
+      for (var i = 0; i < layers.length; i++) if (ready[i]) order.push(layers[i]);
+      M_END = Math.min(order.length, SHOTS.length) * EACH;
+      T_END = M_END + 1.66;
+      requestAnimationFrame(frame);
+    }
+    function armed() {
+      /* '석 장이면 시작' 은 실측에서 큰 사진 석 장을 버렸다(6장 중 0·1·5번만
+         나왔다). 합계 330KB 라 전부 기다려도 보통 0.3초 안이다 — 전부 오면
+         시작하고, 회선이 느리면 0.9초 상한이 준비된 것만으로 연다. */
+      for (var i = 0; i < ready.length; i++) if (!ready[i]) return;
+      begin();
+    }
+    layers.forEach(function (im2, i2) {
+      var done = function () { ready[i2] = true; armed(); };
+      if (im2.decode) im2.decode().then(done)["catch"](function () {});
+      else if (im2.complete) done();
+      else im2.onload = done;
+    });
+    setTimeout(begin, 900);
+
+    var lastBand = -1;
     function frame(now) {
       try { frameBody(now); }
       catch (e) { clearTimeout(safety); reveal(); }
     }
     function frameBody(now) {
       if (!t0) t0 = now;
-      /* 프레임 적산이 아니라 벽시계를 쓴다 — 느린 기기에서 프레임을 잃어도
-         끝나는 시각은 지켜져 안전망(8초)에 걸리지 않는다. */
+      /* 프레임 적산이 아니라 벽시계 — 프레임을 잃어도 끝나는 시각은 지켜진다. */
       var t = (now - t0) / 1000 + boost;
-      var tc = Math.min(t, G_END);
+      var tc = Math.min(t, T_END);
 
-      var vw = window.innerWidth, vh = window.innerHeight;
-      var br = brand ? brand.getBoundingClientRect()
-                     : { left: vw / 2, top: -vh * 0.2, width: 0, height: 0 };
-      var S = Math.min(vw, vh);
-      /* 뭉쳐 있는 자리와 크기 */
-      var cx = vw / 2, cy = vh * 0.52, cs = S * 0.22;
-
-      /* 세 박자다.
-         ① 0 ~ HOLD      겹쳐 있다 — 한 마리로 보인다
-         ② HOLD ~ VEE    갈라져 기러기 V자를 이룬다
-         ③ VEE ~ G_END   대열이 풀리며 넷은 나가고 하나는 상표에 앉는다
-
-         비욘세의 별은 갈라져 흩어지기만 한다. 우리 거위는 흩어지기 전에
-         잠깐 대열을 이룬다 — 기러기가 실제로 나는 모양이고, 이 사이트가
-         이미 품고 있는 뜻이다(앞선 새의 상승기류에 기대어 함께 간다).
-         자막으로 설명하지 않는다. 모양이 말하게 둔다. */
-      var HOLD = 0.16, VEE = 0.92;
-      var uV = g01((tc - HOLD) / (VEE - HOLD));      /* 모이는 국면 */
-      var uS = g01((tc - VEE) / (G_END - VEE));      /* 풀리는 국면 */
-      var eV = gOut5(uV), eS = gOut5(uS);
-
-      /* 나타남. 검정에서 그냥 켜지면 '떴다'가 되므로 짧게 밝아진다. */
-      var lit = gEase(g01(tc / 0.30));
-
-      /* V자 자리. 선두가 앞서고 뒤로 갈수록 비스듬히 처진다.
-         [열, 위아래] — 열이 0 인 선두가 상표로 갈 한 마리다. */
-      var VPOS = [[0, 0], [-1, -1], [-1, 1], [-2, -2], [-2, 2]];
-      var gapX = S * 0.085, gapY = S * 0.052;
-      /* 대열은 화면 가운데보다 살짝 왼쪽에서 오른쪽 위(상표 쪽)를 본다 */
-      var fcx = cx - S * 0.02, fcy = cy;
-
-      var tw = br.width, tx = br.left + br.width / 2, ty = br.top + br.height / 2;
-      /* 폰에는 헤더에 마크가 없다. 앉을 자리가 없으면 앉는 척하지 않는다 —
-         선두도 나머지처럼 위로 빠져나가고, 사이트가 드러나는 것으로 끝난다. */
-      var hasSeat = !!brand;
-
-      for (var i = 0; i < 5; i++) {
-        var bird = i === 0 ? lander : fan[i - 1];
-        /* 모이는 국면: 겹친 자리 → V자 자리 */
-        var vx = fcx + VPOS[i][0] * gapX;
-        var vy = fcy + VPOS[i][1] * gapY;
-        var px = cx + (vx - cx) * eV;
-        var py = cy + (vy - cy) * eV;
-        /* 뒤로 갈수록 조금 작다 — 같은 크기 다섯이면 복사본으로 읽힌다.
-           크기 차이가 거리를 만든다. */
-        var depth = 1 - Math.abs(VPOS[i][0]) * 0.10;
-        var pw = cs * depth;
-        var prot = -6 * (1 - eV);
-        var pop = lit * (1 - Math.abs(VPOS[i][0]) * 0.13);
-
-        if (i === 0 && hasSeat) {
-          /* 선두는 대열을 이끌다가 그대로 상표 자리로 올라가 앉는다 */
-          px = px + (tx - px) * eS;
-          py = py + (ty - py) * eS - Math.sin(Math.PI * eS) * S * 0.05;
-          pw = pw + (tw - pw) * eS;
-          prot = prot * (1 - eS);      /* 착지에서 정확히 0 */
-        } else if (i === 0) {
-          /* 앉을 자리가 없다 — 선두는 위로 빠져나간다 */
-          py -= S * 1.15 * eS;
-          px += S * 0.10 * eS;
-          pw *= (1 - 0.30 * eS);
-          pop *= (1 - gEase(g01((eS - 0.30) / 0.70)));
-        } else {
-          /* 나머지는 대열을 유지한 채 각자의 방향으로 화면을 빠져나간다 */
-          var ang = Math.atan2(VPOS[i][1], VPOS[i][0] - 0.35);
-          var dist = S * 1.15 * eS;
-          px += Math.cos(ang) * dist;
-          py += Math.sin(ang) * dist;
-          pw *= (1 - 0.34 * eS);
-          pop *= (1 - gEase(g01((eS - 0.30) / 0.70)));
+      /* ① 몽타주. 딱딱 끊어 바꾼다(비욘세 문법) — 페이드를 겹치면
+         두 사진이 반투명하게 포개져 유령 프레임이 생긴다.
+         각 장은 1.045 → 1.0 으로 아주 조금 물러난다: 정지 사진에 숨을 준다. */
+      for (var i = 0; i < order.length; i++) {
+        var on = tc >= i * EACH && tc < (i + 1) * EACH && tc < M_END;
+        if (on) {
+          var u = (tc - i * EACH) / EACH;
+          order[i].style.opacity = "1";
+          order[i].style.transform = "scale(" + (1.045 - 0.045 * u).toFixed(4) + ")";
+        } else if (order[i].style.opacity !== "0") {
+          order[i].style.opacity = "0";
         }
+      }
+      vig.style.opacity = (tc < M_END ? 1 : 1 - gEase(g01((tc - M_END) / 0.30))).toFixed(3);
 
-        bird.el.style.transform = "translate3d(" + (px - G_BOX / 2).toFixed(2) + "px,"
-          + (py - G_BOX / 2).toFixed(2) + "px,0) scale(" + (pw / G_BOX).toFixed(6)
-          + ") rotate(" + prot.toFixed(3) + "deg)";
-        bird.el.style.opacity = pop.toFixed(3);
+      /* ② 상승 → ③ 안착 */
+      var vw = window.innerWidth, vh = window.innerHeight;
+      var S = Math.min(vw, vh);
+      var br = brand ? brand.getBoundingClientRect()
+                     : { left: vw / 2 + vw * 0.06, top: -vh * 0.25, width: 0, height: 0 };
+      var hasSeat = !!brand;
+      var tw = hasSeat ? br.width : S * 0.14;
+      var tx = br.left + br.width / 2, ty = br.top + br.height / 2;
+      var sx = vw / 2, sy = vh * 0.74, s0 = S * 0.20;
 
-        /* 날갯짓. 선두는 앉으면서 정확히 0 으로 잦아든다 —
-           0 이 아니면 상표와 다른 그림으로 끝나 착지가 어긋나 보인다.
-           뒤따르는 넷은 위상을 어긋내 대열이 기계처럼 보이지 않게 한다. */
-        var damp = (i === 0 && hasSeat) ? (1 - gEase(g01((uS - 0.30) / 0.70))) : 1;
-        var flap = Math.sin(tc * 8.2 + i * 0.9) * 14 * damp;
-        bird.wing.setAttribute("transform", "rotate(" + flap.toFixed(2) + " 66 55)");
+      var gt = tc - M_END;                       /* 거위 국면 시각 */
+      var lit = gEase(g01(gt / 0.30));
+      var e = gOut5(g01((gt - 0.12) / 1.42));    /* 상승 진행 — 긴 감속 꼬리 */
+
+      var x = sx + (tx - sx) * e;
+      /* 호를 그리며 '날아오른다' — 직선 상승은 승강기다. 위로 부풀린 호. */
+      var y = sy + (ty - sy) * e - Math.sin(Math.PI * e) * S * 0.11;
+      var w = s0 + (tw - s0) * e;
+      var rot = -8 * (1 - e);
+      if (!hasSeat) lit *= (1 - gEase(g01((e - 0.55) / 0.45)));
+
+      bird.el.style.transform = "translate3d(" + (x - G_BOX / 2).toFixed(2) + "px,"
+        + (y - G_BOX / 2).toFixed(2) + "px,0) scale(" + (w / G_BOX).toFixed(6)
+        + ") rotate(" + rot.toFixed(3) + "deg)";
+      bird.el.style.opacity = lit.toFixed(3);
+
+      /* 날갯짓 — 앉으며 정확히 0 으로. 0 이 아니면 상표와 다른 그림으로 끝난다. */
+      var damp = hasSeat ? (1 - gEase(g01((e - 0.55) / 0.45))) : 1;
+      var flap = Math.sin(gt * 9.2) * 15 * damp;
+      bird.wing.setAttribute("transform", "rotate(" + flap.toFixed(2) + " 66 55)");
+
+      /* 광륜 걷기 — 조건 셋째. 0.32 → 0 을 4단계 단조 감소로. */
+      var band = Math.max(0, Math.min(3, Math.round((1 - e) * 3)));
+      if (band !== lastBand) {
+        lastBand = band;
+        bird.el.style.filter = band === 0 ? "none"
+          : "drop-shadow(0 0 " + (10 + 4 * band) + "px rgba(246,226,178," + (0.11 * band).toFixed(2) + "))";
       }
 
-      /* ④ 어둠은 갈라지기 시작할 때 함께 걷힌다 */
-      scrim.style.opacity = (1 - gQ4io(g01((tc - HOLD - 0.06) / (G_END - HOLD - 0.30)))).toFixed(3);
+      /* 어둠은 거위가 오르는 동안 걷힌다 — 사진이 끝나고 한 호흡 뒤. */
+      scrim.style.opacity = (1 - gQ4io(g01((tc - (M_END + 0.22)) / 0.95))).toFixed(3);
 
-      if (t < G_END) { requestAnimationFrame(frame); return; }
+      if (t < T_END) { requestAnimationFrame(frame); return; }
 
-      /* 마지막 프레임을 손으로 못박는다. rAF 는 G_END 에 정확히 떨어지지 않아
-         회전 0.3도쯤이 남는데, 상표는 기울어 있지 않다. */
+      /* 마지막 프레임을 손으로 못박는다 — rAF 는 T_END 에 정확히 안 떨어진다. */
       if (brand) {
         var fr = brand.getBoundingClientRect();
-        lander.el.style.transform = "translate3d(" + (fr.left + fr.width / 2 - G_BOX / 2).toFixed(2) + "px,"
+        bird.el.style.transform = "translate3d(" + (fr.left + fr.width / 2 - G_BOX / 2).toFixed(2) + "px,"
           + (fr.top + fr.height / 2 - G_BOX / 2).toFixed(2) + "px,0) scale("
           + (fr.width / G_BOX).toFixed(6) + ") rotate(0deg)";
-        lander.wing.setAttribute("transform", "rotate(0 66 55)");
+        bird.wing.setAttribute("transform", "rotate(0 66 55)");
+        bird.el.style.filter = "none";
       } else {
-        lander.el.style.opacity = "0";
+        bird.el.style.opacity = "0";
       }
       scrim.style.opacity = "0";
 
-      /* 순서가 중요하다. clearTimeout 을 먼저 부르고 그 뒤에서 예외가 나면
-         헤더가 영구히 사라진다 — 안전망 해제를 맨 마지막에 둔다. */
+      /* 순서가 중요하다 — 안전망 해제는 맨 마지막. 그 전에 예외가 나면
+         8초 안전망이 그래도 헤더를 살린다. */
       if (sk.parentNode) sk.parentNode.removeChild(sk);
-      reveal();                              /* 진짜 상표가 켜진다 */
-      lander.el.classList.add("gone");       /* 같은 그림·같은 자리·같은 크기라 안 보인다 */
-      for (i = 0; i < fan.length; i++) fan[i].el.classList.add("gone");
+      reveal();                            /* 진짜 상표가 켜진다 */
+      bird.el.classList.add("gone");       /* 같은 그림·같은 자리·같은 크기·같은 색 */
       setTimeout(function () {
-        if (lander.el.parentNode) lander.el.parentNode.removeChild(lander.el);
-        for (var q = 0; q < fan.length; q++) {
-          if (fan[q].el.parentNode) fan[q].el.parentNode.removeChild(fan[q].el);
+        if (bird.el.parentNode) bird.el.parentNode.removeChild(bird.el);
+        for (var q = 0; q < layers.length; q++) {
+          if (layers[q].parentNode) layers[q].parentNode.removeChild(layers[q]);
         }
+        if (vig.parentNode) vig.parentNode.removeChild(vig);
       }, 520);
       clearTimeout(safety);
     }
-    requestAnimationFrame(frame);
     return true;
   }
 

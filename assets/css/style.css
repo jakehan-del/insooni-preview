@@ -3531,6 +3531,21 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
    width/height 를 매 프레임 바꾸면 레이아웃이 다시 계산된다.
    원점을 가운데로 둔 이유: 0 0 이면 축소할 때마다 상자가 왼쪽 위로 쏠려
    '중심 - 줄어든 절반' 같은 보정이 필요해지고, 실제로 두 번 틀렸다. */
+/* 몽타주 사진. 전면을 덮고, 딱딱 끊어 바뀐다(비욘세 로더 문법).
+   변형은 JS 가 매 프레임 쓰므로 transition 을 두지 않는다 — 두면
+   하드컷이 페이드가 되어 유령 프레임이 생긴다. */
+.ld-photo {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; opacity: 0; will-change: opacity, transform;
+}
+/* 사진 위 비네트 — 가장자리를 어둠에 묻어 사진끼리의 밝기 차를 죽이고,
+   위쪽은 더 눌러 하드컷의 번쩍임을 줄인다(광민감성 배려). */
+.ld-vig {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 92% 76% at 50% 46%, transparent 42%, rgba(5,5,6,.88) 100%),
+    linear-gradient(to bottom, rgba(5,5,6,.72), transparent 24%, transparent 70%, rgba(5,5,6,.78));
+}
 .ld-goose {
   position: absolute; top: 0; left: 0; width: 512px; height: 512px;
   transform-origin: 50% 50%; will-change: transform, opacity;
