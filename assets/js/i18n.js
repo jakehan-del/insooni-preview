@@ -120,7 +120,7 @@ window.I18N_EN = {
   /* 사진 설명 — 화면 낭독기가 읽는 유일한 사진 정보다 */
   "alt.01": "LP jacket for '인연', 1980",
   "alt.02": "Insooni in a cream suit, studio portrait",
-  "alt.03": "On stage in a white lace dress amid blue haze",
+  "alt.03": "A profile just before the stage — silver-painted jacket",
   "alt.04": "Raising the trophy at the Hanteo Music Awards",
   "alt.05": "On stage with an orchestra, in white with feather trim",
   "alt.06": "LP jacket for '욕망', her fourth solo album, 1983",
