@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-08-11 05:51",
+ "updated": "2026-08-11 07:45",
  "items": [
   {
    "date": "2026-08-05",
@@ -15,9 +15,9 @@
   {
    "date": "2026-08-04",
    "title": "가수 남진·인순이, KBS '가요무대'서 환상적인 듀엣 무대…",
-   "source": "유스연합",
-   "sourceSite": "https://www.youthassembly.kr",
-   "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE9WeVM3ZWl3bXF2S0FkQTJBUkNaV1dHdnZKdmM1QXdsRU5oczJYUXhCdDRoMVc1VUtJazBaa3BiNGk4T29RQjYzVFdjZnc4RllncEE?oc=5",
+   "source": "kcemedia.com",
+   "sourceSite": "http://knpp.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTE9UWFp3dGdyY09vbkg4c2E1YzlkOXZLNk5fS292ZHFzQkRxTDJTajBLWXp2NjROSjVaZzJYUWVvSERUYnc?oc=5",
    "type": "공연",
    "auto": true,
    "also": 1
@@ -90,7 +90,7 @@
   {
    "date": "2026-06-30",
    "title": "미국 독립기념일 행사에서 애국가 부르는 인순이",
-   "source": "연합뉴스 한민족센터",
+   "source": "koreancenter.or.kr",
    "sourceSite": "https://www.koreancenter.or.kr",
    "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1lUFFLT19OWU14SWNZbmNUUVBkUkxJaXp4ekRnWHpjRlFHNkpoMnBqRGZkY3RtODNldmZUenNLVms3Wm1mRm12d2dmRzJpaGhId2V6OF9uSDR2TWhEOHc2cDZFOTFnRkdSODJTcXJYQXhudGNZ?oc=5",
    "type": "공연",
@@ -100,7 +100,7 @@
   {
    "date": "2026-06-23",
    "title": "'11회 청주시 시민의 날 기념행사' 내달 1일 개최…염유리·인순이 공연",
-   "source": "뉴스1",
+   "source": "news1.kr",
    "sourceSite": "https://www.news1.kr",
    "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5pWndrbExpeXFyTENrOFYwWE9neTZPbnFtZWRPelZGLVZWSzlQczU4a2xBLXpaSHNDdUVNZlVOVUpKd3JmVkpLblhtSWJsbXc1dWVvU2hyTVppdnpDeVNn?oc=5",
    "type": "공연",
