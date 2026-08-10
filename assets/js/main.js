@@ -3153,7 +3153,7 @@
       box.classList.add("done");
       setTimeout(function () { if (box.parentNode) box.remove(); }, 900);
     }
-    var safety = setTimeout(reveal, 8000);
+    var safety = setTimeout(reveal, 12000);   /* 도입부 총 ~7.7초 + 여유 */
 
     try {
       if (!flyGoose(box, brand, reveal, safety)) { clearTimeout(safety); reveal(); }
@@ -3233,7 +3233,10 @@
        채널을 소모하고 그 뒤 건너뛰기가 죽는다. 건너뛴 직후의 click 한 번은
        아래 필름스트립으로 새므로 캡처 단계에서 삼킨다. */
     var t0 = 0, skipped = false, boost = 0, started = false;
-    var EACH = 0.26, M_END = 0, T_END = 0;   /* begin() 에서 확정 */
+    /* 한 장에 1초 머물고, 0.5초씩 겹치며 녹아 넘어간다.
+       처음엔 0.26초 하드컷(비욘세 문법 그대로)이었는데 형님 판정:
+       "사진들이 천천히 바뀌면서 해야지" — 스치는 게 아니라 보는 것이다. */
+    var STEP = 1.0, FADE = 0.5, M_END = 0, T_END = 0;   /* begin() 에서 확정 */
     function swallow(ev) {
       ev.preventDefault(); ev.stopPropagation();
       document.removeEventListener("click", swallow, true);
@@ -3270,7 +3273,7 @@
       if (started) return;
       started = true;
       for (var i = 0; i < layers.length; i++) if (ready[i]) order.push(layers[i]);
-      M_END = Math.min(order.length, SHOTS.length) * EACH;
+      M_END = order.length * STEP;
       T_END = M_END + 1.66;
       requestAnimationFrame(frame);
     }
@@ -3300,20 +3303,24 @@
       var t = (now - t0) / 1000 + boost;
       var tc = Math.min(t, T_END);
 
-      /* ① 몽타주. 딱딱 끊어 바꾼다(비욘세 문법) — 페이드를 겹치면
-         두 사진이 반투명하게 포개져 유령 프레임이 생긴다.
-         각 장은 1.045 → 1.0 으로 아주 조금 물러난다: 정지 사진에 숨을 준다. */
+      /* ① 몽타주 — 느린 디졸브. 각 장은 0.5초에 걸쳐 떠오르고, 1초 머물고,
+         다음 장이 떠오르는 0.5초 동안 겹치며 녹아 사라진다(필름 디졸브).
+         각 장은 1.07 → 1.0 으로 천천히 물러난다: 정지 사진에 숨을 준다.
+         마지막 장의 사라짐은 거위의 등장과 겹친다 — 사진에서 거위로
+         끊기지 않고 이어진다. */
       for (var i = 0; i < order.length; i++) {
-        var on = tc >= i * EACH && tc < (i + 1) * EACH && tc < M_END;
-        if (on) {
-          var u = (tc - i * EACH) / EACH;
-          order[i].style.opacity = "1";
-          order[i].style.transform = "scale(" + (1.045 - 0.045 * u).toFixed(4) + ")";
-        } else if (order[i].style.opacity !== "0") {
-          order[i].style.opacity = "0";
+        var tt = tc - i * STEP;
+        var op = 0;
+        if (tt > 0 && tt < STEP + FADE) {
+          op = Math.min(gEase(g01(tt / FADE)), 1 - gEase(g01((tt - STEP) / FADE)));
+        }
+        order[i].style.opacity = op.toFixed(3);
+        if (op > 0) {
+          order[i].style.transform = "scale("
+            + (1.07 - 0.07 * g01(tt / (STEP + FADE))).toFixed(4) + ")";
         }
       }
-      vig.style.opacity = (tc < M_END ? 1 : 1 - gEase(g01((tc - M_END) / 0.30))).toFixed(3);
+      vig.style.opacity = (tc < M_END ? 1 : 1 - gEase(g01((tc - M_END) / FADE))).toFixed(3);
 
       /* ② 상승 → ③ 안착 */
       var vw = window.innerWidth, vh = window.innerHeight;
