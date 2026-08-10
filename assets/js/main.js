@@ -3093,6 +3093,7 @@
   var G_BOX = 512;       /* 상자 기본 한 변(px). 실제 크기는 scale 로만 준다 */
 
   function gEase(t) { return t * t * (3 - 2 * t); }
+  function gIn2(t) { return t * t; }                       /* 가속 — 들려 나갈 때 */
   function g01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
   function gOut5(t) { return 1 - Math.pow(1 - t, 5); }   /* 긴 감속 꼬리 — '값비쌈'의 1차 지표 */
   function gQ4io(t) { return t < 0.5 ? 8*t*t*t*t : 1 - Math.pow(-2*t + 2, 4) / 2; }
@@ -3199,18 +3200,35 @@
                  "assets/img/photos/hinkchi5.webp",
                  "assets/img/photos/hanteo-1.webp",
                  "assets/img/hero.webp"];
+    /* 층층이 쌓는다 — v17 원형. 첫 장이 맨 위(z 높음), 다음 장들이 밑에
+       온전히 깔려 있다. 위 장이 걷히면 밑 장이 '이미 완성된 채' 드러나므로
+       두 장이 반투명으로 섞이는 순간이 구조적으로 없다(형님: "겹치지 않게"). */
+    /* 각 층은 '불투명한 전면 시트 + 그 위의 사진'이다. 사진만 쌓으면
+       비율이 다른 밑 장이 가장자리로 삐져나온다 — 시트가 그걸 가리고,
+       넘어갈 때는 시트째 들려 나간다. 종이가 걷히는 그 느낌이다. */
     var layers = [], li;
     for (li = 0; li < SHOTS.length; li++) {
+      var leaf = document.createElement("div");
+      leaf.className = "ld-leaf";
+      leaf.style.zIndex = String(20 - li);    /* 첫 장이 맨 위 */
       var im = document.createElement("img");
       im.className = "ld-photo";
       im.alt = ""; im.decoding = "async";
       im.src = SHOTS[li];
-      box.appendChild(im);
-      layers.push(im);
+      leaf.appendChild(im);
+      box.appendChild(leaf);
+      layers.push({ leaf: leaf, im: im });
     }
     var vig = document.createElement("div");
     vig.className = "ld-vig";
     box.appendChild(vig);
+    /* 사진 위 한가운데 INSOONI — v17 로더의 이름판을 되살린다.
+       도입부가 끝나면 헤더의 같은 글자로 이어진다. */
+    var nameEl = document.createElement("span");
+    nameEl.className = "ld-name";
+    nameEl.textContent = "INSOONI";
+    nameEl.style.opacity = "0";
+    box.appendChild(nameEl);
 
     var bird = (function () {
       var b = document.createElement("div");
@@ -3233,10 +3251,10 @@
        채널을 소모하고 그 뒤 건너뛰기가 죽는다. 건너뛴 직후의 click 한 번은
        아래 필름스트립으로 새므로 캡처 단계에서 삼킨다. */
     var t0 = 0, skipped = false, boost = 0, started = false;
-    /* 한 장에 1초 머물고, 0.5초씩 겹치며 녹아 넘어간다.
-       처음엔 0.26초 하드컷(비욘세 문법 그대로)이었는데 형님 판정:
-       "사진들이 천천히 바뀌면서 해야지" — 스치는 게 아니라 보는 것이다. */
-    var STEP = 1.0, FADE = 0.5, M_END = 0, T_END = 0;   /* begin() 에서 확정 */
+    /* 한 장에 1.15초 머물다가, 마지막 0.45초 동안 위로 들려 나간다.
+       0.26초 하드컷(1차)은 "천천히", 0.5초 디졸브(2차)는 "겹치지 않게"로
+       기각됐다. 벗겨짐은 둘 다 만족한다 — 천천히 보이고, 섞이지 않는다. */
+    var STEP = 1.15, PEEL = 0.45, M_END = 0, T_END = 0;   /* begin() 에서 확정 */
     function swallow(ev) {
       ev.preventDefault(); ev.stopPropagation();
       document.removeEventListener("click", swallow, true);
@@ -3284,7 +3302,7 @@
       requestAnimationFrame(frame);
     }
     var gate = setInterval(function () {
-      if (layers[0].complete && layers[0].naturalWidth > 0) {
+      if (layers[0].im.complete && layers[0].im.naturalWidth > 0) {
         clearInterval(gate); begin();
       }
     }, 60);
@@ -3301,25 +3319,36 @@
       var t = (now - t0) / 1000 + boost;
       var tc = Math.min(t, T_END);
 
-      /* ① 몽타주 — 느린 디졸브. 각 장은 0.5초에 걸쳐 떠오르고, 1초 머물고,
-         다음 장이 떠오르는 0.5초 동안 겹치며 녹아 사라진다(필름 디졸브).
-         각 장은 1.07 → 1.0 으로 천천히 물러난다: 정지 사진에 숨을 준다.
-         마지막 장의 사라짐은 거위의 등장과 겹친다 — 사진에서 거위로
-         끊기지 않고 이어진다. */
+      /* ① 몽타주 — 층층이 벗겨짐(v17 원형). 사진은 통째로 보인다(contain,
+         잘리지 않는다). 각 장은 1.03 → 1.0 으로 아주 천천히 물러나며 숨을
+         쉬다가, 제 시간이 끝나면 물리적인 사진처럼 살짝 돌며 위로 들려
+         나간다. 밑 장은 이미 온전히 깔려 있어 섞임이 없다. */
+      var vhNow = window.innerHeight;
       for (var i = 0; i < layers.length; i++) {
+        var L = layers[i];
+        var okImg = L.im.complete && L.im.naturalWidth > 0;
         var tt = tc - i * STEP;
-        var op = 0;
-        if (tt > 0 && tt < STEP + FADE
-            && layers[i].complete && layers[i].naturalWidth > 0) {
-          op = Math.min(gEase(g01(tt / FADE)), 1 - gEase(g01((tt - STEP) / FADE)));
+        if (!okImg || tc >= (i + 1) * STEP + 0.05) {
+          /* 아직 안 왔거나 이미 다 나간 장 — 시트째 치운다.
+             안 온 장은 시트도 안 보여야 밑의 온 장이 대신 선다. */
+          if (L.leaf.style.visibility !== "hidden") L.leaf.style.visibility = "hidden";
+          continue;
         }
-        layers[i].style.opacity = op.toFixed(3);
-        if (op > 0) {
-          layers[i].style.transform = "scale("
-            + (1.07 - 0.07 * g01(tt / (STEP + FADE))).toFixed(4) + ")";
-        }
+        if (L.leaf.style.visibility !== "visible") L.leaf.style.visibility = "visible";
+        /* 사진의 숨 — 제 슬롯 동안 1.03 → 1.0 */
+        var kb = 1.03 - 0.03 * g01(tt / STEP);
+        L.im.style.transform = "translate(-50%, -50%) scale(" + kb.toFixed(4) + ")";
+        /* 시트째 들려 나감 — 슬롯 끝 0.45초, 가속으로 떠난다.
+           시트가 불투명하니 나가는 동안에도 섞임·비침이 없다. */
+        var lift = gIn2(g01((tt - (STEP - PEEL)) / PEEL));
+        L.leaf.style.transform = lift > 0
+          ? "translate3d(0," + (-vhNow * 1.06 * lift).toFixed(1) + "px,0) rotate(" + (-2.2 * lift).toFixed(2) + "deg)"
+          : "";
       }
-      vig.style.opacity = (tc < M_END ? 1 : 1 - gEase(g01((tc - M_END) / FADE))).toFixed(3);
+      /* 이름판 — 첫 장과 함께 떠서 몽타주가 끝나며 물러난다 */
+      nameEl.style.opacity = (gEase(g01(tc / 0.7))
+        * (1 - gEase(g01((tc - (M_END - 0.35)) / 0.5)))).toFixed(3);
+      vig.style.opacity = (tc < M_END ? 1 : 1 - gEase(g01((tc - M_END) / 0.4))).toFixed(3);
 
       /* ② 상승 → ③ 안착 */
       var vw = window.innerWidth, vh = window.innerHeight;
