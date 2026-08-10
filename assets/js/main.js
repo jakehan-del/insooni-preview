@@ -3088,8 +3088,8 @@
   /* 헤더 상표(index.html 의 .brand-mark)의 두 서브패스를 그대로 떼어 왔다.
      상표를 고치면 여기도 같이 고쳐야 한다 — 착지한 거위가 헤더의 상표와
      한 픽셀도 다르면 안 되기 때문이다. */
-  var G_BODY = "M3 74 C3 63 16 55 35 54.4 C47 54 56 55.6 61 57.8 C59 50 59 40 62 31 C66 19.4 73 11.6 81 8.6 C85.6 7 89.4 8 91 11.2 L99.6 13.6 L90.8 16.8 C89.2 19.8 86.2 21.4 82.6 20.8 C78.2 20.2 74.8 24.8 72.6 33 C70.2 42 70.2 52 72.8 61 C73.6 64 72.6 67 69 70 C61 77 44 81 26 80.6 C16 80.4 8 79 3 74 Z M3 74 C8 70 16 64 26 60 C18 66 10 71 3 74 Z";
-  var G_WING = "M68 52 C60 39 46 29 27 25 C30 38 35 49 43 57 C52 66 63 64 68 52 Z";
+  var G_BODY = "M3 74 C3 63 16 55 35 54.4 C47 54 56 55.6 61 57.8 C59 50 59 40 62 31 C66 19.4 73 11.6 81 8.6 C85.2 7.4 88.8 8.4 90.6 11.4 L99.6 13.6 L90.4 16.2 C88.8 19.2 85.6 20.6 80.8 20.2 C76.6 19.6 72.8 24 69.8 33 C67.6 42 67.6 52 69.8 61 C70.8 64.5 70.4 68 66.5 71 C58.5 75 43 77.5 25.5 77.6 C15.5 77.6 8 76.6 3 74 Z M3 74 C10 69 20 61.5 33 56.8 C22 64.5 11 70.5 3 74 Z";
+  var G_WING = "M65.5 54 C58.5 40 46 29 27 25 C32.5 39.5 38.5 50 45.5 56.5 C52.5 63 61.5 61.5 65.5 54 Z";
   var G_BOX = 512;       /* 상자 기본 한 변(px). 실제 크기는 scale 로만 준다 */
 
   function gEase(t) { return t * t * (3 - 2 * t); }
@@ -3238,10 +3238,11 @@
       var b = document.createElement("div");
       b.className = "ld-goose";
       var svg = svgEl("svg", { viewBox: "3 7.8 96.6 72.8", "aria-hidden": "true", focusable: "false" });
-      svg.appendChild(svgEl("path", { d: G_BODY, fill: "currentColor" }));
+      /* 날개를 몸 "아래"에 깐다 — 퍼덕이며 회전해도 이음부를 몸이 덮는다 */
       var wg = svgEl("g", {});
       wg.appendChild(svgEl("path", { d: G_WING, fill: "currentColor" }));
       svg.appendChild(wg);
+      svg.appendChild(svgEl("path", { d: G_BODY, fill: "currentColor" }));
       b.appendChild(svg);
       box.appendChild(b);
       return { el: b, wing: wg };
