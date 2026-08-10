@@ -1551,6 +1551,32 @@ button.show-cell:hover .show-cta, button.show-cell:focus-visible .show-cta { col
    가로 내비(데스크톱)에서는 글자 항목과 같은 높이여야 한 줄로 반듯하고,
    세로 오버레이(모바일)에서는 다른 항목처럼 가운데에 놓여야 한다.
    li를 flex로 만들면 세로 메뉴에서 마크가 왼쪽에 붙어 버리므로, 가로일 때만 적용한다. */
+
+/* ---------- 상시 프레임 — 무대를 담는 액자 ----------
+   beyonce.com 실측(2026-08-10): 별 넷이 화면 네 변 한가운데, 가장자리에서
+   10px 인셋으로 '모든 페이지에' 상주한다. 로더의 별이 그 자리로 흩어져
+   사이트 전체가 하나의 액자가 된다 — 그 사이트가 값비싸 보이는 뼈대다.
+   우리는 아이콘을 반복하지 않는다(상징은 반복되는 순간 벽지가 된다 —
+   거위는 헤더에 한 마리면 족하다). 대신 이음새 없는 은빛 헤어라인 하나로
+   같은 인셋(10px)을 두른다. blend-difference 라 검은 무대 위에선 은은하게,
+   밝은 사진 위에선 어둡게 — 어떤 화면에서도 실처럼 읽힌다.
+   도입부와의 연결: 거위가 상표에 앉아 is-intro 가 풀리는 순간, 액자가
+   1.1초에 걸쳐 스며들며 '완성'된다. 별은 흩어질 뿐이지만 액자는 맺힌다. */
+.site-frame {
+  position: fixed; inset: 10px; z-index: 98; pointer-events: none;
+  border: 1px solid rgba(243, 239, 231, .34);
+  mix-blend-mode: difference;
+  opacity: 1; transition: opacity 1.1s ease .15s;
+}
+.is-intro .site-frame { opacity: 0; transition: none; }
+@media (max-width: 720px) { .site-frame { inset: 8px; } }
+@media (prefers-reduced-motion: reduce) { .site-frame { transition: none; } }
+
+/* 정중앙 거위 — 액자의 관. 손을 얹으면 살짝 떠오른다. */
+.nav-mark a .mark-goose { transition: color .3s ease, transform .35s cubic-bezier(.2,.7,.2,1); }
+.nav-mark a:hover .mark-goose,
+.nav-mark a:focus-visible .mark-goose { transform: translateY(-2px); }
+
 /* 정중앙 거위의 크기. 글자 항목(0.72rem 대문자)과 눈으로 같은 무게가 되는 값이다 —
    좌측 상표(.brand-mark)의 27px 보다 살짝 크게 두는 이유는, 가운데에 홀로 서면
    같은 크기라도 작아 보이기 때문이다(주변에 글자가 없다). */
