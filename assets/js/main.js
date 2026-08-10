@@ -3093,7 +3093,6 @@
   var G_BOX = 512;       /* 상자 기본 한 변(px). 실제 크기는 scale 로만 준다 */
 
   function gEase(t) { return t * t * (3 - 2 * t); }
-  function gIn2(t) { return t * t; }                       /* 가속 — 들려 나갈 때 */
   function g01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
   function gOut5(t) { return 1 - Math.pow(1 - t, 5); }   /* 긴 감속 꼬리 — '값비쌈'의 1차 지표 */
   function gQ4io(t) { return t < 0.5 ? 8*t*t*t*t : 1 - Math.pow(-2*t + 2, 4) / 2; }
@@ -3194,12 +3193,16 @@
     /* ── 몽타주 사진. 전부 이 사이트가 이미 쓰는 큰 원본(≥1067px)이다 —
        작은 스캔을 전면으로 늘리지 않는다(원본보다 늘리지 않는 규칙).
        합계 약 330KB. 순서는 무대 뒤 → 화보 → 시상 → MV, 지금을 향해 간다. */
-    var SHOTS = ["assets/img/photos/kakao26.webp",
-                 "assets/img/photos/seasons-1.webp",
-                 "assets/img/photos/kakao25.webp",
-                 "assets/img/photos/hinkchi5.webp",
-                 "assets/img/photos/hanteo-1.webp",
-                 "assets/img/hero.webp"];
+    /* v17 이 쓰던 그 스틸들 — MV 의 시네마 프레임, 전부 가로 1280x720.
+       한 줄기 조명 아래 홀로 선 시작(s8)에서 합창단과 두 팔을 벌린
+       클라이맥스(s7)까지. 합계 49KB. object-position 은 v17 실측값.
+       hero.webp 를 끝에 두지 않는다 — 도입부가 끝나면 뒤의 홈 화면이
+       바로 그 장면이라 같은 그림이 두 번 나왔다(형님: "마지막 사진 겹침"). */
+    var SHOTS = [["assets/img/stills/s8.webp", "center 45%"],
+                 ["assets/img/stills/s4.webp", "center 25%"],
+                 ["assets/img/stills/s2.webp", "center 30%"],
+                 ["assets/img/stills/s5.webp", "center 40%"],
+                 ["assets/img/stills/s7.webp", "center 30%"]];
     /* 층층이 쌓는다 — v17 원형. 첫 장이 맨 위(z 높음), 다음 장들이 밑에
        온전히 깔려 있다. 위 장이 걷히면 밑 장이 '이미 완성된 채' 드러나므로
        두 장이 반투명으로 섞이는 순간이 구조적으로 없다(형님: "겹치지 않게"). */
@@ -3214,7 +3217,8 @@
       var im = document.createElement("img");
       im.className = "ld-photo";
       im.alt = ""; im.decoding = "async";
-      im.src = SHOTS[li];
+      im.src = SHOTS[li][0];
+      im.style.objectPosition = SHOTS[li][1];
       leaf.appendChild(im);
       box.appendChild(leaf);
       layers.push({ leaf: leaf, im: im });
@@ -3251,10 +3255,10 @@
        채널을 소모하고 그 뒤 건너뛰기가 죽는다. 건너뛴 직후의 click 한 번은
        아래 필름스트립으로 새므로 캡처 단계에서 삼킨다. */
     var t0 = 0, skipped = false, boost = 0, started = false;
-    /* 한 장에 1.15초 머물다가, 마지막 0.45초 동안 위로 들려 나간다.
-       0.26초 하드컷(1차)은 "천천히", 0.5초 디졸브(2차)는 "겹치지 않게"로
-       기각됐다. 벗겨짐은 둘 다 만족한다 — 천천히 보이고, 섞이지 않는다. */
-    var STEP = 1.15, PEEL = 0.45, M_END = 0, T_END = 0;   /* begin() 에서 확정 */
+    /* 한 장에 1.15초 머물다가, 마지막 0.5초 동안 걷힌다 — v17 원형.
+       밑 장이 '이미 온전한 채' 깔려 있으므로 걷히는 동안에도 반쪽짜리
+       두 장이 섞이는 화면이 없다. 반투명 디졸브(2차)와 다른 점이 그것이다. */
+    var STEP = 1.15, PEEL = 0.5, M_END = 0, T_END = 0;   /* begin() 에서 확정 */
     function swallow(ev) {
       ev.preventDefault(); ev.stopPropagation();
       document.removeEventListener("click", swallow, true);
@@ -3297,7 +3301,9 @@
     function begin() {
       if (started) return;
       started = true;
-      M_END = SHOTS.length * STEP;
+      /* 마지막 장이 '완전히 걷힌 뒤'에 거위가 뜬다 — 사진과 거위가
+         한 화면에 겹치는 순간을 두지 않는다. */
+      M_END = SHOTS.length * STEP + PEEL;
       T_END = M_END + 1.66;
       requestAnimationFrame(frame);
     }
@@ -3323,27 +3329,23 @@
          잘리지 않는다). 각 장은 1.03 → 1.0 으로 아주 천천히 물러나며 숨을
          쉬다가, 제 시간이 끝나면 물리적인 사진처럼 살짝 돌며 위로 들려
          나간다. 밑 장은 이미 온전히 깔려 있어 섞임이 없다. */
-      var vhNow = window.innerHeight;
       for (var i = 0; i < layers.length; i++) {
         var L = layers[i];
         var okImg = L.im.complete && L.im.naturalWidth > 0;
         var tt = tc - i * STEP;
-        if (!okImg || tc >= (i + 1) * STEP + 0.05) {
+        if (!okImg || tt >= STEP + PEEL + 0.05) {
           /* 아직 안 왔거나 이미 다 나간 장 — 시트째 치운다.
              안 온 장은 시트도 안 보여야 밑의 온 장이 대신 선다. */
           if (L.leaf.style.visibility !== "hidden") L.leaf.style.visibility = "hidden";
           continue;
         }
         if (L.leaf.style.visibility !== "visible") L.leaf.style.visibility = "visible";
-        /* 사진의 숨 — 제 슬롯 동안 1.03 → 1.0 */
-        var kb = 1.03 - 0.03 * g01(tt / STEP);
-        L.im.style.transform = "translate(-50%, -50%) scale(" + kb.toFixed(4) + ")";
-        /* 시트째 들려 나감 — 슬롯 끝 0.45초, 가속으로 떠난다.
-           시트가 불투명하니 나가는 동안에도 섞임·비침이 없다. */
-        var lift = gIn2(g01((tt - (STEP - PEEL)) / PEEL));
-        L.leaf.style.transform = lift > 0
-          ? "translate3d(0," + (-vhNow * 1.06 * lift).toFixed(1) + "px,0) rotate(" + (-2.2 * lift).toFixed(2) + "deg)"
-          : "";
+        /* 사진의 숨 — 제 슬롯 동안 1.05 → 1.0 으로 천천히 물러난다 */
+        var kb = 1.05 - 0.05 * g01(tt / (STEP + PEEL));
+        L.im.style.transform = "scale(" + kb.toFixed(4) + ")";
+        /* 걷힘 — 슬롯 끝 0.5초. 위 장만 옅어지고 밑 장은 온전하다. */
+        var pu = g01((tt - STEP) / PEEL);
+        L.leaf.style.opacity = (1 - gEase(pu)).toFixed(3);
       }
       /* 이름판 — 첫 장과 함께 떠서 몽타주가 끝나며 물러난다 */
       nameEl.style.opacity = (gEase(g01(tc / 0.7))

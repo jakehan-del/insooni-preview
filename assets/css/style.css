@@ -3535,18 +3535,16 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
    전면 cover 는 세로 사진의 머리를 잘랐다(형님: "화면이 잘리지 않게").
    통째로 보이도록 상자 안에 맞춘다. 크기·회전·들림은 JS 가 매 프레임
    쓰므로 transition 을 두지 않는다. 층은 zIndex(첫 장이 맨 위)로 선다. */
+/* v17 원형 — 시네마 스틸이 화면을 가득 채운다. 스틸이 전부 가로(1280x720)라
+   cover 로도 얼굴이 잘리지 않고, object-position 실측값이 초점을 지킨다.
+   시트(leaf)가 불투명해 밑 장 비침이 없고, 걷힘은 시트째 옅어진다. */
 .ld-leaf {
   position: absolute; inset: 0; background: #050506;
-  visibility: hidden; will-change: transform;
+  visibility: hidden; will-change: opacity;
 }
 .ld-photo {
-  position: absolute; left: 50%; top: 50%;
-  transform: translate(-50%, -50%);
-  max-width: min(88vw, 1280px); max-height: 76vh;
-  width: auto; height: auto;
-  will-change: transform;
-  border-radius: 2px;
-  box-shadow: 0 18px 60px rgba(0,0,0,.55);
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; will-change: transform;
 }
 /* 사진 위 비네트 — 무대 조명처럼 가장자리를 어둠에 묻는다 */
 .ld-vig {
