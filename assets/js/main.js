@@ -3305,7 +3305,7 @@
       /* 마지막 장이 '완전히 걷힌 뒤'에 거위가 뜬다 — 사진과 거위가
          한 화면에 겹치는 순간을 두지 않는다. */
       M_END = SHOTS.length * STEP + PEEL;
-      T_END = M_END + 1.45;
+      T_END = M_END + 1.80;
       requestAnimationFrame(frame);
     }
     var gate = setInterval(function () {
@@ -3353,39 +3353,63 @@
         * (1 - gEase(g01((tc - (M_END - 0.35)) / 0.5)))).toFixed(3);
       vig.style.opacity = (tc < M_END ? 1 : 1 - gEase(g01((tc - M_END) / 0.4))).toFixed(3);
 
-      /* ② 상승 → ③ 안착 */
+      /* ② 활공 → ③ 안착
+         전에는 화면 아래에서 위로 곧장 올랐다 — 기능적이지만 승강기다.
+         형님: "마지막에 멋있게 날아가면 좋겠어." 그래서 비행 곡선을 그린다:
+         왼쪽 아래에서 들어와 살짝 가라앉으며 속도를 얻고, 화면 오른쪽을
+         크게 쓸며 오른 뒤, 선회해 감속하며 상표에 내려앉는다. 실제 새가
+         앉을 때 그리는 J자 궤적이다. 기울기는 비행 방향(접선)을 따른다. */
       var vw = window.innerWidth, vh = window.innerHeight;
       var S = Math.min(vw, vh);
-      var br = brand ? brand.getBoundingClientRect()
-                     : { left: vw / 2 + vw * 0.06, top: -vh * 0.25, width: 0, height: 0 };
+      var br = brand ? brand.getBoundingClientRect() : null;
       var hasSeat = !!brand;
-      var tw = hasSeat ? br.width : S * 0.14;
-      var tx = br.left + br.width / 2, ty = br.top + br.height / 2;
-      var sx = vw / 2, sy = vh * 0.74, s0 = S * 0.20;
+      var tw = hasSeat ? br.width : S * 0.11;
+      /* 자리가 없으면(폰) 선회 없이 오른쪽 위로 날아 나간다 */
+      var tx = hasSeat ? br.left + br.width / 2 : vw * 1.10;
+      var ty = hasSeat ? br.top + br.height / 2 : -vh * 0.18;
 
       var gt = tc - M_END;                       /* 거위 국면 시각 */
-      var lit = gEase(g01(gt / 0.26));
-      var e = gOut5(g01((gt - 0.10) / 1.22));    /* 상승 진행 — 긴 감속 꼬리 */
+      var lit = gEase(g01(gt / 0.24));
+      var u = g01((gt - 0.06) / 1.66);
+      var e = gQ4io(u);                          /* 가속으로 쓸고, 감속으로 앉는다 */
 
-      var x = sx + (tx - sx) * e;
-      /* 호를 그리며 '날아오른다' — 직선 상승은 승강기다. 위로 부풀린 호. */
-      var y = sy + (ty - sy) * e - Math.sin(Math.PI * e) * S * 0.11;
-      var w = s0 + (tw - s0) * e;
-      var rot = -8 * (1 - e);
-      if (!hasSeat) lit *= (1 - gEase(g01((e - 0.55) / 0.45)));
+      /* 3차 베지어. P0 왼쪽 아래 화면 밖 → P1 아래로 살짝 가라앉음(활공의
+         숨) → P2 오른쪽 위 크게 → P3 상표. P2 가 오른쪽에 있어 마지막에
+         왼쪽으로 선회해 들어온다. 매 프레임 다시 계산 — 창이 바뀌어도 맞다. */
+      var p0x = -vw * 0.07, p0y = vh * 0.62;
+      var p1x = vw * 0.34,  p1y = vh * 0.86;
+      var p2x = vw * 0.94,  p2y = vh * 0.10;
+      var mt = 1 - e;
+      var x = mt*mt*mt*p0x + 3*mt*mt*e*p1x + 3*mt*e*e*p2x + e*e*e*tx;
+      var y = mt*mt*mt*p0y + 3*mt*mt*e*p1y + 3*mt*e*e*p2y + e*e*e*ty;
+      /* 접선(진행 방향) → 기울기. 마크는 기울어 있지 않으므로
+         마지막 30% 에서 0 으로 편다. ±14도 상한 — 마크가 팽이가 되면 안 된다. */
+      var dx = 3*mt*mt*(p1x-p0x) + 6*mt*e*(p2x-p1x) + 3*e*e*(tx-p2x);
+      var dy = 3*mt*mt*(p1y-p0y) + 6*mt*e*(p2y-p1y) + 3*e*e*(ty-p2y);
+      var rot = Math.max(-14, Math.min(14, Math.atan2(dy, dx) * 180 / Math.PI));
+      rot *= (1 - gEase(g01((u - 0.70) / 0.30)));
+      /* 크기: 오른쪽을 쓸 때까지 당당하게 크고, 선회하며 멀어지듯 줄어
+         상표 크기로. (1-q)² 는 끝에서 기울기가 0 이라 앉는 순간 크기가
+         튀지 않는다. 실측으로 잡았다 — 처음 배분은 활공 정점에서 이미
+         45px 라 큰 새가 아니라 파리였다. */
+      var s0 = S * 0.19;
+      var q = g01((u - 0.45) / 0.55);
+      var w = tw + (s0 - tw) * (1 - q) * (1 - q);
+      if (!hasSeat) lit *= (1 - gEase(g01((u - 0.62) / 0.38)));
 
       bird.el.style.transform = "translate3d(" + (x - G_BOX / 2).toFixed(2) + "px,"
         + (y - G_BOX / 2).toFixed(2) + "px,0) scale(" + (w / G_BOX).toFixed(6)
         + ") rotate(" + rot.toFixed(3) + "deg)";
       bird.el.style.opacity = lit.toFixed(3);
 
-      /* 날갯짓 — 앉으며 정확히 0 으로. 0 이 아니면 상표와 다른 그림으로 끝난다. */
-      var damp = hasSeat ? (1 - gEase(g01((e - 0.55) / 0.45))) : 1;
-      var flap = Math.sin(gt * 9.2) * 15 * damp;
+      /* 날갯짓 — 진입·상승에선 힘차게, 선회하며 잦아들고, 앉을 땐 정확히 0.
+         0 이 아니면 상표와 다른 그림으로 끝난다. */
+      var damp = hasSeat ? (1 - gEase(g01((u - 0.58) / 0.42))) : 1;
+      var flap = Math.sin(gt * 8.6) * 16 * damp;
       bird.wing.setAttribute("transform", "rotate(" + flap.toFixed(2) + " 66 55)");
 
       /* 광륜 걷기 — 조건 셋째. 0.32 → 0 을 4단계 단조 감소로. */
-      var band = Math.max(0, Math.min(3, Math.round((1 - e) * 3)));
+      var band = Math.max(0, Math.min(3, Math.round((1 - u) * 3)));
       if (band !== lastBand) {
         lastBand = band;
         bird.el.style.filter = band === 0 ? "none"
