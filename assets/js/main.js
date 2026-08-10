@@ -3199,14 +3199,14 @@
                  "assets/img/photos/hinkchi5.webp",
                  "assets/img/photos/hanteo-1.webp",
                  "assets/img/hero.webp"];
-    var layers = [], ready = [], li;
+    var layers = [], li;
     for (li = 0; li < SHOTS.length; li++) {
       var im = document.createElement("img");
       im.className = "ld-photo";
       im.alt = ""; im.decoding = "async";
       im.src = SHOTS[li];
       box.appendChild(im);
-      layers.push(im); ready.push(false);
+      layers.push(im);
     }
     var vig = document.createElement("div");
     vig.className = "ld-vig";
@@ -3265,32 +3265,30 @@
     setTimeout(function () { sk.classList.add("on"); }, 700);
 
     /* ── 시작 게이트 ──
-       사진이 하나도 안 왔는데 몽타주 슬롯부터 돌리면 검은 화면이 스친다.
-       석 장이 준비되거나 0.9초가 지나면, '그때 준비된 것만'으로 시작한다.
-       느린 회선에서는 사진 없이 거위만 오른다 — 연출은 줄어도 사이트는 뜬다. */
-    var order = [];
+       처음엔 '준비된 것만으로 0.9초에 시작'이었다. 로컬(10ms)에선 여섯 장이
+       다 통과했지만 라이브 첫 방문(Cloudflare 콜드 캐시)에선 0.9초 안에
+       한 장도 못 와서 몽타주가 통째로 사라졌다 — 형님이 본 "사진이 안
+       바뀌는" 화면이 그것이다. 로컬에서만 검증한 죄다.
+
+       그래서 셋으로 나눈다.
+       · 슬롯은 항상 여섯이다 — 몇 장이 왔는지로 길이를 정하지 않는다
+       · 시작은 '첫 장이 오면'(30KB 라 가장 먼저 온다), 늦어도 1.6초
+       · 각 슬롯은 그리는 순간 도착해 있으면 그린다. 몽타주가 6초를 흐르는
+         동안 뒷장들은 도착하고도 남는다. 못 온 슬롯만 어둠으로 한 박자 쉰다
+       decode() 프라미스에도 걸지 않는다 — complete 플래그만 본다. */
     function begin() {
       if (started) return;
       started = true;
-      for (var i = 0; i < layers.length; i++) if (ready[i]) order.push(layers[i]);
-      M_END = order.length * STEP;
+      M_END = SHOTS.length * STEP;
       T_END = M_END + 1.66;
       requestAnimationFrame(frame);
     }
-    function armed() {
-      /* '석 장이면 시작' 은 실측에서 큰 사진 석 장을 버렸다(6장 중 0·1·5번만
-         나왔다). 합계 330KB 라 전부 기다려도 보통 0.3초 안이다 — 전부 오면
-         시작하고, 회선이 느리면 0.9초 상한이 준비된 것만으로 연다. */
-      for (var i = 0; i < ready.length; i++) if (!ready[i]) return;
-      begin();
-    }
-    layers.forEach(function (im2, i2) {
-      var done = function () { ready[i2] = true; armed(); };
-      if (im2.decode) im2.decode().then(done)["catch"](function () {});
-      else if (im2.complete) done();
-      else im2.onload = done;
-    });
-    setTimeout(begin, 900);
+    var gate = setInterval(function () {
+      if (layers[0].complete && layers[0].naturalWidth > 0) {
+        clearInterval(gate); begin();
+      }
+    }, 60);
+    setTimeout(function () { clearInterval(gate); begin(); }, 1600);
 
     var lastBand = -1;
     function frame(now) {
@@ -3308,15 +3306,16 @@
          각 장은 1.07 → 1.0 으로 천천히 물러난다: 정지 사진에 숨을 준다.
          마지막 장의 사라짐은 거위의 등장과 겹친다 — 사진에서 거위로
          끊기지 않고 이어진다. */
-      for (var i = 0; i < order.length; i++) {
+      for (var i = 0; i < layers.length; i++) {
         var tt = tc - i * STEP;
         var op = 0;
-        if (tt > 0 && tt < STEP + FADE) {
+        if (tt > 0 && tt < STEP + FADE
+            && layers[i].complete && layers[i].naturalWidth > 0) {
           op = Math.min(gEase(g01(tt / FADE)), 1 - gEase(g01((tt - STEP) / FADE)));
         }
-        order[i].style.opacity = op.toFixed(3);
+        layers[i].style.opacity = op.toFixed(3);
         if (op > 0) {
-          order[i].style.transform = "scale("
+          layers[i].style.transform = "scale("
             + (1.07 - 0.07 * g01(tt / (STEP + FADE))).toFixed(4) + ")";
         }
       }
