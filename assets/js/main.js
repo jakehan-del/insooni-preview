@@ -3202,7 +3202,6 @@
                  ["assets/img/photos/photo-av3u.webp", "center 35%"],
                  ["assets/img/photos/img2496.webp", "center 40%"],
                  ["assets/img/photos/dsc0369.webp", "center 35%"],
-                 ["assets/img/photos/seasons-1.webp", "center 22%"],
                  ["assets/img/photos/hanteo-1.webp", "center 28%"]];
     /* 층층이 쌓는다 — v17 원형. 첫 장이 맨 위(z 높음), 다음 장들이 밑에
        온전히 깔려 있다. 위 장이 걷히면 밑 장이 '이미 완성된 채' 드러나므로
@@ -3256,10 +3255,11 @@
        채널을 소모하고 그 뒤 건너뛰기가 죽는다. 건너뛴 직후의 click 한 번은
        아래 필름스트립으로 새므로 캡처 단계에서 삼킨다. */
     var t0 = 0, skipped = false, boost = 0, started = false;
-    /* 한 장에 1.15초 머물다가, 마지막 0.5초 동안 걷힌다 — v17 원형.
-       밑 장이 '이미 온전한 채' 깔려 있으므로 걷히는 동안에도 반쪽짜리
-       두 장이 섞이는 화면이 없다. 반투명 디졸브(2차)와 다른 점이 그것이다. */
-    var STEP = 1.15, PEEL = 0.5, M_END = 0, T_END = 0;   /* begin() 에서 확정 */
+    /* 한 장에 0.8초 머물다가 0.4초 동안 걷힌다 — 형님 판정으로
+       beyonce.com 의 총장(4~5초대)에 맞춰 당겼다. 하드컷(0.26초)과 달리
+       읽을 시간은 남기되, 다섯 장이 4.4초에 흐른다.
+       밑 장이 '이미 온전한 채' 깔려 있으므로 걷히는 동안에도 섞임이 없다. */
+    var STEP = 0.8, PEEL = 0.4, M_END = 0, T_END = 0;   /* begin() 에서 확정 */
     function swallow(ev) {
       ev.preventDefault(); ev.stopPropagation();
       document.removeEventListener("click", swallow, true);
@@ -3305,7 +3305,7 @@
       /* 마지막 장이 '완전히 걷힌 뒤'에 거위가 뜬다 — 사진과 거위가
          한 화면에 겹치는 순간을 두지 않는다. */
       M_END = SHOTS.length * STEP + PEEL;
-      T_END = M_END + 1.66;
+      T_END = M_END + 1.45;
       requestAnimationFrame(frame);
     }
     var gate = setInterval(function () {
@@ -3364,8 +3364,8 @@
       var sx = vw / 2, sy = vh * 0.74, s0 = S * 0.20;
 
       var gt = tc - M_END;                       /* 거위 국면 시각 */
-      var lit = gEase(g01(gt / 0.30));
-      var e = gOut5(g01((gt - 0.12) / 1.42));    /* 상승 진행 — 긴 감속 꼬리 */
+      var lit = gEase(g01(gt / 0.26));
+      var e = gOut5(g01((gt - 0.10) / 1.22));    /* 상승 진행 — 긴 감속 꼬리 */
 
       var x = sx + (tx - sx) * e;
       /* 호를 그리며 '날아오른다' — 직선 상승은 승강기다. 위로 부풀린 호. */
