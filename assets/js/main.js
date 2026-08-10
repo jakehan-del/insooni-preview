@@ -3193,16 +3193,17 @@
     /* ── 몽타주 사진. 전부 이 사이트가 이미 쓰는 큰 원본(≥1067px)이다 —
        작은 스캔을 전면으로 늘리지 않는다(원본보다 늘리지 않는 규칙).
        합계 약 330KB. 순서는 무대 뒤 → 화보 → 시상 → MV, 지금을 향해 간다. */
-    /* v17 이 쓰던 그 스틸들 — MV 의 시네마 프레임, 전부 가로 1280x720.
-       한 줄기 조명 아래 홀로 선 시작(s8)에서 합창단과 두 팔을 벌린
-       클라이맥스(s7)까지. 합계 49KB. object-position 은 v17 실측값.
-       hero.webp 를 끝에 두지 않는다 — 도입부가 끝나면 뒤의 홈 화면이
-       바로 그 장면이라 같은 그림이 두 번 나왔다(형님: "마지막 사진 겹침"). */
-    var SHOTS = [["assets/img/stills/s8.webp", "center 45%"],
-                 ["assets/img/stills/s4.webp", "center 25%"],
-                 ["assets/img/stills/s2.webp", "center 30%"],
-                 ["assets/img/stills/s5.webp", "center 40%"],
-                 ["assets/img/stills/s7.webp", "center 30%"]];
+    /* 어머니의 무대 사진들 — MV 스틸이 아니라(형님 지시) 라이브러리에서
+       직접 보고 고른 여섯 장. 위엄(깃털 의상·오케스트라) → 친밀(초록 레이스
+       프로필) → 디바(금빛 드레스) → 에너지(백색 군무) → 화보(은빛 재킷) →
+       승리(트로피). 전부 큰 원본이고 object-position 은 얼굴 기준으로 잡았다.
+       마지막은 사진이 아니라 거위다 — 날아올라 상표에 앉는다. */
+    var SHOTS = [["assets/img/photos/dsc0427.webp", "center 30%"],
+                 ["assets/img/photos/photo-av3u.webp", "center 35%"],
+                 ["assets/img/photos/img2496.webp", "center 40%"],
+                 ["assets/img/photos/dsc0369.webp", "center 35%"],
+                 ["assets/img/photos/seasons-1.webp", "center 22%"],
+                 ["assets/img/photos/hanteo-1.webp", "center 28%"]];
     /* 층층이 쌓는다 — v17 원형. 첫 장이 맨 위(z 높음), 다음 장들이 밑에
        온전히 깔려 있다. 위 장이 걷히면 밑 장이 '이미 완성된 채' 드러나므로
        두 장이 반투명으로 섞이는 순간이 구조적으로 없다(형님: "겹치지 않게"). */
