@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-08-10 11:19",
+ "updated": "2026-08-10 14:38",
  "items": [
   {
    "date": "2026-08-05",
@@ -71,9 +71,9 @@
   {
    "date": "2026-07-27",
    "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
-   "source": "v.daum.net",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1ha0ZobU9TdWhIMEw1N05GX05Hd3B5UU5SSGtTZWF2ZG9xNEE3UElMVG1uVGNoVlUxSTJZeG5IZl9wYUdzOUxQa3d1bw?oc=5",
+   "source": "동아일보",
+   "sourceSite": "https://www.donga.com",
+   "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTFAwQkJha0MzSzFWQnRSTG4xd0g5b3ZMcGh3OVVTS0xvYUI5dWlfUnBJSldQQ0xZM2hSZEVHMUI3RnRWOFNCNVJJeW1FelNlckJSUjlQV3BUTHR4ZVlhelpQWlVnYVl0S3BjZkdrWTUyVTUyN3pSS1HSAWZBVV95cUxNSDU5LXd4UFZ4VXdocDRjcVprTFhYTzlsM3hMZGNTOXRoTU40bGV1Y1pIZk8ya3l6cGJTTWszVU5yQmhjbzNKTFlOQXVVMkRmSzBFdmdoY2pyTWY1V0lDd3hmSk9MNUE?oc=5",
    "type": "공연",
    "auto": true
   },
@@ -95,7 +95,7 @@
    "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1lUFFLT19OWU14SWNZbmNUUVBkUkxJaXp4ekRnWHpjRlFHNkpoMnBqRGZkY3RtODNldmZUenNLVms3Wm1mRm12d2dmRzJpaGhId2V6OF9uSDR2TWhEOHc2cDZFOTFnRkdSODJTcXJYQXhudGNZ?oc=5",
    "type": "공연",
    "auto": true,
-   "also": 1
+   "also": 2
   },
   {
    "date": "2026-06-23",
@@ -119,7 +119,7 @@
   {
    "date": "2026-06-11",
    "title": "뉴욕 브랜드 '노아' 가수 인순이 만났다… 다양성·공존 담은 화보 선봬",
-   "source": "fashionbiz.co.kr",
+   "source": "패션비즈",
    "sourceSite": "https://fashionbiz.co.kr",
    "url": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5tV2hkSzFRelFoWEY3OHhKaWd1Z0N0MUh2M0V1VThxcDJKWUNZZ3pPM3BlUU5UU1oxV01VUGp0NEpvNk1UeDFPdVlPMGhNaHU1?oc=5",
    "type": "보도",
@@ -137,7 +137,7 @@
   {
    "date": "2026-05-21",
    "title": "경주 고분 콘서트 '봉황대 뮤직스퀘어' 내달 5일 개막…인순이·김태우 등",
-   "source": "뉴시스",
+   "source": "newsis.com",
    "sourceSite": "https://www.newsis.com",
    "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE1JbG9NZElJeVhQOEJURTZrT0ZzT3Z1NFRNeEowdEJFcDE5Y3hGYndJR3RvVnpudzRGVVpJRjdSYWhZNkdvbE1xaVVkM2FaMlFzRzBzV0FEdzZ5Z2xaYmJxQdIBeEFVX3lxTE5Kek82MVdOdUljaEpOYXZjdHNzR25kbkhRRVlacms0aWw5MXphM0FLMXJzUHFCVjhiZDJkWVdfc2pSSW9TUnU2d2J5VmxGMmp1bE41Tk5YZVctMnN5NUhSZE5aaU1mN1RBbEhfbFdDZVRidnBTd3EyWQ?oc=5",
    "type": "공연",
