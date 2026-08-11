@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-08-11 18:06",
+ "updated": "2026-08-11 19:55",
  "items": [
   {
    "date": "2026-08-05",
@@ -15,9 +15,9 @@
   {
    "date": "2026-08-04",
    "title": "가수 남진·인순이, KBS '가요무대'서 환상적인 듀엣 무대…",
-   "source": "유스연합",
-   "sourceSite": "https://www.youthassembly.kr",
-   "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE9WeVM3ZWl3bXF2S0FkQTJBUkNaV1dHdnZKdmM1QXdsRU5oczJYUXhCdDRoMVc1VUtJazBaa3BiNGk4T29RQjYzVFdjZnc4RllncEE?oc=5",
+   "source": "한국공공정책신문",
+   "sourceSite": "http://knpp.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTE9UWFp3dGdyY09vbkg4c2E1YzlkOXZLNk5fS292ZHFzQkRxTDJTajBLWXp2NjROSjVaZzJYUWVvSERUYnc?oc=5",
    "type": "공연",
    "auto": true,
    "also": 1
@@ -43,7 +43,7 @@
   {
    "date": "2026-07-28",
    "title": "총상금 1억 ‘인생은 오디션’, 서지오 심사 출격…인순이와 트롯 스타 발굴",
-   "source": "isplus.com",
+   "source": "일간스포츠",
    "sourceSite": "https://isplus.com",
    "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5zQ1VQT1VmdGtPLWFZQVpRQ3ZPRFlUS3hNRGxoOXhUZ2F0N1VPSDlqU2RkVHlkb29wbWJPZVhYcUVGXzZaN1RQNk4zcEhSNGQwZkdfSWdGc2V4elE?oc=5",
    "type": "방송",
@@ -86,7 +86,7 @@
    "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1tV0FhNmZMendjUkhqd1VCeGFXNWJzYVJzdXpiaFM2aWNOdk5yMC1FLVVvVm92SVFHRUdEQUNTYVdaSkdWX2NlNTJSenpEV1ZjU3A0?oc=5",
    "type": "공연",
    "auto": true,
-   "also": 2
+   "also": 1
   },
   {
    "date": "2026-06-30",
