@@ -86,6 +86,12 @@ AUDIT = r"""() => {
 }"""
 
 
+def _outside(text):
+    """검증이 끊은 바깥 주소 때문에 난 콘솔 오류인가."""
+    return any(h in text for h in ("mzstatic.com", "itunes.apple.com",
+                                   "open-meteo.com", "ERR_FAILED", "ERR_BLOCKED"))
+
+
 def main():
     fails, checked = [], 0
     with sync_playwright() as p:
@@ -94,13 +100,27 @@ def main():
             for w, h in WIDTHS:
                 for name in PAGES:
                     pg = b.new_page(viewport={"width": w, "height": h})
+                    # 외부 CDN(애플 미리듣기·앨범아트, 날씨 API)은 검증 대상이 아니다.
+                    # 음악 페이지의 previews.json 은 103곡 전부 애플 CDN 을 가리키는데,
+                    # CI 러너에서 이 요청들이 느리거나 막히면 페이지 로드가 끝나지 않아
+                    # 대비·넘침을 재기도 전에 시간초과로 떨어졌다 (8/8~8/10 CI 전건 실패,
+                    # 실패한 페이지는 항상 music 이고 폭·글자크기는 매번 달랐다 — 네트워크
+                    # 흔들림의 지문이다). 바깥 세상을 끊어 검증을 우리 것만으로 만든다.
+                    pg.route("**://*/*", lambda route: (
+                        route.abort() if "127.0.0.1" not in route.request.url
+                        and not route.request.url.startswith("data:")
+                        else route.continue_()))
                     errs = []
                     pg.on("pageerror", lambda e, L=errs: L.append(str(e)[:80]))
+                    # 우리가 끊은 바깥 요청의 실패는 사이트의 오류가 아니다 — 그것만 걸러낸다.
+                    # 우리 파일(127.0.0.1)의 404·스크립트 오류는 그대로 잡힌다.
                     pg.on("console",
                           lambda m, L=errs: L.append("console: " + m.text[:70])
-                          if m.type == "error" else None)
+                          if m.type == "error" and not _outside(m.text) else None)
                     try:
-                        pg.goto(BASE + name + ".html", wait_until="networkidle", timeout=30000)
+                        # networkidle 은 바깥 요청 하나만 늦어도 영원히 안 끝난다.
+                        # 우리 것만 남긴 지금은 load 로 충분하고, 아래 1500ms 가 정착을 기다린다.
+                        pg.goto(BASE + name + ".html", wait_until="load", timeout=30000)
                         pg.wait_for_timeout(1500)
                         pg.evaluate("(s) => { document.documentElement.style.fontSize = s + 'px'; }", size)
                         pg.wait_for_timeout(400)
