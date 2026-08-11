@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-08-11 22:19",
+ "updated": "2026-08-12 00:04",
  "items": [
   {
    "date": "2026-08-05",
@@ -15,9 +15,9 @@
   {
    "date": "2026-08-04",
    "title": "가수 남진·인순이, KBS '가요무대'서 환상적인 듀엣 무대…",
-   "source": "youthassembly.kr",
-   "sourceSite": "https://www.youthassembly.kr",
-   "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE9WeVM3ZWl3bXF2S0FkQTJBUkNaV1dHdnZKdmM1QXdsRU5oczJYUXhCdDRoMVc1VUtJazBaa3BiNGk4T29RQjYzVFdjZnc4RllncEE?oc=5",
+   "source": "kcemedia.com",
+   "sourceSite": "http://knpp.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTE9UWFp3dGdyY09vbkg4c2E1YzlkOXZLNk5fS292ZHFzQkRxTDJTajBLWXp2NjROSjVaZzJYUWVvSERUYnc?oc=5",
    "type": "공연",
    "auto": true,
    "also": 1
@@ -120,7 +120,7 @@
   {
    "date": "2026-06-11",
    "title": "뉴욕 브랜드 '노아' 가수 인순이 만났다… 다양성·공존 담은 화보 선봬",
-   "source": "fashionbiz.co.kr",
+   "source": "패션비즈",
    "sourceSite": "https://fashionbiz.co.kr",
    "url": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5tV2hkSzFRelFoWEY3OHhKaWd1Z0N0MUh2M0V1VThxcDJKWUNZZ3pPM3BlUU5UU1oxV01VUGp0NEpvNk1UeDFPdVlPMGhNaHU1?oc=5",
    "type": "보도",
