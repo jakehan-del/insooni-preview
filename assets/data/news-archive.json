@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-08-13 04:09",
- "count": 30,
+ "updated": "2026-08-13 05:53",
+ "count": 31,
  "items": [
   {
    "date": "2026-08-05",
@@ -229,6 +229,16 @@
    "source": "뉴스1",
    "sourceSite": "https://www.news1.kr",
    "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5pWndrbExpeXFyTENrOFYwWE9neTZPbnFtZWRPelZGLVZWSzlQczU4a2xBLXpaSHNDdUVNZlVOVUpKd3JmVkpLblhtSWJsbXc1dWVvU2hyTVppdnpDeVNn?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 1
+  },
+  {
+   "date": "2026-06-23",
+   "title": "'11회 청주시 시민의 날 기념행사' 내달 1일 개최…염유리·인순이 공연",
+   "source": "news1.kr",
+   "sourceSite": "https://www.news1.kr",
+   "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5pWndrbExpeXFyTENrOFYwWE9neTZPbnFtZWRPelZGLVZWSzlQczU4a2xBLXpaSHNDdUVNZlVOVUpKd3JmVkpLblhtSWJsbXc1dWVvU2hyTVppdnpDeVNn0gFkQVVfeXFMTWlMNy00Y3dDTEJpUWhMdktwNGlib3pldDJ6ZVBsblQtenF2bmVoRDNpUGRkUVAtYWNlZVNJZ2lxSkc2LTEwZTlxTThtNE5ILWRQNFJDcHFGaDdfamlmcHozWjU3UQ?oc=5",
    "type": "공연",
    "auto": true,
    "also": 1
