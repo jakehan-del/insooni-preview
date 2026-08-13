@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-08-13 11:29",
- "count": 31,
+ "updated": "2026-08-13 14:44",
+ "count": 32,
  "items": [
   {
    "date": "2026-08-05",
@@ -180,6 +180,15 @@
    "source": "동아일보",
    "sourceSite": "https://www.donga.com",
    "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTFAwQkJha0MzSzFWQnRSTG4xd0g5b3ZMcGh3OVVTS0xvYUI5dWlfUnBJSldQQ0xZM2hSZEVHMUI3RnRWOFNCNVJJeW1FelNlckJSUjlQV3BUTHR4ZVlhelpQWlVnYVl0S3BjZkdrWTUyVTUyN3pSS1E?oc=5",
+   "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-07-27",
+   "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE40WkVmSF9QRWk2V01WNnIwUTlBaFlXRG53ZUhpd3ZIQl9DQzVfUzltVFJsYlFyZlpHcU9EbThHT1ZDeXZ6ek1tQ3U3OUFlcU5LMVJxaA?oc=5",
    "type": "공연",
    "auto": true
   },
