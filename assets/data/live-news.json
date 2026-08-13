@@ -1,12 +1,12 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-08-13 16:43",
+ "updated": "2026-08-13 18:18",
  "items": [
   {
    "date": "2026-08-05",
    "title": "안동문화예술의전당 어버이날 특별기획 가수 인순이 & 명창 유지숙 `두 사랑 이야기`",
-   "source": "경북뉴스",
+   "source": "kbnews.kr",
    "sourceSite": "http://www.kbnews.kr",
    "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPMXRuVmxnUDIteHB5VEpoWFotZ2JYdUpidS1PSHJQRllfVXpQamdZZTV5MV82ZWNITVctVnZnZHkyLVNDMnVYYnMzR3ZEOGFNc1pVN292TFZPOGxGNmFId3h5eVdJTXNmV190NHZjNmJGUTBKVm5mQjBiWldQdndpaGVvOV9YTEkwUDllc0xNS3poam9pZEZod21lZ2NVOEhxOW5ZSXFrTl9yRFdPT19zNlFB?oc=5",
    "type": "보도",
@@ -34,7 +34,7 @@
   {
    "date": "2026-07-29",
    "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
-   "source": "segye.com",
+   "source": "세계일보",
    "sourceSite": "https://www.segye.com",
    "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1na00xTzd5cjdDS1hfWE9DNWtTS3dVYUJ2ZDBNN0Nya0pDbkRDQzI4NXF2eE1qWE83TThzWWFyNm1XYnhPSnpUeXg3YkhHYnF4VXVrYTlTQnPSAVRBVV95cUxQakJQeWRlb1BYRklZQW83amF3NXBPWTAxY2JrMExvcXVpdVowZi1LUmRpd04tUlVJNEt2c3c3YW5pOGpnekNwMlpJYTRsa0pNTWhiNXI?oc=5",
    "type": "방송",
@@ -91,7 +91,7 @@
   {
    "date": "2026-06-30",
    "title": "미국 독립기념일 행사에서 애국가 부르는 인순이",
-   "source": "koreancenter.or.kr",
+   "source": "연합뉴스 한민족센터",
    "sourceSite": "https://www.koreancenter.or.kr",
    "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1lUFFLT19OWU14SWNZbmNUUVBkUkxJaXp4ekRnWHpjRlFHNkpoMnBqRGZkY3RtODNldmZUenNLVms3Wm1mRm12d2dmRzJpaGhId2V6OF9uSDR2TWhEOHc2cDZFOTFnRkdSODJTcXJYQXhudGNZ?oc=5",
    "type": "공연",
@@ -103,7 +103,7 @@
    "title": "'11회 청주시 시민의 날 기념행사' 내달 1일 개최…염유리·인순이 공연",
    "source": "뉴스1",
    "sourceSite": "https://www.news1.kr",
-   "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5pWndrbExpeXFyTENrOFYwWE9neTZPbnFtZWRPelZGLVZWSzlQczU4a2xBLXpaSHNDdUVNZlVOVUpKd3JmVkpLblhtSWJsbXc1dWVvU2hyTVppdnpDeVNn0gFkQVVfeXFMTWlMNy00Y3dDTEJpUWhMdktwNGlib3pldDJ6ZVBsblQtenF2bmVoRDNpUGRkUVAtYWNlZVNJZ2lxSkc2LTEwZTlxTThtNE5ILWRQNFJDcHFGaDdfamlmcHozWjU3UQ?oc=5",
+   "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5pWndrbExpeXFyTENrOFYwWE9neTZPbnFtZWRPelZGLVZWSzlQczU4a2xBLXpaSHNDdUVNZlVOVUpKd3JmVkpLblhtSWJsbXc1dWVvU2hyTVppdnpDeVNn?oc=5",
    "type": "공연",
    "auto": true,
    "also": 1
