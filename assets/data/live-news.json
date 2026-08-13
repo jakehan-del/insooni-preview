@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-08-14 05:51",
+ "updated": "2026-08-14 07:51",
  "items": [
   {
    "date": "2026-08-05",
@@ -101,7 +101,7 @@
   {
    "date": "2026-06-23",
    "title": "'11회 청주시 시민의 날 기념행사' 내달 1일 개최…염유리·인순이 공연",
-   "source": "news1.kr",
+   "source": "뉴스1",
    "sourceSite": "https://www.news1.kr",
    "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5pWndrbExpeXFyTENrOFYwWE9neTZPbnFtZWRPelZGLVZWSzlQczU4a2xBLXpaSHNDdUVNZlVOVUpKd3JmVkpLblhtSWJsbXc1dWVvU2hyTVppdnpDeVNn0gFkQVVfeXFMTWlMNy00Y3dDTEJpUWhMdktwNGlib3pldDJ6ZVBsblQtenF2bmVoRDNpUGRkUVAtYWNlZVNJZ2lxSkc2LTEwZTlxTThtNE5ILWRQNFJDcHFGaDdfamlmcHozWjU3UQ?oc=5",
    "type": "공연",
@@ -138,7 +138,7 @@
   {
    "date": "2026-05-21",
    "title": "경주 고분 콘서트 '봉황대 뮤직스퀘어' 내달 5일 개막…인순이·김태우 등",
-   "source": "newsis.com",
+   "source": "뉴시스",
    "sourceSite": "https://www.newsis.com",
    "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE1JbG9NZElJeVhQOEJURTZrT0ZzT3Z1NFRNeEowdEJFcDE5Y3hGYndJR3RvVnpudzRGVVpJRjdSYWhZNkdvbE1xaVVkM2FaMlFzRzBzV0FEdzZ5Z2xaYmJxQdIBeEFVX3lxTE5Kek82MVdOdUljaEpOYXZjdHNzR25kbkhRRVlacms0aWw5MXphM0FLMXJzUHFCVjhiZDJkWVdfc2pSSW9TUnU2d2J5VmxGMmp1bE41Tk5YZVctMnN5NUhSZE5aaU1mN1RBbEhfbFdDZVRidnBTd3EyWQ?oc=5",
    "type": "공연",
