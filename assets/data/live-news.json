@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-08-14 22:20",
+ "updated": "2026-08-14 23:58",
  "items": [
   {
    "date": "2026-08-05",
@@ -34,9 +34,18 @@
   {
    "date": "2026-07-29",
    "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
-   "source": "segye.com",
+   "source": "세계일보",
    "sourceSite": "https://www.segye.com",
    "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1na00xTzd5cjdDS1hfWE9DNWtTS3dVYUJ2ZDBNN0Nya0pDbkRDQzI4NXF2eE1qWE83TThzWWFyNm1XYnhPSnpUeXg3YkhHYnF4VXVrYTlTQnPSAVRBVV95cUxQakJQeWRlb1BYRklZQW83amF3NXBPWTAxY2JrMExvcXVpdVowZi1LUmRpd04tUlVJNEt2c3c3YW5pOGpnekNwMlpJYTRsa0pNTWhiNXI?oc=5",
+   "type": "방송",
+   "auto": true
+  },
+  {
+   "date": "2026-07-28",
+   "title": "총상금 1억 ‘인생은 오디션’, 서지오 심사 출격…인순이와 트롯 스타 발굴",
+   "source": "일간스포츠",
+   "sourceSite": "https://isplus.com",
+   "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5zQ1VQT1VmdGtPLWFZQVpRQ3ZPRFlUS3hNRGxoOXhUZ2F0N1VPSDlqU2RkVHlkb29wbWJPZVhYcUVGXzZaN1RQNk4zcEhSNGQwZkdfSWdGc2V4elE?oc=5",
    "type": "방송",
    "auto": true
   },
@@ -49,15 +58,6 @@
    "type": "방송",
    "auto": true,
    "also": 1
-  },
-  {
-   "date": "2026-07-28",
-   "title": "총상금 1억 ‘인생은 오디션’, 서지오 심사 출격…인순이와 트롯 스타 발굴",
-   "source": "일간스포츠",
-   "sourceSite": "https://isplus.com",
-   "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5zQ1VQT1VmdGtPLWFZQVpRQ3ZPRFlUS3hNRGxoOXhUZ2F0N1VPSDlqU2RkVHlkb29wbWJPZVhYcUVGXzZaN1RQNk4zcEhSNGQwZkdfSWdGc2V4elE?oc=5",
-   "type": "방송",
-   "auto": true
   },
   {
    "date": "2026-07-28",
