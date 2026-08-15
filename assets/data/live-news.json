@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-08-15 15:48",
+ "updated": "2026-08-15 17:36",
  "items": [
   {
    "date": "2026-08-05",
@@ -111,7 +111,7 @@
   {
    "date": "2026-06-17",
    "title": "\"왜 이렇게 눈물이 날까요\" 인순이가 완성한 축제의 대미",
-   "source": "star.ohmynews.com",
+   "source": "오마이스타",
    "sourceSite": "https://star.ohmynews.com",
    "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTFBLMEJuXy1BejFxbDJZYmQ3X3ljWE9jamdaU2tlSlhRem5CMXJGLXNlRDA2S0p4UmI0dkh5Wmdqb1N5VWdGd000NldvamFxWERpZk9FMXdpOWxGTExlN1htR2tZVTVVU2ViQ2hjZUpXYjRFS01ZdlRUdHRRR1lyQQ?oc=5",
    "type": "공연",
