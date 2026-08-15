@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-08-15 13:37",
+ "updated": "2026-08-15 15:48",
  "items": [
   {
    "date": "2026-08-05",
@@ -74,7 +74,7 @@
    "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
    "source": "v.daum.net",
    "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE40WkVmSF9QRWk2V01WNnIwUTlBaFlXRG53ZUhpd3ZIQl9DQzVfUzltVFJsYlFyZlpHcU9EbThHT1ZDeXZ6ek1tQ3U3OUFlcU5LMVJxaA?oc=5",
+   "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE52cFRPVGYyaTNTdl8xRlFaRUdicmFpOWo5aW03WUhjcHYxekVGckRYbTNnSk1hTTJkS01iRURPOVpuRlFzcnc?oc=5",
    "type": "공연",
    "auto": true
   },
@@ -86,12 +86,12 @@
    "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1tV0FhNmZMendjUkhqd1VCeGFXNWJzYVJzdXpiaFM2aWNOdk5yMC1FLVVvVm92SVFHRUdEQUNTYVdaSkdWX2NlNTJSenpEV1ZjU3A0?oc=5",
    "type": "공연",
    "auto": true,
-   "also": 2
+   "also": 1
   },
   {
    "date": "2026-06-30",
    "title": "미국 독립기념일 행사에서 애국가 부르는 인순이",
-   "source": "koreancenter.or.kr",
+   "source": "연합뉴스 한민족센터",
    "sourceSite": "https://www.koreancenter.or.kr",
    "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1lUFFLT19OWU14SWNZbmNUUVBkUkxJaXp4ekRnWHpjRlFHNkpoMnBqRGZkY3RtODNldmZUenNLVms3Wm1mRm12d2dmRzJpaGhId2V6OF9uSDR2TWhEOHc2cDZFOTFnRkdSODJTcXJYQXhudGNZ?oc=5",
    "type": "공연",
@@ -138,7 +138,7 @@
   {
    "date": "2026-05-21",
    "title": "경주 고분 콘서트 '봉황대 뮤직스퀘어' 내달 5일 개막…인순이·김태우 등",
-   "source": "newsis.com",
+   "source": "뉴시스",
    "sourceSite": "https://www.newsis.com",
    "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE1JbG9NZElJeVhQOEJURTZrT0ZzT3Z1NFRNeEowdEJFcDE5Y3hGYndJR3RvVnpudzRGVVpJRjdSYWhZNkdvbE1xaVVkM2FaMlFzRzBzV0FEdzZ5Z2xaYmJxQdIBeEFVX3lxTE5Kek82MVdOdUljaEpOYXZjdHNzR25kbkhRRVlacms0aWw5MXphM0FLMXJzUHFCVjhiZDJkWVdfc2pSSW9TUnU2d2J5VmxGMmp1bE41Tk5YZVctMnN5NUhSZE5aaU1mN1RBbEhfbFdDZVRidnBTd3EyWQ?oc=5",
    "type": "공연",
