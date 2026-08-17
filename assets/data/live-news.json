@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-08-18 01:35",
+ "updated": "2026-08-18 03:49",
  "items": [
   {
    "date": "2026-08-05",
@@ -34,7 +34,7 @@
   {
    "date": "2026-07-29",
    "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
-   "source": "세계일보",
+   "source": "segye.com",
    "sourceSite": "https://www.segye.com",
    "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1na00xTzd5cjdDS1hfWE9DNWtTS3dVYUJ2ZDBNN0Nya0pDbkRDQzI4NXF2eE1qWE83TThzWWFyNm1XYnhPSnpUeXg3YkhHYnF4VXVrYTlTQnPSAVRBVV95cUxQakJQeWRlb1BYRklZQW83amF3NXBPWTAxY2JrMExvcXVpdVowZi1LUmRpd04tUlVJNEt2c3c3YW5pOGpnekNwMlpJYTRsa0pNTWhiNXI?oc=5",
    "type": "방송",
@@ -91,7 +91,7 @@
   {
    "date": "2026-06-30",
    "title": "미국 독립기념일 행사에서 애국가 부르는 인순이",
-   "source": "koreancenter.or.kr",
+   "source": "연합뉴스 한민족센터",
    "sourceSite": "https://www.koreancenter.or.kr",
    "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1lUFFLT19OWU14SWNZbmNUUVBkUkxJaXp4ekRnWHpjRlFHNkpoMnBqRGZkY3RtODNldmZUenNLVms3Wm1mRm12d2dmRzJpaGhId2V6OF9uSDR2TWhEOHc2cDZFOTFnRkdSODJTcXJYQXhudGNZ?oc=5",
    "type": "공연",
@@ -129,7 +129,7 @@
   {
    "date": "2026-06-05",
    "title": "K채널 / 김태우·인순이, '2026 봉황대 뮤직스퀘어' 오프닝 무대 성황",
-   "source": "K채널",
+   "source": "kchannel.kr",
    "sourceSite": "https://www.kchannel.kr",
    "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE8zbkRNWlBGMzN1QWV4aGZ6N0puSFZzNlo1MERPTDBFVWxDZjBPZktod0dEcUtUQXFOc2FfRUxEQzBVb2FKSGxxWHNkel94OWFRa2RXVXV6UFJzek5CRXVwMlVHRWVYYkt6ekE?oc=5",
    "type": "공연",
