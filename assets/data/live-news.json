@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-08-18 17:44",
+ "updated": "2026-08-18 19:35",
  "items": [
   {
    "date": "2026-08-05",
@@ -36,7 +36,16 @@
    "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
    "source": "v.daum.net",
    "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1jYUFXYzVtWVFJT3I4TTFUR3RqUEw1RDJINHZvYlVCeFp2bjRZWmRUQ0dTdE1vRUhJQnpWMHZkMGYtRDFHc1lVcmxUU25CVnM?oc=5",
+   "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5MNFpYdWwyZDZ0Y1pjdlMwci01clU3enoxMlF0NkQwX2hGNjl6MEx6ZTdpOXZlY1pVU1lfRVVQU0dLeGI4Y1VSTHB5NA?oc=5",
+   "type": "방송",
+   "auto": true
+  },
+  {
+   "date": "2026-07-28",
+   "title": "총상금 1억 ‘인생은 오디션’, 서지오 심사 출격…인순이와 트롯 스타 발굴",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5JWEt5blRnY2J3Nk1KdS1QZVBuakh3N0ZNQnduUm1TWGlCYm5tanc2eHg2M29fVk9xOF9QUUtYRVVOSHBtZVBKN2UzMnFCOWM?oc=5",
    "type": "방송",
    "auto": true
   },
@@ -59,17 +68,6 @@
    "type": "방송",
    "auto": true,
    "also": 3
-  },
-  {
-   "date": "2026-07-28",
-   "title": "총상금 1억 ‘인생은 오디션’, 서지오 심사 출격…인순이와 트롯 스타 발굴",
-   "source": "일간스포츠",
-   "sourceSite": "https://isplus.com",
-   "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5zQ1VQT1VmdGtPLWFZQVpRQ3ZPRFlUS3hNRGxoOXhUZ2F0N1VPSDlqU2RkVHlkb29wbWJPZVhYcUVGXzZaN1RQNk4zcEhSNGQwZkdfSWdGc2V4elE?oc=5",
-   "type": "방송",
-   "auto": true,
-   "also": 3,
-   "ai": true
   },
   {
    "date": "2026-07-27",
@@ -103,7 +101,7 @@
   {
    "date": "2026-06-23",
    "title": "'11회 청주시 시민의 날 기념행사' 내달 1일 개최…염유리·인순이 공연",
-   "source": "뉴스1",
+   "source": "news1.kr",
    "sourceSite": "https://www.news1.kr",
    "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5pWndrbExpeXFyTENrOFYwWE9neTZPbnFtZWRPelZGLVZWSzlQczU4a2xBLXpaSHNDdUVNZlVOVUpKd3JmVkpLblhtSWJsbXc1dWVvU2hyTVppdnpDeVNn0gFkQVVfeXFMTWlMNy00Y3dDTEJpUWhMdktwNGlib3pldDJ6ZVBsblQtenF2bmVoRDNpUGRkUVAtYWNlZVNJZ2lxSkc2LTEwZTlxTThtNE5ILWRQNFJDcHFGaDdfamlmcHozWjU3UQ?oc=5",
    "type": "공연",
@@ -131,7 +129,7 @@
   {
    "date": "2026-06-05",
    "title": "K채널 / 김태우·인순이, '2026 봉황대 뮤직스퀘어' 오프닝 무대 성황",
-   "source": "K채널",
+   "source": "kchannel.kr",
    "sourceSite": "https://www.kchannel.kr",
    "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE8zbkRNWlBGMzN1QWV4aGZ6N0puSFZzNlo1MERPTDBFVWxDZjBPZktod0dEcUtUQXFOc2FfRUxEQzBVb2FKSGxxWHNkel94OWFRa2RXVXV6UFJzek5CRXVwMlVHRWVYYkt6ekE?oc=5",
    "type": "공연",
