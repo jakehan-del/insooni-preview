@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-08-18 15:54",
- "count": 33,
+ "updated": "2026-08-18 17:44",
+ "count": 34,
  "items": [
   {
    "date": "2026-08-05",
@@ -99,6 +99,15 @@
    "source": "v.daum.net",
    "sourceSite": "https://v.daum.net",
    "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5MNFpYdWwyZDZ0Y1pjdlMwci01clU3enoxMlF0NkQwX2hGNjl6MEx6ZTdpOXZlY1pVU1lfRVVQU0dLeGI4Y1VSTHB5NA?oc=5",
+   "type": "방송",
+   "auto": true
+  },
+  {
+   "date": "2026-07-29",
+   "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1jYUFXYzVtWVFJT3I4TTFUR3RqUEw1RDJINHZvYlVCeFp2bjRZWmRUQ0dTdE1vRUhJQnpWMHZkMGYtRDFHc1lVcmxUU25CVnM?oc=5",
    "type": "방송",
    "auto": true
   },
