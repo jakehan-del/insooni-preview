@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-08-21 05:35",
+ "updated": "2026-08-21 07:34",
  "items": [
   {
    "date": "2026-08-05",
@@ -87,6 +87,15 @@
    "type": "공연",
    "auto": true,
    "also": 2
+  },
+  {
+   "date": "2026-07-12",
+   "title": "'열린음악회' 출연진 라인업 노라조·인순이",
+   "source": "bntnews.co.kr",
+   "sourceSite": "https://www.bntnews.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBnMzUyVWRJSndBT1BaeEtmblNmWlREUldPbmJIY1IyRng5dmxGMGh3VTN3RmM4X0hVNWltd2I3TGFrcmZKR29QSVUzalVEQTBjaGZuLWZ5LTE4V0JCdFYtZ0ZGSTQ?oc=5",
+   "type": "방송",
+   "auto": true
   },
   {
    "date": "2026-06-30",
