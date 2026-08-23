@@ -1,8 +1,17 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-08-24 01:33",
- "count": 36,
+ "updated": "2026-08-24 03:38",
+ "count": 37,
  "items": [
+  {
+   "date": "2026-08-23",
+   "title": "'나는 가수다'에서 '아버지'를 열창한 인순이",
+   "source": "OhmyNews",
+   "sourceSite": "https://www.ohmynews.com",
+   "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTFBXYVRjd0hEQUlxdnBrdEFoQ0xLUE9Uak9KaDd4dDBtRjdkTHFtVEVial9yS2FaMkV5NnFpZEVubUN1UmF4NV9TdzgtWVFHdFpIY2xfQnhUUVFrb2toT1ZyNDloaHJCb2tzRVd0TG9hTHVnZ3BnLTBBVA?oc=5",
+   "type": "공연",
+   "auto": true
+  },
   {
    "date": "2026-08-05",
    "title": "안동문화예술의전당 어버이날 특별기획 가수 인순이 & 명창 유지숙 `두 사랑 이야기`",
