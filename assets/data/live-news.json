@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-08-25 12:04",
+ "updated": "2026-08-25 13:45",
  "items": [
   {
    "date": "2026-08-23",
@@ -60,11 +60,32 @@
    "also": 2
   },
   {
+   "date": "2026-07-28",
+   "title": "한강 X 문초희, '이제는', 고음과 안무에도 빛난 듀엣 호흡! 인순이 X 서지오 심사평은? [인생은 오디션]",
+   "source": "sbs.co.kr",
+   "sourceSite": "https://programs.sbs.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFAxUHNaU29ORTRFc1VEUVBxQ0Vid2xTY0stTDZFbXVvWUZrUGNOZWxfRlZzcENhU1U4eGxSdFpkc1JCVU50OW9MUUZXdVZodkp5UGROeGpJT1N2YzZMVzZYeHo4Q0U1elpIbXJZQ2VwNXpIeGcxb1Z3?oc=5",
+   "type": "방송",
+   "auto": true,
+   "also": 3
+  },
+  {
+   "date": "2026-07-28",
+   "title": "총상금 1억 ‘인생은 오디션’, 서지오 심사 출격…인순이와 트롯 스타 발굴",
+   "source": "일간스포츠",
+   "sourceSite": "https://isplus.com",
+   "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5zQ1VQT1VmdGtPLWFZQVpRQ3ZPRFlUS3hNRGxoOXhUZ2F0N1VPSDlqU2RkVHlkb29wbWJPZVhYcUVGXzZaN1RQNk4zcEhSNGQwZkdfSWdGc2V4elE?oc=5",
+   "type": "방송",
+   "auto": true,
+   "also": 3,
+   "ai": true
+  },
+  {
    "date": "2026-07-27",
    "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
-   "source": "v.daum.net",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1GX3hoUzdOcG1SMngyNXBGVmF4YUlMTmdMZkJyZXV4a3RXRHpwVnlFT3NfWHMxTzhmWHFlRTF4MHV0ODNjTFNVRG9KWEtxWlE?oc=5",
+   "source": "동아일보",
+   "sourceSite": "https://www.donga.com",
+   "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTFAwQkJha0MzSzFWQnRSTG4xd0g5b3ZMcGh3OVVTS0xvYUI5dWlfUnBJSldQQ0xZM2hSZEVHMUI3RnRWOFNCNVJJeW1FelNlckJSUjlQV3BUTHR4ZVlhelpQWlVnYVl0S3BjZkdrWTUyVTUyN3pSS1HSAWZBVV95cUxNSDU5LXd4UFZ4VXdocDRjcVprTFhYTzlsM3hMZGNTOXRoTU40bGV1Y1pIZk8ya3l6cGJTTWszVU5yQmhjbzNKTFlOQXVVMkRmSzBFdmdoY2pyTWY1V0lDd3hmSk9MNUE?oc=5",
    "type": "공연",
    "auto": true
   },
