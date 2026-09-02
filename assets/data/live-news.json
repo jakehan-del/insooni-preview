@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-09-02 20:02",
+ "updated": "2026-09-03 01:23",
  "items": [
   {
    "date": "2026-09-02",
@@ -75,28 +75,7 @@
    "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBPQ041WGZ5MlRYTXZOOTdtdHBWWGRLTDkyWXc0SmhGU3ZrWnY1N2huSU5rbVd4WlY2SWxRb1Jha0pHZ0hFZ3dFWmNNOU45YjBpa3VKMFBmeWRUcGVOVUN2dUZTaDU5QWZ4QnhXYlpHRDFfaWNJTTN3?oc=5",
    "type": "방송",
    "auto": true,
-   "also": 1
-  },
-  {
-   "date": "2026-07-28",
-   "title": "한강 X 문초희, '이제는', 고음과 안무에도 빛난 듀엣 호흡! 인순이 X 서지오 심사평은? [인생은 오디션]",
-   "source": "sbs.co.kr",
-   "sourceSite": "https://programs.sbs.co.kr",
-   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFAxUHNaU29ORTRFc1VEUVBxQ0Vid2xTY0stTDZFbXVvWUZrUGNOZWxfRlZzcENhU1U4eGxSdFpkc1JCVU50OW9MUUZXdVZodkp5UGROeGpJT1N2YzZMVzZYeHo4Q0U1elpIbXJZQ2VwNXpIeGcxb1Z3?oc=5",
-   "type": "방송",
-   "auto": true,
-   "also": 3
-  },
-  {
-   "date": "2026-07-28",
-   "title": "총상금 1억 ‘인생은 오디션’, 서지오 심사 출격…인순이와 트롯 스타 발굴",
-   "source": "일간스포츠",
-   "sourceSite": "https://isplus.com",
-   "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5zQ1VQT1VmdGtPLWFZQVpRQ3ZPRFlUS3hNRGxoOXhUZ2F0N1VPSDlqU2RkVHlkb29wbWJPZVhYcUVGXzZaN1RQNk4zcEhSNGQwZkdfSWdGc2V4elE?oc=5",
-   "type": "방송",
-   "auto": true,
-   "also": 3,
-   "ai": true
+   "also": 2
   },
   {
    "date": "2026-07-27",
@@ -116,6 +95,15 @@
    "type": "공연",
    "auto": true,
    "also": 2
+  },
+  {
+   "date": "2026-07-12",
+   "title": "'열린음악회' 출연진 라인업 노라조·인순이",
+   "source": "bntnews.co.kr",
+   "sourceSite": "https://www.bntnews.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBnMzUyVWRJSndBT1BaeEtmblNmWlREUldPbmJIY1IyRng5dmxGMGh3VTN3RmM4X0hVNWltd2I3TGFrcmZKR29QSVUzalVEQTBjaGZuLWZ5LTE4V0JCdFYtZ0ZGSTQ?oc=5",
+   "type": "방송",
+   "auto": true
   },
   {
    "date": "2026-06-30",
@@ -144,6 +132,15 @@
    "sourceSite": "https://star.ohmynews.com",
    "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTFBLMEJuXy1BejFxbDJZYmQ3X3ljWE9jamdaU2tlSlhRem5CMXJGLXNlRDA2S0p4UmI0dkh5Wmdqb1N5VWdGd000NldvamFxWERpZk9FMXdpOWxGTExlN1htR2tZVTVVU2ViQ2hjZUpXYjRFS01ZdlRUdHRRR1lyQQ?oc=5",
    "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-06-11",
+   "title": "뉴욕 브랜드 '노아' 가수 인순이 만났다… 다양성·공존 담은 화보 선봬",
+   "source": "fashionbiz.co.kr",
+   "sourceSite": "https://fashionbiz.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5tV2hkSzFRelFoWEY3OHhKaWd1Z0N0MUh2M0V1VThxcDJKWUNZZ3pPM3BlUU5UU1oxV01VUGp0NEpvNk1UeDFPdVlPMGhNaHU1?oc=5",
+   "type": "보도",
    "auto": true
   },
   {
