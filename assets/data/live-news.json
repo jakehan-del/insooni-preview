@@ -1,23 +1,33 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-09-03 01:23",
+ "updated": "2026-09-03 05:53",
  "items": [
   {
-   "date": "2026-09-02",
+   "date": "2026-09-03",
    "title": "‘플레이리스트 109’ 장동선-김영옥, 버텨낸 사람이 건넨 위로! 인순이 ‘거위의 꿈’에 함께 울고.. 89세 인생 선배의 한마디가 준 깨달음에 위로 받았다!",
-   "source": "뉴스팟",
-   "sourceSite": "http://www.todaysn.com",
-   "url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTE1iVzZWaC1DcW9kZ3psSVozQjJnbDFDWm9jTzM2cjNhUURBRGhvYzVrbDhjZUpueTVra3NfUndZSmg4RlU?oc=5",
+   "source": "kookminnews.com",
+   "sourceSite": "https://www.kookminnews.com",
+   "url": "https://news.google.com/rss/articles/CBMiSkFVX3lxTFA5Z2J4YmNia3ZZU0F1VVhzV1Q1RWdvY0FFaG50aWZpc0RtVC1qQ3FvcmtiMlhWVXQ5UDdfd1NyMkI4d3JaT3R6Y0dn?oc=5",
    "type": "보도",
+   "auto": true,
+   "also": 1
+  },
+  {
+   "date": "2026-09-02",
+   "title": "추석 인순이, 김영임 등 민요와 가요 더한 무대 펼친다",
+   "source": "Korearetro",
+   "sourceSite": "https://www.korearetro.com",
+   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE0zY2IwS1J4TkFlQ1ZHYVMwa0xPbzNiczlXNDJGd01tMlo2c0toem1oTG5nemdZUlRlTXFQVkRWeUhWUExuWDVVZEI4djJFOGdVcmVScXQyRUpnUTVNUW5NM09FOEtMdDFYWmZn?oc=5",
+   "type": "공연",
    "auto": true
   },
   {
    "date": "2026-09-02",
    "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
-   "source": "v.daum.net",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1PbW94SVNDRWJUQjNqTFJYSkV4UjVaRkZnbERjVXNSeDJlNE00eTNyekdvQ19jd2hjWEJOYXcwaTF3Q2k5ZnBwWmRhWUdaX1k?oc=5",
+   "source": "뉴스1",
+   "sourceSite": "https://www.news1.kr",
+   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBQZmF0LTNUNUY0UEtIbGtsUGRfdDh6dEhnU2MzXzFPQjEtdVdMNFRnMGJMbUF1S1JEQzlIelBSYmxoQlpZUDJfX1J0b25qSGFKb2ROdmtYZERhaUhEVnROLWI0RTVGUktoZzlYc2ZqN3RMM3hMVVFB0gF3QVVfeXFMUFBmYXQtM1Q1RjRQS0hsa2xQZF90OHp0SGdTYzNfMU9CMS11V0w0VGcwYkxtQXVLUkRDOUh6UFJibGhCWllQMl9fUnRvbmpIYUpvZE52a1hkRGFpSERWdE4tYjRFNUZSS2hnOVhzZmo3dEwzeExVUUE?oc=5",
    "type": "방송",
    "auto": true
   },
@@ -61,9 +71,9 @@
   {
    "date": "2026-07-29",
    "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
-   "source": "세계일보",
-   "sourceSite": "https://www.segye.com",
-   "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1na00xTzd5cjdDS1hfWE9DNWtTS3dVYUJ2ZDBNN0Nya0pDbkRDQzI4NXF2eE1qWE83TThzWWFyNm1XYnhPSnpUeXg3YkhHYnF4VXVrYTlTQnPSAVRBVV95cUxQakJQeWRlb1BYRklZQW83amF3NXBPWTAxY2JrMExvcXVpdVowZi1LUmRpd04tUlVJNEt2c3c3YW5pOGpnekNwMlpJYTRsa0pNTWhiNXI?oc=5",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE5PdnVpdURVSXh5MXE2OWYtWV9Belp0RHVKQXhCOFZfcmxyZVduclFWSjhrYnY5VEJJaXZndUozMU5vZjlxYWc?oc=5",
    "type": "방송",
    "auto": true
   },
@@ -75,7 +85,17 @@
    "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBPQ041WGZ5MlRYTXZOOTdtdHBWWGRLTDkyWXc0SmhGU3ZrWnY1N2huSU5rbVd4WlY2SWxRb1Jha0pHZ0hFZ3dFWmNNOU45YjBpa3VKMFBmeWRUcGVOVUN2dUZTaDU5QWZ4QnhXYlpHRDFfaWNJTTN3?oc=5",
    "type": "방송",
    "auto": true,
-   "also": 2
+   "also": 1
+  },
+  {
+   "date": "2026-07-28",
+   "title": "한강 X 문초희, '이제는', 고음과 안무에도 빛난 듀엣 호흡! 인순이 X 서지오 심사평은? [인생은 오디션]",
+   "source": "sbs.co.kr",
+   "sourceSite": "https://programs.sbs.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFAxUHNaU29ORTRFc1VEUVBxQ0Vid2xTY0stTDZFbXVvWUZrUGNOZWxfRlZzcENhU1U4eGxSdFpkc1JCVU50OW9MUUZXdVZodkp5UGROeGpJT1N2YzZMVzZYeHo4Q0U1elpIbXJZQ2VwNXpIeGcxb1Z3?oc=5",
+   "type": "방송",
+   "auto": true,
+   "also": 3
   },
   {
    "date": "2026-07-27",
@@ -95,15 +115,6 @@
    "type": "공연",
    "auto": true,
    "also": 2
-  },
-  {
-   "date": "2026-07-12",
-   "title": "'열린음악회' 출연진 라인업 노라조·인순이",
-   "source": "bntnews.co.kr",
-   "sourceSite": "https://www.bntnews.co.kr",
-   "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBnMzUyVWRJSndBT1BaeEtmblNmWlREUldPbmJIY1IyRng5dmxGMGh3VTN3RmM4X0hVNWltd2I3TGFrcmZKR29QSVUzalVEQTBjaGZuLWZ5LTE4V0JCdFYtZ0ZGSTQ?oc=5",
-   "type": "방송",
-   "auto": true
   },
   {
    "date": "2026-06-30",
@@ -135,18 +146,9 @@
    "auto": true
   },
   {
-   "date": "2026-06-11",
-   "title": "뉴욕 브랜드 '노아' 가수 인순이 만났다… 다양성·공존 담은 화보 선봬",
-   "source": "fashionbiz.co.kr",
-   "sourceSite": "https://fashionbiz.co.kr",
-   "url": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5tV2hkSzFRelFoWEY3OHhKaWd1Z0N0MUh2M0V1VThxcDJKWUNZZ3pPM3BlUU5UU1oxV01VUGp0NEpvNk1UeDFPdVlPMGhNaHU1?oc=5",
-   "type": "보도",
-   "auto": true
-  },
-  {
    "date": "2026-06-05",
    "title": "K채널 / 김태우·인순이, '2026 봉황대 뮤직스퀘어' 오프닝 무대 성황",
-   "source": "K채널",
+   "source": "kchannel.kr",
    "sourceSite": "https://www.kchannel.kr",
    "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE8zbkRNWlBGMzN1QWV4aGZ6N0puSFZzNlo1MERPTDBFVWxDZjBPZktod0dEcUtUQXFOc2FfRUxEQzBVb2FKSGxxWHNkel94OWFRa2RXVXV6UFJzek5CRXVwMlVHRWVYYkt6ekE?oc=5",
    "type": "공연",

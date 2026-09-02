@@ -1,8 +1,18 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-09-03 01:23",
- "count": 39,
+ "updated": "2026-09-03 05:53",
+ "count": 42,
  "items": [
+  {
+   "date": "2026-09-03",
+   "title": "‘플레이리스트 109’ 장동선-김영옥, 버텨낸 사람이 건넨 위로! 인순이 ‘거위의 꿈’에 함께 울고.. 89세 인생 선배의 한마디가 준 깨달음에 위로 받았다!",
+   "source": "kookminnews.com",
+   "sourceSite": "https://www.kookminnews.com",
+   "url": "https://news.google.com/rss/articles/CBMiSkFVX3lxTFA5Z2J4YmNia3ZZU0F1VVhzV1Q1RWdvY0FFaG50aWZpc0RtVC1qQ3FvcmtiMlhWVXQ5UDdfd1NyMkI4d3JaT3R6Y0dn?oc=5",
+   "type": "보도",
+   "auto": true,
+   "also": 1
+  },
   {
    "date": "2026-09-02",
    "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
@@ -19,6 +29,24 @@
    "sourceSite": "http://www.todaysn.com",
    "url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTE1iVzZWaC1DcW9kZ3psSVozQjJnbDFDWm9jTzM2cjNhUURBRGhvYzVrbDhjZUpueTVra3NfUndZSmg4RlU?oc=5",
    "type": "보도",
+   "auto": true
+  },
+  {
+   "date": "2026-09-02",
+   "title": "추석 인순이, 김영임 등 민요와 가요 더한 무대 펼친다",
+   "source": "Korearetro",
+   "sourceSite": "https://www.korearetro.com",
+   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE0zY2IwS1J4TkFlQ1ZHYVMwa0xPbzNiczlXNDJGd01tMlo2c0toem1oTG5nemdZUlRlTXFQVkRWeUhWUExuWDVVZEI4djJFOGdVcmVScXQyRUpnUTVNUW5NM09FOEtMdDFYWmZn?oc=5",
+   "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-09-02",
+   "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
+   "source": "뉴스1",
+   "sourceSite": "https://www.news1.kr",
+   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBQZmF0LTNUNUY0UEtIbGtsUGRfdDh6dEhnU2MzXzFPQjEtdVdMNFRnMGJMbUF1S1JEQzlIelBSYmxoQlpZUDJfX1J0b25qSGFKb2ROdmtYZERhaUhEVnROLWI0RTVGUktoZzlYc2ZqN3RMM3hMVVFB0gF3QVVfeXFMUFBmYXQtM1Q1RjRQS0hsa2xQZF90OHp0SGdTYzNfMU9CMS11V0w0VGcwYkxtQXVLUkRDOUh6UFJibGhCWllQMl9fUnRvbmpIYUpvZE52a1hkRGFpSERWdE4tYjRFNUZSS2hnOVhzZmo3dEwzeExVUUE?oc=5",
+   "type": "방송",
    "auto": true
   },
   {
