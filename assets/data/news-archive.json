@@ -1,8 +1,17 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-09-02 08:55",
- "count": 37,
+ "updated": "2026-09-02 13:10",
+ "count": 38,
  "items": [
+  {
+   "date": "2026-09-02",
+   "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1PbW94SVNDRWJUQjNqTFJYSkV4UjVaRkZnbERjVXNSeDJlNE00eTNyekdvQ19jd2hjWEJOYXcwaTF3Q2k5ZnBwWmRhWUdaX1k?oc=5",
+   "type": "방송",
+   "auto": true
+  },
   {
    "date": "2026-08-23",
    "title": "'나는 가수다'에서 '아버지'를 열창한 인순이",

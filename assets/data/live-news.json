@@ -1,8 +1,17 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-09-02 08:55",
+ "updated": "2026-09-02 13:10",
  "items": [
+  {
+   "date": "2026-09-02",
+   "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1PbW94SVNDRWJUQjNqTFJYSkV4UjVaRkZnbERjVXNSeDJlNE00eTNyekdvQ19jd2hjWEJOYXcwaTF3Q2k5ZnBwWmRhWUdaX1k?oc=5",
+   "type": "방송",
+   "auto": true
+  },
   {
    "date": "2026-08-23",
    "title": "'나는 가수다'에서 '아버지'를 열창한 인순이",
@@ -97,7 +106,7 @@
    "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1tV0FhNmZMendjUkhqd1VCeGFXNWJzYVJzdXpiaFM2aWNOdk5yMC1FLVVvVm92SVFHRUdEQUNTYVdaSkdWX2NlNTJSenpEV1ZjU3A0?oc=5",
    "type": "공연",
    "auto": true,
-   "also": 1
+   "also": 2
   },
   {
    "date": "2026-07-12",
@@ -135,15 +144,6 @@
    "sourceSite": "https://star.ohmynews.com",
    "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTFBLMEJuXy1BejFxbDJZYmQ3X3ljWE9jamdaU2tlSlhRem5CMXJGLXNlRDA2S0p4UmI0dkh5Wmdqb1N5VWdGd000NldvamFxWERpZk9FMXdpOWxGTExlN1htR2tZVTVVU2ViQ2hjZUpXYjRFS01ZdlRUdHRRR1lyQQ?oc=5",
    "type": "공연",
-   "auto": true
-  },
-  {
-   "date": "2026-06-11",
-   "title": "뉴욕 브랜드 '노아' 가수 인순이 만났다… 다양성·공존 담은 화보 선봬",
-   "source": "패션비즈",
-   "sourceSite": "https://fashionbiz.co.kr",
-   "url": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5tV2hkSzFRelFoWEY3OHhKaWd1Z0N0MUh2M0V1VThxcDJKWUNZZ3pPM3BlUU5UU1oxV01VUGp0NEpvNk1UeDFPdVlPMGhNaHU1?oc=5",
-   "type": "보도",
    "auto": true
   },
   {
