@@ -1,8 +1,17 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-09-02 13:10",
+ "updated": "2026-09-02 20:02",
  "items": [
+  {
+   "date": "2026-09-02",
+   "title": "‘플레이리스트 109’ 장동선-김영옥, 버텨낸 사람이 건넨 위로! 인순이 ‘거위의 꿈’에 함께 울고.. 89세 인생 선배의 한마디가 준 깨달음에 위로 받았다!",
+   "source": "뉴스팟",
+   "sourceSite": "http://www.todaysn.com",
+   "url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTE1iVzZWaC1DcW9kZ3psSVozQjJnbDFDWm9jTzM2cjNhUURBRGhvYzVrbDhjZUpueTVra3NfUndZSmg4RlU?oc=5",
+   "type": "보도",
+   "auto": true
+  },
   {
    "date": "2026-09-02",
    "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
@@ -107,15 +116,6 @@
    "type": "공연",
    "auto": true,
    "also": 2
-  },
-  {
-   "date": "2026-07-12",
-   "title": "'열린음악회' 출연진 라인업 노라조·인순이",
-   "source": "bntnews.co.kr",
-   "sourceSite": "https://www.bntnews.co.kr",
-   "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBnMzUyVWRJSndBT1BaeEtmblNmWlREUldPbmJIY1IyRng5dmxGMGh3VTN3RmM4X0hVNWltd2I3TGFrcmZKR29QSVUzalVEQTBjaGZuLWZ5LTE4V0JCdFYtZ0ZGSTQ?oc=5",
-   "type": "방송",
-   "auto": true
   },
   {
    "date": "2026-06-30",
