@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-09-03 08:57",
+ "updated": "2026-09-03 13:11",
  "items": [
   {
    "date": "2026-09-03",
@@ -15,20 +15,20 @@
   },
   {
    "date": "2026-09-02",
-   "title": "추석 인순이, 김영임 등 민요와 가요 더한 무대 펼친다",
-   "source": "Korearetro",
-   "sourceSite": "https://www.korearetro.com",
-   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE0zY2IwS1J4TkFlQ1ZHYVMwa0xPbzNiczlXNDJGd01tMlo2c0toem1oTG5nemdZUlRlTXFQVkRWeUhWUExuWDVVZEI4djJFOGdVcmVScXQyRUpnUTVNUW5NM09FOEtMdDFYWmZn?oc=5",
-   "type": "공연",
-   "auto": true
-  },
-  {
-   "date": "2026-09-02",
    "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
    "source": "뉴스1",
    "sourceSite": "https://www.news1.kr",
    "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBQZmF0LTNUNUY0UEtIbGtsUGRfdDh6dEhnU2MzXzFPQjEtdVdMNFRnMGJMbUF1S1JEQzlIelBSYmxoQlpZUDJfX1J0b25qSGFKb2ROdmtYZERhaUhEVnROLWI0RTVGUktoZzlYc2ZqN3RMM3hMVVFB0gF3QVVfeXFMUFBmYXQtM1Q1RjRQS0hsa2xQZF90OHp0SGdTYzNfMU9CMS11V0w0VGcwYkxtQXVLUkRDOUh6UFJibGhCWllQMl9fUnRvbmpIYUpvZE52a1hkRGFpSERWdE4tYjRFNUZSS2hnOVhzZmo3dEwzeExVUUE?oc=5",
    "type": "방송",
+   "auto": true
+  },
+  {
+   "date": "2026-09-02",
+   "title": "추석 인순이, 김영임 등 민요와 가요 더한 무대 펼친다",
+   "source": "Korearetro",
+   "sourceSite": "https://www.korearetro.com",
+   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE0zY2IwS1J4TkFlQ1ZHYVMwa0xPbzNiczlXNDJGd01tMlo2c0toem1oTG5nemdZUlRlTXFQVkRWeUhWUExuWDVVZEI4djJFOGdVcmVScXQyRUpnUTVNUW5NM09FOEtMdDFYWmZn?oc=5",
+   "type": "공연",
    "auto": true
   },
   {
@@ -108,10 +108,10 @@
   },
   {
    "date": "2026-07-24",
-   "title": "경수진 시구→인순이 애국가 '특집 불꽃야구 생중계' 고척돔 달군다",
-   "source": "네이트",
-   "sourceSite": "https://news.nate.com",
-   "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1tV0FhNmZMendjUkhqd1VCeGFXNWJzYVJzdXpiaFM2aWNOdk5yMC1FLVVvVm92SVFHRUdEQUNTYVdaSkdWX2NlNTJSenpEV1ZjU3A0?oc=5",
+   "title": "경수진 시구→인순이 애국가 ‘특집 불꽃야구 생중계’ 고척돔 달군다",
+   "source": "뉴스엔",
+   "sourceSite": "https://m.newsen.com",
+   "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTFBIa3ZIblV0NmRXVU53MkwxdV9Uazd2MW1rb2dKWXRhRDZGSEl4Z1JpNElKcVVkUmRKdzNLQjFkd3BBVzgtb0RtbUg5cWx1VEVtOThWejlvX0wzUVUxYmJZbURFZEVoTGhf?oc=5",
    "type": "공연",
    "auto": true,
    "also": 2
@@ -139,7 +139,7 @@
   {
    "date": "2026-06-17",
    "title": "\"왜 이렇게 눈물이 날까요\" 인순이가 완성한 축제의 대미",
-   "source": "오마이스타",
+   "source": "star.ohmynews.com",
    "sourceSite": "https://star.ohmynews.com",
    "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTFBLMEJuXy1BejFxbDJZYmQ3X3ljWE9jamdaU2tlSlhRem5CMXJGLXNlRDA2S0p4UmI0dkh5Wmdqb1N5VWdGd000NldvamFxWERpZk9FMXdpOWxGTExlN1htR2tZVTVVU2ViQ2hjZUpXYjRFS01ZdlRUdHRRR1lyQQ?oc=5",
    "type": "공연",
