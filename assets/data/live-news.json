@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-09-04 05:51",
+ "updated": "2026-09-04 08:53",
  "items": [
   {
    "date": "2026-09-03",
@@ -15,20 +15,20 @@
   },
   {
    "date": "2026-09-02",
-   "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
-   "source": "v.daum.net",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTFBSY0JLUGRCWWN3S2U1UHdudkJybHVOWlpNYzlLUUNDVnRyd1gwdFQ0d3pPN3d4SkVCaXhrbE1xcGxra19BaXc?oc=5",
-   "type": "방송",
-   "auto": true
-  },
-  {
-   "date": "2026-09-02",
    "title": "추석 인순이, 김영임 등 민요와 가요 더한 무대 펼친다",
    "source": "Korearetro",
    "sourceSite": "https://www.korearetro.com",
    "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE0zY2IwS1J4TkFlQ1ZHYVMwa0xPbzNiczlXNDJGd01tMlo2c0toem1oTG5nemdZUlRlTXFQVkRWeUhWUExuWDVVZEI4djJFOGdVcmVScXQyRUpnUTVNUW5NM09FOEtMdDFYWmZn?oc=5",
    "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-09-02",
+   "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1PbW94SVNDRWJUQjNqTFJYSkV4UjVaRkZnbERjVXNSeDJlNE00eTNyekdvQ19jd2hjWEJOYXcwaTF3Q2k5ZnBwWmRhWUdaX1k?oc=5",
+   "type": "방송",
    "auto": true
   },
   {
@@ -70,6 +70,15 @@
   },
   {
    "date": "2026-07-29",
+   "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1jYUFXYzVtWVFJT3I4TTFUR3RqUEw1RDJINHZvYlVCeFp2bjRZWmRUQ0dTdE1vRUhJQnpWMHZkMGYtRDFHc1lVcmxUU25CVnM?oc=5",
+   "type": "방송",
+   "auto": true
+  },
+  {
+   "date": "2026-07-29",
    "title": "황우림 X 송별이 '엄마 꽃', 심사위원도 위로받은 아름다운 하모니! 인순이 X 서지오 심사평은? [인생은 오디션]",
    "source": "sbs.co.kr",
    "sourceSite": "https://programs.sbs.co.kr",
@@ -77,15 +86,6 @@
    "type": "방송",
    "auto": true,
    "also": 1
-  },
-  {
-   "date": "2026-07-29",
-   "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
-   "source": "v.daum.net",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1jYUFXYzVtWVFJT3I4TTFUR3RqUEw1RDJINHZvYlVCeFp2bjRZWmRUQ0dTdE1vRUhJQnpWMHZkMGYtRDFHc1lVcmxUU25CVnM?oc=5",
-   "type": "방송",
-   "auto": true
   },
   {
    "date": "2026-07-27",
@@ -104,7 +104,7 @@
    "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTFBIa3ZIblV0NmRXVU53MkwxdV9Uazd2MW1rb2dKWXRhRDZGSEl4Z1JpNElKcVVkUmRKdzNLQjFkd3BBVzgtb0RtbUg5cWx1VEVtOThWejlvX0wzUVUxYmJZbURFZEVoTGhf?oc=5",
    "type": "공연",
    "auto": true,
-   "also": 2
+   "also": 1
   },
   {
    "date": "2026-07-11",
@@ -147,7 +147,7 @@
   {
    "date": "2026-06-11",
    "title": "김태원·태진아·인순이, ‘조선의 사랑꾼’ 5주년 노래자랑 심사위원 합류",
-   "source": "topstarnews.net",
+   "source": "톱스타뉴스",
    "sourceSite": "https://www.topstarnews.net",
    "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE9JQXF6bWg0aTlYb3BHd2Z1elV1dXE4SmxZWE0xaDFMczhKZHNHOG5RSkstdjFvTmpwbkVheDM1LTcyRHhkUG8wamY3dXg2ZW0xMW9wSWE4RVMzNHpTRlhyRWYyS3hfSmcwSDhlZnNMSG1VZw?oc=5",
    "type": "방송",
