@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-09-04 13:03",
+ "updated": "2026-09-04 20:01",
  "items": [
   {
    "date": "2026-09-03",
@@ -16,7 +16,7 @@
   {
    "date": "2026-09-02",
    "title": "추석 인순이, 김영임 등 민요와 가요 더한 무대 펼친다",
-   "source": "Korearetro",
+   "source": "korearetro.com",
    "sourceSite": "https://www.korearetro.com",
    "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE0zY2IwS1J4TkFlQ1ZHYVMwa0xPbzNiczlXNDJGd01tMlo2c0toem1oTG5nemdZUlRlTXFQVkRWeUhWUExuWDVVZEI4djJFOGdVcmVScXQyRUpnUTVNUW5NM09FOEtMdDFYWmZn?oc=5",
    "type": "공연",
@@ -70,6 +70,15 @@
   },
   {
    "date": "2026-07-29",
+   "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1jYUFXYzVtWVFJT3I4TTFUR3RqUEw1RDJINHZvYlVCeFp2bjRZWmRUQ0dTdE1vRUhJQnpWMHZkMGYtRDFHc1lVcmxUU25CVnM?oc=5",
+   "type": "방송",
+   "auto": true
+  },
+  {
+   "date": "2026-07-29",
    "title": "황우림 X 송별이 '엄마 꽃', 심사위원도 위로받은 아름다운 하모니! 인순이 X 서지오 심사평은? [인생은 오디션]",
    "source": "sbs.co.kr",
    "sourceSite": "https://programs.sbs.co.kr",
@@ -79,18 +88,9 @@
    "also": 1
   },
   {
-   "date": "2026-07-29",
-   "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
-   "source": "v.daum.net",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1jYUFXYzVtWVFJT3I4TTFUR3RqUEw1RDJINHZvYlVCeFp2bjRZWmRUQ0dTdE1vRUhJQnpWMHZkMGYtRDFHc1lVcmxUU25CVnM?oc=5",
-   "type": "방송",
-   "auto": true
-  },
-  {
    "date": "2026-07-27",
    "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
-   "source": "donga.com",
+   "source": "동아일보",
    "sourceSite": "https://www.donga.com",
    "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTFAwQkJha0MzSzFWQnRSTG4xd0g5b3ZMcGh3OVVTS0xvYUI5dWlfUnBJSldQQ0xZM2hSZEVHMUI3RnRWOFNCNVJJeW1FelNlckJSUjlQV3BUTHR4ZVlhelpQWlVnYVl0S3BjZkdrWTUyVTUyN3pSS1HSAWZBVV95cUxNSDU5LXd4UFZ4VXdocDRjcVprTFhYTzlsM3hMZGNTOXRoTU40bGV1Y1pIZk8ya3l6cGJTTWszVU5yQmhjbzNKTFlOQXVVMkRmSzBFdmdoY2pyTWY1V0lDd3hmSk9MNUE?oc=5",
    "type": "공연",
@@ -104,7 +104,7 @@
    "url": "https://news.google.com/rss/articles/CBMiQkFVX3lxTE9WRnJFR21jVFBScXRNa1pqNjUxQkhJTHg4U1plWnY2M200aXFXTk10RWdoNnB3V0ROeEh2djRSaFlnZw?oc=5",
    "type": "공연",
    "auto": true,
-   "also": 2
+   "also": 1
   },
   {
    "date": "2026-07-11",
