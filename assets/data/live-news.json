@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-09-06 01:42",
+ "updated": "2026-09-06 05:12",
  "items": [
   {
    "date": "2026-09-03",
@@ -27,7 +27,7 @@
    "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
    "source": "v.daum.net",
    "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1PbW94SVNDRWJUQjNqTFJYSkV4UjVaRkZnbERjVXNSeDJlNE00eTNyekdvQ19jd2hjWEJOYXcwaTF3Q2k5ZnBwWmRhWUdaX1k?oc=5",
+   "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTFBSY0JLUGRCWWN3S2U1UHdudkJybHVOWlpNYzlLUUNDVnRyd1gwdFQ0d3pPN3d4SkVCaXhrbE1xcGxra19BaXc?oc=5",
    "type": "방송",
    "auto": true
   },
