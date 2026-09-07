@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-09-08 03:40",
- "count": 50,
+ "updated": "2026-09-08 07:42",
+ "count": 51,
  "items": [
   {
    "date": "2026-09-03",
@@ -416,6 +416,16 @@
    "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTFBLMEJuXy1BejFxbDJZYmQ3X3ljWE9jamdaU2tlSlhRem5CMXJGLXNlRDA2S0p4UmI0dkh5Wmdqb1N5VWdGd000NldvamFxWERpZk9FMXdpOWxGTExlN1htR2tZVTVVU2ViQ2hjZUpXYjRFS01ZdlRUdHRRR1lyQQ?oc=5",
    "type": "공연",
    "auto": true
+  },
+  {
+   "date": "2026-06-12",
+   "title": "무신사 노아, 인순이와 특별 화보 공개...해밀학교 위한 협업 티셔츠도 선봬",
+   "source": "중앙이코노미뉴스",
+   "sourceSite": "https://www.joongangenews.com",
+   "url": "https://news.google.com/rss/articles/CBMickFVX3lxTFBoNzItOFZCb1dPeFJ2TDd2bjhCSWU1SDVvZWh4bVV5ajRBWjVUX0YxWWNMRndFQndCZTRTcE1Ecnhkc3VqZ0Y3SXY4QnlYMU5wcG9JRTBaa2FtS3pVTE9URDF3djl1dHVfMWZBckRnQTNpQQ?oc=5",
+   "type": "보도",
+   "auto": true,
+   "also": 1
   },
   {
    "date": "2026-06-11",

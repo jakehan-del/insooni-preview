@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-09-08 03:40",
+ "updated": "2026-09-08 07:42",
  "items": [
   {
    "date": "2026-09-03",
@@ -27,7 +27,7 @@
    "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
    "source": "v.daum.net",
    "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1iTEMtbDdnOUZQWWtPZlJHTTVOd0hGRmtSQk1ELWFBb1RyNFJ0NE9aWFRDY09rUWFTeWRrZTV6eHVVUlpOVU1RT2JWVQ?oc=5",
+   "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTFBSY0JLUGRCWWN3S2U1UHdudkJybHVOWlpNYzlLUUNDVnRyd1gwdFQ0d3pPN3d4SkVCaXhrbE1xcGxra19BaXc?oc=5",
    "type": "방송",
    "auto": true
   },
@@ -77,15 +77,6 @@
    "type": "방송",
    "auto": true,
    "also": 1
-  },
-  {
-   "date": "2026-07-29",
-   "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
-   "source": "v.daum.net",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1jYUFXYzVtWVFJT3I4TTFUR3RqUEw1RDJINHZvYlVCeFp2bjRZWmRUQ0dTdE1vRUhJQnpWMHZkMGYtRDFHc1lVcmxUU25CVnM?oc=5",
-   "type": "방송",
-   "auto": true
   },
   {
    "date": "2026-07-27",
@@ -143,6 +134,16 @@
    "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTFBLMEJuXy1BejFxbDJZYmQ3X3ljWE9jamdaU2tlSlhRem5CMXJGLXNlRDA2S0p4UmI0dkh5Wmdqb1N5VWdGd000NldvamFxWERpZk9FMXdpOWxGTExlN1htR2tZVTVVU2ViQ2hjZUpXYjRFS01ZdlRUdHRRR1lyQQ?oc=5",
    "type": "공연",
    "auto": true
+  },
+  {
+   "date": "2026-06-12",
+   "title": "무신사 노아, 인순이와 특별 화보 공개...해밀학교 위한 협업 티셔츠도 선봬",
+   "source": "중앙이코노미뉴스",
+   "sourceSite": "https://www.joongangenews.com",
+   "url": "https://news.google.com/rss/articles/CBMickFVX3lxTFBoNzItOFZCb1dPeFJ2TDd2bjhCSWU1SDVvZWh4bVV5ajRBWjVUX0YxWWNMRndFQndCZTRTcE1Ecnhkc3VqZ0Y3SXY4QnlYMU5wcG9JRTBaa2FtS3pVTE9URDF3djl1dHVfMWZBckRnQTNpQQ?oc=5",
+   "type": "보도",
+   "auto": true,
+   "also": 1
   },
   {
    "date": "2026-06-11",
