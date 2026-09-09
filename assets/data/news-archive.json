@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-09-09 13:29",
- "count": 51,
+ "updated": "2026-09-09 20:06",
+ "count": 52,
  "items": [
   {
    "date": "2026-09-03",
@@ -190,6 +190,15 @@
    "source": "sbs.co.kr",
    "sourceSite": "https://programs.sbs.co.kr",
    "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9ZcWV1QU5OV1RSUF90RmRaWUVBLVdLSHJzMHVnZmJKREtlc3pBUlgxclpVZFZOM1NzZTZJNkRJd1RadHpnX0JURzBLclNuUS1MTkJEU3lkaFNvVUI0Skh1Y3NLcGo4SUEwd2lJMVVmZVhITkJUQmM4?oc=5",
+   "type": "방송",
+   "auto": true
+  },
+  {
+   "date": "2026-07-29",
+   "title": "김중연 X 송민경 '밤이면 밤마다', 원곡자 인순이 앞에서 펼친 용감한 퍼포먼스! 인순이 X 서지오 심사평은? [인생은 오디션]",
+   "source": "sbs.co.kr",
+   "sourceSite": "https://programs.sbs.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9WbUVadXdhX3pWWXgzZjE4QnpSRXFzS2dwdm5FcnVUWWVWMDZHd1l4Z09wWHE2OVBwZXF0WW5QUUxUNnY0dEFXNEhDc2szUGxlc2g1ZzIxWEVtVk4tU1JxaFBNS1Yxcy1ZcTYtNzV5LS1xVzVvLWg0?oc=5",
    "type": "방송",
    "auto": true
   },
