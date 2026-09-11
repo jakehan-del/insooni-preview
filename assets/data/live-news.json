@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-09-11 08:55",
+ "updated": "2026-09-11 13:17",
  "items": [
   {
    "date": "2026-09-03",
@@ -16,7 +16,7 @@
   {
    "date": "2026-09-02",
    "title": "추석 인순이, 김영임 등 민요와 가요 더한 무대 펼친다",
-   "source": "Korearetro",
+   "source": "korearetro.com",
    "sourceSite": "https://www.korearetro.com",
    "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE0zY2IwS1J4TkFlQ1ZHYVMwa0xPbzNiczlXNDJGd01tMlo2c0toem1oTG5nemdZUlRlTXFQVkRWeUhWUExuWDVVZEI4djJFOGdVcmVScXQyRUpnUTVNUW5NM09FOEtMdDFYWmZn?oc=5",
    "type": "공연",
@@ -27,7 +27,7 @@
    "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
    "source": "v.daum.net",
    "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1PbW94SVNDRWJUQjNqTFJYSkV4UjVaRkZnbERjVXNSeDJlNE00eTNyekdvQ19jd2hjWEJOYXcwaTF3Q2k5ZnBwWmRhWUdaX1k?oc=5",
+   "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1iTEMtbDdnOUZQWWtPZlJHTTVOd0hGRmtSQk1ELWFBb1RyNFJ0NE9aWFRDY09rUWFTeWRrZTV6eHVVUlpOVU1RT2JWVQ?oc=5",
    "type": "방송",
    "auto": true
   },
@@ -70,20 +70,20 @@
   },
   {
    "date": "2026-07-29",
-   "title": "황우림 X 송별이 '엄마 꽃', 심사위원도 위로받은 아름다운 하모니! 인순이 X 서지오 심사평은? [인생은 오디션]",
+   "title": "김중연 X 송민경 '밤이면 밤마다', 원곡자 인순이 앞에서 펼친 용감한 퍼포먼스! 인순이 X 서지오 심사평은? [인생은 오디션]",
    "source": "sbs.co.kr",
    "sourceSite": "https://programs.sbs.co.kr",
-   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9ZcWV1QU5OV1RSUF90RmRaWUVBLVdLSHJzMHVnZmJKREtlc3pBUlgxclpVZFZOM1NzZTZJNkRJd1RadHpnX0JURzBLclNuUS1MTkJEU3lkaFNvVUI0Skh1Y3NLcGo4SUEwd2lJMVVmZVhITkJUQmM4?oc=5",
+   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9WbUVadXdhX3pWWXgzZjE4QnpSRXFzS2dwdm5FcnVUWWVWMDZHd1l4Z09wWHE2OVBwZXF0WW5QUUxUNnY0dEFXNEhDc2szUGxlc2g1ZzIxWEVtVk4tU1JxaFBNS1Yxcy1ZcTYtNzV5LS1xVzVvLWg0?oc=5",
    "type": "방송",
    "auto": true,
    "also": 1
   },
   {
    "date": "2026-07-29",
-   "title": "김중연 X 송민경 '밤이면 밤마다', 원곡자 인순이 앞에서 펼친 용감한 퍼포먼스! 인순이 X 서지오 심사평은? [인생은 오디션]",
+   "title": "황우림 X 송별이 '엄마 꽃', 심사위원도 위로받은 아름다운 하모니! 인순이 X 서지오 심사평은? [인생은 오디션]",
    "source": "sbs.co.kr",
    "sourceSite": "https://programs.sbs.co.kr",
-   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9WbUVadXdhX3pWWXgzZjE4QnpSRXFzS2dwdm5FcnVUWWVWMDZHd1l4Z09wWHE2OVBwZXF0WW5QUUxUNnY0dEFXNEhDc2szUGxlc2g1ZzIxWEVtVk4tU1JxaFBNS1Yxcy1ZcTYtNzV5LS1xVzVvLWg0?oc=5",
+   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9ZcWV1QU5OV1RSUF90RmRaWUVBLVdLSHJzMHVnZmJKREtlc3pBUlgxclpVZFZOM1NzZTZJNkRJd1RadHpnX0JURzBLclNuUS1MTkJEU3lkaFNvVUI0Skh1Y3NLcGo4SUEwd2lJMVVmZVhITkJUQmM4?oc=5",
    "type": "방송",
    "auto": true,
    "also": 1
@@ -115,7 +115,7 @@
    "url": "https://news.google.com/rss/articles/CBMiQkFVX3lxTE9WRnJFR21jVFBScXRNa1pqNjUxQkhJTHg4U1plWnY2M200aXFXTk10RWdoNnB3V0ROeEh2djRSaFlnZw?oc=5",
    "type": "공연",
    "auto": true,
-   "also": 1
+   "also": 2
   },
   {
    "date": "2026-07-11",
