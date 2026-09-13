@@ -1,8 +1,17 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-09-13 13:22",
+ "updated": "2026-09-13 20:32",
  "items": [
+  {
+   "date": "2026-09-09",
+   "title": "윤항기 66주년 헌정 기념 공연, 최백호 인순이 등 후배들과 함께한다",
+   "source": "이슈데일리",
+   "sourceSite": "https://issuedaily.com",
+   "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9xdXJNdXpqQUlhYjlEdGJyQTA3TlRKc0R5OVhpeUVYU0dHNHhQdkthVnZnTHZsVi1BTGE2VmpJYXF6a01wajJUdVJHT0VzTjBSZGQ5RzJn?oc=5",
+   "type": "공연",
+   "auto": true
+  },
   {
    "date": "2026-09-03",
    "title": "‘플레이리스트 109’ 장동선-김영옥, 버텨낸 사람이 건넨 위로! 인순이 ‘거위의 꿈’에 함께 울고.. 89세 인생 선배의 한마디가 준 깨달음에 위로 받았다!",
@@ -71,7 +80,7 @@
   {
    "date": "2026-07-29",
    "title": "김중연 X 송민경 '밤이면 밤마다', 원곡자 인순이 앞에서 펼친 용감한 퍼포먼스! 인순이 X 서지오 심사평은? [인생은 오디션]",
-   "source": "sbs.co.kr",
+   "source": "programs.sbs.co.kr",
    "sourceSite": "https://programs.sbs.co.kr",
    "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9WbUVadXdhX3pWWXgzZjE4QnpSRXFzS2dwdm5FcnVUWWVWMDZHd1l4Z09wWHE2OVBwZXF0WW5QUUxUNnY0dEFXNEhDc2szUGxlc2g1ZzIxWEVtVk4tU1JxaFBNS1Yxcy1ZcTYtNzV5LS1xVzVvLWg0?oc=5",
    "type": "방송",
@@ -87,16 +96,6 @@
    "type": "방송",
    "auto": true,
    "also": 1
-  },
-  {
-   "date": "2026-07-29",
-   "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
-   "source": "v.daum.net",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE9kLTZJcnFMUmF6Vkl2TWxKejBVblBxS0RTU0NYbkhhNlJPc3FfU2dBTGd0NG1RLVBaX3NybTZMR2owdXVidjdYTzYxMVBxNlhpOEkyaQ?oc=5",
-   "type": "방송",
-   "auto": true,
-   "ai": true
   },
   {
    "date": "2026-07-27",

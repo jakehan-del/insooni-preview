@@ -1,8 +1,17 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-09-13 13:22",
- "count": 52,
+ "updated": "2026-09-13 20:32",
+ "count": 53,
  "items": [
+  {
+   "date": "2026-09-09",
+   "title": "윤항기 66주년 헌정 기념 공연, 최백호 인순이 등 후배들과 함께한다",
+   "source": "이슈데일리",
+   "sourceSite": "https://issuedaily.com",
+   "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9xdXJNdXpqQUlhYjlEdGJyQTA3TlRKc0R5OVhpeUVYU0dHNHhQdkthVnZnTHZsVi1BTGE2VmpJYXF6a01wajJUdVJHT0VzTjBSZGQ5RzJn?oc=5",
+   "type": "공연",
+   "auto": true
+  },
   {
    "date": "2026-09-03",
    "title": "‘플레이리스트 109’ 장동선-김영옥, 버텨낸 사람이 건넨 위로! 인순이 ‘거위의 꿈’에 함께 울고.. 89세 인생 선배의 한마디가 준 깨달음에 위로 받았다!",
