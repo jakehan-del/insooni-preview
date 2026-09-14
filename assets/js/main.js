@@ -2456,9 +2456,11 @@
     fetch("assets/data/stages.json").then(function (r) { return r.json(); }).then(function (d) {
       var lede = $("#st-lede");
       if (lede) {
-        lede.textContent = en
-          ? d.first + "\u2013" + d.last + " \u00b7 " + d.count + " stages on record"
-          : d.first + "\u2013" + d.last + " \u00b7 " + d.count + "개의 무대가 남아 있습니다";
+        /* 숫자는 stages.json 실측값 그대로 — motion.js 가 굴리기만 한다 */
+        var cnt = '<span data-countup="' + Number(d.count) + '">' + Number(d.count) + "</span>";
+        lede.innerHTML = en
+          ? esc(d.first) + "\u2013" + esc(d.last) + " \u00b7 " + cnt + " stages on record"
+          : esc(d.first) + "\u2013" + esc(d.last) + " \u00b7 " + cnt + "개의 무대가 남아 있습니다";
       }
       wrap.innerHTML = d.years.map(function (yr, idx) {
         var rows = yr.items.map(function (it) {
