@@ -789,7 +789,7 @@
       c.innerHTML =
         '<span class="show-date">' + esc(sh.date) + "</span>" +
         '<span class="show-city">' + esc(sh.title) + (sh.city ? " · " + esc(sh.city) : "") + "</span>" +
-        (sh.recap ? '<span class="show-cta">VIEW RECAP</span>' : "");
+        (sh.recap ? '<span class="show-cta">' + esc(t("dyn.recapCta", "다시 보기")) + '</span>' : "");
       if (sh.recap) c.addEventListener("click", function () { openRecap(sh.recap, c); });
       /* 대표 사진이 있으면 호버 시 전체 화면 배경으로 떠오른다 */
       /* 포스터는 밝고 그래픽이 강해 배경으로 쓰면 글자를 덮는다 — 실제 무대 사진만 쓴다 */
@@ -3287,7 +3287,7 @@
        승리(트로피). 전부 큰 원본이고 object-position 은 얼굴 기준으로 잡았다.
        마지막은 사진이 아니라 거위다 — 날아올라 상표에 앉는다. */
     var SHOTS = [["assets/img/photos/dsc0427.webp", "center 30%"],
-                 ["assets/img/photos/photo-av3u.webp", "center 35%"],
+                 ["assets/img/photos/openc-5.webp", "center 28%"],
                  ["assets/img/photos/img2496.webp", "center 40%"],
                  ["assets/img/photos/dsc0369.webp", "center 35%"],
                  ["assets/img/photos/hanteo-1.webp", "center 28%"]];
@@ -3430,9 +3430,6 @@
           continue;
         }
         if (L.leaf.style.visibility !== "visible") L.leaf.style.visibility = "visible";
-        /* 사진의 숨 — 제 슬롯 동안 1.05 → 1.0 으로 천천히 물러난다 */
-        var kb = 1.05 - 0.05 * g01(tt / (STEP + PEEL));
-        L.im.style.transform = "scale(" + kb.toFixed(4) + ")";
         /* 걷힘 — 슬롯 끝 0.5초. 위 장만 옅어지고 밑 장은 온전하다. */
         var pu = g01((tt - STEP) / PEEL);
         L.leaf.style.opacity = (1 - gEase(pu)).toFixed(3);
@@ -3684,7 +3681,7 @@
         else { bgv.dataset.userPaused = "1"; allVids.forEach(function (v) { v.pause(); }); }
         pauseBtn.setAttribute("aria-pressed", String(!paused));
         pauseBtn.setAttribute("aria-label", !paused ? t("aria.playVideo", "배경 영상 재생") : t("aria.pauseVideo", "배경 영상 일시정지"));
-        pauseBtn.querySelector("span").textContent = !paused ? "▶" : "⏸";
+        pauseBtn.querySelector("span").textContent = !paused ? t("strip.play", "재생") : t("strip.pause", "일시정지");
       });
     } else if (pauseBtn) {
       pauseBtn.remove();
@@ -3715,35 +3712,12 @@
      헤더·전역 리스너에 붙는 것들은 최초 1회만 실행한다. */
   var GLOBAL_DONE = false;
 
-  /* 상단 진행선: 문서를 얼마나 읽었는지 얇은 금선으로 보여 준다.
-     고급 사이트의 절제된 신호 — 헤더에 한 번만 붙이고 스크롤에 맞춰 채운다. */
-  function initScrollProgress() {
-    if (document.getElementById("scroll-progress")) return;
-    var bar = el("div", "");
-    bar.id = "scroll-progress";
-    bar.setAttribute("aria-hidden", "true");
-    document.body.appendChild(bar);
-    var ticking = false;
-    function paint() {
-      ticking = false;
-      var h = document.documentElement;
-      var max = (h.scrollHeight - h.clientHeight) || 1;
-      var p = Math.min(1, Math.max(0, (h.scrollTop || window.pageYOffset) / max));
-      bar.style.transform = "scaleX(" + p.toFixed(4) + ")";
-    }
-    window.addEventListener("scroll", function () {
-      if (!ticking) { ticking = true; requestAnimationFrame(paint); }
-    }, { passive: true });
-    paint();
-  }
-
   function globalInit() {
     if (GLOBAL_DONE) return;
     GLOBAL_DONE = true;
     initLang();
     initNav();
     initScrollState();
-    initScrollProgress();
     initLoader();
     initIntro();
   }

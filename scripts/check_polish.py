@@ -1,80 +1,52 @@
 # 실행: 사이트 루트에서 `python3 -m http.server 8908` 을 띄운 뒤
 #       playwright 가 있는 파이썬으로 이 파일을 돌린다 (scripts/verify.py 와 같은 환경).
 # 왜 저장소에 두나: 임시 폴더에 두었던 검사기가 두 달 사이 두 번 증발했다.
-# 폴리시 v2 기능 프로브 — 스포트라이트·진행선·카운트업·샤인
+# v3 (2026-09-14): 스포트라이트·샤인·커서·자석은 걷었으므로 '없음'을 검사한다.
+#   남긴 기능(카운트업·액자 진행선)과 홈 리드 페어·조용한 크롬을 확인한다.
 import time
 from playwright.sync_api import sync_playwright
+B = "http://127.0.0.1:8908/"
 fails = []
 with sync_playwright() as pw:
     b = pw.chromium.launch()
-    pg = b.new_page(viewport={"width":1280,"height":800})
+    pg = b.new_page(viewport={"width":1440,"height":900})
 
-    # ① 아카이브: 카운트업
-    pg.goto("http://127.0.0.1:8908/archive.html", wait_until="networkidle", timeout=45000)
+    # ① 아카이브: 카운트업은 실측값으로 끝난다
+    pg.goto(B+"archive.html", wait_until="networkidle", timeout=45000)
     pg.wait_for_timeout(2500)
-    d = pg.evaluate("""() => {
-      const el = document.querySelector('[data-countup]');
-      if (!el) return {no: true};
-      el.scrollIntoView({block:'center'});
-      return {target: el.getAttribute('data-countup'), now: el.textContent};
-    }""")
-    if d.get("no"): fails.append("카운트업 요소 없음"); print("✗ 카운트업 요소 없음")
-    else:
-        pg.wait_for_timeout(400)
-        mid = pg.evaluate("document.querySelector('[data-countup]').textContent")
-        pg.wait_for_timeout(1400)
-        fin = pg.evaluate("document.querySelector('[data-countup]').textContent")
-        rolled = mid != fin or int(mid) < int(d["target"])
-        ok = fin == d["target"]
-        print("카운트업: 목표 %s · 중간 %s · 최종 %s %s" % (d["target"], mid, fin, "✓" if ok else "✗"))
-        if not ok: fails.append("카운트업 최종값 불일치")
+    pg.evaluate("document.querySelector('[data-countup]')?.scrollIntoView({block:'center'})")
+    pg.wait_for_timeout(1600)
+    cu = pg.evaluate("""() => { const el=document.querySelector('[data-countup]');
+      return el ? {target: el.getAttribute('data-countup'), now: el.textContent} : null; }""")
+    ok = bool(cu) and cu["target"] == cu["now"]
+    print("카운트업: %s %s" % (cu, "✓" if ok else "✗"))
+    if not ok: fails.append("카운트업")
 
-    # ② 진행선 (서브페이지)
-    p0 = pg.evaluate("""() => { const b=document.querySelector('.frame-progress');
-      return b ? getComputedStyle(b).transform : null; }""")
+    # ② 서브페이지 진행선은 하나(.frame-progress), 2px 금선(#scroll-progress)은 없다
+    pg.goto(B+"about.html", wait_until="networkidle", timeout=45000)
+    pg.wait_for_timeout(800)
     pg.evaluate("window.scrollTo(0, document.documentElement.scrollHeight)")
     pg.wait_for_timeout(500)
-    p1 = pg.evaluate("""() => { const b=document.querySelector('.frame-progress');
-      const m=(b.style.transform.match(/scaleX\\(([\\d.]+)\\)/)||[])[1]; return +m; }""")
-    print("진행선: 존재 %s · 바닥에서 scaleX=%s %s" % (bool(p0), p1, "✓" if p1 and p1 > 0.95 else "✗"))
-    if not (p1 and p1 > 0.95): fails.append("진행선")
+    pr = pg.evaluate("""() => { const b=document.querySelector('.frame-progress');
+      return {one: document.querySelectorAll('.frame-progress').length, old: !!document.getElementById('scroll-progress'),
+              sx: b ? getComputedStyle(b).transform : null, cursor: !!document.querySelector('.cursor-ring'),
+              spot: !!document.querySelector('.card::after')}; }""")
+    ok = pr["one"] == 1 and not pr["old"] and not pr["cursor"] and pr["sx"] and "matrix(1," in pr["sx"]
+    print("진행선/커서: %s %s" % (pr, "✓" if ok else "✗"))
+    if not ok: fails.append("진행선 또는 커서")
 
-    # ③ 스포트라이트 좌표 (about 의 .card 위에서 pointermove)
-    pg.goto("http://127.0.0.1:8908/about.html", wait_until="networkidle", timeout=45000)
-    pg.wait_for_timeout(2200)
-    d = pg.evaluate("""() => {
-      const c = document.querySelector('.card');
-      if (!c) return {no:true};
-      c.scrollIntoView({block:'center'});
-      const r = c.getBoundingClientRect();
-      const ev = new PointerEvent('pointermove', {clientX:r.left+r.width*0.3, clientY:r.top+r.height*0.6, bubbles:true});
-      c.dispatchEvent(ev);
-      return {sx: c.style.getPropertyValue('--sx'), sy: c.style.getPropertyValue('--sy'),
-              hasAfter: !!getComputedStyle(c, '::after').background.includes('radial')};
-    }""")
-    ok = (not d.get("no")) and d.get("sx") and d.get("hasAfter")
-    print("스포트라이트: --sx=%s --sy=%s 라디얼=%s %s" % (d.get("sx"), d.get("sy"), d.get("hasAfter"), "✓" if ok else "✗"))
-    if not ok: fails.append("스포트라이트")
-
-    # ③b 홈에는 진행선 없어야
-    pg.goto("http://127.0.0.1:8908/index.html", wait_until="domcontentloaded", timeout=45000)
-    pg.wait_for_timeout(1500)
-    disp = pg.evaluate("""() => { const b=document.querySelector('.frame-progress');
-      return b ? getComputedStyle(b).display : '요소없음'; }""")
-    print("홈 진행선: %s %s" % (disp, "✓" if disp in ("none","요소없음") else "✗"))
-    if disp not in ("none","요소없음"): fails.append("홈 진행선 노출")
-
-    # ④ 샤인 — 도입부 뒤 sc-title 에 1회
-    t0 = time.time()
-    seen = False
-    while time.time() - t0 < 13:
-        has = pg.evaluate("""() => { const t=document.querySelector('.sc-title');
-          return t ? t.classList.contains('sheen-once') : null; }""")
-        if has: seen = True; break
-        time.sleep(0.5)
-    pg.wait_for_timeout(2800)
-    gone = pg.evaluate("!document.querySelector('.sc-title').classList.contains('sheen-once')")
-    print("샤인: 1회 등장 %s · 제거 %s %s" % (seen, gone, "✓" if seen and gone else "✗"))
-    if not (seen and gone): fails.append("샤인")
+    # ③ 홈: 리드 페어가 첫 화면에 함께 서고, 사진 위 텍스트 층·상자가 없다
+    pg.goto(B+"index.html", wait_until="domcontentloaded", timeout=45000)
+    pg.wait_for_timeout(8500)
+    h = pg.evaluate("""() => { const q=s=>document.querySelector(s); const r=e=>e?e.getBoundingClientRect():null;
+      const f=r(q('.strip-item--first')), l=r(q('.strip-item--lead'));
+      return {first: f && f.left===0 && f.width>0, leadVisible: l && l.left < innerWidth*0.6,
+              caption: !!q('.strip-caption'), pauseInFooter: !!q('.footer-min .strip-pause'),
+              fsBorder: getComputedStyle(q('.fs-toggle')).borderTopWidth, progress: !q('.frame-progress') || getComputedStyle(q('.frame-progress')).display==='none',
+              grain: getComputedStyle(document.body,'::after').content, geese: [...document.querySelectorAll('.site-header svg')].filter(e=>e.checkVisibility({checkVisibilityCSS:true})).length}; }""")
+    ok = h["first"] and h["leadVisible"] and not h["caption"] and h["pauseInFooter"] and h["fsBorder"]=="0px" and h["progress"] and h["grain"] in ("none","normal") and h["geese"]==1
+    print("홈 리드 페어/조용한 크롬: %s %s" % (h, "✓" if ok else "✗"))
+    if not ok: fails.append("홈 v3")
     b.close()
 print("\n실패:", fails or "없음")
+raise SystemExit(1 if fails else 0)
