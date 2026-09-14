@@ -645,9 +645,93 @@
     });
   }
   /* 지난 무대 리캡: 타일 → VIEW RECAP 패널 (사진 갤러리 + 영상) */
+  /* ---------- 지난 공연 ← 공식 채널 클립 자동 합류 ----------
+     2026-09-14 까지 이 그리드는 data.js 의 수동 목록만 읽었다. 자동 수집기
+     (live-shows.json, 매일 GitHub Actions)는 '최근 공식 영상'에만 닿아 있어
+     7월 28일에 멈춘 것처럼 보였다 — 형님이 잡았다.
+
+     안전한 자동 소스는 방송사 공식 채널 클립뿐이다: 업로드일 = 방송일이고,
+     수동 항목도 이미 "KBS"/"tvN" 을 venue 로 쓴다. 언론 기사는 쓰지 않는다 —
+     기사 날짜 ≠ 공연 날짜(회고 기사·예고 기사)라 거짓 날짜가 들어간다.
+     공식 INSOONI 채널의 MV·쇼츠·커버도 공연이 아니라 제외한다.
+     제목·날짜 추출은 전부 정규식이다. 추정하지 않는다. */
+  var BROADCAST_VENUE = { "KBS 레전드 케이팝": "KBS", "MBN MUSIC": "MBN", "tvN Joy": "tvN",
+                          "TVCHOSUN": "TV조선", "헬로tv뉴스": "헬로tv" };
+  function programKey(title) {
+    var m;
+    if ((m = /열린음악회\s*(\d+)\s*회/.exec(title))) return { key: "열린음악회#" + m[1], ko: "열린음악회 " + m[1] + "회", en: "Open Concert Ep." + m[1] };
+    if (/열린음악회/.test(title)) return { key: "열린음악회", ko: "열린음악회", en: "Open Concert" };
+    if (/가요무대/.test(title)) return { key: "가요무대", ko: "가요무대", en: "Music Stage (KBS)" };
+    if ((m = /킬잇\s*EP\.?\s*(\d+)/i.exec(title))) return { key: "킬잇#" + m[1], ko: "'킬잇' EP." + m[1], en: "'Kill It' EP." + m[1] };
+    if (/킬잇/.test(title)) return { key: "킬잇", ko: "'킬잇'", en: "'Kill It'" };
+    if (/불후의\s*명곡/.test(title)) return { key: "불후", ko: "불후의 명곡", en: "Immortal Songs" };
+    if (/조선의\s*사랑꾼/.test(title)) return { key: "사랑꾼", ko: "'조선의 사랑꾼'", en: "'Joseon Lovers'" };
+    /* 모르는 프로그램: 공식 제목을 그대로, 꼬리표만 걷어낸다 */
+    var clean = String(title).replace(/\[[^\]]*\]/g, " ").replace(/#\S+/g, " ")
+      .replace(/\|.*$/, "").replace(/\s+/g, " ").trim();
+    if (clean.length > 42) clean = clean.slice(0, 41) + "…";
+    return { key: "raw:" + clean, ko: clean, en: clean };
+  }
+  function dayNum(d) { var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(d || "")); return m ? Date.UTC(+m[1], +m[2] - 1, +m[3]) / 864e5 : NaN; }
+  function autoShowsFromClips(items) {
+    var curated = D.pastShows || [];
+    var known = {};
+    curated.forEach(function (p) {
+      ((p.recap && p.recap.clips) || []).forEach(function (c) { known[c.id] = true; });
+    });
+    var groups = {}, order = [];
+    (items || []).forEach(function (v) {
+      var venue = BROADCAST_VENUE[v.channel];
+      if (!venue || !v.id || !v.date || known[v.id]) return;
+      var pk = programKey(v.title || "");
+      var vd = dayNum(v.date);
+      /* 같은 프로그램의 수동 항목이 ±1일에 있으면 그 항목의 클립으로 붙인다 */
+      /* 회차 번호가 한쪽에만 있을 수 있다("'킬잇' 파이널 깜짝 무대" vs "#킬잇 EP.12").
+         그래서 '#' 앞의 프로그램 계열이 같고 날짜가 ±1일이면 같은 방송으로 본다 —
+         같은 프로그램의 다른 회차는 최소 1주 간격이라 이 창에서 섞일 수 없다. */
+      var fam = pk.key.split("#")[0];
+      var host = null;
+      for (var i = 0; i < curated.length; i++) {
+        var cp = curated[i];
+        if (Math.abs(dayNum(cp.date) - vd) <= 1
+            && programKey(cp.title || "").key.split("#")[0] === fam) { host = cp; break; }
+      }
+      if (host) {
+        host.recap = host.recap || { desc: venue + " 공식 클립." };
+        host.recap.clips = (host.recap.clips || []).concat([{ id: v.id, title: v.title }]);
+        known[v.id] = true;
+        return;
+      }
+      var g = v.date + "|" + pk.key;
+      if (!groups[g]) {
+        groups[g] = { date: v.date, venue: venue, title: pk.ko, auto: true,
+                      en: { title: pk.en, venue: venue },
+                      recap: { desc: venue + " 공식 채널 클립.", en: { desc: "Official " + venue + " clip." }, clips: [] } };
+        order.push(g);
+      }
+      groups[g].recap.clips.push({ id: v.id, title: v.title });
+    });
+    return order.map(function (g) { return groups[g]; });
+  }
+
   function renderPastRecaps() {
     var box = $("#past-recaps");
     if (!box) return;
+    if (box.dataset.autoWired) return;
+    box.dataset.autoWired = "1";
+    renderPastRecapsWith([]);
+    fetch("assets/data/live-shows.json?" + Date.now())
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) {
+        var auto = autoShowsFromClips(j && j.items);
+        if (auto.length) renderPastRecapsWith(auto);
+        else renderPastRecapsWith([]);   /* 붙이기(host)만 일어난 경우도 다시 그린다 */
+      })["catch"](function () { /* 수동 목록은 이미 그려져 있다 — 실패해도 사이트는 온전하다 */ });
+  }
+  function renderPastRecapsWith(autoShows) {
+    var box = $("#past-recaps");
+    if (!box) return;
+    box.innerHTML = "";
     var items = D.recaps || [];
     if (!items.length && D.videos) {
       buildVideoTiles(box, D.videos.filter(function (v) { return v.youtubeId; }).slice(1));
@@ -663,7 +747,7 @@
       if (parts[0] === "1999") return "1999";
       return parts[0] + ". " + (parts[1] ? parseInt(parts[1], 10) + "." : "") + (parts[2] ? " " + parseInt(parts[2], 10) + "." : "");
     }
-    (D.pastShows || []).forEach(function (p) {
+    (D.pastShows || []).concat(autoShows || []).forEach(function (p) {
       var cell = { date: fmtShow(p.date), city: tr(p, "city"), venue: tr(p, "venue"), title: tr(p, "title") };
       if (p.recap || p.poster) {
         /* 공연 항목이 자체 리캡(클립·사진)을 갖거나, 포스터만 있어도 열람 가능 */
@@ -723,6 +807,8 @@
   /* 공연 그리드 포커스 연출: 한 공연에 머무르면 그 밤이 화면 전체로 떠오른다
      (사진 또는 실황 영상 + 대형 제목. 요소는 각 1개만 두고 소스만 교체한다) */
   function initStageBg(grid) {
+    if (grid.dataset.stageBg) return;          /* 재렌더에도 배경·제목 요소는 한 벌 */
+    grid.dataset.stageBg = "1";
     if (!window.matchMedia || !window.matchMedia("(hover: hover)").matches) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     var bg = el("div", "stage-bg");
