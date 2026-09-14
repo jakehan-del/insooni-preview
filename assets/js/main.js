@@ -1025,6 +1025,12 @@
           var yb = parseInt(String(b.year).replace(/\D.*$/, ""), 10) || 9999;
           return ya - yb;
         });
+      // v3 phase 2: 연대순 첫 장(1970년대 420px 스캔)이 2×2 리드 칸을 맡으면 네 배로 늘어난다.
+      // 리드는 data.js 가 lead 로 표시한 큰 사진이 맡는다 — 캡션·연도는 그 항목 것을 그대로 쓴다.
+      // viewables 보다 먼저 옮겨야 라이트박스 순서와 격자 순서가 같다.
+      var li = -1;
+      items.forEach(function (a, k) { if (li < 0 && a.lead && !a.placeholder) li = k; });
+      if (li > 0) items.unshift(items.splice(li, 1)[0]);
       var viewables = items.filter(function (a) { return !a.placeholder; });
       archView.list = viewables;
       var st = $("#arch-status");
@@ -1039,6 +1045,11 @@
         }
         var i = viewables.indexOf(a);
         var b = el("button", "arch-item");
+        // 700px 미만의 옛 스캔은 늘리지 않고 매트(--surface-1) 위에 원본 비율로 놓는다 — 사진 배율 원칙.
+        if (a.w && +a.w < 700) b.className += " arch-item--small";
+        // 리드 칸은 첫 장이 세로형 큰 사진(폭 1000px 이상)일 때만. 가로 사진은 2×2 에서 절반이
+        // 잘리고, 작은 스캔은 1.25배를 넘겨 늘어난다 — 분류 필터마다 첫 장이 달라서 여기서 판단한다.
+        if (items.indexOf(a) === 0 && +a.w >= 1000 && +a.h >= +a.w) b.className += " arch-item--lead";
         b.type = "button";
         b.setAttribute("aria-haspopup", "dialog");
         b.setAttribute("aria-label", tr(a, "caption") + " " + t("aria.zoom", "크게 보기"));
@@ -3305,12 +3316,25 @@
       var im = document.createElement("img");
       im.className = "ld-photo";
       im.alt = ""; im.decoding = "async";
-      im.src = SHOTS[li][0];
       im.style.objectPosition = SHOTS[li][1];
       leaf.appendChild(im);
       box.appendChild(leaf);
-      layers.push({ leaf: leaf, im: im });
+      layers.push({ leaf: leaf, im: im, url: SHOTS[li][0] });
     }
+    /* 사진을 한꺼번에 받지 않는다. 다섯 장을 동시에 열면 느린 회선에서 전부가
+       함께 기어 와 첫 장부터 제 슬롯을 놓쳤다(1.2Mbps 실측: 6.5~10초에 보이는 장 0).
+       첫 두 장(프리로드됨)은 바로, 그 뒤는 '두 장 앞이 도착하면' 다음을 연다 —
+       한 장 100KB 는 0.7초, 슬롯은 1.2초라 회선이 몽타주 박자를 따라온다.
+       안전망: 3초 뒤에도 안 열린 장은 전부 연다(네트워크가 이상해도 사진은 온다). */
+    function openShot(k) {
+      if (k >= layers.length || layers[k].im.getAttribute("src")) return;
+      layers[k].im.src = layers[k].url;
+      var next = function () { openShot(k + 2); };
+      if (layers[k].im.complete) next();
+      else { layers[k].im.addEventListener("load", next, { once: true }); layers[k].im.addEventListener("error", next, { once: true }); }
+    }
+    openShot(0); openShot(1);
+    setTimeout(function () { for (var k = 0; k < layers.length; k++) openShot(k); }, 3000);
     var vig = document.createElement("div");
     vig.className = "ld-vig";
     box.appendChild(vig);

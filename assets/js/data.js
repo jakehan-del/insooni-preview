@@ -17,7 +17,7 @@ window.SITE_DATA = {
     { img: "assets/img/photos/portrait2025.webp", w: 642, h: 913, year: "2025", cat: "화보", caption: "2025년 공식 프로필 — 검은 턱시도", en: { caption: "Official 2025 portrait — black tuxedo" } },
     { img: "assets/img/photos/editorial2025.webp", w: 643, h: 970, year: "2025", cat: "화보", caption: "2025년 공식 프로필 — 자주색 드레이프 드레스", en: { caption: "Official 2025 portrait — draped plum dress" } },
     { img: "assets/img/photos/kakao26.webp", w: 1600, h: 1067, year: "2024", cat: "화보", caption: "블랙 크롭 수트, 무대 뒤 안개 속에서" , en: { caption: "Black cropped suit, in the backstage haze" } },
-    { img: "assets/img/photos/seasons-1.webp", w: 1281, h: 1600, year: "2024", cat: "화보", caption: "은빛 페인팅 재킷 — '더 시즌즈' 대기실에서 (2024. 12.)" , en: { caption: "Silver-painted jacket — backstage at 'The Seasons' (Dec 2024)" } },
+    { lead: true, img: "assets/img/photos/seasons-1.webp", w: 1281, h: 1600, year: "2024", cat: "화보", caption: "은빛 페인팅 재킷 — '더 시즌즈' 대기실에서 (2024. 12.)" , en: { caption: "Silver-painted jacket — backstage at 'The Seasons' (Dec 2024)" } },
     { img: "assets/img/photos/seasons-2.webp", w: 1277, h: 1600, year: "2024", cat: "화보", caption: "무대 직전의 프로필 — '더 시즌즈' 대기실에서 (2024. 12.)" , en: { caption: "A profile just before the stage — backstage at 'The Seasons' (Dec 2024)" } },
     { img: "assets/img/photos/hinkchi5.webp", w: 1067, h: 1600, year: "2025", cat: "화보", caption: "데님 수트, 스텝을 밟으며" , en: { caption: "Denim suit, mid-step" } },
     { img: "assets/img/photos/hm-3.webp", w: 1280, h: 824, year: "", cat: "기록", caption: "해밀학교 건축 후원자 벽 앞에서" , en: { caption: "At Haemil School's donor wall" } },
