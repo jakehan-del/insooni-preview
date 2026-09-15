@@ -3106,7 +3106,15 @@
     function later(fn) {
       if (document.readyState === "complete") soon(fn);
       else window.addEventListener("load", function () { soon(fn); }, { once: true });
-      function soon(f) { requestAnimationFrame(function () { setTimeout(f, 0); }); }
+      function soon(f) {
+        requestAnimationFrame(function () { setTimeout(function () {
+          /* 도입부 중에는 영상(≈2.6MB)을 받지 않는다 — 몽타주 사진과 회선을 다투지 않게 */
+          if (!document.documentElement.classList.contains("is-intro")) { f(); return; }
+          var iv = setInterval(function () {
+            if (!document.documentElement.classList.contains("is-intro")) { clearInterval(iv); f(); }
+          }, 250);
+        }, 0); });
+      }
     }
     /* 실제 프레임이 흐르기 시작하면 포스터 위로 영상이 피어난다 */
     var stage = v.closest(".strip-item--video") || v.parentNode;
@@ -3612,7 +3620,19 @@
        항목 폭은 전부 CSS 로 정해져 있어(--tall/--wide/--sleeve/--video)
        src 가 없어도 레이아웃과 scrollWidth 는 흔들리지 않는다. */
     var HYDRATE_PAD = 1.6;                 /* 화면 좌우로 이만큼(화면 폭 배수)까지 미리 */
+    function introOn() { return document.documentElement.classList.contains("is-intro"); }
+    function afterIntro(fn) {
+      if (!introOn()) { fn(); return; }
+      var iv = setInterval(function () { if (!introOn()) { clearInterval(iv); fn(); } }, 250);
+    }
+    var hydrateArmed = false;
     function hydrate() {
+      /* 도입부 중에는 첫 화면 밖의 사진을 받지 않는다 — 몽타주 다섯 장이 회선을 써야 한다.
+         (라이브 1.2Mbps 실측: 이웃 패널 4장 ≈190KB 가 몽타주 사진보다 먼저 도착했다) */
+      if (introOn()) {
+        if (!hydrateArmed) { hydrateArmed = true; afterIntro(function () { hydrateArmed = false; hydrate(); }); }
+        return;
+      }
       var vw = strip.clientWidth;
       if (!vw) return;
       var pad = vw * HYDRATE_PAD;
