@@ -3452,9 +3452,15 @@
         var si = Math.min(layers.length - 1, Math.floor(raw / STEP));
         var Ls = layers[si];
         holdSlot[si] = holdSlot[si] || 0;
-        if (!(Ls.im.complete && Ls.im.naturalWidth > 0) && holdSlot[si] < HOLD_SLOT && hold < HOLD_TOTAL) {
+        var okS = Ls.im.complete && Ls.im.naturalWidth > 0;
+        if (!okS && holdSlot[si] < HOLD_SLOT && hold < HOLD_TOTAL) {
           var over = raw - si * STEP;           /* 경계를 넘은 만큼 시계를 되돌린다 */
           if (over > 0) { hold += over; holdSlot[si] += over; raw = si * STEP; }
+        } else if (!okS && si === 0) {
+          /* 첫 장이 게이트(1.6초)+붙잡기(0.9초)에도 안 왔다 = 회선이 아주 느리다.
+             남은 몽타주를 검게 흘리는 대신 곧장 거위로 간다(라이브 1.2Mbps 실측: 사진 10초 도착).
+             사진은 도입부 뒤 홈 스트립에서 어차피 보인다. */
+          boost += (M_END - raw); raw = M_END;
         }
       }
       var tc = Math.min(raw, T_END);
