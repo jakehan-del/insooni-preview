@@ -531,7 +531,6 @@ window.SITE_DATA = {
     { year: "2012", event: "사단법인 '인순이와 좋은 사람들' 설립", note: "", en: { event: "Founded the nonprofit 'Insooni and Good People'" } },
     { year: "2013", event: "다문화 대안학교 '해밀학교' 개교", note: "강원 홍천. 무대 밖의 또 다른 무대", milestone: true, en: { event: "Opened Haemil School for multicultural youth", note: "Hongcheon, Gangwon — another stage beyond the stage" } },
     { year: "2023", event: "KBS2 '골든걸스' 출연, 'One Last Time' 발표", note: "인순이·박미경·신효범·이은미", milestone: true, en: { event: "KBS2 'Golden Girls' — 'One Last Time' released", note: "Insooni, Park Mi-kyung, Shin Hyo-bum, Lee Eun-mi" } },
-    { year: "2025", event: "《인순이, 아름다운 우리나라》 재녹음 발매", note: "2월 19일, 9곡. 1984년 정규 5집의 곡들을 다시 불렀습니다", en: { event: "'Insooni, Beautiful Korea' re-recording released", note: "19 February — nine songs, re-recorded from the 1984 fifth album" } },
     { year: "2025", event: "펄벅 인터내셔널 '올해의 여성상' 수상", note: "Woman of Influence 2025", en: { event: "Woman of Influence, Pearl S. Buck International", note: "Woman of Influence 2025" } },
     { year: "2026", event: "데뷔 48주년, 그리고 계속되는 이야기", note: "새로운 기록이 이곳에 쌓입니다", en: { event: "48 years on stage — and the story continues", note: "New records will be added here" } }
   ],
@@ -562,7 +561,7 @@ window.SITE_DATA = {
     { d: "02-01", y: 2007, ko: "《거위의 꿈》 — 위로가 된 노래", en: "'A Goose's Dream' — the song that became comfort" },
     { d: "05-08", y: 2009, ko: "정규 17집 《인순이》 발매 — 'Fantasia'·'아버지'", en: "17th album released — 'Fantasia', 'Father'" },
     { d: "09-25", y: 2013, ko: "정규 18집 《Umbrella》 발매", en: "18th album 'Umbrella' released" },
-    { d: "02-19", y: 2025, ko: "《인순이, 아름다운 우리나라》 발매", en: "'Insooni, Beautiful Korea' released" },
+    { d: "02-19", y: 2025, ko: "《인순이, 아름다운 우리나라》 재녹음 발매 (원곡 1984년 정규 5집)", en: "'Insooni, Beautiful Korea' re-recording released (originally the 1984 fifth album)" },
     { d: "11-28", y: 2025, ko: "싱글 《그래도 꿈은 흐른다》 발매", en: "Single 'Still, the Dream Flows' released" }
   ],
   cheerPresets: [
