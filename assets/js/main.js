@@ -3305,10 +3305,14 @@
        프로필) → 디바(금빛 드레스) → 에너지(백색 군무) → 화보(은빛 재킷) →
        승리(트로피). 전부 큰 원본이고 object-position 은 얼굴 기준으로 잡았다.
        마지막은 사진이 아니라 거위다 — 날아올라 상표에 앉는다. */
-    var SHOTS = [["assets/img/photos/dsc0427.webp", "center 30%"],
-                 ["assets/img/photos/openc-5.webp", "center 28%"],
-                 ["assets/img/photos/img2496.webp", "center 40%"],
+    /* 2026-09-15 재선정 — 밝기 실측으로 골랐다. 옛 다섯 장은 평균 휘도 74, 순검정 44%로
+       도입부가 '검은 화면에 사람이 조금'이었다(비욘세 로더 실측: 휘도 100~126, 검정 3~8%).
+       지금 다섯 장 평균 휘도 118. 리드 스프레드(hinkchi1·hinkchi2)와는 겹치지 않는다 —
+       도입부 직후 같은 그림이 또 나오면 안 된다는 형님 지적(2026-08-10)이 그대로 유효하다. */
+    var SHOTS = [["assets/img/photos/openc-5.webp", "center 28%"],
                  ["assets/img/photos/dsc0369.webp", "center 35%"],
+                 ["assets/img/photos/seasons-1.webp", "center 24%"],
+                 ["assets/img/photos/hinkchi6.webp", "center 20%"],
                  ["assets/img/photos/hanteo-1.webp", "center 28%"]];
     /* 층층이 쌓는다 — v17 원형. 첫 장이 맨 위(z 높음), 다음 장들이 밑에
        온전히 깔려 있다. 위 장이 걷히면 밑 장이 '이미 완성된 채' 드러나므로

@@ -1279,9 +1279,12 @@ body.home .footer-min a { display: inline-flex; align-items: center; min-height:
   box-shadow: 0 1.6rem 3.4rem rgba(0, 0, 0, .62);
   outline: 1px solid rgba(243, 239, 231, .09); outline-offset: -1px;
 }
-/* v3 리드 페어 — 세로 전신(.7) + 정방형(1:1). 1440×900 첫 화면에 두 장이 함께 선다(비욘세의 '두 장 스프레드'). */
+/* v3.1 리드 스프레드 — beyonce.com 실측 그대로: 1440×900 에서 정방형 900 + 세로 540 = 1440.
+   한 픽셀도 잘리지 않고 두 장이 화면을 정확히 채운다(그쪽 패널 실측: 900 / 540). */
 .strip-item--lead { width: 100dvh; }
 .strip-item--lead img { width: 100%; }
+.strip-item--pair { width: calc(100dvh * .6); }
+.strip-item--pair img { width: 100%; }
 .strip-item--video { width: calc(100dvh * 1.7778); }
 /* MV 패널 라벨 — 사진 위 글자는 이것 하나, 12.8px 모노, 좌하단 */
 .vhero-label {
@@ -1295,9 +1298,9 @@ body.home .footer-min a { display: inline-flex; align-items: center; min-height:
 
 
 @media (max-width: 700px) {
-  .strip-item, .strip-item--tall, .strip-item--wide, .strip-item--video, .strip-item--sleeve, .strip-item--lead { width: 100vw; }
+  .strip-item, .strip-item--tall, .strip-item--wide, .strip-item--video, .strip-item--sleeve, .strip-item--lead, .strip-item--pair { width: 100vw; }
   .strip-item img { width: 100%; object-fit: contain; }
-  .strip-item--wide img, .strip-item--lead img, .strip-item--first img { object-fit: cover; }
+  .strip-item--wide img, .strip-item--lead img, .strip-item--pair img, .strip-item--first img { object-fit: cover; }
   .vhero-label { left: 16px; bottom: 96px; }
   /* 폰에서도 재킷은 원본을 넘겨 늘리지 않는다 (390px 화면 기준 ≈ 320px) */
   .strip-item--sleeve img { width: 82%; max-width: 360px; }
@@ -1731,12 +1734,16 @@ main h3 { font-family: var(--font-body); font-weight: 600; font-size: 1.02rem; l
 .legal-body p { color: var(--muted); line-height: 1.9; }
 /* 홈 푸터 = 비욘세 우측 하단 한 줄 */
 body.home .footer-min nav {
-  justify-content: flex-end; padding: 2rem 22px 14px; gap: 1.5rem;
+  justify-content: flex-end; padding: 4.5rem 22px 14px; gap: 1.5rem;
   font-size: .8rem; text-transform: uppercase; letter-spacing: var(--track-label);
-  background: none; text-shadow: 0 1px 12px rgba(8,8,8,.9);
+  /* 2026-09-15 실측: 리드가 화보로 바뀌자 글자 뒤 배경이 (230,185,161) 이 되어
+     푸터 대비 1.30:1 — 사실상 안 보였다. 띠가 아니라 그늘로, 높고 부드럽게 한 겹. */
+  background: linear-gradient(to top, rgba(8,8,8,.90) 0%, rgba(8,8,8,.66) 34%, rgba(8,8,8,.26) 68%, transparent 100%);
+  text-shadow: 0 1px 12px rgba(8,8,8,.9);
 }
 body.home .footer-min nav button { pointer-events: auto; }
-body.home .footer-min a { min-height: 44px; color: var(--muted); }
+body.home .footer-min a, body.home .footer-min span, body.home .strip-pause { color: var(--ivory); }
+body.home .footer-min a { min-height: 44px; }
 body.home .footer-min a:hover { color: #fff; }
 
 .strip-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
@@ -1747,7 +1754,7 @@ a.strip-item--video { position: relative; display: block; background: var(--surf
    그레인·비네트·캡션 그늘은 전부 걷었다(비욘세: 사진 위 텍스트 0, 필터 0). */
 body.home .strip::before {
   content: ""; position: absolute; left: 0; right: 0; top: 0; height: 150px; z-index: 3; pointer-events: none;
-  background: linear-gradient(to bottom, rgba(8,8,8,.62), rgba(8,8,8,.2) 60%, transparent);
+  background: linear-gradient(to bottom, rgba(8,8,8,.78), rgba(8,8,8,.34) 55%, transparent);
 }
 
 /* 스크롤 리빌: 섹션이 떠오르며 등장 */

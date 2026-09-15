@@ -51,6 +51,7 @@ window.I18N_EN = {
   "strip.title": "STILL, THE DREAM FLOWS",
   "strip.discog": "DISCOGRAPHY",
   "strip.mv": "PLAY OFFICIAL MV",
+  "alt.41": "Insooni in an orange shirt and pinstripe jacket against a peach backdrop",
   "strip.pause": "PAUSE",
   "strip.play": "PLAY",
   "dyn.recapCta": "VIEW RECAP",
