@@ -3647,3 +3647,7 @@ html[lang="ko"] .page-hero--portrait .ph-cap { letter-spacing: 0; }   /* 한글�
   .release-hero { grid-template-columns: 1fr; }
   .release-hero > img { max-width: 300px; justify-self: center; }
 }
+
+/* 화면 밖 보조기기 텍스트가 서체를 부르면 안 된다 — 홈의 sr-only h1 하나가
+   Noto Serif KR 부분집합 5개(약 170KB)를 도입부 한복판에 내려받게 했다(1.2Mbps 실측). */
+.sr-only { font-family: var(--font-body); }

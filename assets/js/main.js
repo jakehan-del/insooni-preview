@@ -3373,6 +3373,11 @@
        읽을 시간은 남기되, 다섯 장이 4.4초에 흐른다.
        밑 장이 '이미 온전한 채' 깔려 있으므로 걷히는 동안에도 섞임이 없다. */
     var STEP = 0.8, PEEL = 0.4, M_END = 0, T_END = 0;   /* begin() 에서 확정 */
+    /* 슬롯 붙잡기 — 느린 회선(1.2Mbps 라이브 실측: 사진이 10초에 도착)에서 다음 장이
+       아직 안 왔으면 시계를 그 경계에 세운다. 앞 장은 걷히지 않고 그대로 서 있으므로
+       화면이 검게 비는 순간이 없다. 슬롯당 0.9초·합계 2.0초까지만 — 그 뒤엔 그 장을
+       건너뛴다(도입부는 최악에도 12초 안전망 안에서 끝나야 한다). */
+    var HOLD_SLOT = 0.9, HOLD_TOTAL = 2.0, hold = 0, holdSlot = [];
     function swallow(ev) {
       ev.preventDefault(); ev.stopPropagation();
       document.removeEventListener("click", swallow, true);
@@ -3419,6 +3424,11 @@
          한 화면에 겹치는 순간을 두지 않는다. */
       M_END = SHOTS.length * STEP + PEEL;
       T_END = M_END + 1.80;
+      /* 연출이 실제로 시작됐으니 HTML 의 인라인 예비 해제(11초)는 물린다 — 느린 회선에서
+         슬롯 붙잡기로 도입부가 11초를 넘기면 거위가 나는 중에 헤더가 튀어나온다.
+         대신 시작 시점 기준의 안전망(최악 4.4+2.0+1.8 = 8.2초 + 여유)을 다시 건다. */
+      try { if (window.__introFb) { clearTimeout(window.__introFb); window.__introFb = 0; } } catch (e) {}
+      clearTimeout(safety); safety = setTimeout(reveal, 10500);
       requestAnimationFrame(frame);
     }
     var gate = setInterval(function () {
@@ -3437,7 +3447,17 @@
       if (!t0) t0 = now;
       /* 프레임 적산이 아니라 벽시계 — 프레임을 잃어도 끝나는 시각은 지켜진다. */
       var t = (now - t0) / 1000 + boost;
-      var tc = Math.min(t, T_END);
+      var raw = t - hold;
+      if (!skipped && raw < M_END) {
+        var si = Math.min(layers.length - 1, Math.floor(raw / STEP));
+        var Ls = layers[si];
+        holdSlot[si] = holdSlot[si] || 0;
+        if (!(Ls.im.complete && Ls.im.naturalWidth > 0) && holdSlot[si] < HOLD_SLOT && hold < HOLD_TOTAL) {
+          var over = raw - si * STEP;           /* 경계를 넘은 만큼 시계를 되돌린다 */
+          if (over > 0) { hold += over; holdSlot[si] += over; raw = si * STEP; }
+        }
+      }
+      var tc = Math.min(raw, T_END);
 
       /* ① 몽타주 — 층층이 벗겨짐(v17 원형). 사진은 통째로 보인다(contain,
          잘리지 않는다). 각 장은 1.03 → 1.0 으로 아주 천천히 물러나며 숨을

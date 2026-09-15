@@ -7,10 +7,10 @@
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
 <!-- 본문 글꼴은 먼저 확실히 깐다(미뤄 봤지만 첫 화면이 빨라지지 않았다).
      제목용 서체는 화면이 뜬 뒤 들어온다 — font-display:swap이라 늦어도 글자는 보인다. -->
-<link rel="stylesheet" href="assets/fonts/body.css?vdef30bd0">
-<link rel="stylesheet" href="assets/fonts/display.css?vdef30bd0" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/fonts/display.css?vdef30bd0"></noscript>
-<link rel="stylesheet" href="assets/css/style.min.css?vdef30bd0">
+<link rel="stylesheet" href="assets/fonts/body.css?va4de7c6a">
+<link rel="stylesheet" href="assets/fonts/display.css?va4de7c6a" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?va4de7c6a"></noscript>
+<link rel="stylesheet" href="assets/css/style.min.css?va4de7c6a">
 <!-- 도입부 몽타주 — 첫 두 장만 프리로드한다. 다섯 장을 한꺼번에 high 로 올리면
      1.2Mbps 실측에서 스타일시트가 사진 뒤로 밀려 첫 화면이 9초 늦었다(2026-09-14).
      3~5번째 장은 main.js 가 앞 장이 도착한 뒤 순서대로 받는다(회선이 몽타주 박자를 따라온다). -->
@@ -49,7 +49,7 @@
 <!-- 입장 로더: 사진 다섯이 걷히며 흐르고, 거위가 날아올라 상표에 앉는다 (~6.2초)
      beyonce.com 로더 실측 문법(전면 사진 레이어 몽타주) + 형님 지시.
      자막·서사는 두지 않는다. 어디든 누르면 건너뛴다. -->
-<script>try{var _d=document.documentElement;if(!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)){_d.classList.add("is-intro");setTimeout(function(){_d.classList.remove("is-intro")},8500)}}catch(e){}</script>
+<script>try{var _d=document.documentElement;if(!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)){_d.classList.add("is-intro");window.__introFb=setTimeout(function(){_d.classList.remove("is-intro")},11000)}}catch(e){}</script>
 <div class="loader" id="loader" aria-hidden="true">
       <div class="ld-dark"></div>
     </div>
@@ -136,17 +136,17 @@
   </nav>
 </footer>
 
-<script src="assets/js/config.js?vdef30bd0" defer></script>
-<script src="assets/js/backend.js?vdef30bd0" defer></script>
-<script src="assets/js/i18n.min.js?vdef30bd0" defer></script>
-<script src="assets/js/data.min.js?vdef30bd0" defer></script>
-<script src="assets/js/tracklinks.min.js?vdef30bd0" defer></script>
-<script src="assets/js/albums-full.min.js?vdef30bd0" defer></script>
-<script src="assets/js/albums-en.min.js?vdef30bd0" defer></script>
-<script src="assets/js/song-moods.min.js?vdef30bd0" defer></script>
-<script src="assets/js/main.min.js?vdef30bd0" defer></script>
-<script src="assets/js/motion.min.js?vdef30bd0" defer></script>
-<script src="assets/js/router.min.js?vdef30bd0" defer></script>
-<script src="assets/js/deck.min.js?vdef30bd0" defer></script>
+<script src="assets/js/config.js?va4de7c6a" defer></script>
+<script src="assets/js/backend.js?va4de7c6a" defer></script>
+<script src="assets/js/i18n.min.js?va4de7c6a" defer></script>
+<script src="assets/js/data.min.js?va4de7c6a" defer></script>
+<script src="assets/js/tracklinks.min.js?va4de7c6a" defer></script>
+<script src="assets/js/albums-full.min.js?va4de7c6a" defer></script>
+<script src="assets/js/albums-en.min.js?va4de7c6a" defer></script>
+<script src="assets/js/song-moods.min.js?va4de7c6a" defer></script>
+<script src="assets/js/main.min.js?va4de7c6a" defer></script>
+<script src="assets/js/motion.min.js?va4de7c6a" defer></script>
+<script src="assets/js/router.min.js?va4de7c6a" defer></script>
+<script src="assets/js/deck.min.js?va4de7c6a" defer></script>
 </body>
 </html>
