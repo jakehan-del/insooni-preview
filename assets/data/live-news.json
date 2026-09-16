@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-09-16 20:16",
+ "updated": "2026-09-17 01:37",
  "items": [
   {
    "date": "2026-09-09",
@@ -61,7 +61,7 @@
   {
    "date": "2026-08-04",
    "title": "가수 남진·인순이, KBS '가요무대'서 환상적인 듀엣 무대…",
-   "source": "eanews.kr",
+   "source": "얼리어답터뉴스",
    "sourceSite": "https://www.eanews.kr",
    "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTFAzTWhaNDdxOU5GUDhweThvOWg5SXNqbVZYRXQ0MFRSMV9EdkZLclRCaDRnSGwtRGxROUs4UlQ3WHlPOUNaSS1yMA?oc=5",
    "type": "공연",
@@ -80,7 +80,7 @@
   {
    "date": "2026-07-29",
    "title": "김중연 X 송민경 '밤이면 밤마다', 원곡자 인순이 앞에서 펼친 용감한 퍼포먼스! 인순이 X 서지오 심사평은? [인생은 오디션]",
-   "source": "programs.sbs.co.kr",
+   "source": "sbs.co.kr",
    "sourceSite": "https://programs.sbs.co.kr",
    "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9WbUVadXdhX3pWWXgzZjE4QnpSRXFzS2dwdm5FcnVUWWVWMDZHd1l4Z09wWHE2OVBwZXF0WW5QUUxUNnY0dEFXNEhDc2szUGxlc2g1ZzIxWEVtVk4tU1JxaFBNS1Yxcy1ZcTYtNzV5LS1xVzVvLWg0?oc=5",
    "type": "방송",
