@@ -1,8 +1,17 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-09-18 19:58",
- "count": 54,
+ "updated": "2026-09-19 01:13",
+ "count": 55,
  "items": [
+  {
+   "date": "2026-09-18",
+   "title": "‘나는 행복합니다’ 윤항기, 65년 음악 인생 헌정무대…최백호·인순이 등 후배 총출동",
+   "source": "매일경제",
+   "sourceSite": "https://www.mk.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1LV3VwV3hJV3gwUXZoeEdtX3JORFdybUg2X0dNQXgzai1SQWl0M25EczhBZlNlQkZIci15YXZJcDZoRXlhZDdlZ1ZNQmZhb0xDQ0pZQ2JTbmg?oc=5",
+   "type": "공연",
+   "auto": true
+  },
   {
    "date": "2026-09-09",
    "title": "윤항기 66주년 헌정 기념 공연, 최백호 인순이 등 후배들과 함께한다",
