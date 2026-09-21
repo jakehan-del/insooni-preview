@@ -1,14 +1,33 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-09-21 09:02",
- "count": 55,
+ "updated": "2026-09-21 16:51",
+ "count": 57,
  "items": [
+  {
+   "date": "2026-09-21",
+   "title": "윤항기 65주년 헌정 공연, 최백호·인순이·전영록 등 출연…10명 후배들이 각자 색깔로 재해석 '헌정'",
+   "source": "SPOTV NEWS",
+   "sourceSite": "https://www.spotvnews.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1PSVZrNjJyV0N4UVhqS0xxWE5sXzZ5ZGcteVRDVkhialJyVTk3aUQ0VXJFVjBtM3BGWjJmeGJMdU9lSFAxM1FZUkxtNlMzd1Fqbk9aVEQwMklmWUg3QjJRMmNmSTdGZkNPSzIzR241cW8?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 4
+  },
   {
    "date": "2026-09-18",
    "title": "‘나는 행복합니다’ 윤항기, 65년 음악 인생 헌정무대…최백호·인순이 등 후배 총출동",
    "source": "매일경제",
    "sourceSite": "https://www.mk.co.kr",
    "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1LV3VwV3hJV3gwUXZoeEdtX3JORFdybUg2X0dNQXgzai1SQWl0M25EczhBZlNlQkZIci15YXZJcDZoRXlhZDdlZ1ZNQmZhb0xDQ0pZQ2JTbmg?oc=5",
+   "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-09-18",
+   "title": "윤항기 데뷔 65주년 기념 헌정 콘서트...최백호·서유석·인순이 등 출연",
+   "source": "뉴스브라이트",
+   "sourceSite": "https://www.newsbrite.net",
+   "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFB1QWQ4aTdtNEhBMFJPWEpWamRuRkxiYkM4SUV0VC1ya2YyaHpvSU1BdGR5dWo5RWtTR2w2UGlILUprRkExV2oyNVFIWi1OVzd0Z1pJSkFtOGdJTHpJSFpfVmIya25STWgxRjU1bA?oc=5",
    "type": "공연",
    "auto": true
   },

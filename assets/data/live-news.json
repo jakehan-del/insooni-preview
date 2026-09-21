@@ -1,8 +1,27 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-09-21 09:02",
+ "updated": "2026-09-21 16:51",
  "items": [
+  {
+   "date": "2026-09-21",
+   "title": "윤항기 65주년 헌정 공연, 최백호·인순이·전영록 등 출연…10명 후배들이 각자 색깔로 재해석 '헌정'",
+   "source": "SPOTV NEWS",
+   "sourceSite": "https://www.spotvnews.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1PSVZrNjJyV0N4UVhqS0xxWE5sXzZ5ZGcteVRDVkhialJyVTk3aUQ0VXJFVjBtM3BGWjJmeGJMdU9lSFAxM1FZUkxtNlMzd1Fqbk9aVEQwMklmWUg3QjJRMmNmSTdGZkNPSzIzR241cW8?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 4
+  },
+  {
+   "date": "2026-09-18",
+   "title": "윤항기 데뷔 65주년 기념 헌정 콘서트...최백호·서유석·인순이 등 출연",
+   "source": "뉴스브라이트",
+   "sourceSite": "https://www.newsbrite.net",
+   "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFB1QWQ4aTdtNEhBMFJPWEpWamRuRkxiYkM4SUV0VC1ya2YyaHpvSU1BdGR5dWo5RWtTR2w2UGlILUprRkExV2oyNVFIWi1OVzd0Z1pJSkFtOGdJTHpJSFpfVmIya25STWgxRjU1bA?oc=5",
+   "type": "공연",
+   "auto": true
+  },
   {
    "date": "2026-09-18",
    "title": "‘나는 행복합니다’ 윤항기, 65년 음악 인생 헌정무대…최백호·인순이 등 후배 총출동",
@@ -10,8 +29,7 @@
    "sourceSite": "https://www.mk.co.kr",
    "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1LV3VwV3hJV3gwUXZoeEdtX3JORFdybUg2X0dNQXgzai1SQWl0M25EczhBZlNlQkZIci15YXZJcDZoRXlhZDdlZ1ZNQmZhb0xDQ0pZQ2JTbmg?oc=5",
    "type": "공연",
-   "auto": true,
-   "also": 1
+   "auto": true
   },
   {
    "date": "2026-09-09",
@@ -98,16 +116,6 @@
    "also": 1
   },
   {
-   "date": "2026-07-29",
-   "title": "김중연 X 송민경 '밤이면 밤마다', 원곡자 인순이 앞에서 펼친 용감한 퍼포먼스! 인순이 X 서지오 심사평은? [인생은 오디션]",
-   "source": "programs.sbs.co.kr",
-   "sourceSite": "https://programs.sbs.co.kr",
-   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9WbUVadXdhX3pWWXgzZjE4QnpSRXFzS2dwdm5FcnVUWWVWMDZHd1l4Z09wWHE2OVBwZXF0WW5QUUxUNnY0dEFXNEhDc2szUGxlc2g1ZzIxWEVtVk4tU1JxaFBNS1Yxcy1ZcTYtNzV5LS1xVzVvLWg0?oc=5",
-   "type": "방송",
-   "auto": true,
-   "also": 1
-  },
-  {
    "date": "2026-07-27",
    "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
    "source": "동아일보",
@@ -144,15 +152,6 @@
    "type": "공연",
    "auto": true,
    "also": 2
-  },
-  {
-   "date": "2026-06-23",
-   "title": "가수 인순이·염유리 청주온다…시민의날 기념행사 7월 1일",
-   "source": "v.daum.net",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE04WWM0VmRRWWFUVjdaTXk2Vjg0czVDeWFZd2JpaC1Fc1MxeWtIOXpjN2RocXU0WjNPTnlPckdsZ2drS1lWNjdWaUJPZUJtd2c?oc=5",
-   "type": "보도",
-   "auto": true
   }
  ]
 }
