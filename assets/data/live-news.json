@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-09-21 05:37",
+ "updated": "2026-09-21 09:02",
  "items": [
   {
    "date": "2026-09-18",
@@ -89,20 +89,20 @@
   },
   {
    "date": "2026-07-29",
-   "title": "김중연 X 송민경 '밤이면 밤마다', 원곡자 인순이 앞에서 펼친 용감한 퍼포먼스! 인순이 X 서지오 심사평은? [인생은 오디션]",
-   "source": "programs.sbs.co.kr",
+   "title": "황우림 X 송별이 '엄마 꽃', 심사위원도 위로받은 아름다운 하모니! 인순이 X 서지오 심사평은? [인생은 오디션]",
+   "source": "sbs.co.kr",
    "sourceSite": "https://programs.sbs.co.kr",
-   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9WbUVadXdhX3pWWXgzZjE4QnpSRXFzS2dwdm5FcnVUWWVWMDZHd1l4Z09wWHE2OVBwZXF0WW5QUUxUNnY0dEFXNEhDc2szUGxlc2g1ZzIxWEVtVk4tU1JxaFBNS1Yxcy1ZcTYtNzV5LS1xVzVvLWg0?oc=5",
+   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9ZcWV1QU5OV1RSUF90RmRaWUVBLVdLSHJzMHVnZmJKREtlc3pBUlgxclpVZFZOM1NzZTZJNkRJd1RadHpnX0JURzBLclNuUS1MTkJEU3lkaFNvVUI0Skh1Y3NLcGo4SUEwd2lJMVVmZVhITkJUQmM4?oc=5",
    "type": "방송",
    "auto": true,
    "also": 1
   },
   {
    "date": "2026-07-29",
-   "title": "황우림 X 송별이 '엄마 꽃', 심사위원도 위로받은 아름다운 하모니! 인순이 X 서지오 심사평은? [인생은 오디션]",
-   "source": "sbs.co.kr",
+   "title": "김중연 X 송민경 '밤이면 밤마다', 원곡자 인순이 앞에서 펼친 용감한 퍼포먼스! 인순이 X 서지오 심사평은? [인생은 오디션]",
+   "source": "programs.sbs.co.kr",
    "sourceSite": "https://programs.sbs.co.kr",
-   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9ZcWV1QU5OV1RSUF90RmRaWUVBLVdLSHJzMHVnZmJKREtlc3pBUlgxclpVZFZOM1NzZTZJNkRJd1RadHpnX0JURzBLclNuUS1MTkJEU3lkaFNvVUI0Skh1Y3NLcGo4SUEwd2lJMVVmZVhITkJUQmM4?oc=5",
+   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9WbUVadXdhX3pWWXgzZjE4QnpSRXFzS2dwdm5FcnVUWWVWMDZHd1l4Z09wWHE2OVBwZXF0WW5QUUxUNnY0dEFXNEhDc2szUGxlc2g1ZzIxWEVtVk4tU1JxaFBNS1Yxcy1ZcTYtNzV5LS1xVzVvLWg0?oc=5",
    "type": "방송",
    "auto": true,
    "also": 1
@@ -147,13 +147,12 @@
   },
   {
    "date": "2026-06-23",
-   "title": "'11회 청주시 시민의 날 기념행사' 내달 1일 개최…염유리·인순이 공연",
-   "source": "뉴스1",
-   "sourceSite": "https://www.news1.kr",
-   "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5pWndrbExpeXFyTENrOFYwWE9neTZPbnFtZWRPelZGLVZWSzlQczU4a2xBLXpaSHNDdUVNZlVOVUpKd3JmVkpLblhtSWJsbXc1dWVvU2hyTVppdnpDeVNn0gFkQVVfeXFMTWlMNy00Y3dDTEJpUWhMdktwNGlib3pldDJ6ZVBsblQtenF2bmVoRDNpUGRkUVAtYWNlZVNJZ2lxSkc2LTEwZTlxTThtNE5ILWRQNFJDcHFGaDdfamlmcHozWjU3UQ?oc=5",
-   "type": "공연",
-   "auto": true,
-   "also": 1
+   "title": "가수 인순이·염유리 청주온다…시민의날 기념행사 7월 1일",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE04WWM0VmRRWWFUVjdaTXk2Vjg0czVDeWFZd2JpaC1Fc1MxeWtIOXpjN2RocXU0WjNPTnlPckdsZ2drS1lWNjdWaUJPZUJtd2c?oc=5",
+   "type": "보도",
+   "auto": true
   }
  ]
 }
