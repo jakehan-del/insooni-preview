@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-09-24 22:27",
+ "updated": "2026-09-25 03:21",
  "items": [
   {
    "date": "2026-09-24",
@@ -15,7 +15,7 @@
   {
    "date": "2026-09-21",
    "title": "윤항기 65주년 헌정 공연, 최백호·인순이·전영록 등 출연…10명 후배들이 각자 색깔로 재해석 '헌정'",
-   "source": "SPOTV NEWS",
+   "source": "spotvnews.co.kr",
    "sourceSite": "https://www.spotvnews.co.kr",
    "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1PSVZrNjJyV0N4UVhqS0xxWE5sXzZ5ZGcteVRDVkhialJyVTk3aUQ0VXJFVjBtM3BGWjJmeGJMdU9lSFAxM1FZUkxtNlMzd1Fqbk9aVEQwMklmWUg3QjJRMmNmSTdGZkNPSzIzR241cW8?oc=5",
    "type": "공연",
@@ -33,12 +33,13 @@
   },
   {
    "date": "2026-09-18",
-   "title": "‘나는 행복합니다’ 윤항기, 65년 음악 인생 헌정무대…최백호·인순이 등 후배 총출동",
+   "title": "‘나는 행복합니다’ 윤항기, 65년 음악 인생 헌정무대…최백호·인순이 등 후배 총출동 - 스타투데이",
    "source": "매일경제",
    "sourceSite": "https://www.mk.co.kr",
    "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1LV3VwV3hJV3gwUXZoeEdtX3JORFdybUg2X0dNQXgzai1SQWl0M25EczhBZlNlQkZIci15YXZJcDZoRXlhZDdlZ1ZNQmZhb0xDQ0pZQ2JTbmg?oc=5",
    "type": "공연",
-   "auto": true
+   "auto": true,
+   "also": 1
   },
   {
    "date": "2026-09-09",
@@ -118,7 +119,7 @@
   {
    "date": "2026-07-27",
    "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
-   "source": "동아일보",
+   "source": "donga.com",
    "sourceSite": "https://www.donga.com",
    "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTFAwQkJha0MzSzFWQnRSTG4xd0g5b3ZMcGh3OVVTS0xvYUI5dWlfUnBJSldQQ0xZM2hSZEVHMUI3RnRWOFNCNVJJeW1FelNlckJSUjlQV3BUTHR4ZVlhelpQWlVnYVl0S3BjZkdrWTUyVTUyN3pSS1HSAWZBVV95cUxNSDU5LXd4UFZ4VXdocDRjcVprTFhYTzlsM3hMZGNTOXRoTU40bGV1Y1pIZk8ya3l6cGJTTWszVU5yQmhjbzNKTFlOQXVVMkRmSzBFdmdoY2pyTWY1V0lDd3hmSk9MNUE?oc=5",
    "type": "공연",
