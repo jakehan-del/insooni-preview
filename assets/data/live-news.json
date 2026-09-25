@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-09-26 01:58",
+ "updated": "2026-09-26 06:24",
  "items": [
   {
    "date": "2026-09-24",
@@ -20,12 +20,12 @@
    "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1PSVZrNjJyV0N4UVhqS0xxWE5sXzZ5ZGcteVRDVkhialJyVTk3aUQ0VXJFVjBtM3BGWjJmeGJMdU9lSFAxM1FZUkxtNlMzd1Fqbk9aVEQwMklmWUg3QjJRMmNmSTdGZkNPSzIzR241cW8?oc=5",
    "type": "공연",
    "auto": true,
-   "also": 6
+   "also": 7
   },
   {
    "date": "2026-09-18",
    "title": "윤항기 데뷔 65주년 기념 헌정 콘서트...최백호·서유석·인순이 등 출연",
-   "source": "뉴스브라이트",
+   "source": "newsbrite.net",
    "sourceSite": "https://www.newsbrite.net",
    "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFB1QWQ4aTdtNEhBMFJPWEpWamRuRkxiYkM4SUV0VC1ya2YyaHpvSU1BdGR5dWo5RWtTR2w2UGlILUprRkExV2oyNVFIWi1OVzd0Z1pJSkFtOGdJTHpJSFpfVmIya25STWgxRjU1bA?oc=5",
    "type": "공연",
@@ -65,7 +65,7 @@
    "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
    "source": "v.daum.net",
    "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTFBSY0JLUGRCWWN3S2U1UHdudkJybHVOWlpNYzlLUUNDVnRyd1gwdFQ0d3pPN3d4SkVCaXhrbE1xcGxra19BaXc?oc=5",
+   "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1iTEMtbDdnOUZQWWtPZlJHTTVOd0hGRmtSQk1ELWFBb1RyNFJ0NE9aWFRDY09rUWFTeWRrZTV6eHVVUlpOVU1RT2JWVQ?oc=5",
    "type": "방송",
    "auto": true
   },
@@ -134,7 +134,7 @@
    "url": "https://news.google.com/rss/articles/CBMiQkFVX3lxTE9WRnJFR21jVFBScXRNa1pqNjUxQkhJTHg4U1plWnY2M200aXFXTk10RWdoNnB3V0ROeEh2djRSaFlnZw?oc=5",
    "type": "공연",
    "auto": true,
-   "also": 2
+   "also": 3
   },
   {
    "date": "2026-07-11",
