@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-09-25 13:30",
+ "updated": "2026-09-25 20:36",
  "items": [
   {
    "date": "2026-09-24",
@@ -20,7 +20,16 @@
    "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1PSVZrNjJyV0N4UVhqS0xxWE5sXzZ5ZGcteVRDVkhialJyVTk3aUQ0VXJFVjBtM3BGWjJmeGJMdU9lSFAxM1FZUkxtNlMzd1Fqbk9aVEQwMklmWUg3QjJRMmNmSTdGZkNPSzIzR241cW8?oc=5",
    "type": "공연",
    "auto": true,
-   "also": 6
+   "also": 5
+  },
+  {
+   "date": "2026-09-21",
+   "title": "'나는 행복합니다' 윤항기 65주년 헌정 공연..인순이·최백호 합류",
+   "source": "starnewskorea.com",
+   "sourceSite": "https://www.starnewskorea.com",
+   "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE44cl8zSV9YdFNOb2ZTS0ktcU14SU1WUVdqbF9MTWlpZVdnTk5YYzBCUjE4M2Q3N0hhSGxvemF5bFJlc0dtMXgxMTJOYVcxQkR5N3ZVUU9HLWdjOTBmdU9NQXZmRFgyY2tGSk9XQjJPUkJWZmt4?oc=5",
+   "type": "공연",
+   "auto": true
   },
   {
    "date": "2026-09-18",
@@ -34,7 +43,7 @@
   {
    "date": "2026-09-18",
    "title": "‘나는 행복합니다’ 윤항기, 65년 음악 인생 헌정무대…최백호·인순이 등 후배 총출동 - 스타투데이",
-   "source": "매일경제",
+   "source": "mk.co.kr",
    "sourceSite": "https://www.mk.co.kr",
    "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1LV3VwV3hJV3gwUXZoeEdtX3JORFdybUg2X0dNQXgzai1SQWl0M25EczhBZlNlQkZIci15YXZJcDZoRXlhZDdlZ1ZNQmZhb0xDQ0pZQ2JTbmg?oc=5",
    "type": "공연",
@@ -85,15 +94,6 @@
    "sourceSite": "https://www.ohmynews.com",
    "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTFBXYVRjd0hEQUlxdnBrdEFoQ0xLUE9Uak9KaDd4dDBtRjdkTHFtVEVial9yS2FaMkV5NnFpZEVubUN1UmF4NV9TdzgtWVFHdFpIY2xfQnhUUVFrb2toT1ZyNDloaHJCb2tzRVd0TG9hTHVnZ3BnLTBBVA?oc=5",
    "type": "공연",
-   "auto": true
-  },
-  {
-   "date": "2026-08-05",
-   "title": "안동문화예술의전당 어버이날 특별기획 가수 인순이 & 명창 유지숙 `두 사랑 이야기`",
-   "source": "kbnews.kr",
-   "sourceSite": "http://www.kbnews.kr",
-   "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPMXRuVmxnUDIteHB5VEpoWFotZ2JYdUpidS1PSHJQRllfVXpQamdZZTV5MV82ZWNITVctVnZnZHkyLVNDMnVYYnMzR3ZEOGFNc1pVN292TFZPOGxGNmFId3h5eVdJTXNmV190NHZjNmJGUTBKVm5mQjBiWldQdndpaGVvOV9YTEkwUDllc0xNS3poam9pZEZod21lZ2NVOEhxOW5ZSXFrTl9yRFdPT19zNlFB?oc=5",
-   "type": "보도",
    "auto": true
   },
   {
