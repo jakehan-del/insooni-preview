@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-09-26 16:24",
- "count": 59,
+ "updated": "2026-09-26 21:54",
+ "count": 61,
  "items": [
   {
    "date": "2026-09-24",
@@ -30,6 +30,26 @@
    "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE44cl8zSV9YdFNOb2ZTS0ktcU14SU1WUVdqbF9MTWlpZVdnTk5YYzBCUjE4M2Q3N0hhSGxvemF5bFJlc0dtMXgxMTJOYVcxQkR5N3ZVUU9HLWdjOTBmdU9NQXZmRFgyY2tGSk9XQjJPUkJWZmt4?oc=5",
    "type": "공연",
    "auto": true
+  },
+  {
+   "date": "2026-09-21",
+   "title": "최백호 김수희→전영록 인순이 한 자리에, 윤항기 65주년 공연 라인업",
+   "source": "뉴스엔",
+   "sourceSite": "https://m.newsen.com",
+   "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE1laVRqV00xUHpHazN4U01abDcwR0hKeGZpZ1lDNlBZRUQxUUJTZmJ4X0tIeGdUMDVCcG8xckVPd3E4cHZTRFBRV3NHVXhVNGN6MWpfV2N0N3NXbm1yTmFDaENxZkg5ZDFK?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 1
+  },
+  {
+   "date": "2026-09-21",
+   "title": "윤항기, 데뷔 65주년 공연 개최…최백호·인순이 등 후배 10팀 출연",
+   "source": "Queen 이코노미퀸",
+   "sourceSite": "https://www.queen.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1rcEtPYjBhUWRNSk9aNy1XTHZxenhiY2JrUXB3c3MzT1ZmTGdQNktuSFlvd0hjWjFYN184T1E0dXVEMzg5aUY0T2F1UUpCTkhYR1hQR2liQ0VsVTNvNkJtYkxQR0V4ZWJPRXc?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 1
   },
   {
    "date": "2026-09-18",

@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-09-26 16:24",
+ "updated": "2026-09-26 21:54",
  "items": [
   {
    "date": "2026-09-24",
@@ -14,13 +14,32 @@
   },
   {
    "date": "2026-09-21",
+   "title": "최백호 김수희→전영록 인순이 한 자리에, 윤항기 65주년 공연 라인업",
+   "source": "뉴스엔",
+   "sourceSite": "https://m.newsen.com",
+   "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE1laVRqV00xUHpHazN4U01abDcwR0hKeGZpZ1lDNlBZRUQxUUJTZmJ4X0tIeGdUMDVCcG8xckVPd3E4cHZTRFBRV3NHVXhVNGN6MWpfV2N0N3NXbm1yTmFDaENxZkg5ZDFK?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 1
+  },
+  {
+   "date": "2026-09-21",
    "title": "윤항기 65주년 헌정 공연, 최백호·인순이·전영록 등 출연…10명 후배들이 각자 색깔로 재해석 '헌정'",
    "source": "SPOTV NEWS",
    "sourceSite": "https://www.spotvnews.co.kr",
    "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1PSVZrNjJyV0N4UVhqS0xxWE5sXzZ5ZGcteVRDVkhialJyVTk3aUQ0VXJFVjBtM3BGWjJmeGJMdU9lSFAxM1FZUkxtNlMzd1Fqbk9aVEQwMklmWUg3QjJRMmNmSTdGZkNPSzIzR241cW8?oc=5",
    "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-09-21",
+   "title": "윤항기, 데뷔 65주년 공연 개최…최백호·인순이 등 후배 10팀 출연",
+   "source": "Queen 이코노미퀸",
+   "sourceSite": "https://www.queen.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1rcEtPYjBhUWRNSk9aNy1XTHZxenhiY2JrUXB3c3MzT1ZmTGdQNktuSFlvd0hjWjFYN184T1E0dXVEMzg5aUY0T2F1UUpCTkhYR1hQR2liQ0VsVTNvNkJtYkxQR0V4ZWJPRXc?oc=5",
+   "type": "공연",
    "auto": true,
-   "also": 5
+   "also": 1
   },
   {
    "date": "2026-09-21",
@@ -68,15 +87,6 @@
    "type": "보도",
    "auto": true,
    "also": 1
-  },
-  {
-   "date": "2026-09-02",
-   "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
-   "source": "v.daum.net",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE1TQklOR2c5eDBrdGxWU3lSMEQ2UllqdWV1Qm9ERFhCUFJLVzdudkdQUVhXQ1BKMDNBd3cxMTZOSktuM0phTko0Mll4ZlZGTGcwaHc2bA?oc=5",
-   "type": "방송",
-   "auto": true
   },
   {
    "date": "2026-09-02",
@@ -143,16 +153,6 @@
    "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE9vQVJqUjNmellvZUZZcXFSVm1YR1ZQOVhrWl9RSENjR1hiNVVSUmg2TE5EeldXMlM1TFZERm9kcWhIS1N0LUNNNGpaNk1XaWQ2MUZHRlVvQWRCdzZ2QjVCUl96Q2xTUnFMeXRsR2tDMFZDQQ?oc=5",
    "type": "공연",
    "auto": true
-  },
-  {
-   "date": "2026-06-30",
-   "title": "미국 독립기념일 행사에서 애국가 부르는 인순이",
-   "source": "연합뉴스 한민족센터",
-   "sourceSite": "https://www.koreancenter.or.kr",
-   "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1lUFFLT19OWU14SWNZbmNUUVBkUkxJaXp4ekRnWHpjRlFHNkpoMnBqRGZkY3RtODNldmZUenNLVms3Wm1mRm12d2dmRzJpaGhId2V6OF9uSDR2TWhEOHc2cDZFOTFnRkdSODJTcXJYQXhudGNZ?oc=5",
-   "type": "공연",
-   "auto": true,
-   "also": 2
   }
  ]
 }
