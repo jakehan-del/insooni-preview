@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-09-28 07:55",
+ "updated": "2026-09-28 13:55",
  "items": [
   {
    "date": "2026-09-24",
@@ -98,15 +98,6 @@
    "auto": true
   },
   {
-   "date": "2026-08-23",
-   "title": "'나는 가수다'에서 '아버지'를 열창한 인순이",
-   "source": "OhmyNews",
-   "sourceSite": "https://www.ohmynews.com",
-   "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTFBXYVRjd0hEQUlxdnBrdEFoQ0xLUE9Uak9KaDd4dDBtRjdkTHFtVEVial9yS2FaMkV5NnFpZEVubUN1UmF4NV9TdzgtWVFHdFpIY2xfQnhUUVFrb2toT1ZyNDloaHJCb2tzRVd0TG9hTHVnZ3BnLTBBVA?oc=5",
-   "type": "공연",
-   "auto": true
-  },
-  {
    "date": "2026-08-04",
    "title": "가수 남진·인순이, KBS '가요무대'서 환상적인 듀엣 무대…",
    "source": "대한청년일보",
@@ -143,7 +134,7 @@
    "url": "https://news.google.com/rss/articles/CBMiQkFVX3lxTE9WRnJFR21jVFBScXRNa1pqNjUxQkhJTHg4U1plWnY2M200aXFXTk10RWdoNnB3V0ROeEh2djRSaFlnZw?oc=5",
    "type": "공연",
    "auto": true,
-   "also": 2
+   "also": 3
   },
   {
    "date": "2026-07-11",
@@ -153,6 +144,16 @@
    "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE9vQVJqUjNmellvZUZZcXFSVm1YR1ZQOVhrWl9RSENjR1hiNVVSUmg2TE5EeldXMlM1TFZERm9kcWhIS1N0LUNNNGpaNk1XaWQ2MUZHRlVvQWRCdzZ2QjVCUl96Q2xTUnFMeXRsR2tDMFZDQQ?oc=5",
    "type": "공연",
    "auto": true
+  },
+  {
+   "date": "2026-06-30",
+   "title": "애국가 부르는 가수 인순이",
+   "source": "뉴시스",
+   "sourceSite": "https://www.newsis.com",
+   "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9qd09CNUJrVUUwVG9jbGxKMXBGSXRHQTd3Y1Q4QnA4WnppbVJrU0NHYWYzcDBLZnNYM1RVREdUN0t5TzFqOWEybTJ5aEo3cE1BNDhXakRWZk9Dc2lWc1gwVw?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 1
   }
  ]
 }
