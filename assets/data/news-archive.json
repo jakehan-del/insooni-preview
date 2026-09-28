@@ -1,8 +1,27 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-09-28 13:55",
- "count": 62,
+ "updated": "2026-09-28 22:32",
+ "count": 64,
  "items": [
+  {
+   "date": "2026-09-28",
+   "title": "진해아트홀 개관기념 특별공연 ‘인순이 스페셜 콘서트’ 10월 3일 개최",
+   "source": "시사코리아저널",
+   "sourceSite": "http://m.koreajn.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9NV2VSNGVWWVF2SXJnUGZmTUZJMDJ4Q0FpdkRzRXdza3BfRG9TMlNRdzdMNkxzMm9pUFc4dUJlRVVpN2syaVpkZl9PMkpLOGttaHBJaVR4dXJNR3V1QndEdDV3S2RJdVBV?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 1
+  },
+  {
+   "date": "2026-09-28",
+   "title": "'거위의 꿈' 진해서 울린다…인순이, 아트홀 개관 축하",
+   "source": "한스경제",
+   "sourceSite": "http://www.hansbiz.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5JY1RFMGRYczNrUnpXRTMzUlpjaUxjWHhKMV8yelBBbHdQNlZuZ1NIRkViOFRJN0haNHluVmczX3gyUkcwWXhDa2dKMnNEb0kwcTItbmtQdTBoV21LNVNqTnozU3dwSmJCdC130gFvQVVfeXFMTW9iS21HNVZ1aW1SUmdDc08tSzVDYTNUbW52eUptVXZLdVd0R0hHMDJwaVpmYTBJR3pNTUl2cnhJVms4eWZGWk5WVXpkaFhTMW0tdFpCc0IweVdQYmhYeUs0WDlKbFVrLXZRM0tvVG9V?oc=5",
+   "type": "보도",
+   "auto": true
+  },
   {
    "date": "2026-09-24",
    "title": "안방엔 이승철, 공연장엔 인순이…추석 음악 한 상",

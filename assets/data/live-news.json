@@ -1,8 +1,27 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-09-28 13:55",
+ "updated": "2026-09-28 22:32",
  "items": [
+  {
+   "date": "2026-09-28",
+   "title": "진해아트홀 개관기념 특별공연 ‘인순이 스페셜 콘서트’ 10월 3일 개최",
+   "source": "시사코리아저널",
+   "sourceSite": "http://m.koreajn.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9NV2VSNGVWWVF2SXJnUGZmTUZJMDJ4Q0FpdkRzRXdza3BfRG9TMlNRdzdMNkxzMm9pUFc4dUJlRVVpN2syaVpkZl9PMkpLOGttaHBJaVR4dXJNR3V1QndEdDV3S2RJdVBV?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 1
+  },
+  {
+   "date": "2026-09-28",
+   "title": "'거위의 꿈' 진해서 울린다…인순이, 아트홀 개관 축하",
+   "source": "한스경제",
+   "sourceSite": "http://www.hansbiz.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5JY1RFMGRYczNrUnpXRTMzUlpjaUxjWHhKMV8yelBBbHdQNlZuZ1NIRkViOFRJN0haNHluVmczX3gyUkcwWXhDa2dKMnNEb0kwcTItbmtQdTBoV21LNVNqTnozU3dwSmJCdC130gFvQVVfeXFMTW9iS21HNVZ1aW1SUmdDc08tSzVDYTNUbW52eUptVXZLdVd0R0hHMDJwaVpmYTBJR3pNTUl2cnhJVms4eWZGWk5WVXpkaFhTMW0tdFpCc0IweVdQYmhYeUs0WDlKbFVrLXZRM0tvVG9V?oc=5",
+   "type": "보도",
+   "auto": true
+  },
   {
    "date": "2026-09-24",
    "title": "안방엔 이승철, 공연장엔 인순이…추석 음악 한 상",
@@ -25,21 +44,11 @@
   {
    "date": "2026-09-21",
    "title": "윤항기 65주년 헌정 공연, 최백호·인순이·전영록 등 출연…10명 후배들이 각자 색깔로 재해석 '헌정'",
-   "source": "SPOTV NEWS",
+   "source": "spotvnews.co.kr",
    "sourceSite": "https://www.spotvnews.co.kr",
    "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1PSVZrNjJyV0N4UVhqS0xxWE5sXzZ5ZGcteVRDVkhialJyVTk3aUQ0VXJFVjBtM3BGWjJmeGJMdU9lSFAxM1FZUkxtNlMzd1Fqbk9aVEQwMklmWUg3QjJRMmNmSTdGZkNPSzIzR241cW8?oc=5",
    "type": "공연",
    "auto": true
-  },
-  {
-   "date": "2026-09-21",
-   "title": "윤항기, 데뷔 65주년 공연 개최…최백호·인순이 등 후배 10팀 출연",
-   "source": "Queen 이코노미퀸",
-   "sourceSite": "https://www.queen.co.kr",
-   "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1rcEtPYjBhUWRNSk9aNy1XTHZxenhiY2JrUXB3c3MzT1ZmTGdQNktuSFlvd0hjWjFYN184T1E0dXVEMzg5aUY0T2F1UUpCTkhYR1hQR2liQ0VsVTNvNkJtYkxQR0V4ZWJPRXc?oc=5",
-   "type": "공연",
-   "auto": true,
-   "also": 1
   },
   {
    "date": "2026-09-21",
@@ -144,16 +153,6 @@
    "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE9vQVJqUjNmellvZUZZcXFSVm1YR1ZQOVhrWl9RSENjR1hiNVVSUmg2TE5EeldXMlM1TFZERm9kcWhIS1N0LUNNNGpaNk1XaWQ2MUZHRlVvQWRCdzZ2QjVCUl96Q2xTUnFMeXRsR2tDMFZDQQ?oc=5",
    "type": "공연",
    "auto": true
-  },
-  {
-   "date": "2026-06-30",
-   "title": "애국가 부르는 가수 인순이",
-   "source": "뉴시스",
-   "sourceSite": "https://www.newsis.com",
-   "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9qd09CNUJrVUUwVG9jbGxKMXBGSXRHQTd3Y1Q4QnA4WnppbVJrU0NHYWYzcDBLZnNYM1RVREdUN0t5TzFqOWEybTJ5aEo3cE1BNDhXakRWZk9Dc2lWc1gwVw?oc=5",
-   "type": "공연",
-   "auto": true,
-   "also": 1
   }
  ]
 }
