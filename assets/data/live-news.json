@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-09-30 21:21",
+ "updated": "2026-10-01 04:02",
  "items": [
   {
    "date": "2026-09-30",
@@ -16,7 +16,7 @@
   {
    "date": "2026-09-28",
    "title": "'거위의 꿈' 진해서 울린다…인순이, 아트홀 개관 축하",
-   "source": "한스경제",
+   "source": "hansbiz.co.kr",
    "sourceSite": "http://www.hansbiz.co.kr",
    "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5JY1RFMGRYczNrUnpXRTMzUlpjaUxjWHhKMV8yelBBbHdQNlZuZ1NIRkViOFRJN0haNHluVmczX3gyUkcwWXhDa2dKMnNEb0kwcTItbmtQdTBoV21LNVNqTnozU3dwSmJCdC130gFvQVVfeXFMTW9iS21HNVZ1aW1SUmdDc08tSzVDYTNUbW52eUptVXZLdVd0R0hHMDJwaVpmYTBJR3pNTUl2cnhJVms4eWZGWk5WVXpkaFhTMW0tdFpCc0IweVdQYmhYeUs0WDlKbFVrLXZRM0tvVG9V?oc=5",
    "type": "보도",
