@@ -174,8 +174,11 @@ def restamp_cache_bust():
     바뀐 파일만 새 값을 받는다. 사람이 기억할 것이 하나 줄어든다.
     """
     import hashlib, re
+    # backend·admin 도 넣는다 — 전에는 빠져 있어서 backend.js 만 고치면 해시가
+    # 그대로였고, 브라우저가 옛 서버 어댑터를 계속 썼다(2026-10-01 발견).
     keys = ["assets/css/style.min.css", "assets/js/main.min.js",
-            "assets/js/i18n.min.js", "assets/js/data.min.js"]
+            "assets/js/i18n.min.js", "assets/js/data.min.js",
+            "assets/js/backend.min.js", "assets/js/admin.min.js"]
     h = hashlib.sha1()
     for k in keys:
         f = os.path.join(ROOT, k)

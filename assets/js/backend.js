@@ -130,6 +130,18 @@
     /* 아직 검수 전인 내 글만 지운다. 이미 올라간 글은 서버가 거절하고
        그 사실을 사실대로 알려 준다 — 화면이 거짓말을 하지 않게. */
     cancelNote: function (token) { return rpc("cancel_note", { p_token: token || null }); },
+    /* 내 글 지우기 — 검수 전이든 이미 올라간 뒤든. 토큰을 가진 쓴 사람만 된다.
+       서버에 008 이 아직 실행되지 않았으면 함수가 없어 PostgREST 가 404 를 준다.
+       그때는 예전 통로(cancel_note)로 물러나 검수 전 글만이라도 지운다 —
+       화면을 먼저 배포해도 지금보다 나빠지는 일이 없게. */
+    withdrawNote: function (token) {
+      return rpc("withdraw_note", { p_token: token || null }).then(function (res) {
+        if (res && res.ok === false && res.reason === "server" && res.status === 404) {
+          return rpc("cancel_note", { p_token: token || null });
+        }
+        return res;
+      });
+    },
     /* 상태만 돌려준다. 본문·이름은 돌려주지 않는다. */
     noteStatus: function (token) { return rpc("note_status", { p_token: token || null }); },
     listNotes:  function () { return readView("public_notes"); },

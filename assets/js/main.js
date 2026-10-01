@@ -1788,6 +1788,40 @@
     var song = null, photo = null;
     var audio = null, timer = null;
     var TOKKEY = "insooni_note_token";
+    /* 내가 남긴 글 — 이 기기에서 쓴 줄의 토큰과 첫머리.
+       예전에는 토큰을 하나만 두고, 글이 승인되는 순간 그마저 지웠다.
+       그래서 올라간 뒤에는 쓴 사람이 자기 글을 찾을 길도, 지울 길도 없었다
+       (화면은 "공식 채널로 알려 달라"고만 했다 — 매니저가 짚은 바로 그 빈틈).
+       이제 토큰은 쓴 사람이 지우거나 서버가 "없다"고 할 때까지 남는다.
+       본문 첫머리는 서버에서 받지 않는다 — 쓴 기기가 이미 알고 있는 글자다. */
+    var MYKEY = "insooni_my_notes", MYMAX = 30;
+    function myList() {
+      try {
+        var v = JSON.parse(localStorage.getItem(MYKEY) || "[]");
+        return Array.isArray(v) ? v.filter(function (x) { return x && typeof x.t === "string"; }) : [];
+      } catch (e) { return []; }
+    }
+    function mySave(list) {
+      try { localStorage.setItem(MYKEY, JSON.stringify(list.slice(0, MYMAX))); } catch (e) {}
+    }
+    function myAdd(token, body) {
+      if (!token) return;
+      var list = myList().filter(function (x) { return x.t !== token; });
+      list.unshift({ t: token, b: String(body || "").slice(0, 80), at: new Date().toISOString() });
+      mySave(list);
+    }
+    function myDrop(token) {
+      mySave(myList().filter(function (x) { return x.t !== token; }));
+      try { if (localStorage.getItem(TOKKEY) === token) localStorage.removeItem(TOKKEY); } catch (e) {}
+    }
+    /* 예전 방식으로 남아 있던 토큰 하나를 목록으로 옮긴다(본문은 모른다). */
+    (function migrate() {
+      var old = null;
+      try { old = localStorage.getItem(TOKKEY); } catch (e) {}
+      if (old && !myList().some(function (x) { return x.t === old; })) {
+        var list = myList(); list.push({ t: old, b: "", at: "" }); mySave(list);
+      }
+    })();
     var nextIssueOn = "";          /* 다음 소식이 나가는 날 (서버 실측) */
 
     /* 칩으로 바로 오른 줄은 그 자리에서 줄기에 반영한다.
@@ -1952,14 +1986,16 @@
       var fold = $("#sb-fold");
       if (fold) fold.open = true;
       myCode = codeOf(token);
+      doneTok = token || null;
       if (token) { try { localStorage.setItem(TOKKEY, token); } catch (e) {} }
+      renderMine();
 
       var head = $("#sb-done-head"), meta = $("#sb-done-meta");
       if (instant) {
         /* 사이트가 제시한 문구라 검수 없이 바로 올랐다. 그 사실을 그대로 말한다. */
         if (head) head.innerHTML = "<strong>" + esc(t("sb.upNow", "사랑방에 올랐습니다.")) + "</strong> " +
           esc(t("sb.upNowWhy", "사랑방이 드리는 문구라 바로 올라갑니다. 위 줄기에서 보실 수 있어요."));
-        if (btnCancel) btnCancel.hidden = true;
+        if (btnCancel) btnCancel.hidden = !token;
       } else {
         if (head) head.innerHTML = "<strong>" + esc(t("sb.gotIt", "남겨졌습니다.")) + "</strong> " +
           esc(t("sb.gotItWhy", "사람이 읽고 올립니다 — 며칠 걸릴 수 있어요. 아직 공개 전입니다."));
@@ -2152,6 +2188,7 @@
           if (btn) btn.disabled = false;
           if (res && res.ok) {
             note("");
+            myAdd(res.token, body);
             showDone(res.token, !!res.instant);
             if (input) input.value = "";
             if (res.instant) refreshStream(body);
@@ -2162,28 +2199,102 @@
       });
     }
 
+    /* ---- 내 글 지우기 ----
+       지운 뒤에는 되돌릴 수 없으므로 한 번 묻는다. 이 방의 어르신들이 가장
+       두려워하는 것이 '잘못 눌렀나'다 — 묻지 않고 지우면 그 두려움이 현실이 된다.
+       after(res) 는 확인창에서 그만둬도 반드시 불린다(단추가 잠긴 채 남지 않게). */
+    var doneTok = null;
+    /* 안내는 '누른 자리' 가까이에 띄운다. 「내가 남긴 글」은 글칸 접힘 밖에 있는데,
+       안내를 접힘 안(#sb-msg)에 찍으면 다시 찾아온 분 눈에는 아무 반응이 없다 —
+       지워졌는지 모르는 것이 이 방에서 가장 피해야 할 상태다(실측으로 발견). */
+    var mineMsg = $("#sb-mine-msg");
+    function say(where, text, kind) {
+      if (where === "mine" && mineMsg) {
+        mineMsg.textContent = text || "";
+        mineMsg.className = "sb-msg sb-mine-msg" + (kind ? " is-" + kind : "");
+      } else {
+        note(text, kind);
+      }
+    }
+    function withdraw(tok, after, where) {
+      after = after || function () {};
+      var note = function (text, kind) { say(where, text, kind); };
+      var be = BE();
+      if (!be || !tok) { note(t("sb.nocancel", "지울 글을 찾지 못했습니다."), "bad"); after(null); return; }
+      if (!window.confirm(t("sb.confirmDel", "이 글을 지울까요? 지우면 되돌릴 수 없습니다."))) { after(null); return; }
+      be.withdrawNote(tok).then(function (res) {
+        var gone = !!(res && (res.ok || res.reason === "not_found"));
+        if (res && res.ok) {
+          /* 올라가 있던 글이면 줄기에서도 바로 걷는다 — 새로고침해야 사라지면
+             '지웠다'는 말이 반쯤 거짓이 된다. */
+          note(res.was === "approved"
+            ? t("sb.delDone", "지웠습니다. 사랑방에서도 사라졌습니다.")
+            : t("sb.cancelled", "지웠습니다."), "ok");
+          if (res.was === "approved") refreshStream();
+        } else if (res && res.reason === "already_published") {
+          /* 서버에 008 이 아직 없어 예전 통로로 물러난 경우다. 지운 척하지 않는다. */
+          note(t("sb.tooLate", "이미 사랑방에 올라간 글입니다. 내리시려면 아래 공식 채널로 알려 주세요."), "bad");
+        } else if (res && res.reason === "not_found") {
+          note(t("sb.delGone", "이미 지워졌거나 찾을 수 없는 글입니다."), "bad");
+        } else {
+          note(beWhy(res), "bad");
+        }
+        if (gone) {
+          myDrop(tok);
+          if (tok === doneTok && done) done.hidden = true;
+          renderMine();
+        }
+        after(res);
+      });
+    }
+
     if (btnCancel) {
       btnCancel.addEventListener("click", function () {
-        var be = BE(), tok = null;
+        var tok = null;
         try { tok = localStorage.getItem(TOKKEY); } catch (e) {}
-        if (!be || !tok) { note(t("sb.nocancel", "지울 글을 찾지 못했습니다."), "bad"); return; }
         btnCancel.disabled = true;
-        be.cancelNote(tok).then(function (res) {
+        withdraw(tok || doneTok, function (res) {
           btnCancel.disabled = false;
-          if (res && res.ok) {
-            try { localStorage.removeItem(TOKKEY); } catch (e) {}
-            if (done) done.hidden = true;
-            note(t("sb.cancelled", "지웠습니다."), "ok");
-          } else if (res && res.reason === "already_published") {
-            /* 이미 올라간 뒤다. 지운 척하지 않는다. */
-            note(t("sb.tooLate", "이미 사랑방에 올라간 글입니다. 내리시려면 아래 공식 채널로 알려 주세요."), "bad");
-            btnCancel.hidden = true;
-          } else {
-            note(beWhy(res), "bad");
-          }
+          if (res && res.reason === "already_published") btnCancel.hidden = true;
         });
       });
     }
+
+    /* ---- 내가 남긴 글 ----
+       이 기기에서 쓴 줄만 보인다(토큰이 이 기기에만 있다). 글칸을 접어 두어도
+       찾을 수 있게 접힘 밖에 작게 둔다 — 큰 단추는 언제나 하나라는 이 방의 규칙.
+       본문은 쓴 사람의 글이지만 그래도 innerHTML 로 넣지 않는다. */
+    var mineBox = $("#sb-mine"), mineList = $("#sb-mine-list"), mineN = $("#sb-mine-n");
+    function renderMine() {
+      if (!mineBox || !mineList) return;
+      var list = myList();
+      mineBox.hidden = !list.length || !BE();
+      if (mineN) mineN.textContent = list.length ? "(" + list.length + ")" : "";
+      mineList.textContent = "";
+      list.forEach(function (it) {
+        var label = it.b || t("sb.noText", "(이전에 남긴 글)");
+        var li = document.createElement("li");
+        li.className = "sb-mine-item";
+        var when = document.createElement("span");
+        when.className = "sb-mine-when";
+        when.textContent = it.at ? fmtDay(it.at) : "";
+        var txt = document.createElement("span");
+        txt.className = "sb-mine-text";
+        txt.textContent = label;
+        var del = document.createElement("button");
+        del.type = "button";
+        del.className = "sb-mine-del";
+        del.textContent = t("sb.del", "지우기");
+        del.setAttribute("aria-label", t("sb.del", "지우기") + " — " + label);
+        del.addEventListener("click", function () {
+          del.disabled = true;
+          withdraw(it.t, function () { del.disabled = false; }, "mine");
+        });
+        li.appendChild(when); li.appendChild(txt); li.appendChild(del);
+        mineList.appendChild(li);
+      });
+    }
+    renderMine();
 
     /* ---- 내 카드 저장 ----
        자체 호스팅 사진만 그린다. 애플 재킷을 캔버스에 그리면
@@ -2359,12 +2470,14 @@
       if (be && tok) {
         be.noteStatus(tok).then(function (res) {
           if (!res || !res.ok) {
-            if (res && res.reason === "not_found") { try { localStorage.removeItem(TOKKEY); } catch (e) {} }
+            if (res && res.reason === "not_found") { myDrop(tok); renderMine(); }
             return;
           }
           if (res.status === "approved") {
             var up = $("#sb-uplifted");
             if (up) { up.hidden = false; }
+            /* '올라왔다'는 알림은 한 번이면 된다 — 최신 포인터만 지운다.
+               토큰 자체는 '내가 남긴 글'에 남아 있어 언제든 지울 수 있다. */
             try { localStorage.removeItem(TOKKEY); } catch (e) {}
           } else if (res.status === "pending") {
             showDone(tok);

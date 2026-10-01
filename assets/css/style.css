@@ -3666,3 +3666,41 @@ html[lang="ko"] .page-hero--portrait .ph-cap { letter-spacing: 0; }   /* 한글�
 /* 화면 밖 보조기기 텍스트가 서체를 부르면 안 된다 — 홈의 sr-only h1 하나가
    Noto Serif KR 부분집합 5개(약 170KB)를 도입부 한복판에 내려받게 했다(1.2Mbps 실측). */
 .sr-only { font-family: var(--font-body); }
+
+/* ============================================================
+   사랑방 · 내가 남긴 글 (2026-10-01)
+   쓴 기기에서만 보이는 작은 목록. 크게 만들지 않는다 — 이 방의 큰 단추는
+   언제나 '남기기' 하나다. 대신 글자는 어르신 기준(16px)을 지키고,
+   지우기 단추는 손끝 기준(44px)을 지킨다.
+   ============================================================ */
+.sb-mine { margin-top: 1.4rem; border-top: 1px solid var(--line); padding-top: .4rem; }
+.sb-mine-s {
+  cursor: pointer; min-height: 44px; display: flex; align-items: center; gap: .4em;
+  font-size: 1rem; color: var(--muted); list-style: none;
+}
+.sb-mine-s::-webkit-details-marker { display: none; }
+.sb-mine-s::after { content: "＋"; margin-left: auto; color: var(--faint); }
+.sb-mine[open] > .sb-mine-s::after { content: "－"; }
+.sb-mine-s:hover { color: var(--ivory); }
+.sb-mine-n { color: var(--faint); }
+.sb-mine-hint { margin: .2rem 0 .8rem; font-size: 1rem; color: var(--faint); }
+.sb-mine-list { list-style: none; margin: 0; padding: 0; }
+.sb-mine-item {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .4rem 1rem;
+  padding: .55rem 0; border-top: 1px solid var(--line);
+}
+.sb-mine-when { font-size: 1rem; color: var(--faint); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.sb-mine-text { font-size: 1rem; color: var(--ivory); overflow-wrap: anywhere; word-break: keep-all; }
+.sb-mine-del {
+  min-height: 44px; min-width: 64px; padding: 0 .9rem; border-radius: 0; cursor: pointer;
+  background: transparent; color: var(--muted); border: 1px solid var(--line-strong);
+  font: inherit; font-size: 1rem;
+}
+.sb-mine-del:hover { color: var(--ivory); border-color: var(--ivory); }
+.sb-mine-del:disabled { opacity: .45; cursor: default; }
+.sb-mine-msg { font-size: 1rem; margin: .4rem 0 0; }
+.sb-mine-msg:empty { display: none; }
+@media (max-width: 520px) {
+  .sb-mine-item { grid-template-columns: 1fr auto; }
+  .sb-mine-when { grid-column: 1 / -1; }
+}

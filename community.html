@@ -17,11 +17,11 @@
 <meta name="description" content="편지를 쓰고, 팬 번호증과 응원 카드를 만들고, 공식 채널로 마음을 전하는 곳. 인순이 공식 사랑방.">
 <!-- 본문 글꼴은 먼저 확실히 깐다(미뤄 봤지만 첫 화면이 빨라지지 않았다).
      제목용 서체는 화면이 뜬 뒤 들어온다 — font-display:swap이라 늦어도 글자는 보인다. -->
-<link rel="stylesheet" href="assets/fonts/body.css?v59c00942">
-<link rel="stylesheet" href="assets/fonts/mono.css?v59c00942">
-<link rel="stylesheet" href="assets/fonts/display.css?v59c00942" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/fonts/display.css?v59c00942"></noscript>
-<link rel="stylesheet" href="assets/css/style.min.css?v59c00942">
+<link rel="stylesheet" href="assets/fonts/body.css?vb369b410">
+<link rel="stylesheet" href="assets/fonts/mono.css?vb369b410">
+<link rel="stylesheet" href="assets/fonts/display.css?vb369b410" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?vb369b410"></noscript>
+<link rel="stylesheet" href="assets/css/style.min.css?vb369b410">
 <link rel="canonical" href="https://insooni.com/community">
 <meta property="og:url" content="https://insooni.com/community">
 <meta property="og:type" content="website">
@@ -163,6 +163,16 @@
 
       </details>
 
+      <!-- 내가 남긴 글 — 이 기기에서 쓴 줄만 보인다. 비어 있으면 숨는다.
+           접힘(글 남기러 들어가기) 밖에 두어, 다시 찾아온 분이 바로 찾게 한다. -->
+      <details class="sb-mine" id="sb-mine" hidden>
+        <summary class="sb-mine-s"><span data-i18n="sb.mine">내가 남긴 글</span> <span class="sb-mine-n" id="sb-mine-n"></span></summary>
+        <p class="sb-mine-hint" data-i18n="sb.mineHint">이 기기에서 남긴 글만 보입니다. 지우면 사랑방에서도 사라집니다.</p>
+        <ol class="sb-mine-list" id="sb-mine-list"></ol>
+      </details>
+      <!-- 목록 밖에 둔다 — 마지막 글을 지우면 목록이 통째로 숨는데, 안내까지 숨으면 안 된다 -->
+      <p class="sb-msg sb-mine-msg" id="sb-mine-msg" role="status" aria-live="polite"></p>
+
       <p class="form-hint" id="sb-offline" hidden data-i18n="sb.offline">지금은 글을 받을 수 없습니다. 잠시 뒤 다시 시도해 주세요.</p>
     </div>
   </section>
@@ -254,17 +264,17 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동" data-i18n-aria="aria.toTop">TOP</button>
-<script src="assets/js/config.js?v59c00942" defer></script>
-<script src="assets/js/backend.js?v59c00942" defer></script>
-<script src="assets/js/i18n.min.js?v59c00942" defer></script>
-<script src="assets/js/data.min.js?v59c00942" defer></script>
-<script src="assets/js/tracklinks.min.js?v59c00942" defer></script>
-<script src="assets/js/albums-full.min.js?v59c00942" defer></script>
-<script src="assets/js/albums-en.min.js?v59c00942" defer></script>
-<script src="assets/js/song-moods.min.js?v59c00942" defer></script>
-<script src="assets/js/main.min.js?v59c00942" defer></script>
-<script src="assets/js/motion.min.js?v59c00942" defer></script>
-<script src="assets/js/router.min.js?v59c00942" defer></script>
-<script src="assets/js/deck.min.js?v59c00942" defer></script>
+<script src="assets/js/config.js?vb369b410" defer></script>
+<script src="assets/js/backend.js?vb369b410" defer></script>
+<script src="assets/js/i18n.min.js?vb369b410" defer></script>
+<script src="assets/js/data.min.js?vb369b410" defer></script>
+<script src="assets/js/tracklinks.min.js?vb369b410" defer></script>
+<script src="assets/js/albums-full.min.js?vb369b410" defer></script>
+<script src="assets/js/albums-en.min.js?vb369b410" defer></script>
+<script src="assets/js/song-moods.min.js?vb369b410" defer></script>
+<script src="assets/js/main.min.js?vb369b410" defer></script>
+<script src="assets/js/motion.min.js?vb369b410" defer></script>
+<script src="assets/js/router.min.js?vb369b410" defer></script>
+<script src="assets/js/deck.min.js?vb369b410" defer></script>
 </body>
 </html>

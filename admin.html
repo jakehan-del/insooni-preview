@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080808">
+<!-- 운영자 화면. 검색에 나오지 않게 한다(robots.txt 에서도 막았다).
+     주소가 알려져도 괜찮다 — 문은 서버에 있다. 로그인한 사람이 운영자 명단에
+     없으면 서버 함수가 아무것도 내주지 않는다(supabase/008). -->
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<title>사랑방 운영 | 인순이 INSOONI</title>
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/fonts/body.css?vb369b410">
+<style>
+  :root {
+    --void: #080808; --ivory: #F3EFE7; --muted: #b3a99c; --faint: #9c9284;
+    --line: rgba(243,239,231,.12); --line-strong: rgba(243,239,231,.26);
+    --surface: #0d0d0d; --focus: #0048FF;
+    --ok-bg: rgba(120,190,140,.14); --ok-fg: #a8dcb6;
+    --warn-bg: rgba(230,190,110,.14); --warn-fg: #ecd29a;
+    --bad-bg: rgba(230,120,110,.15); --bad-fg: #f0a89f;
+    --font: "Pretendard Variable", Pretendard, "Apple SD Gothic Neo", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--void); color: var(--ivory); }
+  body { font-family: var(--font); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 860px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 80px; }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  [hidden] { display: none !important; }
+
+  .adm-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+              border-bottom: 1px solid var(--line-strong); padding-bottom: 14px; margin-bottom: 22px; }
+  .adm-head h1 { margin: 0; font-size: 1.35rem; font-weight: 800; letter-spacing: -.02em; }
+  .adm-head .sub { color: var(--faint); font-size: .95rem; }
+
+  /* 로그인 */
+  .adm-login { max-width: 380px; display: grid; gap: 14px; margin-top: 8px; }
+  .adm-login label { display: grid; gap: 6px; font-size: 1rem; color: var(--muted); }
+  .adm-login input {
+    min-height: 48px; padding: 0 14px; font: inherit; font-size: 1.05rem; color: var(--ivory);
+    background: var(--surface); border: 1px solid var(--line-strong); border-radius: 0;
+  }
+  .adm-login input:focus { border-color: var(--ivory); outline: none; }
+  .btn {
+    min-height: 48px; padding: 0 20px; font: inherit; font-size: 1rem; font-weight: 600; cursor: pointer;
+    border-radius: 0; border: 1px solid var(--ivory); background: var(--ivory); color: var(--void);
+  }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .btn--ghost { background: transparent; color: var(--ivory); border-color: var(--line-strong); font-weight: 500; }
+  .btn--ghost:hover { border-color: var(--ivory); }
+  .btn--sm { min-height: 44px; padding: 0 14px; }
+  .msg { min-height: 1.6em; margin: 0; font-size: 1rem; }
+  .msg.bad { color: var(--bad-fg); }
+  .msg.ok { color: var(--ok-fg); }
+
+  /* 도구줄 */
+  .adm-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+  .adm-who { color: var(--muted); font-size: .95rem; margin-right: auto; overflow-wrap: anywhere; }
+
+  /* 탭 */
+  .adm-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--line-strong); margin-bottom: 6px; overflow-x: auto; }
+  .adm-tab {
+    min-height: 48px; padding: 0 16px; font: inherit; font-size: 1rem; cursor: pointer; white-space: nowrap;
+    background: none; border: 0; border-bottom: 2px solid transparent; color: var(--faint);
+  }
+  .adm-tab[aria-pressed="true"] { color: var(--ivory); border-bottom-color: var(--ivory); font-weight: 600; }
+  .adm-tab .n { font-variant-numeric: tabular-nums; margin-left: .3em; }
+
+  /* 목록 */
+  .adm-list { list-style: none; margin: 0; padding: 0; }
+  .adm-item { border-bottom: 1px solid var(--line); padding: 18px 0; display: grid; gap: 8px; }
+  .adm-meta { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; font-size: .95rem; color: var(--faint); }
+  .adm-kind { color: var(--muted); border: 1px solid var(--line-strong); padding: 1px 8px; font-size: .9rem; }
+  .adm-name { color: var(--muted); }
+  .adm-tag { font-size: .88rem; color: var(--faint); }
+  .adm-text { margin: 0; font-size: 1.08rem; white-space: pre-wrap; overflow-wrap: anywhere; word-break: keep-all; }
+  .adm-ai { margin: 0; font-size: .95rem; padding: 6px 10px; justify-self: start; }
+  .adm-ai--ok     { background: var(--ok-bg);   color: var(--ok-fg); }
+  .adm-ai--review { background: var(--warn-bg); color: var(--warn-fg); }
+  .adm-ai--spam   { background: var(--bad-bg);  color: var(--bad-fg); }
+  .adm-ai--none   { color: var(--faint); padding-left: 0; }
+  .adm-acts { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
+  .adm-empty { color: var(--faint); padding: 32px 0; text-align: center; }
+  .adm-note { color: var(--faint); font-size: .92rem; margin: 26px 0 0; }
+
+  .adm-toast {
+    position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%);
+    background: var(--ivory); color: var(--void); padding: 10px 18px; font-weight: 600;
+    opacity: 0; transition: opacity .25s ease; pointer-events: none;
+  }
+  .adm-toast.on { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .adm-toast { transition: none; } }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="adm-head">
+    <h1>사랑방 운영</h1>
+    <span class="sub">인순이 INSOONI · 운영자 전용</span>
+  </header>
+
+  <!-- 설정·서버 상태 안내 (어느 화면에서든 위에 뜬다) -->
+  <p class="msg bad" id="adm-sys" role="alert" hidden></p>
+
+  <!-- 1. 로그인 -->
+  <section id="adm-login" hidden>
+    <form class="adm-login" id="adm-login-form" autocomplete="on">
+      <label for="adm-email">이메일
+        <input id="adm-email" type="email" autocomplete="username" required inputmode="email">
+      </label>
+      <label for="adm-pw">비밀번호
+        <input id="adm-pw" type="password" autocomplete="current-password" required>
+      </label>
+      <button class="btn" type="submit" id="adm-login-btn">로그인</button>
+      <p class="msg" id="adm-login-msg" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <!-- 2. 운영 화면 -->
+  <section id="adm-app" hidden>
+    <div class="adm-bar">
+      <span class="adm-who" id="adm-who"></span>
+      <button class="btn btn--ghost btn--sm" type="button" id="adm-reload">새로고침</button>
+      <button class="btn btn--ghost btn--sm" type="button" id="adm-out">로그아웃</button>
+    </div>
+
+    <div class="adm-tabs" role="group" aria-label="글 상태">
+      <button class="adm-tab" type="button" data-status="pending"  aria-pressed="true">검수 대기<span class="n" data-n="pending"></span></button>
+      <button class="adm-tab" type="button" data-status="approved" aria-pressed="false">올라간 글<span class="n" data-n="approved"></span></button>
+      <button class="adm-tab" type="button" data-status="rejected" aria-pressed="false">내린 글<span class="n" data-n="rejected"></span></button>
+    </div>
+    <p class="msg" id="adm-msg" role="status" aria-live="polite"></p>
+    <ol class="adm-list" id="adm-list"></ol>
+
+    <p class="adm-note">
+      '내리기'는 지우는 것이 아닙니다. 「내린 글」에서 언제든 다시 올릴 수 있습니다.
+      팬이 자기 글을 스스로 지운 경우에는 여기에도 남지 않습니다.
+    </p>
+  </section>
+</main>
+
+<div class="adm-toast" id="adm-toast" role="status" aria-live="polite"></div>
+
+<script src="assets/js/config.js?vb369b410"></script>
+<script src="assets/js/admin.min.js?vb369b410"></script>
+</body>
+</html>
