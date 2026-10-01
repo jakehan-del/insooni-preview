@@ -1,29 +1,63 @@
 -- ════════════════════════════════════════════════════════════════
---  008 · 운영자 화면 + 내 글 지우기
+--  008 · 운영자 화면 + 내 글 지우기   (2판 — 2026-10-01)
 -- ------------------------------------------------------------------
+--  ⚠️ 1판을 받으셨다면 그 파일은 쓰지 마세요. 이 2판만 실행하세요.
+--     1판 실행 뒤 실서버를 점검하니 새 표·함수가 하나도 생기지 않았고,
+--     그 과정에서 더 중요한 구멍을 찾았습니다(아래 0번).
+--
 --  매니저 요청(2026-10-01): "운영자가 지정되어 있어야 하고,
 --  회원가입이 어렵다면 최소한 글 삭제 기능은 있어야 한다."
 --
---  ① 운영자 — 사이트 안 관리 화면(/admin)에서 승인·내리기를 한다.
---     지금까지는 Supabase 표 편집기에 들어갈 수 있는 형님만 할 수 있었다.
---     로그인은 Supabase 인증(이메일 + 비밀번호)이 맡고, 아래 운영자 명단에
---     있는 사람만 통과한다. 명단에 없는 계정은 로그인해도 아무것도 못 본다.
+--  0. 공개 키로 원본 표가 통째로 읽히던 것을 칸 단위로 좁힌다 — 먼저.
+--     004 가 notes 표에 select 를 통째로 열어 두었다(공개 뷰가 '부르는 사람
+--     권한'으로 읽는 방식이라 표 권한이 필요했다). 그 바람에 승인된 글의
+--     지우기용 토큰과 AI 검수 소견까지 공개 키로 읽혔다(실서버 실측).
+--     기존 취소 함수는 '검수 전' 글만 지워서 지금까지는 해가 없었지만,
+--     아래 7번(올라간 글도 지우기)이 켜지는 순간 누구든 남의 글을 지울 수 있게 된다.
+--     그래서 7번보다 먼저, 같은 묶음 안에서 닫는다.
 --
---  ② 내 글 지우기 — 쓴 사람이 자기 한 줄을 언제든 지운다.
---     지금까지는 검수 전(pending)에만 지울 수 있었고, 올라간 뒤에는
---     "공식 채널로 알려 달라"고만 했다. 글마다 붙은 토큰은 쓴 기기에만
---     있으므로 그 자체가 '내가 쓴 글'이라는 증명이다 — 로그인 없이 된다.
+--  ① 운영자 — 사이트 안 관리 화면(/admin)에서 승인·내리기를 한다.
+--     로그인은 Supabase 인증(이메일 + 비밀번호), 아래 운영자 명단에 있는
+--     사람만 통과한다. 명단에 없는 계정은 로그인해도 아무것도 못 본다.
+--  ② 내 글 지우기 — 쓴 사람이 자기 한 줄을 언제든 지운다(쓴 기기의 토큰으로).
 --
 --  안전합니다.
---    · 기존 표·함수를 지우거나 고치지 않습니다. 새것만 더합니다.
---      (cancel_note 는 그대로 둡니다 — 옛 화면을 캐시해 둔 기기가 아직 부릅니다)
+--    · 전체가 한 묶음(begin … commit)입니다. 중간에 하나라도 실패하면
+--      아무것도 바뀌지 않습니다.
+--    · 맨 끝의 안전장치가 공개 키 권한으로 모든 공개 뷰를 실제로 읽어 봅니다.
+--      화면이 하나라도 깨지거나 토큰이 아직 읽히면 스스로 전체를 취소합니다.
+--    · 기존 함수는 고치지 않습니다(cancel_note 는 옛 화면을 캐시한 기기용으로 둡니다).
 --    · 여러 번 실행해도 결과가 같습니다.
---    · 운영자 화면에는 '지우기'가 없습니다. '내리기'는 status 를 rejected 로
---      바꿀 뿐이라 언제든 다시 올릴 수 있습니다.
 --
---  실행하는 곳: Supabase 대시보드 → SQL Editor → 붙여넣고 Run
+--  실행: Supabase 대시보드 → SQL Editor → 전체 붙여넣기 → Run
+--  성공하면 아래쪽 결과 창에 ✅ 표가 뜹니다. 그 화면을 보내 주세요.
 --  그다음 맨 아래 「운영자 등록」을 이메일만 바꿔서 따로 실행하세요.
 -- ════════════════════════════════════════════════════════════════
+
+begin;
+
+
+-- ── 0. 원본 표는 칸 단위로만 연다 ──────────────────────────────
+--  공개 뷰가 실제로 쓰는 칸만 연다(뷰 정의에서 뽑았다). 닫는 칸:
+--    notes   — token(지우기 열쇠) · ai_verdict · ai_reason · ai_at · preset
+--    letters · posts · dreams — ai_verdict · ai_reason · ai_at
+--  '마지막으로 읽은 날'(read_at)은 이미 공개 문구라 연다(sarangbang_state 가 쓴다).
+revoke select on public.notes   from anon, authenticated;
+grant  select (id, song_key, song_title, song_year, name, city, body, kind,
+               status, created_at, read_at)
+       on public.notes   to anon, authenticated;
+
+revoke select on public.letters from anon, authenticated;
+grant  select (id, name, category, body, status, created_at)
+       on public.letters to anon, authenticated;
+
+revoke select on public.posts   from anon, authenticated;
+grant  select (id, name, body, status, created_at)
+       on public.posts   to anon, authenticated;
+
+revoke select on public.dreams  from anon, authenticated;
+grant  select (id, name, text, status, created_at)
+       on public.dreams  to anon, authenticated;
 
 
 -- ── 1. 운영자 명단 ─────────────────────────────────────────────
@@ -257,6 +291,74 @@ grant  execute on function public.admin_whoami()                        to authe
 grant  execute on function public.admin_list(text, int)                 to authenticated;
 grant  execute on function public.admin_set_status(text, bigint, text)  to authenticated;
 grant  execute on function public.withdraw_note(uuid)                   to anon, authenticated;
+
+
+-- ── 9. 안전장치 — 공개 키 권한으로 실제로 읽어 본다 ─────────────
+--  하나라도 실패하면 예외가 나고, 위의 모든 변경이 함께 취소된다.
+do $chk$
+begin
+  set local role anon;
+
+  -- 화면이 쓰는 공개 뷰는 전부 그대로 읽혀야 한다
+  perform * from public.public_notes     limit 1;
+  perform * from public.notes_filled     limit 1;
+  perform * from public.issue_notes      limit 1;
+  perform * from public.public_issues    limit 1;
+  perform * from public.sarangbang_state limit 1;
+  perform * from public.public_letters   limit 1;
+  perform * from public.public_posts     limit 1;
+  perform * from public.public_dreams    limit 1;
+  perform * from public.public_cheers    limit 1;
+  perform * from public.song_tally       limit 1;
+  perform * from public.presets          limit 1;
+
+  -- 지우기 열쇠(토큰)는 읽히면 안 된다
+  begin
+    perform token from public.notes limit 1;
+    raise exception '안전장치: 공개 키로 토큰 칸이 아직 읽힙니다 — 전체를 취소합니다';
+  exception when insufficient_privilege then null;
+  end;
+  -- AI 검수 소견도
+  begin
+    perform ai_reason from public.notes limit 1;
+    raise exception '안전장치: 공개 키로 AI 소견이 아직 읽힙니다 — 전체를 취소합니다';
+  exception when insufficient_privilege then null;
+  end;
+  -- 운영자 함수는 공개 키로 불리면 안 된다
+  begin
+    perform public.admin_list('pending', 1);
+    raise exception '안전장치: 공개 키로 운영자 함수가 불립니다 — 전체를 취소합니다';
+  exception when insufficient_privilege then null;
+  end;
+
+  reset role;
+end
+$chk$;
+
+-- 사이트(PostgREST)가 새 함수·표를 바로 알아보게 한다.
+-- 1판 실행 뒤 '찾을 수 없음'이 났던 원인 후보 하나를 여기서 지운다.
+notify pgrst, 'reload schema';
+
+commit;
+
+
+-- ── 10. 확인표 — 결과 창에 뜬다 ──────────────────────────────
+select 점검, 결과 from (
+  select 번호, 점검, case when 결과 then '✅' else '❌' end as 결과
+  from (values
+    (1, '운영자 명단 표가 생겼다',                    to_regclass('public.admins') is not null),
+    (2, '처리 기록 표가 생겼다',                      to_regclass('public.moderation_log') is not null),
+    (3, '공개 키로 지우기 토큰을 못 읽는다',           not has_column_privilege('anon', 'public.notes', 'token', 'SELECT')),
+    (4, '공개 키로 AI 검수 소견을 못 읽는다',          not has_column_privilege('anon', 'public.notes', 'ai_reason', 'SELECT')),
+    (5, '공개 키로 운영자 함수를 못 부른다',           not has_function_privilege('anon', 'public.admin_list(text, integer)', 'EXECUTE')),
+    (6, '로그인한 사람은 운영자 함수를 부를 수 있다',   has_function_privilege('authenticated', 'public.admin_list(text, integer)', 'EXECUTE')),
+    (7, '팬은 내 글 지우기를 부를 수 있다',             has_function_privilege('anon', 'public.withdraw_note(uuid)', 'EXECUTE')),
+    (8, '사랑방 공개 뷰는 그대로 읽힌다',              has_table_privilege('anon', 'public.public_notes', 'SELECT'))
+  ) as t(번호, 점검, 결과)
+  union all
+  select 9, '등록된 운영자 ' || (select count(*) from public.admins)::text || '명 (0명이면 아래 「운영자 등록」을 실행)', 'ℹ️'
+) x
+order by 번호;
 
 
 -- ════════════════════════════════════════════════════════════════
