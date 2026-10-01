@@ -39,6 +39,19 @@ with sync_playwright() as p:
         r = c("/rest/v1/%s?select=*&limit=1" % v, "GET"); chk("공개 뷰 %s 그대로·토큰 없음" % v, r["status"] == 200 and "token" not in r["cols"], r)
     r = c("/rest/v1/notes?select=id,status&status=neq.approved&limit=1", "GET")
     chk("검수 전 글은 안 보임", r["status"] == 200 and not r["cols"], r)
+    # 팬 화면이 부르는 쓰기 함수가 살아 있는가. 권한이 빠지면 화면은 '서버 오류'만 띄우고 끝난다.
+    # 입력 검사가 저장보다 앞에 있으므로 일부러 틀린 값을 보내면 행이 생기지 않는다(001·003·004·005).
+    # 인자는 backend.js 가 보내는 것과 똑같이 전부 보낸다 — 하나라도 빠지면 PostgREST 가 함수를 못 찾는다(PGRST202).
+    song = {"p_song_key": None, "p_song_title": None, "p_song_year": None, "p_name": None}
+    for fn, b, want in [("submit_note",   dict(song, p_body=""), "empty"),
+                        ("submit_preset", dict(song, p_chip=0),  "bad_chip"),
+                        ("submit_dream",  {"p_name": None, "p_text": ""}, "empty"),
+                        ("request_song",  {"p_title": ""}, "empty"),
+                        ("subscribe",     {"p_email": "x"}, "bad_email"),
+                        ("note_status",   {"p_token": None}, "bad_token"),
+                        ("cancel_note",   {"p_token": None}, "bad_token")]:
+        r = c("/rest/v1/rpc/" + fn, "POST", b)
+        chk("팬 쓰기 함수 %s 살아 있음 · 틀린 입력 → %s" % (fn, want), r["status"] == 200 and r["reason"] == want, r)
     br.close()
 f = 0
 for n, ok, info in R:

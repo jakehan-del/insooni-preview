@@ -109,6 +109,11 @@ def main():
                               ("ANTHROPIC_API_KEY", akey)) if not v]
     if missing:
         print("건너뜁니다 — 없는 설정:", ", ".join(missing))
+        # 실패로 만들지는 않지만 초록불 뒤에 숨지도 않는다 — 2026-10-01, 키 두 개가 빠진 채
+        # 하루 두 번 '성공'으로 끝나며 아무것도 안 하고 있었다. Actions 요약에 노란 경고로 뜬다.
+        if os.environ.get("GITHUB_ACTIONS"):
+            print("::warning title=AI 검수 꺼짐::secret 없음 — %s. 운영 화면에 AI 소견이 붙지 않습니다."
+                  % ", ".join(missing))
         return 0
     base = base.rstrip("/")
 

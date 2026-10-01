@@ -197,7 +197,24 @@ def restamp_cache_bust():
     print("캐시 무효화: ?v%s (%d개 파일)" % (stamp, n))
 
 
+def check_archive_preload():
+    """archive.html 의 미리 받기 사진이 격자 첫 장(data.js 의 lead)과 같은지.
+
+    어긋나면 첫 화면에 없는 사진을 최우선으로 받느라 진짜 첫 장이 늦어진다 —
+    화면은 멀쩡해 보이므로 사람 눈으로는 영영 못 잡는다. 그래서 빌드를 멈춘다.
+    """
+    data = io.open(os.path.join(ROOT, "assets/js/data.js"), encoding="utf-8").read()
+    html = io.open(os.path.join(ROOT, "archive.html"), encoding="utf-8").read()
+    arch = data[data.find("archive: ["):]
+    lead = re.search(r'lead:\s*true,\s*img:\s*"([^"]+)"', arch)
+    pre = re.findall(r'<link rel="preload" as="image" href="([^"]+)"', html)
+    if not lead or pre != [lead.group(1)]:
+        sys.exit("✗ archive.html 미리 받기 %s ≠ data.js archive lead %s — 둘을 맞춰 주세요"
+                 % (pre, lead.group(1) if lead else "없음"))
+
+
 def run():
+    check_archive_preload()
     restamp_site_url()
     restamp_clean_urls()
     split_fonts()

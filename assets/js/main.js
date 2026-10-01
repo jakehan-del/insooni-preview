@@ -1053,7 +1053,10 @@
         b.type = "button";
         b.setAttribute("aria-haspopup", "dialog");
         b.setAttribute("aria-label", tr(a, "caption") + " " + t("aria.zoom", "크게 보기"));
-        b.innerHTML = '<img src="' + esc(a.img) + '" alt="' + esc(tr(a, "caption")) + '" width="' + a.w + '" height="' + a.h + '" loading="lazy">' +
+        // 첫 장은 첫 화면이다 — lazy 를 걸면 레이아웃이 끝날 때까지 요청이 미뤄지고
+        // 그 뒤엔 다른 칸들과 회선을 나눠 쓴다. 첫 장만 즉시·우선으로 받는다.
+        var load = items.indexOf(a) === 0 ? 'fetchpriority="high"' : 'loading="lazy"';
+        b.innerHTML = '<img src="' + esc(a.img) + '" alt="' + esc(tr(a, "caption")) + '" width="' + a.w + '" height="' + a.h + '" ' + load + '>' +
           '<span class="arch-cap">' + esc(tr(a, "year")) + " · " + esc(kindCat(a.cat)) + "</span>";
         b.addEventListener("click", function () { openImageViewer(i, b); });
         grid.appendChild(b);
