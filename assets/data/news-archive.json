@@ -1,8 +1,17 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-10-02 04:23",
- "count": 67,
+ "updated": "2026-10-02 08:49",
+ "count": 68,
  "items": [
+  {
+   "date": "2026-10-02",
+   "title": "다문화와 평화의 축제, '김포 세계인 큰잔치' 11일 김포아트빌리지...인순이 공연도",
+   "source": "글로벌이코노믹",
+   "sourceSite": "https://www.g-enews.com",
+   "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxNSGUyVE9oMFhtQjdqQnJSWDRoaHZYUzNNZGxTSEN3bW9EQXMzZS1FdE5GY2tiTllnU0liWWxCR0dyYUhVRFREenYzM29uMnBYSC1wOTBzTUFBbWV0TG1QNFRWNXVEX2N3dUM3QmxFMVN2Mlkxdmg5a3phUUVRNXlTLTc3UDgtdFNmbm9R?oc=5",
+   "type": "공연",
+   "auto": true
+  },
   {
    "date": "2026-09-30",
    "title": "최백호·인순이·소찬휘 총출동…윤항기 \"일생에 한 번뿐인 헌정 공연, 후배들 바쁜데도 함께해줘\" [엑's 현장]",

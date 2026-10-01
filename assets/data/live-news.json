@@ -1,8 +1,17 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-10-02 04:23",
+ "updated": "2026-10-02 08:49",
  "items": [
+  {
+   "date": "2026-10-02",
+   "title": "다문화와 평화의 축제, '김포 세계인 큰잔치' 11일 김포아트빌리지...인순이 공연도",
+   "source": "글로벌이코노믹",
+   "sourceSite": "https://www.g-enews.com",
+   "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxNSGUyVE9oMFhtQjdqQnJSWDRoaHZYUzNNZGxTSEN3bW9EQXMzZS1FdE5GY2tiTllnU0liWWxCR0dyYUhVRFREenYzM29uMnBYSC1wOTBzTUFBbWV0TG1QNFRWNXVEX2N3dUM3QmxFMVN2Mlkxdmg5a3phUUVRNXlTLTc3UDgtdFNmbm9R?oc=5",
+   "type": "공연",
+   "auto": true
+  },
   {
    "date": "2026-09-30",
    "title": "최백호·인순이·소찬휘 총출동…윤항기 \"일생에 한 번뿐인 헌정 공연, 후배들 바쁜데도 함께해줘\" [엑's 현장]",
@@ -16,7 +25,7 @@
   {
    "date": "2026-09-28",
    "title": "진해아트홀 개관기념 특별공연 ‘인순이 스페셜 콘서트’ 10월 3일 개최",
-   "source": "koreajn.co.kr",
+   "source": "시사코리아저널",
    "sourceSite": "http://www.koreajn.co.kr",
    "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9XcGZ4aGhzN2lKc2xhNVpQZUFSZS1zMUJib2NIckZMUVlURzdCMERZd3YyZFhZdUItOXdvazRTV1NwTjBsR2JCVmhocWVOdWt0RzhONnRfU3A5VTNJRHlLcjZJbDc1MEpXLTdJ?oc=5",
    "type": "공연",
@@ -33,18 +42,9 @@
    "auto": true
   },
   {
-   "date": "2026-09-24",
-   "title": "안방엔 이승철, 공연장엔 인순이…추석 음악 한 상",
-   "source": "서울신문",
-   "sourceSite": "https://www.seoul.co.kr",
-   "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE1mSTZFeUV1d21ZdUljMkRzVG1VZDJqdGZ5dEQtYjdvX0tUdTdTMTJUTmwtNmxvbmh0WHBQUEZFb0t4aDJ6R3JjYnJFZk9sZnRYTkV2VmF5OVc1bWtLY2lXbFdPRnVxNHFRY3pTZWg4bGJTWWtkeDVFSUU0MA?oc=5",
-   "type": "공연",
-   "auto": true
-  },
-  {
    "date": "2026-09-21",
    "title": "윤항기 65주년 헌정 공연, 최백호·인순이·전영록 등 출연…10명 후배들이 각자 색깔로 재해석 '헌정'",
-   "source": "spotvnews.co.kr",
+   "source": "SPOTV NEWS",
    "sourceSite": "https://www.spotvnews.co.kr",
    "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1PSVZrNjJyV0N4UVhqS0xxWE5sXzZ5ZGcteVRDVkhialJyVTk3aUQ0VXJFVjBtM3BGWjJmeGJMdU9lSFAxM1FZUkxtNlMzd1Fqbk9aVEQwMklmWUg3QjJRMmNmSTdGZkNPSzIzR241cW8?oc=5",
    "type": "공연",
