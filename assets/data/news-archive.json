@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-10-01 08:37",
- "count": 66,
+ "updated": "2026-10-01 14:23",
+ "count": 67,
  "items": [
   {
    "date": "2026-09-30",
@@ -37,6 +37,16 @@
    "source": "뉴스경남",
    "sourceSite": "https://www.newsgn.com",
    "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9rRzdVNlBfVG1CS3RneE9NTGVwQy10OW43NWRMQlQzeThwXzBvdkZQSXU4ZTkxbFJ2d1RLZGVjMzBpZGNMU3hiSEJXZFlIYTh5YUJzSmp2YVZGNDlHczhIY21HUE1MRm55?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 2
+  },
+  {
+   "date": "2026-09-28",
+   "title": "진해아트홀 개관기념 특별공연 ‘인순이 스페셜 콘서트’ 10월 3일 개최",
+   "source": "시사코리아저널",
+   "sourceSite": "http://www.koreajn.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9XcGZ4aGhzN2lKc2xhNVpQZUFSZS1zMUJib2NIckZMUVlURzdCMERZd3YyZFhZdUItOXdvazRTV1NwTjBsR2JCVmhocWVOdWt0RzhONnRfU3A5VTNJRHlLcjZJbDc1MEpXLTdJ?oc=5",
    "type": "공연",
    "auto": true,
    "also": 2

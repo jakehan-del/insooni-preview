@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
  "mode": "규칙 기반",
- "updated": "2026-10-01 08:37",
+ "updated": "2026-10-01 14:23",
  "items": [
   {
    "date": "2026-09-30",
@@ -15,22 +15,22 @@
   },
   {
    "date": "2026-09-28",
+   "title": "진해아트홀 개관기념 특별공연 ‘인순이 스페셜 콘서트’ 10월 3일 개최",
+   "source": "시사코리아저널",
+   "sourceSite": "http://www.koreajn.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9XcGZ4aGhzN2lKc2xhNVpQZUFSZS1zMUJib2NIckZMUVlURzdCMERZd3YyZFhZdUItOXdvazRTV1NwTjBsR2JCVmhocWVOdWt0RzhONnRfU3A5VTNJRHlLcjZJbDc1MEpXLTdJ?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 2
+  },
+  {
+   "date": "2026-09-28",
    "title": "'거위의 꿈' 진해서 울린다…인순이, 아트홀 개관 축하",
-   "source": "hansbiz.co.kr",
+   "source": "한스경제",
    "sourceSite": "http://www.hansbiz.co.kr",
    "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5JY1RFMGRYczNrUnpXRTMzUlpjaUxjWHhKMV8yelBBbHdQNlZuZ1NIRkViOFRJN0haNHluVmczX3gyUkcwWXhDa2dKMnNEb0kwcTItbmtQdTBoV21LNVNqTnozU3dwSmJCdC130gFvQVVfeXFMTW9iS21HNVZ1aW1SUmdDc08tSzVDYTNUbW52eUptVXZLdVd0R0hHMDJwaVpmYTBJR3pNTUl2cnhJVms4eWZGWk5WVXpkaFhTMW0tdFpCc0IweVdQYmhYeUs0WDlKbFVrLXZRM0tvVG9V?oc=5",
    "type": "보도",
    "auto": true
-  },
-  {
-   "date": "2026-09-28",
-   "title": "진해아트홀 개관기념 특별공연 ‘인순이 스페셜 콘서트’ 10월 3일 개최",
-   "source": "뉴스경남",
-   "sourceSite": "https://www.newsgn.com",
-   "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9rRzdVNlBfVG1CS3RneE9NTGVwQy10OW43NWRMQlQzeThwXzBvdkZQSXU4ZTkxbFJ2d1RLZGVjMzBpZGNMU3hiSEJXZFlIYTh5YUJzSmp2YVZGNDlHczhIY21HUE1MRm55?oc=5",
-   "type": "공연",
-   "auto": true,
-   "also": 2
   },
   {
    "date": "2026-09-24",
