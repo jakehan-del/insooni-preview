@@ -13,6 +13,13 @@
   · 한글 제목·라벨이 고정폭 서체, '공연' 라벨이 화면 폭 전체 상자
 기대값은 사람이 기사 제목을 하나씩 읽고 정했다. 기대값을 고쳐야 한다면 그 이유를 이 파일에 적는다.
 
+2026-10-03 공연 당일 검수 2바퀴에서 더한 화면 단언(--ui):
+  · U15 메타 줄 구분점(·)이 줄 머리에 서지 않는다(320×21 · 375×17 · EN) + 당기기를 빼면 잡히는지 뮤테이션
+  · U16 거르개 글자 사이 16px 이상(영어에서 9~10px 로 붙었다)
+  · U17 손으로 쓴 오늘 소식에만 「오늘」(시계를 2026-10-03 로 고정), 진해 공연 = 한 줄 + 관련 기사, 다음 날 「오늘」 0
+  · U18 영어 날짜 'Oct 2, 2026' · 'Sep 9 – 30, 2026' · 목록 'Sep 28'(한국식 '2026. 10. 2.' 금지)
+  · U10 은 innerWidth 가 아니라 주문한 폭과 비교한다 — 폰 흉내에서는 넘치면 화면이 넓어져 넘침이 감춰진다
+
 뮤테이션: 수집기의 한 곳을 일부러 망가뜨려(예: 낱말 포함 비교를 끄기) 이 검사가
 **실패하는지** 본다. 망가뜨렸는데도 통과하면 검사가 아무것도 지키지 않는 것이다.
 종료코드: 하나라도 실패하면 1.
@@ -364,6 +371,49 @@ UI_PROBE = r"""() => {
   return out;
 }"""
 
+# 메타 줄 구분점(·)이 줄 머리에 서는가 — 줄이 접히면 둘째 줄이 「· 스타뉴스」로 시작했다(검수 2바퀴).
+# 점은 각 항목의 ::before. 줄 머리 항목의 점 상자가 메타 상자와 겹치거나(보인다)
+# 메타가 넘침을 자르지 않으면(상자 밖에서도 보인다) 실패. 줄 가운데 점은 앞 항목과 겹치면 안 된다.
+DOT_PROBE = r"""() => {
+  const out = {dots: 0, wraps: 0, lead: [], overlap: []};
+  document.querySelectorAll('main.news .nw-meta').forEach(m => {
+    if (!m.checkVisibility || !m.checkVisibility()) return;
+    const mr = m.getBoundingClientRect(), mcs = getComputedStyle(m);
+    const clips = mcs.overflowX !== 'visible';
+    let prev = null;
+    [...m.children].forEach((s, i) => {
+      const r = s.getBoundingClientRect(), b = getComputedStyle(s, '::before');
+      const start = !prev || Math.abs(r.top - prev.top) > 2;
+      if (start && prev) out.wraps++;
+      if (b.content && b.content.indexOf('·') >= 0) {
+        out.dots++;
+        const w = parseFloat(b.width) || 0;
+        const shown = !clips || (r.left + w > mr.left + .5);
+        if (start && shown) out.lead.push(m.textContent.trim().slice(0, 30));
+        if (!start && prev && r.left < prev.right - .5) out.overlap.push(m.textContent.trim().slice(0, 30));
+      }
+      prev = r;
+    });
+  });
+  return out;
+}"""
+
+# 거르개 단추 사이 '글자' 간격(단추 상자가 아니라 글자 끝과 다음 글자 머리) — 영어에서 9~10px 로 붙었다
+GAP_PROBE = r"""() => {
+  const bs = [...document.querySelectorAll('#news-filter button')], gaps = [], small = [];
+  const box = e => { const g = document.createRange(); g.selectNodeContents(e); return g.getBoundingClientRect(); };
+  for (let i = 0; i < bs.length; i++) {
+    const r = bs[i].getBoundingClientRect();
+    if (r.width < 43.5 || r.height < 43.5) small.push(bs[i].textContent + ':' + Math.round(r.width) + 'x' + Math.round(r.height));
+    if (i) { const a = box(bs[i - 1]), b = box(bs[i]); if (Math.abs(a.top - b.top) < 4) gaps.push(Math.round(b.left - a.right)); }
+  }
+  return {n: bs.length, gaps, min: gaps.length ? Math.min.apply(null, gaps) : 0, small};
+}"""
+
+EN_MON = r"(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)"
+EN_DATE = re.compile(r"^%s \d{1,2}(?:, \d{4})?(?: – (?:%s )?\d{1,2})?, \d{4}$" % (EN_MON, EN_MON))
+EN_SHORT = re.compile(r"^%s \d{1,2}$" % EN_MON)
+
 
 def ui_checks():
     try:
@@ -394,7 +444,7 @@ def ui_checks():
     with sync_playwright() as p:
         br = p.chromium.launch()
 
-        def page(w, h, fs=None, lang=None, mobile=True):
+        def page(w, h, fs=None, lang=None, mobile=True, clock=None):
             ctx = br.new_context(viewport={"width": w, "height": h}, is_mobile=mobile, has_touch=mobile)
             extra = ""
             if fs is not None:
@@ -403,6 +453,8 @@ def ui_checks():
                 extra += "localStorage.setItem('insooni_lang','\"%s\"');" % lang
             ctx.add_init_script(init % extra)
             pg = ctx.new_page()
+            if clock:
+                pg.clock.set_fixed_time(clock)   # 화면의 '오늘'을 고정한다 — 검사 결과가 돌리는 날에 따라 바뀌지 않게
             errs = []
             pg.on("pageerror", lambda e: errs.append(str(e)[:120]))
             pg.on("console", lambda m: m.type == "error" and errs.append(m.text[:120]))
@@ -473,10 +525,55 @@ def ui_checks():
         pg.click(".nw-older"); pg.wait_for_timeout(150)
         pg.evaluate("() => document.querySelectorAll('.nw-more').forEach(b => b.click())")
         pg.wait_for_timeout(150)
-        ov = pg.evaluate("() => ({doc: document.documentElement.scrollWidth - innerWidth, fs: getComputedStyle(document.documentElement).fontSize,"
-                         " wide: [...document.querySelectorAll('.news .nw-item *')].filter(e => e.getBoundingClientRect().right > innerWidth + 1 && !e.closest('.nw-filter')).length})")
-        ok(ov["doc"] <= 0 and ov["wide"] == 0, "U10 320px·글자 %s — 가로 넘침 없음 (문서 %dpx, 넘친 요소 %d)" % (ov["fs"], ov["doc"], ov["wide"]))
+        # 폰 흉내(is_mobile)에서는 내용이 넘치면 브라우저가 화면을 넓혀(innerWidth 320 → 943) 넘침을 감춘다 —
+        # innerWidth 가 아니라 주문한 폭(320)과 비교하고, innerWidth 가 그대로인지도 본다.
+        ov = pg.evaluate("(W) => ({iw: innerWidth, doc: document.documentElement.scrollWidth - W, fs: getComputedStyle(document.documentElement).fontSize,"
+                         " wide: [...document.querySelectorAll('.news .nw-item *')].filter(e => e.getBoundingClientRect().right > W + 1 && !e.closest('.nw-filter')).length})", 320)
+        ok(ov["iw"] == 320 and ov["doc"] <= 0 and ov["wide"] == 0,
+           "U10 320px·글자 %s — 가로 넘침 없음 (화면 %dpx, 문서 %dpx, 넘친 요소 %d)" % (ov["fs"], ov["iw"], ov["doc"], ov["wide"]))
+        dp = pg.evaluate(DOT_PROBE)
+        ok(dp["dots"] >= 10 and dp["wraps"] >= 1, "U15 320·21px — 구분점 %d개·접힌 메타 %d줄을 실제로 쟀다" % (dp["dots"], dp["wraps"]))
+        ok(not dp["lead"] and not dp["overlap"], "U15 320·21px — 줄 머리에 선 구분점 0, 앞 글자와 겹친 점 0 %s" % (dp["lead"][:2] + dp["overlap"][:2]))
+        # 감사기를 의심한다 — 당기기(margin-left)를 빼면 줄 머리 점이 보여야 한다
+        pg.add_style_tag(content=".news .nw-when,.news .nw-today,.news .nw-src{margin-left:0!important}")
+        pg.wait_for_timeout(80)
+        mu = pg.evaluate(DOT_PROBE)
+        ok(len(mu["lead"]) >= 1, "U15-뮤테이션 당기기를 빼면 줄 머리 점을 잡는다 (%d)" % len(mu["lead"]))
         ok(not errs, "U13 320 콘솔 오류 없음 %s" % errs[:2])
+        ctx.close()
+
+        # ── 폰 375 · 기본 글자(17px) — 같은 점 단언(검수 지적은 기본 크기에서도 생긴다는 것)
+        ctx, pg, errs = page(375, 812)
+        pg.click(".nw-older"); pg.wait_for_timeout(150)
+        dp = pg.evaluate(DOT_PROBE)
+        ok(dp["dots"] >= 10 and not dp["lead"] and not dp["overlap"],
+           "U15 375·17px — 줄 머리 구분점 0 (점 %d · 접힘 %d · %s)" % (dp["dots"], dp["wraps"], dp["lead"][:2] + dp["overlap"][:2]))
+        gp = pg.evaluate(GAP_PROBE)
+        ok(gp["n"] >= 3 and gp["min"] >= 16 and not gp["small"], "U16 한국어 거르개 — 글자 사이 16px 이상·단추 44px (최소 %dpx %s)" % (gp["min"], gp["small"][:2]))
+        ctx.close()
+
+        # ── 공연 당일(2026-10-03 KST 정오로 고정) — 손으로 쓴 오늘 소식에 「오늘」, 같은 일의 기사는 그 줄에 붙는다
+        ctx, pg, errs = page(390, 844, clock="2026-10-03T12:00:00+09:00")
+        td = pg.evaluate("""() => { const rows=[...document.querySelectorAll('.nw-item')];
+          return rows.map((r,i) => ({i, auto: !!r.querySelector('.nw-title a'), today: !!r.querySelector('.nw-today'),
+            date: (r.querySelector('.nw-when time')||{}).getAttribute ? r.querySelector('.nw-when time').getAttribute('datetime') : '',
+            t: r.querySelector('.nw-title').textContent, more: (r.querySelector('.nw-more')||{}).textContent||'',
+            todayTxt: (r.querySelector('.nw-today')||{}).textContent||''})); }""")
+        newer = [r for r in td if r["date"] > "2026-10-03"]
+        tdy = [r for r in td if r["today"]]
+        ok(bool(tdy) and all((not r["auto"]) and r["date"] == "2026-10-03" and r["todayTxt"] == "오늘" for r in tdy),
+           "U17 「오늘」은 오늘 날짜의 손으로 쓴 소식에만 (%s)" % [(r["t"][:14], r["date"]) for r in tdy][:3])
+        jh = [r for r in td if "진해아트홀" in r["t"]]
+        ok(len(jh) == 1 and not jh[0]["auto"] and jh[0]["more"].startswith("관련 기사") and int(re.sub(r"\D", "", jh[0]["more"]) or 0) >= 3,
+           "U17 진해 공연 = 손으로 쓴 한 줄 + 같은 일의 기사(관련 기사 3건 이상) — 따로 선 기사 줄 없음 %s" % [(r["t"][:16], r["more"]) for r in jh])
+        ok(newer or (td and td[0]["t"] == jh[0]["t"] if jh else False),
+           "U17 공연 당일 대표 줄 = 진해 공연(이보다 늦은 보도가 없을 때) — 지금 대표 '%s'" % (td[0]["t"][:20] if td else ""))
+        ok(not errs, "U13 공연 당일 콘솔 오류 없음 %s" % errs[:2])
+        ctx.close()
+        # 다음 날 — 「오늘」이 저절로 사라진다(문장이 낡지 않는다)
+        ctx, pg, errs = page(390, 844, clock="2026-10-04T09:00:00+09:00")
+        n_today = pg.evaluate("() => document.querySelectorAll('.nw-today').length")
+        ok(n_today == 0, "U17 다음 날(10/4)에는 「오늘」 0개 (지금 %d)" % n_today)
         ctx.close()
 
         # ── PC 1440 — 왼쪽 메타 열
@@ -497,6 +594,20 @@ def ui_checks():
             more: (document.querySelector('.nw-more')||{}).textContent||'', note: document.querySelector('.nw-note').textContent.slice(0, 20)})""")
         ok(e["when"].startswith("Reported ") and e["f0"] == "All" and e["more"].endswith("articles") and e["note"].startswith("Press coverage"),
            "U12 EN — 'Reported …' · 'All' · 'N articles' · 안내문 %s" % e)
+        pg.evaluate("() => document.querySelectorAll('.nw-more').forEach(b => b.click())")
+        pg.wait_for_timeout(120)
+        ed = pg.evaluate("""() => ({rows: [...document.querySelectorAll('.nw-item')].map(r => ({auto: !!r.querySelector('.nw-title a'),
+              when: r.querySelector('.nw-when').textContent.trim()})),
+            press: [...document.querySelectorAll('.nw-p-date')].map(x => x.textContent.trim())})""")
+        bad_w = [r["when"] for r in ed["rows"] if not EN_DATE.match(r["when"][len("Reported "):] if r["auto"] else r["when"])
+                 or (r["auto"] != r["when"].startswith("Reported "))]
+        bad_p = [x for x in ed["press"] if not EN_SHORT.match(x)]
+        ok(ed["rows"] and ed["press"] and not bad_w and not bad_p,
+           "U18 EN 날짜 = 'Oct 2, 2026' · 'Sep 9 – 30, 2026' · 목록 'Sep 28' (줄 %d · 목록 %d · 어긋남 %s)" % (len(ed["rows"]), len(ed["press"]), (bad_w + bad_p)[:3]))
+        gp = pg.evaluate(GAP_PROBE)
+        ok(gp["n"] >= 3 and gp["min"] >= 16 and not gp["small"], "U16 EN 거르개 — 글자 사이 16px 이상·단추 44px (최소 %dpx · %s · %s)" % (gp["min"], gp["gaps"][:6], gp["small"][:2]))
+        dp = pg.evaluate(DOT_PROBE)
+        ok(not dp["lead"] and not dp["overlap"], "U15 EN — 줄 머리 구분점 0 (점 %d · 접힘 %d)" % (dp["dots"], dp["wraps"]))
         ok(not errs, "U13 EN 콘솔 오류 없음 %s" % errs[:2])
         ctx.close()
         br.close()
@@ -527,7 +638,7 @@ def main(argv):
             fails += 1
 
     if "--ui" in argv:
-        print("③ 화면 — news.html (폰 390 · 작은 폰 320×21px · PC 1440 · EN)")
+        print("③ 화면 — news.html (폰 390 · 작은 폰 320×21px · 폰 375×17px · 공연 당일/다음 날 · PC 1440 · EN)")
         ub, un = ui_checks()
         print("  %d개 단언 중 실패 %d" % (un, len(ub)))
         fails += len(ub)

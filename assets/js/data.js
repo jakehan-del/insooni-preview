@@ -295,6 +295,12 @@ window.SITE_DATA = {
 
   /* ---------- 소식 (type: 공지 | 공연 | 방송 | 보도) ---------- */
   news: [
+    /* 2026-10-03 진해 공연 — 공연 당일 소식의 맨 위가 '10/2 김포 행사 보도'였다(대표 = 가장 최근 보도라는 규칙의 결과).
+       사실만: 날짜·시각·장소·이름은 뉴스경남 2026-09-28 「진해아트홀 개관기념 특별공연 '인순이 스페셜 콘서트'
+       10월 3일 개최」(10월 3일(토) 오후 5시, 진해아트홀 공연장)와 supabase/012 의 공연 등록값 그대로.
+       문장에 '오늘'을 쓰지 않는다 — 다음 날 낡는다. 당일 표시는 main.js 가 날짜로 붙인다(「오늘」).
+       같은 일의 자동 수집 기사 3건(뉴스경남·시사코리아저널·한스경제)은 nwSame 이 「관련 기사」로 붙인다. */
+    { date: "2026-10-03", type: "공연", title: "진해아트홀 개관기념 '인순이 스페셜 콘서트'", excerpt: "10월 3일(토) 오후 5시, 진해아트홀 공연장. 아트홀 개관을 기념하는 특별공연입니다.", en: { title: "INSOONI Special Concert — Jinhae Art Hall Opening", excerpt: "Saturday, October 3, 5 PM, at Jinhae Art Hall — a special concert celebrating the hall's opening." } },
     { date: "2026-07-28", type: "방송", title: "tvN '킬잇' 파이널 깜짝 무대", excerpt: "파이널 쇼케이스의 깜짝 조력자 — 'This Is Me'로 다름의 가치를 노래했습니다.", en: { title: "Surprise stage on tvN 'Kill It' finale", excerpt: "A surprise helper on the finale showcase — singing 'This Is Me' for everyone born different." } },
     { date: "2026-07-26", type: "방송", title: "고척스카이돔에서 애국가 열창", excerpt: "특집 불꽃야구 생중계 무대. 돔을 채운 목소리.", en: { title: "National anthem at Gocheok Sky Dome", excerpt: "A live broadcast moment that filled the dome." } },
     { date: "2026-06-05", type: "공연", title: "경주 봉황대 뮤직스퀘어 개막", excerpt: "봉황대 광장 특설무대, 2026 시즌의 문을 열다.", en: { title: "Opening Bonghwangdae Music Square, Gyeongju", excerpt: "Opening the 2026 season on the open-air stage." } },
@@ -310,6 +316,16 @@ window.SITE_DATA = {
 
   /* ---------- 일정 (kind: 공연 | 방송 | 행사) ---------- */
   events: [
+    /* 2026-10-03 진해 공연 — 공연 당일 '공연' 메뉴에 이 공연이 없었다(사이트가 같은 날 그 공연장에서 도장 화면을
+       운영하는데). 값은 뉴스경남 2026-09-28 보도와 supabase/012 등록값 그대로: 10/3 17:00 · 진해아트홀.
+       예매 주소는 확인하지 않았으므로 넣지 않는다 — status "none" 은 예매 단추를 그리지 않는다
+       ('예매 오픈 예정'은 거짓이 된다). 날짜가 지나면 renderEventList 가 저절로 목록에서 뺀다. */
+    {
+      date: "2026-10-03", time: "17:00", kind: "공연", status: "none",
+      title: "진해아트홀 개관기념 인순이 스페셜 콘서트",
+      place: "진해아트홀",
+      en: { title: "INSOONI Special Concert — Jinhae Art Hall Opening", place: "Jinhae Art Hall" }
+    },
     {
       recurring: true,
       kind: "방송", status: "broadcast",

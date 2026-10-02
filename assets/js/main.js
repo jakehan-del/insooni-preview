@@ -33,6 +33,8 @@
   }
   function eventCta(ev) {
     var st = ev.status || ((ev.link && ev.link !== "#") ? "onsale" : "soon");
+    /* 예매 주소를 확인하지 못한 확정 공연 — 단추를 그리지 않는다('예매 오픈 예정'이라고 쓰면 거짓) */
+    if (st === "none") return "";
     if (st === "onsale" && ev.link && ev.link !== "#") {
       return '<a class="btn btn--gold btn--sm" href="' + esc(ev.link) + '">' + t("st.onsale", "예매하기") + "</a>";
     }
@@ -187,12 +189,36 @@
     return k === "보도" ? "언론" : k;
   }
   function nwTpl(key, ko, v) { return t(key, ko).replace("{s}", v); }
-  /* "2026. 9. 9. – 9. 30." — 같은 해면 뒤쪽 연도를 줄인다 */
+  /* 날짜 — 한국어 「2026. 10. 2.」, 영어 「Oct 2, 2026」.
+     영어 화면에도 「Reported 2026. 10. 2.」처럼 점 찍은 한국식 날짜가 나가고 있었다(검수 2바퀴).
+     달 이름은 달력과 같은 사전(dyn.months)의 앞 세 글자 — 사전을 하나로 둔다. */
+  function nwEn() { return document.documentElement.getAttribute("lang") === "en"; }
+  function nwMon(i) {
+    var names = (window.I18N_EN && window.I18N_EN["dyn.months"] || "").split(",");
+    return names.length === 12 ? names[i].slice(0, 3) : String(i + 1);
+  }
+  function nwDate(iso) {
+    if (!nwEn()) return fmtDate(iso);
+    var d = new Date(iso + "T00:00:00");
+    return nwMon(d.getMonth()) + " " + d.getDate() + ", " + d.getFullYear();
+  }
+  /* "2026. 9. 9. – 9. 30." — 같은 해면 뒤쪽 연도를 줄인다.
+     영어: 같은 달 "Sep 9 – 30, 2026" · 다른 달 "Sep 28 – Oct 2, 2026" · 다른 해 "Dec 30, 2025 – Jan 2, 2026" */
   function nwRange(a, b) {
-    if (!a || !b || a === b) return fmtDate(b || a);
-    var db = new Date(b + "T00:00:00");
+    if (!a || !b || a === b) return nwDate(b || a);
+    var da = new Date(a + "T00:00:00"), db = new Date(b + "T00:00:00");
+    if (nwEn()) {
+      if (da.getFullYear() !== db.getFullYear()) return nwDate(a) + " – " + nwDate(b);
+      return nwMon(da.getMonth()) + " " + da.getDate() + " – " +
+        (da.getMonth() === db.getMonth() ? "" : nwMon(db.getMonth()) + " ") + db.getDate() + ", " + db.getFullYear();
+    }
     var tail = a.slice(0, 4) === b.slice(0, 4) ? (db.getMonth() + 1) + ". " + db.getDate() + "." : fmtDate(b);
     return fmtDate(a) + " – " + tail;
+  }
+  /* 오늘(보는 사람의 날짜) — 손으로 쓴 소식의 날짜는 행사일이라 「오늘」이 참이다 */
+  function nwToday() {
+    var n = new Date();
+    return n.getFullYear() + "-" + String(n.getMonth() + 1).padStart(2, "0") + "-" + String(n.getDate()).padStart(2, "0");
   }
   /* 언론 기사는 「2026. 9. 21. 보도」(EN: Reported 2026. 9. 21.) — 행사일로 읽히지 않게 */
   function nwWhen(iso, text, reported) {
@@ -206,7 +232,7 @@
   function nwUrl(u) { return /^https?:/i.test(String(u || "")) ? String(u) : ""; }
   function nwShort(iso) {
     var d = new Date(iso + "T00:00:00");
-    return (d.getMonth() + 1) + ". " + d.getDate() + ".";
+    return nwEn() ? nwMon(d.getMonth()) + " " + d.getDate() : (d.getMonth() + 1) + ". " + d.getDate() + ".";
   }
 
   /* 손으로 쓴 소식과 자동 수집 사건이 같은 일인가 — 날짜가 가깝고 특징적인 낱말을 나눠 가지면.
@@ -275,10 +301,14 @@
     var auto = !!n.auto;
     var press = (auto ? (n.articles || []) : (n.press || [])).filter(function (a) { return nwUrl(a.url); });
     var row = el("article", "nw-item" + (lead ? " nw-item--lead" : "") + (auto ? " nw-item--press" : ""));
-    var when = auto ? nwRange(n.first, n.date) : fmtDate(n.date);
+    var when = auto ? nwRange(n.first, n.date) : nwDate(n.date);
+    /* 손으로 쓴 소식이 오늘 일이면 「오늘」 — 공연 당일 QR 로 들어온 분·집에서 찾는 분이 같은 줄을 본다.
+       날짜로 계산하므로 다음 날이면 저절로 사라진다(문장에 '오늘'을 써 두면 낡는다). */
+    var today = !auto && n.date === nwToday();
     var html = '<p class="nw-meta">' +
       '<span class="nw-kind">' + esc(nwKind(n.type)) + "</span>" +
       '<span class="nw-when">' + nwWhen(n.date, when, auto) + "</span>" +
+      (today ? '<span class="nw-today">' + esc(t("dyn.newsToday", "오늘")) + "</span>" : "") +
       (auto && n.source ? '<span class="nw-src">' + esc(n.source) + "</span>" : "") +
       "</p>";
     var title = esc(auto ? n.title : tr(n, "title"));
@@ -506,7 +536,8 @@
         dateHtml +
         '<div class="event-info"><span class="badge badge--' + (ev.kind === "공연" ? "gold" : "wine") + '">' + esc(kindLabel(ev.kind)) + "</span> " +
         (ev.verified === false ? "" : '<span class="badge badge--verify" title="' + t("vf.tip", "소속사 소솝이 직접 확인한 정보입니다") + '">' + t("vf.badge", "소솝 확인") + "</span> ") +
-        "<h3>" + esc(tr(ev, "title")) + '</h3><p class="where">' + esc(tr(ev, "place")) + (ev.note ? " · " + esc(ev.note) : "") + "</p></div>" +
+        "<h3>" + esc(tr(ev, "title")) + '</h3><p class="where">' + esc(tr(ev, "place")) + (ev.time ? ' · <time class="ev-time">' + esc(ev.time) + "</time>" : "") +
+        (ev.note ? " · " + esc(ev.note) : "") + "</p></div>" +
         eventCta(ev);
       list.appendChild(row);
     });
@@ -1199,8 +1230,11 @@
         // 첫 장은 첫 화면이다 — lazy 를 걸면 레이아웃이 끝날 때까지 요청이 미뤄지고
         // 그 뒤엔 다른 칸들과 회선을 나눠 쓴다. 첫 장만 즉시·우선으로 받는다.
         var load = items.indexOf(a) === 0 ? 'fetchpriority="high"' : 'loading="lazy"';
+        // 캡션 「2024 · 화보」 — 한국어 화면에서 캡션은 본문 서체이고 연도 숫자만 고정폭(.arch-y).
+        // 연도가 비어 있는 사진은 「 · 무대」처럼 점으로 시작했다 — 있는 것만 잇는다.
+        var capYear = esc(tr(a, "year") || "").replace(/^(\d{4})/, '<span class="arch-y">$1</span>');
         b.innerHTML = '<img src="' + esc(a.img) + '" alt="' + esc(tr(a, "caption")) + '" width="' + a.w + '" height="' + a.h + '" ' + load + '>' +
-          '<span class="arch-cap">' + esc(tr(a, "year")) + " · " + esc(kindCat(a.cat)) + "</span>";
+          '<span class="arch-cap">' + [capYear, esc(kindCat(a.cat))].filter(Boolean).join(" · ") + "</span>";
         b.addEventListener("click", function () { openImageViewer(i, b); });
         grid.appendChild(b);
       });
