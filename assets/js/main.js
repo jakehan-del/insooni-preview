@@ -3021,7 +3021,7 @@
        원문 존중 규칙:
        · textContent 로만 넣는다(HTML 해석 금지). CSS pre-wrap 이 줄바꿈·겹띄어쓰기를 살린다.
        · 번역하지 않는다. 본인의 말은 본인이 쓴 언어로만 선다.
-       · 두 번째 편지(눈물.....)는 사적인 글이라 접힘 안에 둔다. 여는 것은 읽는 사람이다. */
+       · 두 편 모두 접힘 안에 둔다. 여는 것은 읽는 사람이다(2026-10-02 — 첫 편지도 접었다). */
     var sec = $("#artist-letter");
     if (!sec || !$("#al-body1")) return;
     fetch("assets/data/letters.json").then(function (r) { return r.json(); })
@@ -3039,18 +3039,23 @@
             : (koDate + " — " + years + "년 전 · 본인이 직접 쓴 글 · " +
                "당시 조회 " + l.hit + " · 댓글 " + l.comments);
         }
-        $("#al-title1").textContent = "「" + L[0].title + "」";
-        $("#al-meta1").textContent = meta(L[0]);
-        $("#al-body1").textContent = L[0].body;
-        if (L[1] && $("#al-fold2")) {
-          $("#al-sum2").textContent = isEN
-            ? ("The second letter — “" + L[1].title + "” (" + L[1].posted.slice(0, 7) + ")")
-            : ("두 번째 편지 — 「" + L[1].title + "」 (" + L[1].posted.slice(0, 7).replace("-", "년 ") + "월)");
-          $("#al-title2").textContent = "「" + L[1].title + "」";
-          $("#al-meta2").textContent = meta(L[1]);
-          $("#al-body2").textContent = L[1].body;
-          $("#al-fold2").hidden = false;
+        /* 두 편 모두 접어 두고 제목·날짜 한 줄만 보인다(형님 요청 2026-10-02 — 사랑방이 어지럽다).
+           펼치는 것은 읽는 사람이다. 접힌 줄에도 '본인이 직접 쓴 글'은 밝힌다. */
+        function sum(l) {
+          var p = l.posted.split("-");
+          return isEN ? (l.posted.slice(0, 7) + " · in her own words")
+                      : (parseInt(p[0], 10) + "년 " + parseInt(p[1], 10) + "월 · 본인이 직접 쓴 글");
         }
+        [0, 1].forEach(function (i) {
+          var l = L[i], n = i + 1, fold = $("#al-fold" + n);
+          if (!l || !fold) return;
+          $("#al-sum" + n).textContent = "「" + l.title + "」";
+          $("#al-summ" + n).textContent = sum(l);
+          $("#al-title" + n).textContent = "「" + l.title + "」";
+          $("#al-meta" + n).textContent = meta(l);
+          $("#al-body" + n).textContent = l.body;
+          fold.hidden = false;
+        });
         sec.hidden = false;
       })["catch"](function () { /* 못 불러오면 닫힌 채로 둔다 */ });
   }
@@ -3127,7 +3132,7 @@
       /* 원래 한국어인 것들 — 곡명·공식 영상 제목·팬이 쓴 글.
          번역하지 않고 한국어임을 표시만 해, 화면 낭독기가 올바른 발음으로 읽게 한다. */
       var koIds = ["home-news", "home-schedule", "home-videos", "news-list", "event-list", "cal-grid",
-                   "disco-index", "discography", "videos", "letter-list", "board-list", "poll",
+                   "disco-index", "discography", "videos", "bd-list", "bd-mine-list", "sb-rows", "artist-letter", "poll",
                    "fresh-videos", "cheer-wall", "req-rank"];
       koIds.forEach(function (id) {
         var n = document.getElementById(id);

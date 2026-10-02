@@ -115,6 +115,17 @@ on conflict (key) do nothing;
 alter table public.board_settings enable row level security;
 revoke all on public.board_settings from anon, authenticated;
 
+--  별명을 바꾼 기록 — 공개된 글의 작성자 이름이 조용히 바뀌는 것을 운영자가 볼 수 있게(검토 지적).
+create table if not exists public.member_name_log (
+  id         bigint generated always as identity primary key,
+  at         timestamptz not null default now(),
+  target     uuid not null references public.members (user_id) on delete cascade,
+  from_name  text,
+  to_name    text not null
+);
+alter table public.member_name_log enable row level security;
+revoke all on public.member_name_log from anon, authenticated;
+
 --  누가 언제 누구의 등급을 바꿨나. 탈퇴하면 그 사람에 관한 기록도 함께 지워진다.
 create table if not exists public.member_level_log (
   id          bigint generated always as identity primary key,
@@ -150,6 +161,8 @@ as $fn$
 declare
   s text := btrim(regexp_replace(coalesce(p, ''), '\s+', ' ', 'g'));
   n text := public.nick_norm(p);
+  -- 닮은 글자를 접는다: lNSOONI·ins00ni·1nsooni 가 INSOONI 로 보이는 것을 막으려고(검토에서 재현)
+  f text := translate(public.nick_norm(p), 'l10', 'iio');
 begin
   if char_length(s) < 2 or char_length(s) > 12 or char_length(n) < 2 then
     return 'bad_nick_len';
@@ -157,7 +170,10 @@ begin
   if s !~ '^[0-9A-Za-z가-힣 _.-]+$' then
     return 'bad_nick_char';
   end if;
-  if n in ('인순이', '인순', '김인순', 'insooni', 'insoon', 'kiminsoon', '해밀', '해밀학교') then
+  -- 아티스트 이름은 '들어 있기만 해도' 막는다 — '가수 인순이'·'인순이 본인'·'인순이1' 이 통과했다(검토).
+  -- '인순이팬' 같은 팬 이름도 함께 막힌다. 공식 사이트에서 사칭 하나가 팬 이름 하나보다 훨씬 비싸다.
+  if f ~ '(인순이|김인순|insooni|insoon|kiminsoon|해밀학교)'
+     or regexp_replace(n, '[0-9]', '', 'g') in ('인순', '해밀') then
     return 'reserved_nick';
   end if;
   if n ~ '(운영자|관리자|운영진|운영팀|관리팀|공식|스태프|admin|official|staff|manager|매니저)' then
@@ -236,6 +252,7 @@ begin
   return json_build_object(
     'ok', true, 'joined', true,
     'nickname', m.nickname, 'level', m.level, 'admin', public.is_admin(),
+    'auto_up', m.level_by = 'auto',
     'provider', coalesce(v_app ->> 'provider', 'email'),
     'posts_ok', v_np, 'comments_ok', v_nc, 'posts_pending', v_pp,
     'need_posts', public.bs('levelup_posts', 3), 'need_comments', public.bs('levelup_comments', 5),
@@ -300,18 +317,26 @@ declare
   v_uid  uuid := auth.uid();
   v_nick text := btrim(regexp_replace(coalesce(p_nickname, ''), '\s+', ' ', 'g'));
   v_why  text;
+  v_old  text;
+  v_lv   text;
 begin
   if v_uid is null then
     return json_build_object('ok', false, 'reason', 'not_logged_in');
   end if;
-  if not exists (select 1 from public.members where user_id = v_uid) then
+  select nickname, level into v_old, v_lv from public.members where user_id = v_uid;
+  if not found then
     return json_build_object('ok', false, 'reason', 'not_member');
+  end if;
+  -- 차단된 회원이 별명을 바꿔 공개 중인 옛 글의 작성자 이름을 바꾸지 못하게
+  if v_lv = 'blocked' then
+    return json_build_object('ok', false, 'reason', 'blocked');
   end if;
   v_why := public.nick_reason(v_nick);
   if v_why is not null then
     return json_build_object('ok', false, 'reason', v_why);
   end if;
-  if not public.rate_ok('rename', 5) then
+  if not public.rate_ok('rename', 5)
+     or (select count(*) from public.member_name_log where target = v_uid and at > now() - interval '1 day') >= 3 then
     return json_build_object('ok', false, 'reason', 'rate_limited');
   end if;
   begin
@@ -319,6 +344,9 @@ begin
   exception when unique_violation then
     return json_build_object('ok', false, 'reason', 'nick_taken');
   end;
+  if v_old is distinct from v_nick then
+    insert into public.member_name_log (target, from_name, to_name) values (v_uid, v_old, v_nick);
+  end if;
   return json_build_object('ok', true, 'nickname', v_nick);
 end;
 $fn$;
@@ -656,28 +684,28 @@ begin
   from (
     select 'note'::text as kind, id, name, body as content, status,
            ai_verdict, ai_reason, created_at, preset, song_title,
-           null::text as title, null::bigint as post_id, null::text as level
+           null::text as title, null::bigint as post_id, null::text as level, null::timestamptz as ver
       from public.notes   where status = p_status
     union all
     select 'dream',  id, name, text, status, ai_verdict, ai_reason, created_at, null::int, null::text,
-           null::text, null::bigint, null::text
+           null::text, null::bigint, null::text, null::timestamptz
       from public.dreams  where status = p_status
     union all
     select 'letter', id, name, body, status, ai_verdict, ai_reason, created_at, null::int, null::text,
-           null::text, null::bigint, null::text
+           null::text, null::bigint, null::text, null::timestamptz
       from public.letters where status = p_status
     union all
     select 'post',   id, name, body, status, ai_verdict, ai_reason, created_at, null::int, null::text,
-           null::text, null::bigint, null::text
+           null::text, null::bigint, null::text, null::timestamptz
       from public.posts   where status = p_status
     union all
     select 'bpost', bp.id, m.nickname, bp.body, bp.status, null::text, null::text, bp.created_at, null::int, null::text,
-           bp.title, null::bigint, m.level
+           bp.title, null::bigint, m.level, coalesce(bp.edited_at, bp.created_at)
       from public.board_posts bp join public.members m on m.user_id = bp.user_id
      where bp.status = p_status
     union all
     select 'comment', bc.id, m.nickname, bc.body, bc.status, null::text, null::text, bc.created_at, null::int, null::text,
-           bp.title, bc.post_id, m.level
+           bp.title, bc.post_id, m.level, null::timestamptz
       from public.board_comments bc
       join public.members m on m.user_id = bc.user_id
       join public.board_posts bp on bp.id = bc.post_id
@@ -713,10 +741,15 @@ $fn$;
 
 --  read_at 은 여전히 건드리지 않는다(008 과 같은 이유).
 --  게시판 글·댓글을 올리면 쓴 사람의 등업 기준을 다시 센다.
+--  게시판 글을 올릴 때는 운영자가 화면에서 본 판(p_ver = 고친 시각 또는 쓴 시각)을 함께 받는다.
+--  그사이 쓴 사람이 고쳤으면 'changed' 로 거절한다 — 운영자가 보지 못한 내용이 올라가지 않게(검토에서 재현).
+--  인자가 하나 늘어 008 의 세 인자 판은 지운다(같은 이름 두 판이 있으면 PostgREST 가 헷갈린다).
+drop function if exists public.admin_set_status(text, bigint, text);
 create or replace function public.admin_set_status(
   p_kind   text,
   p_id     bigint,
-  p_status text)
+  p_status text,
+  p_ver    timestamptz default null)
 returns json
 language plpgsql
 security definer
@@ -725,6 +758,7 @@ as $fn$
 declare
   v_from text;
   v_user uuid;
+  v_ver  timestamptz;
   v_up   boolean := false;
 begin
   if not public.is_admin() then
@@ -750,7 +784,11 @@ begin
     select status into v_from from public.posts where id = p_id for update;
     if found then update public.posts set status = p_status where id = p_id; end if;
   elsif p_kind = 'bpost' then
-    select status, user_id into v_from, v_user from public.board_posts where id = p_id for update;
+    select status, user_id, coalesce(edited_at, created_at) into v_from, v_user, v_ver
+      from public.board_posts where id = p_id for update;
+    if found and p_status = 'approved' and (p_ver is null or p_ver is distinct from v_ver) then
+      return json_build_object('ok', false, 'reason', 'changed');
+    end if;
     if found then update public.board_posts set status = p_status where id = p_id; end if;
   elsif p_kind = 'comment' then
     select status, user_id into v_from, v_user from public.board_comments where id = p_id for update;
@@ -913,7 +951,7 @@ revoke execute on function public.comment_delete(bigint)                 from pu
 revoke execute on function public.admin_members(text, int)               from public, anon, authenticated;
 revoke execute on function public.admin_set_level(uuid, text)            from public, anon, authenticated;
 revoke execute on function public.admin_list(text, int)                  from public, anon;
-revoke execute on function public.admin_set_status(text, bigint, text)   from public, anon;
+revoke execute on function public.admin_set_status(text, bigint, text, timestamptz) from public, anon;
 revoke execute on function public.pending_summary(timestamptz)           from public, anon, authenticated;
 
 --  누구나: 게시판 읽기 · 알림 건수
@@ -935,7 +973,7 @@ grant execute on function public.comment_delete(bigint)                  to auth
 grant execute on function public.admin_members(text, int)                to authenticated;
 grant execute on function public.admin_set_level(uuid, text)             to authenticated;
 grant execute on function public.admin_list(text, int)                   to authenticated;
-grant execute on function public.admin_set_status(text, bigint, text)    to authenticated;
+grant execute on function public.admin_set_status(text, bigint, text, timestamptz) to authenticated;
 
 
 -- ── 12. 안전장치 — 공개 키·로그인 권한으로 실제로 불러 본다 ──────
@@ -980,6 +1018,12 @@ begin
   exception when insufficient_privilege then null; end;
   begin perform * from public.member_level_log limit 1;
     raise exception '안전장치: 공개 키로 등급 기록이 읽힙니다 — 전체를 취소합니다';
+  exception when insufficient_privilege then null; end;
+  begin perform * from public.member_name_log limit 1;
+    raise exception '안전장치: 공개 키로 별명 기록이 읽힙니다 — 전체를 취소합니다';
+  exception when insufficient_privilege then null; end;
+  begin perform public.admin_set_status('bpost', 1, 'approved', null);
+    raise exception '안전장치: 공개 키로 상태 바꾸기가 불립니다 — 전체를 취소합니다';
   exception when insufficient_privilege then null; end;
   begin perform public.board_write('제목', '본문');
     raise exception '안전장치: 공개 키로 글쓰기 함수가 불립니다 — 전체를 취소합니다';

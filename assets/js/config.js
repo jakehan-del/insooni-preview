@@ -35,3 +35,12 @@ if (typeof window.INSOONI_CONFIG.url === "undefined") {
 if (typeof window.INSOONI_CONFIG.anonKey === "undefined") {
   window.INSOONI_CONFIG.anonKey = "sb_publishable_HSy_9JL7qeWLRMHt8OZ0dg_Owu_JwwP";
 }
+
+/* 회원 게시판(supabase/010) 스위치 — 010 을 운영 DB 에 실행하고 실서버에서 확인한 뒤 true 로 바꾼다.
+   꺼져 있는 동안 게시판 섹션은 숨고 서버에 아무것도 묻지 않는다.
+   왜 자동 감지가 아니라 스위치인가 — 없는 함수를 부르면 PostgREST 가 404 를 주고, 그 404 가
+   모든 방문자의 콘솔과 사이트 회귀 검사(verify.py)에 오류로 남는다. 그리고 검증 전에 기능이
+   공개되지 않게 막는 문이기도 하다. */
+if (typeof window.INSOONI_CONFIG.board === "undefined") {
+  window.INSOONI_CONFIG.board = false;
+}

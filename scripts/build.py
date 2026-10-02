@@ -178,7 +178,8 @@ def restamp_cache_bust():
     # 그대로였고, 브라우저가 옛 서버 어댑터를 계속 썼다(2026-10-01 발견).
     keys = ["assets/css/style.min.css", "assets/js/main.min.js",
             "assets/js/i18n.min.js", "assets/js/data.min.js",
-            "assets/js/backend.min.js", "assets/js/admin.min.js"]
+            "assets/js/backend.min.js", "assets/js/admin.min.js",
+            "assets/js/board.min.js"]
     h = hashlib.sha1()
     for k in keys:
         f = os.path.join(ROOT, k)

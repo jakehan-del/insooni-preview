@@ -3704,3 +3704,173 @@ html[lang="ko"] .page-hero--portrait .ph-cap { letter-spacing: 0; }   /* 한글�
   .sb-mine-item { grid-template-columns: 1fr auto; }
   .sb-mine-when { grid-column: 1 / -1; }
 }
+
+
+/* ══ 사랑방 정리 · 회원 게시판 (2026-10-02) ═══════════════════════
+   형님: "사랑방이 너무 어지러워 — 사람들이 글을 제대로 잘 쓸 수 있게,
+   어머니 글도 열고 닫기를 하든 정리". 매니저: 운영자 지정 + 등업 팬카페.
+   · 어머니 편지 두 편은 접힌 한 줄씩 — 펼치면 손글씨 그대로
+   · 화면의 큰 버튼은 '글쓰기' 하나. 로그인·내 정보는 오른쪽 위 작은 글자
+   · 글자는 전부 rem — [가] 버튼으로 함께 커진다. 폰에서 줄이지 않는다
+   · 카카오 버튼만 카카오 디자인 가이드의 노랑(#FEE500)·검정 심볼. 나머지는 단색 체계 그대로
+   ══════════════════════════════════════════════════════════════ */
+
+/* 인순이의 편지 — 접힌 두 줄 */
+.al-sec .container { max-width: 48rem; }
+.al-sec .section-head { margin-bottom: .4rem; }
+.al-lede { margin: 0 0 1rem; color: var(--muted); font-size: .95rem; line-height: 1.6; }
+.al-fold { margin-top: .6rem; }
+.al-sum { flex-wrap: wrap; row-gap: .15rem; padding-top: .55rem; padding-bottom: .55rem; }
+.al-sum-t { color: var(--ivory); font-size: 1.08rem; font-weight: 600; }
+.al-sum-m { margin-left: auto; font-family: var(--font-mono); font-size: .8rem; color: var(--faint); }
+@media (max-width: 560px) { .al-sum-m { margin-left: 1.8rem; flex-basis: 100%; } }
+.al-fold[open] > .al-sum { margin-bottom: .9rem; }
+
+/* 게시판 */
+.bd .container { max-width: 48rem; }
+.bd-head { display: flex; align-items: flex-end; justify-content: space-between; gap: .8rem 1.2rem; flex-wrap: wrap; }
+.bd-head h2 { margin: 0; }
+.bd-whobox { display: flex; align-items: center; gap: .5rem; }
+.bd-lede { margin: .7rem 0 1.2rem; max-width: 36em; }
+.bd-me {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 .2rem;
+  background: none; border: 0; color: var(--ivory); cursor: pointer; font: inherit;
+}
+.bd-me:hover .bd-nick, .bd-me:focus-visible .bd-nick { text-decoration: underline; text-underline-offset: .2em; }
+.bd-who-line { display: inline-flex; align-items: center; gap: .45rem; flex-wrap: wrap; }
+.bd-nick { font-weight: 700; color: var(--ivory); }
+.bd-badge {
+  display: inline-block; padding: .12em .55em; border: 1px solid var(--line-strong);
+  font-family: var(--font-mono); font-size: .72rem; line-height: 1.5; color: var(--muted); white-space: nowrap;
+}
+.bd-badge--member { border-color: var(--ivory); color: var(--ivory); }
+.bd-badge--staff { background: var(--ivory); border-color: var(--ivory); color: var(--void); }
+.bd-badge--pending { border-style: dashed; color: var(--ivory); }
+.bd-badge--rejected { color: var(--faint); text-decoration: line-through; }
+.bd-badge--blocked { color: var(--faint); }
+.bd-note {
+  margin: 0 0 1.2rem; padding: .7rem 0 .7rem 1rem; border-left: 2px solid var(--line-strong);
+  color: var(--muted); font-size: .95rem; line-height: 1.6;
+}
+.bd-cta-wrap { margin: 0 0 1rem; }
+.bd-write { min-height: 56px; min-width: 12rem; font-size: 1rem; }
+@media (max-width: 560px) { .bd-write { width: 100%; } }
+.bd-form { margin: 0 0 1rem; padding: 1.4rem 0 .4rem; border-top: 1px solid var(--line); }
+.bd-form-h { margin: 0 0 1rem; font-size: 1.15rem; }
+.bd-form textarea { min-height: 13em; line-height: 1.7; }
+.bd-count { text-align: right; font-family: var(--font-mono); }
+.bd-form-acts { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem; margin-top: .6rem; }
+.bd-form-acts .btn--gold { min-height: 52px; min-width: 9rem; font-size: .95rem; }
+.bd-msg { margin: .2rem 0 1rem; }
+
+.bd-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.bd-item { border-bottom: 1px solid var(--line); }
+.bd-sum {
+  display: block; width: 100%; padding: 1.15rem .2rem; text-align: left; cursor: pointer;
+  background: none; border: 0; color: var(--ivory); font: inherit;
+}
+.bd-sum:hover, .bd-sum:focus-visible { background: var(--panel); }
+.bd-title { display: block; font-size: 1.12rem; font-weight: 700; line-height: 1.45; word-break: keep-all; overflow-wrap: anywhere; }
+.bd-ex {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  margin-top: .35rem; color: var(--muted); font-size: .98rem; line-height: 1.6; white-space: pre-line;
+}
+.bd-item.is-open .bd-ex { display: none; }
+.bd-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .45rem; margin-top: .55rem; font-size: .88rem; color: var(--faint); }
+.bd-meta .bd-nick { font-weight: 600; color: var(--muted); }
+.bd-dot { color: var(--faint); }
+.bd-when, .bd-cn { font-family: var(--font-mono); font-size: .8rem; }
+.bd-item--mine .bd-sum { border-left: 2px dashed var(--line-strong); padding-left: .9rem; }
+.bd-item--linked { border-left: 2px solid var(--ivory); }
+.bd-detail { padding: .2rem .2rem 1.6rem; }
+.bd-body {
+  white-space: pre-wrap; word-break: keep-all; overflow-wrap: anywhere;
+  font-size: 1.06rem; line-height: 1.8; color: var(--ivory); margin: 0 0 1rem;
+}
+.bd-edited { margin: -.4rem 0 1rem; font-family: var(--font-mono); font-size: .78rem; color: var(--faint); }
+.bd-acts { display: flex; flex-wrap: wrap; gap: .6rem; margin: 0 0 1.4rem; }
+.bd-loading { color: var(--faint); margin: 0 0 1rem; }
+.bd-cmts { border-top: 1px dashed var(--line-strong); padding-top: 1rem; }
+.bd-cmts-h { margin: 0 0 .5rem; font-size: 1rem; font-weight: 700; }
+.bd-clist { list-style: none; margin: 0 0 1rem; padding: 0; }
+.bd-c { padding: .85rem 0; border-bottom: 1px solid var(--line); }
+.bd-c-head { margin: 0 0 .3rem; display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .45rem; font-size: .88rem; color: var(--faint); }
+.bd-c-body { margin: 0; white-space: pre-wrap; word-break: keep-all; overflow-wrap: anywhere; color: var(--ivory); line-height: 1.7; }
+.bd-c-del, .bd-link {
+  min-height: 44px; padding: 0 .1rem; background: none; border: 0; cursor: pointer;
+  color: var(--muted); font: inherit; font-size: .9rem; text-decoration: underline; text-underline-offset: .2em;
+}
+.bd-c-del:hover, .bd-link:hover { color: var(--ivory); }
+.bd-cform { display: grid; gap: .6rem; margin-top: .8rem; }
+.bd-ctext {
+  width: 100%; min-height: 6em; padding: .8em 1em; font: inherit; font-size: 1rem; line-height: 1.6;
+  color: var(--ivory); background: var(--void); border: 1px solid var(--line-strong); border-radius: 0; resize: vertical;
+}
+.bd-ctext:focus { border-color: var(--ivory); outline: 2px solid var(--focus); outline-offset: 2px; }
+.bd-cform .btn { justify-self: start; }
+.bd-empty { color: var(--muted); padding: 1.6rem 0; margin: 0; }
+.bd-mine { margin: 0 0 1.2rem; }
+.bd-mine-s {
+  display: flex; align-items: center; gap: .5rem; min-height: 48px; padding: 0 1rem; cursor: pointer; list-style: none;
+  border: 1px dashed var(--line-strong); color: var(--ivory);
+}
+.bd-mine-s::-webkit-details-marker { display: none; }
+.bd-mine-n { font-family: var(--font-mono); color: var(--faint); }
+.bd-mine[open] > .bd-mine-s { margin-bottom: .6rem; }
+
+/* 회원 창 — 폰에서는 아래에서 올라오는 판, 넓은 화면에서는 가운데 상자 */
+html.bd-lock, html.bd-lock body { overflow: hidden; }
+.bd-sheet {
+  position: fixed; inset: 0; z-index: 2000; display: flex; align-items: center; justify-content: center;
+  background: rgba(0, 0, 0, .74); padding: 1rem;
+}
+.bd-sheet[hidden] { display: none; }
+.bd-sheet-box {
+  position: relative; width: min(32rem, 100%); max-height: calc(100dvh - 2rem); overflow: auto;
+  background: var(--surface-2); border: 1px solid var(--line-strong); padding: 1.6rem 1.4rem 1.4rem;
+}
+@media (max-width: 560px) {
+  .bd-sheet { align-items: flex-end; padding: 0; }
+  .bd-sheet-box { width: 100%; max-height: 92dvh; border-left: 0; border-right: 0; border-bottom: 0; padding-bottom: calc(1.4rem + env(safe-area-inset-bottom)); }
+}
+.bd-x {
+  position: absolute; top: .4rem; right: .4rem; width: 48px; height: 48px;
+  background: none; border: 0; color: var(--ivory); font-size: 1.6rem; line-height: 1; cursor: pointer;
+}
+.bd-sheet-h { margin: 0 2.6rem 1rem 0; font-size: 1.3rem; }
+.bd-sheet-lede { margin: 0 0 1.2rem; color: var(--muted); line-height: 1.65; }
+.bd-sheet .form-field input[type="text"], .bd-sheet .form-field input[type="email"], .bd-sheet .form-field input[type="password"] {
+  width: 100%; padding: .85em 1.05em; font-size: 1rem; font-family: inherit;
+  border: 1px solid var(--line-strong); border-radius: 0; background: var(--void); color: var(--ivory);
+}
+.bd-sheet .form-field input:focus { border-color: var(--ivory); outline: 2px solid var(--focus); outline-offset: 2px; }
+.bd-sheet .form-field { margin-bottom: 1rem; }
+.bd-wide { width: 100%; min-height: 52px; font-size: .95rem; }
+.bd-kakao {
+  display: flex; align-items: center; justify-content: center; gap: .55rem; width: 100%; min-height: 54px;
+  background: #FEE500; color: rgba(0, 0, 0, .85); border: 0; border-radius: 0; cursor: pointer;
+  font: inherit; font-size: 1.02rem; font-weight: 600;
+}
+.bd-kakao:hover { filter: brightness(.97); }
+.bd-kakao:disabled { opacity: .6; cursor: wait; }
+.bd-kakao-mark { width: 20px; height: 20px; fill: #000; flex: none; }
+.bd-or { display: flex; align-items: center; gap: .8rem; margin: 1.2rem 0 1rem; color: var(--faint); font-size: .88rem; }
+.bd-or::before, .bd-or::after { content: ""; flex: 1; border-top: 1px solid var(--line); }
+.bd-tabs { display: flex; border-bottom: 1px solid var(--line-strong); margin-bottom: 1rem; }
+.bd-tab {
+  flex: 1; min-height: 48px; background: none; border: 0; border-bottom: 2px solid transparent;
+  color: var(--faint); font: inherit; font-size: 1rem; cursor: pointer;
+}
+.bd-tab[aria-pressed="true"] { color: var(--ivory); border-bottom-color: var(--ivory); font-weight: 700; }
+.bd-aform .btn { margin-top: .3rem; }
+.bd-check { display: flex; align-items: flex-start; gap: .65rem; min-height: 44px; margin: .2rem 0 .5rem; cursor: pointer; line-height: 1.55; }
+.bd-check input { width: 22px; height: 22px; margin-top: .1rem; flex: none; accent-color: var(--ivory); }
+.bd-check a { color: var(--ivory); text-decoration: underline; text-underline-offset: .2em; }
+.bd-lvinfo { margin: .4rem 0 1rem; }
+.bd-me-top { margin: 0 0 .6rem; font-size: 1.1rem; }
+.bd-me-acts { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem 1.2rem; margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+.bd-leave { color: var(--faint); }
+/* 사랑방 첫 화면 — '글쓰기'가 폰 첫 화면 안에 들어오게 편지·게시판 사이 여백을 줄인다(2026-10-02 실측) */
+.al-sec { padding-block: 1.6rem .2rem; }
+.bd { padding-top: 2.4rem; }
+.bd-lede { margin: .5rem 0 1rem; }

@@ -17,11 +17,11 @@
 <meta name="description" content="편지를 쓰고, 팬 번호증과 응원 카드를 만들고, 공식 채널로 마음을 전하는 곳. 인순이 공식 사랑방.">
 <!-- 본문 글꼴은 먼저 확실히 깐다(미뤄 봤지만 첫 화면이 빨라지지 않았다).
      제목용 서체는 화면이 뜬 뒤 들어온다 — font-display:swap이라 늦어도 글자는 보인다. -->
-<link rel="stylesheet" href="assets/fonts/body.css?v35900542">
-<link rel="stylesheet" href="assets/fonts/mono.css?v35900542">
-<link rel="stylesheet" href="assets/fonts/display.css?v35900542" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/fonts/display.css?v35900542"></noscript>
-<link rel="stylesheet" href="assets/css/style.min.css?v35900542">
+<link rel="stylesheet" href="assets/fonts/body.css?v14e760e3">
+<link rel="stylesheet" href="assets/fonts/mono.css?v14e760e3">
+<link rel="stylesheet" href="assets/fonts/display.css?v14e760e3" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?v14e760e3"></noscript>
+<link rel="stylesheet" href="assets/css/style.min.css?v14e760e3">
 <link rel="canonical" href="https://insooni.com/community">
 <meta property="og:url" content="https://insooni.com/community">
 <meta property="og:type" content="website">
@@ -69,7 +69,7 @@
   <section class="page-hero">
     <div class="container">
       <h1 data-i18n="ph.community.t">사랑방</h1>
-      <p data-i18n="ph.community.d">편지를 쓰고, 안부를 남기고, 만든 것을 간직하는 곳. 인순이와 팬들의 마당입니다.</p>
+      <p data-i18n="ph.community.d">글을 쓰고, 이야기를 나누고, 안부를 남기는 곳. 인순이와 팬들의 마당입니다.</p>
     </div>
   </section>
 
@@ -77,29 +77,29 @@
 
   <!-- ── 인순이의 편지 ─────────────────────────────────────────
        2005년 '인순이가 팬들에게' 게시판에 본인이 남긴 글이다(출처 기록용 주석).
-       화면에서는 출처를 말하지 않는다 — 방문자에게 중요한 것은 어머니가
-       직접 썼다는 사실이지, 그 글이 어느 서버에 있었느냐가 아니다.
        맞춤법·띄어쓰기까지 원문 그대로 싣는다 — 그 호흡이 곧 본인의 목소리다.
-       첫 편지 「거위의꿈」은 펼쳐 두고, 「눈물.....」은 사적인 글이라
-       읽는 사람이 스스로 여는 접힘 안에 둔다. -->
-  <section class="section" id="artist-letter" aria-labelledby="h-artist-letter" hidden>
+       형님 요청(2026-10-02, "사랑방이 너무 어지러워 — 어머니 글도 열고 닫기를"):
+       두 편 모두 접어서 제목·날짜 한 줄만 보인다. 펼치면 손글씨 그대로다.
+       전에는 첫 편지가 펼쳐진 채 폰에서 두 화면을 차지해 글쓰기가 세 번째 화면에야 나왔다. -->
+  <section class="section al-sec" id="artist-letter" aria-labelledby="h-artist-letter" hidden>
     <div class="container">
       <div class="section-head">
         <h2 id="h-artist-letter" data-i18n="comm.alT">인순이의 편지</h2>
       </div>
-      <p class="lede" data-i18n="al.lede">2005년, 인순이가 팬들에게 직접 남긴 글입니다. 맞춤법도 띄어쓰기도 손대지 않았습니다.</p>
-      <article class="letter-corner">
-        <div class="letter-paper">
-          <svg class="letter-goose" viewBox="3 7.8 96.6 72.8" aria-hidden="true" focusable="false"><path fill="currentColor" d="M65.5 54 C58.5 40 46 29 27 25 C32.5 39.5 38.5 50 45.5 56.5 C52.5 63 61.5 61.5 65.5 54 Z"/><path fill="currentColor" d="M3 74 C3 63 16 55 35 54.4 C47 54 56 55.6 61 57.8 C59 50 59 40 62 31 C66 19.4 73 11.6 81 8.6 C85.2 7.4 88.8 8.4 90.6 11.4 L99.6 13.6 L90.4 16.2 C88.8 19.2 85.6 20.6 80.8 20.2 C76.6 19.6 72.8 24 69.8 33 C67.6 42 67.6 52 69.8 61 C70.8 64.5 70.4 68 66.5 71 C58.5 75 43 77.5 25.5 77.6 C15.5 77.6 8 76.6 3 74 Z M3 74 C10 69 20 61.5 33 56.8 C22 64.5 11 70.5 3 74 Z"/></svg>
-          <h3 class="letter-title" id="al-title1"></h3>
-          <p class="letter-meta" id="al-meta1"></p>
-          <p class="letter-body" id="al-body1"></p>
-        </div>
-      </article>
-      <!-- 두 번째 편지는 사적인 글이다. 자동으로 펼치지 않는다 —
-           읽을지는 읽는 사람이 정한다. -->
-      <details class="letter-fold" id="al-fold2" hidden>
-        <summary class="sb-fold-s"><span id="al-sum2"></span></summary>
+      <p class="al-lede" data-i18n="al.lede">2005년, 인순이가 팬들에게 직접 남긴 글입니다. 맞춤법도 띄어쓰기도 손대지 않았습니다.</p>
+      <details class="letter-fold al-fold" id="al-fold1">
+        <summary class="sb-fold-s al-sum"><span class="al-sum-t" id="al-sum1"></span><span class="al-sum-m" id="al-summ1"></span></summary>
+        <article class="letter-corner">
+          <div class="letter-paper">
+            <svg class="letter-goose" viewBox="3 7.8 96.6 72.8" aria-hidden="true" focusable="false"><path fill="currentColor" d="M65.5 54 C58.5 40 46 29 27 25 C32.5 39.5 38.5 50 45.5 56.5 C52.5 63 61.5 61.5 65.5 54 Z"/><path fill="currentColor" d="M3 74 C3 63 16 55 35 54.4 C47 54 56 55.6 61 57.8 C59 50 59 40 62 31 C66 19.4 73 11.6 81 8.6 C85.2 7.4 88.8 8.4 90.6 11.4 L99.6 13.6 L90.4 16.2 C88.8 19.2 85.6 20.6 80.8 20.2 C76.6 19.6 72.8 24 69.8 33 C67.6 42 67.6 52 69.8 61 C70.8 64.5 70.4 68 66.5 71 C58.5 75 43 77.5 25.5 77.6 C15.5 77.6 8 76.6 3 74 Z M3 74 C10 69 20 61.5 33 56.8 C22 64.5 11 70.5 3 74 Z"/></svg>
+            <h3 class="letter-title" id="al-title1"></h3>
+            <p class="letter-meta" id="al-meta1"></p>
+            <p class="letter-body" id="al-body1"></p>
+          </div>
+        </article>
+      </details>
+      <details class="letter-fold al-fold" id="al-fold2" hidden>
+        <summary class="sb-fold-s al-sum"><span class="al-sum-t" id="al-sum2"></span><span class="al-sum-m" id="al-summ2"></span></summary>
         <article class="letter-corner">
           <div class="letter-paper">
             <h3 class="letter-title" id="al-title2"></h3>
@@ -111,6 +111,53 @@
     </div>
   </section>
 
+  <!-- ── 사랑방 이야기 (회원 게시판) ─────────────────────────────
+       매니저 요청(2026-10-01): 운영자 지정 + 활동하면 등업되는 팬카페.
+       화면에 큰 버튼은 '글쓰기' 하나뿐이다. 나머지(로그인·내 정보)는 오른쪽 위 작은 글자.
+       서버 규칙: supabase/010 · 화면: assets/js/board.js.
+       서버에 010 이 아직 없거나 백엔드 설정이 없으면 이 섹션은 통째로 숨는다. -->
+  <section class="section bd" id="board" aria-labelledby="h-board" hidden>
+    <div class="container">
+      <div class="bd-head">
+        <h2 id="h-board" data-i18n="bd.h">사랑방 이야기</h2>
+        <div class="bd-whobox" id="bd-who"></div>
+      </div>
+      <p class="lede bd-lede" data-i18n="bd.lede">제목을 달아 길게 쓰고, 댓글로 이야기를 나누는 곳입니다.</p>
+      <p class="bd-note" id="bd-note" hidden></p>
+      <p class="bd-cta-wrap"><button type="button" class="btn btn--gold bd-write" id="bd-write-btn" data-i18n="bd.write">글쓰기</button></p>
+
+      <form class="bd-form" id="bd-form" hidden>
+        <h3 class="bd-form-h" id="bd-form-h" data-i18n="bd.newH">새 글 쓰기</h3>
+        <div class="form-field">
+          <label for="bd-title" data-i18n="bd.titleL">제목</label>
+          <input id="bd-title" type="text" maxlength="60" autocomplete="off" placeholder="예) 홍천에서 인사드립니다" data-i18n-ph="bd.titlePh">
+        </div>
+        <div class="form-field">
+          <label for="bd-body" data-i18n="bd.bodyL">내용</label>
+          <textarea id="bd-body" maxlength="4000" rows="9" placeholder="하고 싶은 이야기를 편하게 적어 주세요. 쓰는 동안 이 기기에 저절로 저장됩니다." data-i18n-ph="bd.bodyPh"></textarea>
+          <p class="form-hint bd-count" id="bd-count" aria-live="off">0 / 4,000</p>
+        </div>
+        <p class="form-hint" id="bd-form-hint"></p>
+        <div class="bd-form-acts">
+          <button type="submit" class="btn btn--gold" id="bd-go" data-i18n="bd.post">올리기</button>
+          <button type="button" class="btn btn--ghost btn--sm" id="bd-cancel" data-i18n="bd.closeForm">접어 두기</button>
+        </div>
+      </form>
+      <p class="sb-msg bd-msg" id="bd-msg" role="status" aria-live="polite"></p>
+
+      <!-- 확인을 기다리는 내 글 — 새싹이 쓴 글은 공개 목록에 없으니, 쓴 사람이 여기서 확인한다 -->
+      <details class="bd-mine" id="bd-mine" hidden>
+        <summary class="bd-mine-s"><span data-i18n="bd.mineS">확인을 기다리는 내 글</span> <span class="bd-mine-n" id="bd-mine-n"></span></summary>
+        <ol class="bd-list" id="bd-mine-list"></ol>
+      </details>
+
+      <ol class="bd-list" id="bd-list"></ol>
+      <p class="bd-empty" id="bd-empty" hidden data-i18n="bd.empty">아직 글이 없습니다. 첫 이야기를 남겨 주세요.</p>
+      <p class="sb-msg is-bad" id="bd-list-msg" role="status" hidden></p>
+      <p class="sb-more-wrap"><button type="button" class="btn btn--ghost btn--sm" id="bd-more" hidden data-i18n="sb.more">더 보기</button></p>
+    </div>
+  </section>
+
   <!-- ── 한 줄 남기기 ─────────────────────────────────────────
        사랑방은 사람과 사람이 만나는 곳이다. 곡을 듣고 고르는 일은
        음악 페이지가 한다 — 여기서 또 하면 사랑방이 음악 페이지의
@@ -119,14 +166,14 @@
   <section class="section sb-today" id="sb-today" aria-labelledby="h-today">
     <div class="container">
       <p class="sb-night" id="sb-night"></p>
-      <h2 id="h-today" data-i18n="sb.todayH">한 줄 남기기</h2>
-      <p class="lede sb-invite" data-i18n="sb.invite">오늘 여기 오신 마음을 한 줄로 남겨 주세요.</p>
+      <h2 id="h-today" data-i18n="sb.todayH">로그인 없이 한 줄 남기기</h2>
+      <p class="lede sb-invite" data-i18n="sb.invite">회원이 아니어도 괜찮습니다. 오늘 여기 오신 마음을 한 줄로 남겨 주세요.</p>
 
-      <p class="sb-uplifted" id="sb-uplifted" hidden data-i18n="sb.uplifted">남기신 줄이 사랑방에 올라왔습니다. 위에서 보실 수 있어요.</p>
+      <p class="sb-uplifted" id="sb-uplifted" hidden data-i18n="sb.uplifted">남기신 줄이 사랑방에 올라왔습니다. 아래 「남기신 줄」에서 보실 수 있어요.</p>
 
       <!-- 사이트 전체의 유일한 자유 입력칸 -->
       <details class="sb-fold" id="sb-fold">
-        <summary class="sb-fold-s" data-i18n="sb.foldS">글 남기러 들어가기</summary>
+        <summary class="sb-fold-s" data-i18n="sb.foldS">한 줄 남기러 들어가기</summary>
       <div class="sb-write-box" id="sb-write-box">
         <p class="sb-chips" id="sb-chips" aria-label="문구 고르기" data-i18n-aria="sb.chipsAria"></p>
         <form id="sb-form" class="sb-form">
@@ -177,6 +224,26 @@
     </div>
   </section>
 
+<!-- ── 남기신 줄 ─────────────────────────────────────────────
+       사람이 남긴 것만 선다. 연혁도 앨범도 넣지 않는다 —
+       그건 이야기 페이지와 음악 페이지가 이미 한다.
+       0건이면 이 섹션은 아예 없다. 34줄로 빈 방을 덮으면
+       '아직 아무도 안 왔다'와 '그래서 당신이 첫 줄이다'가 함께 지워진다. -->
+  <section class="section section--band sb-stream" id="sb-stream" aria-labelledby="h-stream" hidden>
+    <div class="container">
+      <div class="section-head">
+        <h2 id="h-stream" data-i18n="sb.streamH">남기신 줄</h2>
+      </div>
+      <ul class="sb-rows" id="sb-rows"></ul>
+      <!-- 「0건」과 「못 불러옴」을 가르는 자리. 둘을 같은 화면으로 보여 주면
+           서버가 끊긴 날 '아무도 안 왔다'는 거짓말이 첫 화면에 뜬다. -->
+      <p class="sb-stream-msg" id="sb-stream-msg" role="status" hidden></p>
+      <p class="sb-more-wrap">
+        <button type="button" class="btn btn--ghost btn--sm" id="sb-more" data-i18n="sb.more">더 보기</button>
+      </p>
+    </div>
+  </section>
+
     <!-- ── 다음 무대에서 듣고 싶은 노래 ─────────────────────────
          백엔드(supabase/001_init.sql)에 request_song 과 song_requests 표가
          처음부터 있었는데 화면에 나온 적이 없었다. 집계용 select 정책까지
@@ -203,29 +270,6 @@
         <p class="form-hint" id="sl-tally"></p>
       </div>
     </section>
-
-
-<!-- ── 남기신 줄 ─────────────────────────────────────────────
-       사람이 남긴 것만 선다. 연혁도 앨범도 넣지 않는다 —
-       그건 이야기 페이지와 음악 페이지가 이미 한다.
-       0건이면 이 섹션은 아예 없다. 34줄로 빈 방을 덮으면
-       '아직 아무도 안 왔다'와 '그래서 당신이 첫 줄이다'가 함께 지워진다. -->
-  <section class="section section--band sb-stream" id="sb-stream" aria-labelledby="h-stream" hidden>
-    <div class="container">
-      <div class="section-head">
-        <h2 id="h-stream" data-i18n="sb.streamH">남기신 줄</h2>
-      </div>
-      <ul class="sb-rows" id="sb-rows"></ul>
-      <!-- 「0건」과 「못 불러옴」을 가르는 자리. 둘을 같은 화면으로 보여 주면
-           서버가 끊긴 날 '아무도 안 왔다'는 거짓말이 첫 화면에 뜬다. -->
-      <p class="sb-stream-msg" id="sb-stream-msg" role="status" hidden></p>
-      <p class="sb-more-wrap">
-        <button type="button" class="btn btn--ghost btn--sm" id="sb-more" data-i18n="sb.more">더 보기</button>
-      </p>
-    </div>
-  </section>
-
-  
 
 
   <!-- ── 나가는 문 ─────────────────────────────────────────────
@@ -264,17 +308,18 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동" data-i18n-aria="aria.toTop">TOP</button>
-<script src="assets/js/config.js?v35900542" defer></script>
-<script src="assets/js/backend.js?v35900542" defer></script>
-<script src="assets/js/i18n.min.js?v35900542" defer></script>
-<script src="assets/js/data.min.js?v35900542" defer></script>
-<script src="assets/js/tracklinks.min.js?v35900542" defer></script>
-<script src="assets/js/albums-full.min.js?v35900542" defer></script>
-<script src="assets/js/albums-en.min.js?v35900542" defer></script>
-<script src="assets/js/song-moods.min.js?v35900542" defer></script>
-<script src="assets/js/main.min.js?v35900542" defer></script>
-<script src="assets/js/motion.min.js?v35900542" defer></script>
-<script src="assets/js/router.min.js?v35900542" defer></script>
-<script src="assets/js/deck.min.js?v35900542" defer></script>
+<script src="assets/js/config.js?v14e760e3" defer></script>
+<script src="assets/js/backend.js?v14e760e3" defer></script>
+<script src="assets/js/i18n.min.js?v14e760e3" defer></script>
+<script src="assets/js/data.min.js?v14e760e3" defer></script>
+<script src="assets/js/tracklinks.min.js?v14e760e3" defer></script>
+<script src="assets/js/albums-full.min.js?v14e760e3" defer></script>
+<script src="assets/js/albums-en.min.js?v14e760e3" defer></script>
+<script src="assets/js/song-moods.min.js?v14e760e3" defer></script>
+<script src="assets/js/main.min.js?v14e760e3" defer></script>
+<script src="assets/js/board.min.js?v14e760e3" defer></script>
+<script src="assets/js/motion.min.js?v14e760e3" defer></script>
+<script src="assets/js/router.min.js?v14e760e3" defer></script>
+<script src="assets/js/deck.min.js?v14e760e3" defer></script>
 </body>
 </html>

@@ -11,7 +11,7 @@
 <meta name="referrer" content="no-referrer">
 <title>사랑방 운영 | 인순이 INSOONI</title>
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
-<link rel="stylesheet" href="assets/fonts/body.css?v35900542">
+<link rel="stylesheet" href="assets/fonts/body.css?v14e760e3">
 <style>
   :root {
     --void: #080808; --ivory: #F3EFE7; --muted: #b3a99c; --faint: #9c9284;
@@ -74,6 +74,11 @@
   .adm-kind { color: var(--muted); border: 1px solid var(--line-strong); padding: 1px 8px; font-size: .9rem; }
   .adm-name { color: var(--muted); }
   .adm-tag { font-size: .88rem; color: var(--faint); }
+  .adm-title { margin: 0; font-size: 1.14rem; font-weight: 700; overflow-wrap: anywhere; }
+  .adm-search { display: flex; gap: 8px; margin: 14px 0 6px; }
+  .adm-search input { flex: 1; min-height: 44px; padding: 0 12px; font: inherit; color: var(--ivory); background: var(--surface); border: 1px solid var(--line-strong); border-radius: 0; }
+  .adm-mnote { margin: 10px 0 4px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
   .adm-text { margin: 0; font-size: 1.08rem; white-space: pre-wrap; overflow-wrap: anywhere; word-break: keep-all; }
   .adm-ai { margin: 0; font-size: .95rem; padding: 6px 10px; justify-self: start; }
   .adm-ai--ok     { background: var(--ok-bg);   color: var(--ok-fg); }
@@ -129,11 +134,18 @@
       <button class="adm-tab" type="button" data-status="pending"  aria-pressed="true">검수 대기<span class="n" data-n="pending"></span></button>
       <button class="adm-tab" type="button" data-status="approved" aria-pressed="false">올라간 글<span class="n" data-n="approved"></span></button>
       <button class="adm-tab" type="button" data-status="rejected" aria-pressed="false">내린 글<span class="n" data-n="rejected"></span></button>
+      <button class="adm-tab" type="button" data-status="members" aria-pressed="false">회원<span class="n" data-n="members"></span></button>
     </div>
+    <form class="adm-search" id="adm-search" hidden role="search">
+      <label class="sr-only" for="adm-q">별명으로 찾기</label>
+      <input id="adm-q" type="search" placeholder="별명으로 찾기" autocomplete="off">
+      <button class="btn btn--ghost btn--sm" type="submit">찾기</button>
+    </form>
+    <p class="adm-note adm-mnote" id="adm-mnote" hidden></p>
     <p class="msg" id="adm-msg" role="status" aria-live="polite"></p>
     <ol class="adm-list" id="adm-list"></ol>
 
-    <p class="adm-note">
+    <p class="adm-note" id="adm-note">
       '내리기'는 지우는 것이 아닙니다. 「내린 글」에서 언제든 다시 올릴 수 있습니다.
       팬이 자기 글을 스스로 지운 경우에는 여기에도 남지 않습니다.
     </p>
@@ -142,7 +154,7 @@
 
 <div class="adm-toast" id="adm-toast" role="status" aria-live="polite"></div>
 
-<script src="assets/js/config.js?v35900542"></script>
-<script src="assets/js/admin.min.js?v35900542"></script>
+<script src="assets/js/config.js?v14e760e3"></script>
+<script src="assets/js/admin.min.js?v14e760e3"></script>
 </body>
 </html>

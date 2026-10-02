@@ -112,7 +112,10 @@
   /* ---------- 말 ---------- */
   var WHY = {
     not_configured: "사이트 설정에 서버 주소가 없습니다.",
-    not_ready: "서버 쪽 준비(008)가 아직 실행되지 않았습니다. 관리자에게 알려 주세요.",
+    not_ready: "서버 쪽 준비(008·010)가 아직 실행되지 않았습니다. 관리자에게 알려 주세요.",
+    staff: "운영자 계정의 등급은 여기서 바꾸지 않습니다.",
+    changed: "그사이 쓴 사람이 글을 고쳤습니다. 고친 내용을 다시 띄웠으니 확인한 뒤 올려 주세요.",
+    bad_level: "알 수 없는 등급입니다.",
     credentials: "이메일이나 비밀번호가 맞지 않습니다.",
     too_many: "로그인 시도가 너무 많습니다. 잠시 뒤 다시 해 주세요.",
     expired: "로그인이 끝났습니다. 다시 로그인해 주세요.",
@@ -140,7 +143,11 @@
     toastTm = setTimeout(function () { el.classList.remove("on"); }, 1800);
   }
 
-  var KIND = { note: "한 줄", dream: "꿈", letter: "편지", post: "글" };
+  var KIND = { note: "한 줄", dream: "꿈", letter: "편지", post: "옛 글", bpost: "게시판 글", comment: "댓글" };
+  var LEVEL = { sprout: "새싹", member: "정회원", blocked: "쉬는 중" };
+  /* AI 검수 도우미는 옛 네 표(한 줄·꿈·편지·옛 글)만 읽는다. 게시판 글·댓글에 '아직 읽지 않음'을
+     띄우면 영원히 읽지 않을 것을 기다리는 것처럼 보인다 — 그 줄을 아예 그리지 않는다. */
+  var AI_KINDS = { note: 1, dream: 1, letter: 1, post: 1 };
   var AI = {
     ok: ["괜찮아 보임", "ok"],
     review: ["사람이 봐야 함", "review"],
@@ -194,15 +201,20 @@
     meta.appendChild(t);
     if (row.preset != null) meta.appendChild(el("span", "adm-tag", "· 사이트 문구(칩)"));
     if (row.song_title) meta.appendChild(el("span", "adm-tag", "· 곡: " + row.song_title));
+    if (row.level) meta.appendChild(el("span", "adm-tag", "· " + (LEVEL[row.level] || row.level)));
+    if (row.kind === "comment" && row.title) meta.appendChild(el("span", "adm-tag", "· 달린 글: 「" + row.title + "」"));
     li.appendChild(meta);
 
+    if (row.kind === "bpost" && row.title) li.appendChild(el("p", "adm-title", row.title));
     li.appendChild(el("p", "adm-text", row.content || ""));
 
-    var v = AI[row.ai_verdict];
-    var ai = el("p", "adm-ai adm-ai--" + (v ? v[1] : "none"),
-                v ? ("AI 소견 · " + v[0] + (row.ai_reason ? " — " + row.ai_reason : ""))
-                  : "AI 소견 · 아직 읽지 않음");
-    li.appendChild(ai);
+    if (AI_KINDS[row.kind]) {
+      var v = AI[row.ai_verdict];
+      var ai = el("p", "adm-ai adm-ai--" + (v ? v[1] : "none"),
+                  v ? ("AI 소견 · " + v[0] + (row.ai_reason ? " — " + row.ai_reason : ""))
+                    : "AI 소견 · 아직 읽지 않음");
+      li.appendChild(ai);
+    }
 
     var acts = el("div", "adm-acts");
     (ACTS[row.status] || []).forEach(function (a, i) {
@@ -218,17 +230,21 @@
   function act(row, to, done, li) {
     var btns = li.querySelectorAll("button");
     Array.prototype.forEach.call(btns, function (b) { b.disabled = true; });
-    rpc("admin_set_status", { p_kind: row.kind, p_id: row.id, p_status: to }).then(function (res) {
+    /* 게시판 글은 화면에서 본 판(ver)을 함께 보낸다. 그사이 고쳐졌으면 서버가 'changed' 로 거절한다 */
+    var args = { p_kind: row.kind, p_id: row.id, p_status: to };
+    if (row.ver) args.p_ver = row.ver;
+    rpc("admin_set_status", args).then(function (res) {
       if (res && res.ok) {
         li.parentNode && li.parentNode.removeChild(li);
         counts[view] = Math.max(0, (counts[view] || 0) - 1);
         counts[to] = (counts[to] || 0) + 1;
         paintCounts();
-        toast(done);
+        toast(res.levelup ? done + " · " + (row.name || "") + " 님이 정회원이 되었습니다" : done);
         if (!$("#adm-list").children.length) emptyState();
         return;
       }
       Array.prototype.forEach.call(btns, function (b) { b.disabled = false; });
+      if (res && res.reason === "changed") { load(WHY.changed); return; }   /* 다시 불러온 뒤에 띄운다 — 먼저 띄우면 불러오기가 지운다 */
       if (res && res.reason === "not_found") {
         /* 그사이 팬이 지웠다 — 목록에서 걷는다 */
         li.parentNode && li.parentNode.removeChild(li);
@@ -246,12 +262,81 @@
     $("#adm-list").appendChild(el("li", "adm-empty", msg));
   }
 
-  function load() {
+  /* ---------- 회원 (010) ---------- */
+  var MACTS = {
+    sprout:  [["정회원으로", "member", "정회원으로 올렸습니다"], ["쉬게 하기", "blocked", "쉬게 했습니다"]],
+    member:  [["새싹으로", "sprout", "새싹으로 내렸습니다"], ["쉬게 하기", "blocked", "쉬게 했습니다"]],
+    blocked: [["새싹으로 풀기", "sprout", "새싹으로 풀었습니다"]]
+  };
+  function memberItem(m, need) {
+    var li = el("li", "adm-item");
+    var meta = el("div", "adm-meta");
+    meta.appendChild(el("span", "adm-kind", m.staff ? "운영자" : (LEVEL[m.level] || m.level)));
+    meta.appendChild(el("span", "adm-name", m.nickname));
+    meta.appendChild(el("span", "adm-tag", (m.provider === "kakao" ? "카카오" : "이메일") + (m.email_masked ? " · " + m.email_masked : "")));
+    var t = el("time", "", "가입 " + when(m.joined_at));
+    meta.appendChild(t);
+    li.appendChild(meta);
+    var line = "올라간 글 " + m.posts_ok + " · 댓글 " + m.comments_ok + (m.waiting ? " · 확인 기다리는 것 " + m.waiting : "");
+    if (m.level === "sprout" && !m.staff) {
+      if (m.level_by === "admin") line += " · 운영자가 정한 새싹(자동 등업 안 함)";
+      else line += " · 정회원까지 글 " + Math.max(0, need.p - m.posts_ok) + " · 댓글 " + Math.max(0, need.c - m.comments_ok);
+    }
+    li.appendChild(el("p", "adm-text", line));
+    var acts = el("div", "adm-acts");
+    if (!m.staff) {
+      (MACTS[m.level] || []).forEach(function (a, i) {
+        var b = el("button", "btn btn--sm" + (i === 0 ? "" : " btn--ghost"), a[0]);
+        b.type = "button";
+        b.addEventListener("click", function () {
+          if (a[1] === "blocked" && !window.confirm(m.nickname + " 님이 글·댓글을 쓰지 못하게 합니다. 계속할까요?")) return;
+          if (a[1] === "sprout" && m.level === "member" && !window.confirm(m.nickname + " 님을 새싹으로 내립니다. 이 회원의 글은 다시 검수를 거치고, 자동 등업도 더는 걸리지 않습니다. 계속할까요?")) return;
+          var bs = li.querySelectorAll("button");
+          Array.prototype.forEach.call(bs, function (x) { x.disabled = true; });
+          rpc("admin_set_level", { p_user: m.user_id, p_level: a[1] }).then(function (res) {
+            if (res && res.ok) { toast(a[2]); loadMembers(); return; }
+            Array.prototype.forEach.call(bs, function (x) { x.disabled = false; });
+            gate(res) || say($("#adm-msg"), why(res), "bad");
+          });
+        });
+        acts.appendChild(b);
+      });
+    }
+    li.appendChild(acts);
+    return li;
+  }
+  function loadMembers() {
+    var list = $("#adm-list");
+    say($("#adm-msg"), "불러오는 중…");
+    rpc("admin_members", { p_q: ($("#adm-q").value || "").trim() || null, p_limit: 300 }).then(function (res) {
+      if (!res || !res.ok) { gate(res) || say($("#adm-msg"), why(res), "bad"); return; }
+      say($("#adm-msg"), "");
+      var c = res.counts || {};
+      counts.members = c.total;
+      paintCounts();
+      $("#adm-mnote").textContent = "새싹 " + (c.sprout || 0) + " · 정회원 " + (c.member || 0) + " · 쉬는 중 " + (c.blocked || 0) +
+        ". 정회원 기준은 올라간 글 " + res.need_posts + "개 + 댓글 " + res.need_comments +
+        "개입니다(Supabase 의 board_settings 표에서 바꿀 수 있습니다). 운영자가 한 번 등급을 정한 회원에게는 자동 등업이 다시 적용되지 않습니다.";
+      list.textContent = "";
+      var rows = Array.isArray(res.rows) ? res.rows : [];
+      if (!rows.length) { list.appendChild(el("li", "adm-empty", "아직 회원이 없습니다.")); return; }
+      rows.forEach(function (m) { list.appendChild(memberItem(m, { p: res.need_posts, c: res.need_comments })); });
+    });
+  }
+  function refresh() {
+    var mem = view === "members";
+    $("#adm-search").hidden = !mem;
+    $("#adm-mnote").hidden = !mem;
+    $("#adm-note").hidden = mem;
+    if (mem) loadMembers(); else load();
+  }
+
+  function load(note) {
     var list = $("#adm-list");
     say($("#adm-msg"), "불러오는 중…");
     rpc("admin_list", { p_status: view, p_limit: 200 }).then(function (res) {
       if (!res || !res.ok) { gate(res) || say($("#adm-msg"), why(res), "bad"); return; }
-      say($("#adm-msg"), "");
+      say($("#adm-msg"), note || "", note ? "bad" : "");
       if (res.counts) { counts = res.counts; paintCounts(); }
       list.textContent = "";
       var rows = Array.isArray(res.rows) ? res.rows : [];
@@ -283,7 +368,7 @@
       $("#adm-sys").hidden = true;
       $("#adm-who").textContent = (w.email || "") + " · 운영자";
       show("app");
-      load();
+      refresh();
     });
   }
 
@@ -319,10 +404,11 @@
       b.addEventListener("click", function () {
         view = b.getAttribute("data-status");
         $all(".adm-tab").forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
-        load();
+        refresh();
       });
     });
-    $("#adm-reload").addEventListener("click", load);
+    $("#adm-reload").addEventListener("click", refresh);
+    $("#adm-search").addEventListener("submit", function (e) { e.preventDefault(); loadMembers(); });
     $("#adm-out").addEventListener("click", signOut);
 
     if (getS()) enter(); else show("login");
