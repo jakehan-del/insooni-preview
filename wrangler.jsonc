@@ -45,6 +45,8 @@
       "/haemil",
       "/privacy",
       "/terms",
+      // 공연 화면(QR 주소 https://insooni.com/live?e=코드) — http 로 찍힌 QR 도 https 로 올린다
+      "/live",
       "/robots.txt",
       "/sitemap.xml"
     ]

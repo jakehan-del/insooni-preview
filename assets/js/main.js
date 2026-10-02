@@ -102,7 +102,9 @@
     });
     document.addEventListener("keydown", function (e) {
       if (e.key !== "Tab" || !nav.classList.contains("open")) return;
-      var items = [$(".brand")].concat($all("a", nav)).concat([$(".lang-toggle"), toggle]).filter(Boolean);
+      /* 패널 안에는 링크 말고도 회원 입구·언어 단추(board.js 가 넣는다)가 있다. 보이는 것만 돈다 */
+      var items = [$(".brand")].concat($all("a, button", nav).filter(function (n) { return n.offsetParent !== null; }))
+        .concat([$(".site-header .header-tools .lang-toggle"), toggle]).filter(Boolean);
       var first = items[0], last = items[items.length - 1];
       if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
       else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
@@ -2962,8 +2964,11 @@
   /* ---------- 8.5 소식지 구독 ----------
      받을 수단이 있을 때만 주소를 여쭙는다. 서버가 없으면 폼을 숨긴 채 둔다. */
   function initSubscribe() {
+    /* 보낼 도구가 없는 동안은 신청 칸도, '곧 받겠습니다' 안내도 띄우지 않는다(config.js newsletter) */
+    if ((window.INSOONI_CONFIG || {}).newsletter !== true) return;
     var form = $("#sub-form"), msg = $("#sub-msg"), note = $("#sub-note");
     if (!form) return;
+    if (note) note.hidden = false;
     var be = BE();
     if (!be) return;                 /* 폼은 hidden 그대로, 공식 채널 링크만 보인다 */
     form.hidden = false;
@@ -3092,14 +3097,16 @@
      그래서 적용부(applyLang)를 따로 떼어 pageInit에서 매번 부른다. */
   function applyLang(lang) {
     var dict = window.I18N_EN || {};
-    var btn = $(".lang-toggle");
     {
       document.documentElement.setAttribute("lang", lang);
-      if (btn) {
-        btn.textContent = lang === "ko" ? "EN" : "한국어";
+      /* 언어 단추는 헤더에 하나, 아주 좁은 폰(≤359px)에서는 메뉴 패널 맨 아래에 하나 더 있다(board.js 가 넣음).
+         패널 것은 칸이 넓어 'EN' 두 글자 대신 낱말로 쓴다 */
+      $all(".lang-toggle").forEach(function (btn) {
+        var wide = btn.classList.contains("nav-lang");
+        btn.textContent = lang === "ko" ? (wide ? "English" : "EN") : "한국어";
         /* 영어로 보고 있는 사람에게는 설명도 영어여야 한다 */
         btn.setAttribute("aria-label", lang === "ko" ? "Switch to English" : "Switch to Korean");
-      }
+      });
       $all("[data-i18n]").forEach(function (n) {
         var key = n.getAttribute("data-i18n");
         if (lang === "en") {
@@ -3172,10 +3179,13 @@
 
   /* 토글 버튼은 헤더에 있어 라우터가 갈아끼우지 않는다. 한 번만 묶는다. */
   function initLang() {
-    var btn = $(".lang-toggle");
-    if (!btn || btn.dataset.bound) return;
-    btn.dataset.bound = "1";
-    btn.addEventListener("click", function () {
+    if (document.documentElement.dataset.langBound) return;
+    document.documentElement.dataset.langBound = "1";
+    /* 문서에 한 번 거는 위임 — 메뉴 패널의 언어 단추는 board.js 가 나중에 넣으므로
+       단추마다 묶으면 늦게 들어온 것이 빠진다 */
+    document.addEventListener("click", function (e) {
+      var btn = e.target.closest ? e.target.closest(".lang-toggle") : null;
+      if (!btn) return;
       applyLang(curLang() === "ko" ? "en" : "ko");
       /* 데이터 렌더 콘텐츠까지 완전 전환: 저장 후 재로드 */
       location.reload();
@@ -3516,6 +3526,9 @@
       document.removeEventListener("click", swallow, true);
     }
     function skip() {
+      /* 도입부가 끝난 뒤에는 아무것도 하지 않는다 — 이 듣개를 떼지 않아 도입부 뒤 첫 탭·클릭이 skip() 을 거쳐
+         swallow 에 삼켜졌다. 홈에서 '로그인 · 회원가입'·메뉴(☰)·내비 첫 클릭이 먹히지 않던 원인(검토 47번) */
+      if (!document.documentElement.classList.contains("is-intro")) { unbindSkip(); return; }
       if (skipped) return;
       /* 시작 게이트(사진 대기) 중에 눌러도 듣는다 — 그 자리에서 시작시키고
          끝 0.3초 앞으로 점프한다. t0 가 아직 0 이면 첫 프레임이 곧 끝이다. */
@@ -3528,6 +3541,10 @@
     var SKIPS = ["pointerdown", "keydown", "wheel", "touchstart"];
     for (var k = 0; k < SKIPS.length; k++) {
       window.addEventListener(SKIPS[k], skip, { passive: true });
+    }
+    function unbindSkip() {
+      for (var j = 0; j < SKIPS.length; j++) window.removeEventListener(SKIPS[j], skip, { passive: true });
+      document.removeEventListener("click", swallow, true);
     }
     /* WCAG 2.2.2 — 자동 모션에는 보이는 정지 수단. */
     var sk = document.createElement("button");

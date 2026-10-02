@@ -11,7 +11,7 @@
 <meta name="referrer" content="no-referrer">
 <title>사랑방 운영 | 인순이 INSOONI</title>
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
-<link rel="stylesheet" href="assets/fonts/body.css?v434a60a2">
+<link rel="stylesheet" href="assets/fonts/body.css?v12e1c6c2">
 <style>
   :root {
     --void: #080808; --ivory: #F3EFE7; --muted: #b3a99c; --faint: #9c9284;
@@ -25,6 +25,8 @@
   * { box-sizing: border-box; }
   html, body { margin: 0; background: var(--void); color: var(--ivory); }
   body { font-family: var(--font); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  /* 한글이 단어 가운데서 끊기지 않게('보/이지', '인/앱', '고/쳐도' — 검토 17번). 긴 주소만 어디서든 접힌다 */
+  body { word-break: keep-all; overflow-wrap: anywhere; }
   .wrap { max-width: 860px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 80px; }
   :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
   [hidden] { display: none !important; }
@@ -96,6 +98,70 @@
   }
   .adm-toast.on { opacity: 1; }
   @media (prefers-reduced-motion: reduce) { .adm-toast { transition: none; } }
+
+  /* ── 공연 탭 (supabase/011) — 공연장에서 폰 한 손으로도 누르게: 현장 손잡이 56px ── */
+  .gg-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 16px 0 6px; }
+  .gg-row { border-bottom: 1px solid var(--line); padding: 16px 0; display: grid; gap: 6px; }
+  .gg-row h3 { margin: 0; font-size: 1.12rem; font-weight: 700; overflow-wrap: anywhere; }
+  .gg-meta { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: .95rem; color: var(--faint); }
+  .gg-code { font-family: ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: .08em; color: var(--ivory); }
+  .gg-st { color: var(--muted); }
+  .gg-nums { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: .95rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .gg-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .gg-form { display: grid; gap: 14px; margin: 14px 0 24px; padding: 18px 0; border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong); }
+  .gg-form h2, .gg-live h2, .gg-check h2 { margin: 0; font-size: 1.2rem; }
+  .gg-f { display: grid; gap: 6px; font-size: 1rem; color: var(--muted); }
+  .gg-f input, .gg-f select {
+    min-height: 48px; padding: 0 12px; font: inherit; font-size: 1.02rem; color: var(--ivory);
+    background: var(--surface); border: 1px solid var(--line-strong); border-radius: 0; color-scheme: dark;
+  }
+  .gg-f input:focus, .gg-f select:focus { border-color: var(--ivory); outline: 2px solid var(--focus); outline-offset: 2px; }
+  .gg-two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 560px) { .gg-two { grid-template-columns: 1fr; } }
+  .gg-hint { font-size: .92rem; color: var(--faint); margin: 0; }
+  .gg-songs { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .gg-songs li { display: flex; align-items: center; gap: 6px; min-height: 48px; border-bottom: 1px solid var(--line); }
+  .gg-songs li span { flex: 1; overflow-wrap: anywhere; }
+  .gg-songs .btn { min-height: 44px; min-width: 44px; padding: 0 10px; }
+  .gg-opts { list-style: none; margin: 0; padding: 0; max-height: 240px; overflow: auto; border: 1px solid var(--line); }
+  .gg-opts:empty { display: none; }
+  .gg-opts button { display: block; width: 100%; min-height: 44px; padding: 0 12px; text-align: left; font: inherit; color: var(--ivory); background: none; border: 0; border-bottom: 1px solid var(--line); cursor: pointer; }
+  .gg-opts button:hover, .gg-opts button:focus-visible { background: var(--surface); }
+  .gg-live { display: grid; gap: 16px; margin: 14px 0 24px; padding: 18px 0; border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong); }
+  .gg-big { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  @media (max-width: 560px) { .gg-big { grid-template-columns: 1fr 1fr; } }
+  .gg-big div { border: 1px solid var(--line); padding: 10px 12px; }
+  .gg-big b { display: block; font-size: 2rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .gg-big span { color: var(--muted); font-size: .95rem; }
+  .gg-knobs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  @media (max-width: 560px) { .gg-knobs { grid-template-columns: 1fr; } }
+  .gg-knobs .btn, .gg-vote .btn { min-height: 56px; }
+  /* 지금 상태는 '눌러야 할 단추'처럼 채우지 않는다 — 안쪽 테두리 + 굵게 + ✓ (검토 17번) */
+  .gg-knobs .btn[aria-pressed="true"] { background: transparent; color: var(--ivory); border-color: var(--ivory); box-shadow: inset 0 0 0 1px var(--ivory); font-weight: 700; }
+  .gg-now { margin: 0 0 .5rem; }
+  .gg-knobs .btn[aria-pressed="false"] { background: transparent; color: var(--ivory); border-color: var(--line-strong); font-weight: 500; }
+  .gg-qr { display: grid; gap: 10px; justify-items: start; }
+  .gg-qr-box { width: 240px; height: 240px; background: #FFFFFF; padding: 0; }
+  .gg-qr-box svg { width: 240px; height: 240px; display: block; }
+  .gg-url { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .95rem; overflow-wrap: anywhere; color: var(--ivory); }
+  .gg-check ol { margin: 8px 0 0; padding: 0; list-style: none; }
+  .gg-check li { border-bottom: 1px solid var(--line); }
+  .gg-check label { display: flex; gap: 10px; align-items: flex-start; min-height: 48px; padding: 10px 0; cursor: pointer; }
+  .gg-check input { width: 22px; height: 22px; margin-top: 2px; flex: none; accent-color: var(--ivory); }
+  /* 인쇄용 A4 — 이 상자만 종이에 나온다(흰 종이 · 검은 QR, 반전 금지) */
+  #gg-print { display: none; }
+  @media print {
+    @page { size: A4; margin: 18mm; }
+    body.gg-printing { background: #FFFFFF !important; }
+    body.gg-printing > *:not(#gg-print) { display: none !important; }
+    body.gg-printing #gg-print { display: block !important; color: #000; background: #FFF; text-align: center; font-family: var(--font); }
+    #gg-print .p-qr svg { width: 120mm; height: 120mm; margin: 0 auto; display: block; }
+    #gg-print .p-title { font-size: 20pt; font-weight: 800; margin: 0 0 8mm; }
+    #gg-print .p-url { font-size: 16pt; margin: 6mm 0 2mm; }
+    #gg-print .p-code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 40pt; letter-spacing: .12em; margin: 0 0 6mm; }
+    #gg-print .p-how { font-size: 14pt; margin: 0; }
+    #gg-print .p-how-en { font-size: 11pt; margin: 2mm 0 0; }
+  }
 </style>
 </head>
 <body>
@@ -135,6 +201,7 @@
       <button class="adm-tab" type="button" data-status="approved" aria-pressed="false">올라간 글<span class="n" data-n="approved"></span></button>
       <button class="adm-tab" type="button" data-status="rejected" aria-pressed="false">내린 글<span class="n" data-n="rejected"></span></button>
       <button class="adm-tab" type="button" data-status="members" aria-pressed="false">회원<span class="n" data-n="members"></span></button>
+      <button class="adm-tab" type="button" data-status="gigs" aria-pressed="false">공연<span class="n" data-n="gigs"></span></button>
     </div>
     <form class="adm-search" id="adm-search" hidden role="search">
       <label class="sr-only" for="adm-q">별명으로 찾기</label>
@@ -145,6 +212,92 @@
     <p class="msg" id="adm-msg" role="status" aria-live="polite"></p>
     <ol class="adm-list" id="adm-list"></ol>
 
+    <!-- 공연 탭 (supabase/011) — 공연 만들기·고치기 · 현장 손잡이 · QR · 공연 전 점검표.
+         숫자는 전부 서버(admin_gig_list)가 센 그대로다. 코드는 서버가 만든다(읽기 전용). -->
+    <section id="gg" hidden>
+      <div class="gg-bar">
+        <button class="btn" type="button" id="gg-new">새 공연 만들기</button>
+      </div>
+      <form class="gg-form" id="gg-form" hidden novalidate>
+        <h2 id="gg-form-h">새 공연</h2>
+        <label class="gg-f" for="gg-tko">공연명 (한국어, 2~60자)
+          <input id="gg-tko" type="text" maxlength="60" required autocomplete="off"></label>
+        <label class="gg-f" for="gg-ten">공연명 (영어, 선택)
+          <input id="gg-ten" type="text" maxlength="80" autocomplete="off"></label>
+        <div class="gg-two">
+          <label class="gg-f" for="gg-vko">장소 (한국어)
+            <input id="gg-vko" type="text" maxlength="60" autocomplete="off"></label>
+          <label class="gg-f" for="gg-ven">장소 (영어, 선택)
+            <input id="gg-ven" type="text" maxlength="80" autocomplete="off"></label>
+        </div>
+        <label class="gg-f" for="gg-start">시작 (한국 시각)
+          <input id="gg-start" type="datetime-local" required></label>
+        <p class="gg-hint">시작을 정하면 아래 셋이 기본값(도장 열림 −2시간 · 닫힘 +4시간 · 방명록 마감 닫힘 +72시간)으로 채워집니다. 고쳐도 됩니다.</p>
+        <div class="gg-two">
+          <label class="gg-f" for="gg-open">도장 열림
+            <input id="gg-open" type="datetime-local" required></label>
+          <label class="gg-f" for="gg-close">도장 닫힘
+            <input id="gg-close" type="datetime-local" required></label>
+        </div>
+        <label class="gg-f" for="gg-guest">방명록 마감
+          <input id="gg-guest" type="datetime-local" required></label>
+        <div class="gg-f">앵콜 후보 (0~8곡 · 노래 목록에서만 고릅니다)
+          <ol class="gg-songs" id="gg-songs"></ol>
+          <input id="gg-sq" type="search" placeholder="노래 제목으로 찾기" autocomplete="off" aria-label="앵콜 후보 노래 찾기">
+          <ul class="gg-opts" id="gg-opts"></ul>
+        </div>
+        <label class="gg-f" for="gg-status">상태
+          <select id="gg-status">
+            <option value="draft">준비 (공개 전 — 운영자만 미리 봄)</option>
+            <option value="published">공개</option>
+            <option value="archived">보관</option>
+          </select></label>
+        <div class="gg-f" id="gg-code-f" hidden>공연 코드 (서버가 만든다)
+          <span class="gg-code" id="gg-code"></span>
+          <button class="btn btn--ghost btn--sm" type="button" id="gg-regen" hidden>코드 새로 만들기</button>
+          <p class="gg-hint" id="gg-regen-note"></p>
+        </div>
+        <div class="gg-acts">
+          <button class="btn" type="submit" id="gg-save">저장</button>
+          <button class="btn btn--ghost" type="button" id="gg-cancel">그만두기</button>
+        </div>
+        <p class="msg" id="gg-msg" role="status" aria-live="polite"></p>
+      </form>
+
+      <!-- 현장 손잡이 · QR (목록에서 '현장·QR' 을 누른 공연) -->
+      <section class="gg-live" id="gg-live" hidden aria-labelledby="gg-live-h">
+        <h2 id="gg-live-h"></h2>
+        <p class="gg-hint" id="gg-live-st"></p>
+        <div class="gg-big" id="gg-big"></div>
+        <p class="gg-hint gg-now" id="gg-knob-now" aria-live="polite"></p>
+        <div class="gg-knobs" role="group" aria-label="도장 열고 닫기">
+          <button class="btn" type="button" data-ov="open" aria-pressed="false">지금 도장 열기</button>
+          <button class="btn" type="button" data-ov="closed" aria-pressed="false">도장 닫기</button>
+          <button class="btn" type="button" data-ov="" aria-pressed="false">시간대로</button>
+        </div>
+        <div class="gg-vote"><button class="btn btn--ghost" type="button" id="gg-vote-t"></button></div>
+        <p><button class="btn btn--ghost btn--sm" type="button" id="gg-to-pending"></button></p>
+        <div class="gg-qr">
+          <div class="gg-qr-box" id="gg-qr-box" aria-hidden="true"></div>
+          <p class="gg-url" id="gg-url"></p>
+          <div class="gg-acts">
+            <button class="btn btn--ghost btn--sm" type="button" id="gg-svg">SVG 내려받기</button>
+            <button class="btn btn--ghost btn--sm" type="button" id="gg-png">PNG 2048px 내려받기</button>
+            <button class="btn btn--ghost btn--sm" type="button" id="gg-print-b">인쇄용 A4</button>
+          </div>
+        </div>
+        <p class="msg" id="gg-live-msg" role="status" aria-live="polite"></p>
+      </section>
+
+      <ol class="adm-list" id="gg-list"></ol>
+
+      <section class="gg-check" aria-labelledby="gg-check-h">
+        <h2 id="gg-check-h">공연 전 점검표</h2>
+        <p class="gg-hint">이 기기에만 저장되는 점검표입니다. 다른 운영자에게는 보이지 않습니다.</p>
+        <ol id="gg-check"></ol>
+      </section>
+    </section>
+
     <p class="adm-note" id="adm-note">
       '내리기'는 지우는 것이 아닙니다. 「내린 글」에서 언제든 다시 올릴 수 있습니다.
       팬이 자기 글을 스스로 지운 경우에는 여기에도 남지 않습니다.
@@ -154,7 +307,11 @@
 
 <div class="adm-toast" id="adm-toast" role="status" aria-live="polite"></div>
 
-<script src="assets/js/config.js?v434a60a2"></script>
-<script src="assets/js/admin.min.js?v434a60a2"></script>
+<!-- 인쇄용 A4 — '인쇄용 A4' 를 누를 때만 채워진다 -->
+<div id="gg-print" aria-hidden="true"></div>
+
+<script src="assets/js/config.js?v12e1c6c2"></script>
+<script src="assets/js/qr.min.js?v12e1c6c2"></script>
+<script src="assets/js/admin.min.js?v12e1c6c2"></script>
 </body>
 </html>

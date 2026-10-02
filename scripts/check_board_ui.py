@@ -478,8 +478,10 @@ def suite(br, board_src=None, quick_errs=None, R=None):
 
     def mk(on=True, mobile=True):
         c = br.new_context(viewport={"width": 375, "height": 812}, is_mobile=mobile, has_touch=mobile, locale="ko-KR")
-        if on:   # 스위치를 켠 상태(config.js 는 정해진 값이 있으면 손대지 않는다)
-            c.add_init_script("window.INSOONI_CONFIG = {board: true};")
+        # 스위치(config.js 는 정해진 값이 있으면 손대지 않는다). 2026-10-02 부터 board 기본값이 true 라
+        # '꺼짐'도 명시해야 꺼진다. 카카오 단추는 실기기 왕복 확인 전까지 config.kakao 로 숨기므로
+        # 카카오 흐름을 시험하는 쪽은 kakao: true 를 함께 준다.
+        c.add_init_script("window.INSOONI_CONFIG = {board: true, kakao: true};" if on else "window.INSOONI_CONFIG = {board: false};")
         c.route(re.compile(r"https://%s/.*" % re.escape(SUPA)), fake.handle)
         if board_src is not None:
             c.route(re.compile(r".*/assets/js/board\.min\.js.*"),
@@ -511,6 +513,15 @@ def suite(br, board_src=None, quick_errs=None, R=None):
     def h():
         return pg.evaluate("location.hash")
 
+    def hm_aria():   # 헤더 회원 입구 — 폰에서는 짧은 라벨('내 정보')만 보이므로 이름표(aria-label)로 본다
+        return pg.evaluate("(document.getElementById('hm') || {getAttribute: () => ''}).getAttribute('aria-label') || ''")
+
+    def pick():      # 글쓰기의 게시판 고르기(라디오 칸)
+        return pg.evaluate("(document.querySelector('#bd-pick input:checked') || {}).value || ''")
+
+    def choose(k):
+        pg.click("#bd-pick label:has(input[value=%s])" % k)
+
     FAN = "fan@test.local"
 
     # ── A. 카페 모양 ─────────────────────────────────────────
@@ -530,7 +541,7 @@ def suite(br, board_src=None, quick_errs=None, R=None):
     t("A3 '글쓰기' 버튼 아래 끝까지 폰 첫 화면 안", 0 < lay["write"] < 812, lay)
     t("A4 순서: 카페 → 신청곡 → 나가는 길", 0 < lay["cafe"] < lay["setlist"] < lay["doors"], lay)
     t("A5 폰에서 가로 넘침 없음", lay["over"] <= 1, lay["over"])
-    t("A6 전체글 위에 '인순이의 편지' 고정 줄", "인순이가 팬들에게 직접 남긴 편지 2편" in txt("#bd-pins"), txt("#bd-pins"))
+    t("A6 전체글 위에 '인순이의 편지' 고정 줄", "인순이가 직접 남긴 편지 2편" in txt("#bd-pins"), txt("#bd-pins"))
     t("A7 카페 숫자(회원·글)가 실제 값으로", "회원 0명 · 글 0개" in txt("#cafe-stat"), txt("#cafe-stat"))
     pg.evaluate("document.getElementById('main').__keep = 1")
     pg.click(".cafe-menu a[data-b=letters]")
@@ -605,19 +616,20 @@ def suite(br, board_src=None, quick_errs=None, R=None):
     pg.wait_for_timeout(1300)
     t("C10 가입 마침 → 아까 누른 '글쓰기'가 이어서 열림", not pg.is_visible("#bd-sheet") and pg.is_visible("#bd-form")
       and h().startswith("#write"), (sheet()[:60], h()))
-    opts = pg.evaluate("[...document.querySelectorAll('#bd-boardsel option')].map(o => o.value)")
+    opts = pg.evaluate("[...document.querySelectorAll('#bd-pick input')].map(o => o.value)")
     t("C11 회원 글쓰기 게시판: 가입인사·자유·후기(공지는 없음)", opts == ["hello", "free", "review"], opts)
-    t("C12 위쪽에 '홍천팬 · 새싹' · 정회원까지 글 3·댓글 5", "홍천팬" in txt("#bd-who") and "새싹" in txt("#bd-who"), txt("#bd-who"))
+    t("C12 헤더 입구가 '홍천팬, 새싹'으로 바뀜", "홍천팬" in hm_aria() and "새싹" in hm_aria(), hm_aria())
+    t("C12b 처음 쓰는 새싹은 '가입인사'가 미리 골라짐", pick() == "hello", pick())
 
     # ── D. 쓰던 글 자동 저장 ─────────────────────────────────
-    pg.select_option("#bd-boardsel", "hello")
+    choose("hello")
     pg.fill("#bd-title", "첫 인사드립니다")
     pg.fill("#bd-body", "홍천에서 왔습니다.\n둘째 줄입니다.")
     pg.wait_for_timeout(700)
     pg.reload(wait_until="load")
     pg.wait_for_timeout(1500)
     t("D1 새로고침해도 쓰던 글·게시판이 돌아옴", pg.input_value("#bd-title") == "첫 인사드립니다"
-      and "둘째 줄" in pg.input_value("#bd-body") and pg.input_value("#bd-boardsel") == "hello"
+      and "둘째 줄" in pg.input_value("#bd-body") and pick() == "hello"
       and "불러왔습니다" in txt("#bd-msg"), (txt("#bd-msg"), h()))
     t("D2 글자 수 표시", "/ 4,000" in txt("#bd-count"), txt("#bd-count"))
 
@@ -632,8 +644,8 @@ def suite(br, board_src=None, quick_errs=None, R=None):
     t("E4 다 올린 뒤 초안은 지워짐", pg.evaluate("localStorage.getItem('insooni_board_draft')") is None)
     pg.click("#bd-write-btn")
     pg.wait_for_timeout(500)
-    t("E5 가입인사 게시판에서 글쓰기 → 게시판이 미리 골라짐", pg.input_value("#bd-boardsel") == "hello", pg.input_value("#bd-boardsel"))
-    pg.select_option("#bd-boardsel", "free")
+    t("E5 가입인사 게시판에서 글쓰기 → 게시판이 미리 골라짐", pick() == "hello", pick())
+    choose("free")
     pg.fill("#bd-title", '<img src=x onerror="window.__xss=1">위험한 제목')
     pg.fill("#bd-body", '<b>굵게</b><script>window.__xss=2</script>')
     pg.click("#bd-go")
@@ -659,28 +671,31 @@ def suite(br, board_src=None, quick_errs=None, R=None):
     t("F4 새싹 댓글 → '운영자가 확인한 뒤 모두에게' · 나에겐 '확인 중'", "운영자가 확인한 뒤 모두에게" in post
       and "반갑습니다!" in post and "확인 중" in post, post[-160:])
     pg.fill("#cafe-post textarea", "쓰다 만 댓글")
+    hl0 = pg.evaluate("history.length")
     pg.click("#cafe-post .cafe-back >> nth=0")
     pg.wait_for_timeout(700)
-    t("F5 '← 목록으로' → 목록", pg.is_visible("#cafe-list") and h().startswith("#b="), h())
-    pg.go_back()
+    t("F5 '← 목록으로' → 목록(목록에서 온 글이면 진짜 뒤로 — 기록이 쌓이지 않음)", pg.is_visible("#cafe-list") and h().startswith("#b=")
+      and pg.evaluate("history.length") == hl0, (h(), hl0, pg.evaluate("history.length")))
+    pg.go_forward()
     pg.wait_for_timeout(1000)
-    t("F6 다시 그 글로(뒤로 가기) → 쓰던 댓글은 그대로", pg.input_value("#cafe-post textarea") == "쓰다 만 댓글",
+    t("F6 다시 그 글로(앞으로 가기) → 그 글이 다시 열리고 쓰던 댓글은 그대로", pg.is_visible("#cafe-post") and h().startswith("#p")
+      and pg.input_value("#cafe-post textarea") == "쓰다 만 댓글",
       pg.input_value("#cafe-post textarea") if pg.locator("#cafe-post textarea").count() else h())
 
     # ── G. 운영자가 정한 새싹 · 남의 링크 · 정회원 · 고치기 · 지우기 ──
     fake.members[fake.uid_by_email(FAN)]["level_by"] = "admin"
     go("community.html#b=all")
-    t("G0 운영자가 정한 새싹에게는 남은 숫자 대신 '운영자가 정했습니다'", "운영자가 정했습니다" in txt("#bd-note")
+    t("G0 운영자가 정한 새싹에게는 남은 숫자 대신 '등급은 운영자가 정합니다'", "운영자가 정합니다" in txt("#bd-note")
       and "남았습니다" not in txt("#bd-note"), txt("#bd-note"))
     before = pg.evaluate("localStorage.getItem('insooni_member_session')")
     atk = fake.add_user("attacker@test.local", "x", confirmed=True)
     fake.members[atk] = {"nickname": "남의계정", "level": "member", "level_by": "auto"}
     go("community.html#access_token=" + fake.session(atk)["access_token"] + "&expires_in=3600&type=recovery")
     t("G0b 남의 진짜 열쇠를 실은 링크로도 지금 세션이 바뀌지 않음", pg.evaluate("localStorage.getItem('insooni_member_session')") == before
-      and "홍천팬" in txt("#bd-who") and "새 비밀번호" not in sheet(), txt("#bd-who"))
+      and "홍천팬" in hm_aria() and "새 비밀번호" not in sheet(), hm_aria())
     fake.members[fake.uid_by_email(FAN)].update(level="member", level_by="auto")
     go("community.html#b=free")
-    t("G1 정회원 안내", "정회원입니다" in txt("#bd-note"), txt("#bd-note"))
+    t("G1 정회원에게는 새싹 안내 줄이 없음(헤더는 '정회원')", not pg.is_visible("#bd-note") and "정회원" in hm_aria(), (txt("#bd-note"), hm_aria()))
     pg.click("#bd-write-btn")
     pg.wait_for_timeout(400)
     pg.fill("#bd-title", "정회원 첫 글")
@@ -692,14 +707,14 @@ def suite(br, board_src=None, quick_errs=None, R=None):
       and pg.input_value("#bd-title") == "정회원 첫 글" and pg.input_value("#bd-body") == "바로 올라가나요?", txt("#bd-msg"))
     pg.click("#bd-go")
     pg.wait_for_timeout(1300)
-    t("G3 정회원 글 → 바로 공개 · 그 글 보기로", "바로 보입니다" in txt("#bd-msg") and h().startswith("#p")
+    t("G3 정회원 글 → 바로 공개 · 그 글 보기로", "올라갔습니다" in txt("#bd-msg") and h().startswith("#p")
       and "정회원 첫 글" in txt("#cafe-post .cafe-post-title"), (txt("#bd-msg"), h()))
     pg.click("#cafe-post .bd-acts >> text=고치기")
     pg.wait_for_timeout(800)
     t("G4 '고치기' → 같은 칸에 원래 글(#edit)", pg.input_value("#bd-body") == "바로 올라가나요?" and "글 고치기" in txt("#bd-form-h")
       and h().startswith("#edit="), h())
     pg.fill("#bd-body", "고친 본문입니다.")
-    pg.select_option("#bd-boardsel", "review")
+    choose("review")
     pg.click("#bd-go")
     pg.wait_for_timeout(1300)
     t("G5 고친 내용·게시판 반영 → 공개 유지 · 글 보기로", "고친 내용을 올렸습니다" in txt("#bd-msg")
@@ -722,7 +737,7 @@ def suite(br, board_src=None, quick_errs=None, R=None):
       and pg.is_visible("#cafe-list"), (txt("#bd-msg"), h()))
 
     # ── H. 내 정보 · 별명 · 로그아웃(초안 치우기) ───────────────
-    pg.click("#bd-who .bd-me")
+    pg.click("#hm")
     pg.wait_for_timeout(400)
     t("H1 내 정보 창", "내 정보" in sheet() and "정회원" in sheet(), sheet()[:60])
     pg.fill("#bd-mn", "운영자님")
@@ -736,16 +751,17 @@ def suite(br, board_src=None, quick_errs=None, R=None):
     pg.keyboard.press("Escape")
     pg.click("#bd-write-btn"); pg.wait_for_timeout(400)
     pg.fill("#bd-title", "공용 기기 초안"); pg.fill("#bd-body", "다음 사람에게 보이면 안 됨"); pg.wait_for_timeout(700)
-    pg.click("#bd-who .bd-me"); pg.wait_for_timeout(300)
+    pg.click("#hm"); pg.wait_for_timeout(300)
     pg.click("#bd-sheet .bd-me-acts >> text=로그아웃")
     pg.wait_for_timeout(800)
-    t("H4 로그아웃 → 세션 지움 · '로그인 · 가입'", pg.evaluate("localStorage.getItem('insooni_member_session')") is None
-      and "로그인 · 가입" in txt("#bd-who") and any(c[0] == "auth:logout" for c in fake.calls), txt("#bd-who"))
+    # 폰 헤더의 짧은 라벨은 '로그인·가입'(검토 39번 — 폰에도 '가입'이 보이게). 375×17 은 상표와 넉넉해 내려가지 않는다
+    t("H4 로그아웃 → 세션 지움 · 헤더 '로그인·가입'", pg.evaluate("localStorage.getItem('insooni_member_session')") is None
+      and txt("#hm") == "로그인·가입" and hm_aria() == "로그인 또는 회원가입" and any(c[0] == "auth:logout" for c in fake.calls), txt("#hm"))
     t("H5 로그아웃하면 이 기기의 쓰던 글을 치움(공용 기기)", pg.evaluate("localStorage.getItem('insooni_board_draft')") is None
       and pg.input_value("#bd-title") == "" and pg.input_value("#bd-body") == "" and not pg.is_visible("#bd-form"))
 
     # ── I. 카카오 왕복 · 탈퇴 ────────────────────────────────
-    pg.click("#bd-who button")
+    pg.click("#hm")
     pg.wait_for_timeout(400)
     pg.click("#bd-sheet .bd-kakao")
     pg.wait_for_timeout(2200)
@@ -757,8 +773,8 @@ def suite(br, board_src=None, quick_errs=None, R=None):
     pg.check("#bd-ja"); pg.check("#bd-jg")
     pg.click("#bd-sheet button[type=submit]")
     pg.wait_for_timeout(1200)
-    t("I3 카카오 회원 가입 → 환영 인사", "카카오별명" in txt("#bd-who") and "어서 오세요" in txt("#bd-msg"), txt("#bd-msg"))
-    pg.click("#bd-who .bd-me")
+    t("I3 카카오 회원 가입 → 환영 인사", "카카오별명" in hm_aria() and "어서 오세요" in txt("#bd-msg"), txt("#bd-msg"))
+    pg.click("#hm")
     pg.wait_for_timeout(300)
     pg.click("#bd-sheet .bd-leave")
     pg.wait_for_timeout(1200)
@@ -766,7 +782,7 @@ def suite(br, board_src=None, quick_errs=None, R=None):
       and "탈퇴했습니다" in txt("#bd-msg") and pg.evaluate("localStorage.getItem('insooni_member_session')") is None, txt("#bd-msg"))
 
     # ── J. 비밀번호 · 다른 브라우저 · 만료 링크 · token_hash ───
-    pg.click("#bd-who button")
+    pg.click("#hm")
     pg.wait_for_timeout(300)
     pg.click("#bd-sheet .bd-link >> text=비밀번호를 잊으셨나요?")
     pg.fill("#bd-re", FAN)
@@ -805,7 +821,7 @@ def suite(br, board_src=None, quick_errs=None, R=None):
     fake.users[fake.uid_by_email(FAN)]["pw"] = "newpass456"
 
     # ── K. 세션이 서버에서 끝났을 때 · 영어 · 서버 준비 전 ──────
-    pg.click("#bd-who button")
+    pg.click("#hm")
     pg.wait_for_timeout(300)
     pg.fill("#bd-ie", FAN)
     pg.fill("#bd-ip", "newpass456")
@@ -813,18 +829,19 @@ def suite(br, board_src=None, quick_errs=None, R=None):
     pg.wait_for_timeout(1200)
     fake.tokens.clear()      # 서버가 세션을 끝냈다
     go()
-    t("K1 서버가 세션을 끝냈으면 조용히 로그아웃 상태로(오류 없이)", "로그인 · 가입" in txt("#bd-who")
-      and pg.evaluate("localStorage.getItem('insooni_member_session')") is None, txt("#bd-who"))
-    pg.click(".lang-toggle")
+    t("K1 서버가 세션을 끝냈으면 조용히 로그아웃 상태로(오류 없이)", txt("#hm") == "로그인·가입"
+      and pg.evaluate("localStorage.getItem('insooni_member_session')") is None, txt("#hm"))
+    pg.click(".header-tools .lang-toggle")
     pg.wait_for_timeout(1500)
-    t("K2 영어로 바꾸면 카페도 영어", tc("#bd-write-btn") == "Write a post" and "Sarangbang Café" in tc("#h-board")
-      and "Sign in" in tc("#bd-who") and "Notices" in tc(".cafe-menu"), (tc("#bd-write-btn"), tc(".cafe-menu")))
-    pg.click(".lang-toggle")
+    t("K2 영어로 바꾸면 카페도 영어", tc("#bd-write-btn") == "Write a post" and "Sarangbang café" in tc("#h-board")
+      and "Sign in" in tc("#hm") and "Notices" in tc(".cafe-menu") and "Say hello" in tc(".cafe-menu"), (tc("#bd-write-btn"), tc(".cafe-menu"), tc("#hm")))
+    pg.click(".header-tools .lang-toggle")
     pg.wait_for_timeout(1200)
     fake.not_ready = True
     go()
-    t("K3 서버에 010 이 없으면: 닫힘 안내 · 편지 고정 · 쓰기 버튼 없음", pg.is_visible("#cafe-closed") and not pg.is_visible("#bd-write-btn")
-      and "인순이가 팬들에게" in txt("#bd-pins") and not pg.is_visible("#bd-who"), txt("#cafe-closed")[:40])
+    t("K3 서버에 010 이 없으면: 닫힘 안내 · 편지 두 편 특집 · 탭·쓰기 버튼·헤더 입구 없음", pg.is_visible("#cafe-closed")
+      and not pg.is_visible("#bd-write-btn") and not pg.is_visible(".cafe-menu")
+      and pg.locator("#cafe-features .cafe-feature").count() == 2 and not pg.is_visible("#hm"), txt("#cafe-closed")[:40])
     fake.not_ready = False
 
     # ── N. 운영자 공지 ──────────────────────────────────────
@@ -834,18 +851,18 @@ def suite(br, board_src=None, quick_errs=None, R=None):
     pg.evaluate("localStorage.removeItem('insooni_member_session')")
     go("community.html#b=notice")
     t("N0 공지 게시판엔 일반 방문자에게 쓰기 버튼 없음", not pg.is_visible("#bd-write-btn"))
-    pg.click("#bd-who button"); pg.wait_for_timeout(300)
+    pg.click("#hm"); pg.wait_for_timeout(300)
     pg.fill("#bd-ie", "jake@test.local"); pg.fill("#bd-ip", "admin-pass")
     pg.click("#bd-sheet button[type=submit]"); pg.wait_for_timeout(1300)
     t("N1 운영자는 공지 게시판에 쓰기 버튼", pg.is_visible("#bd-write-btn"))
     pg.click("#bd-write-btn"); pg.wait_for_timeout(500)
-    opts = pg.evaluate("[...document.querySelectorAll('#bd-boardsel option')].map(o => o.value)")
-    t("N2 운영자 글쓰기엔 '공지'가 있고 미리 골라짐", opts[0] == "notice" and pg.input_value("#bd-boardsel") == "notice", opts)
+    opts = pg.evaluate("[...document.querySelectorAll('#bd-pick input')].map(o => o.value)")
+    t("N2 운영자 글쓰기엔 '공지'가 있고 미리 골라짐", opts[0] == "notice" and pick() == "notice", opts)
     pg.fill("#bd-title", "사랑방 카페 이용 안내"); pg.fill("#bd-body", "서로 아껴 주세요.")
     pg.click("#bd-go"); pg.wait_for_timeout(1200)
     go("community.html#b=all")
-    t("N3 전체글 맨 위에 공지 고정 · 목록에는 안 섞임", "사랑방 카페 이용 안내" in txt("#bd-pins")
-      and "사랑방 카페 이용 안내" not in txt("#bd-list") and "운영자" in txt("#bd-pins"), txt("#bd-pins")[:80])
+    t("N3 전체글 맨 위에 공지 고정('공지' 라벨) · 목록에는 안 섞임", "사랑방 카페 이용 안내" in txt("#bd-pins")
+      and "사랑방 카페 이용 안내" not in txt("#bd-list") and txt("#bd-pins .cafe-pin-l") == "공지", txt("#bd-pins")[:80])
     pg.evaluate("localStorage.removeItem('insooni_member_session')")
 
     # ── L. 운영 화면 — 게시판 글·댓글 · 회원 탭 ─────────────
@@ -905,12 +922,62 @@ def suite(br, board_src=None, quick_errs=None, R=None):
     op.goto(B + "community.html", wait_until="load")
     op.wait_for_timeout(1500)
     asked = [c for c in fake.calls[f_calls0:] if c[0].startswith(("auth:", "member_", "board_", "comment_", "cafe_"))]
-    t("Y1 스위치가 꺼져 있으면 카페 틀·닫힘 안내·편지만 보이고 서버에 묻지 않음", op.is_visible("#board") and op.is_visible("#cafe-closed")
-      and "인순이가 팬들에게" in op.inner_text("#bd-pins") and not op.is_visible("#bd-write-btn") and not asked, asked[:3])
-    op.click(".cafe-menu a[data-b=letters]"); op.wait_for_timeout(500)
-    op.click("#bd-list .cafe-row >> nth=1 >> a"); op.wait_for_timeout(600)
+    t("Y1 스위치가 꺼져 있으면 카페 틀·닫힘 안내·편지 두 편만 보이고 서버에 묻지 않음(헤더 입구도 없음)", op.is_visible("#board")
+      and op.is_visible("#cafe-closed") and op.locator("#cafe-features .cafe-feature").count() == 2
+      and not op.is_visible("#bd-write-btn") and not op.is_visible(".cafe-menu") and op.locator("#hm").count() == 0 and not asked, asked[:3])
+    op.click("#cafe-features .cafe-feature >> nth=1 >> a"); op.wait_for_timeout(600)
     t("Y2 스위치가 꺼져 있어도 '인순이의 편지'는 읽힘", len(op.inner_text("#cafe-post .letter-body")) > 10)
     off.close()
+
+    # ── P. v4 — 글 보기의 탭 · 목록으로 돌아오기 · 새로고침 자리 ─────────
+    pf = Fake()
+    pa = pf.add_user("p-op@test.local", "x", confirmed=True); pf.admins.add(pa)
+    pf.members[pa] = {"nickname": "지기", "level": "member", "level_by": "admin"}
+    pu = pf.add_user("p-fan@test.local", "x", confirmed=True)
+    pf.members[pu] = {"nickname": "읽는팬", "level": "member", "level_by": "auto"}
+    for i in range(16):
+        pf.posts.append({"id": pf.nid(), "uid": pu, "board": ("hello", "free", "review")[i % 3], "title": "시험 글 %02d" % i,
+                         "body": "본문", "status": "approved", "created_at": "2026-09-%02dT01:00:00Z" % (10 + i)})
+    hello_id = pf.posts[0]["id"]
+    for w, hh in [(1280, 860), (375, 812)]:
+        pc = br.new_context(viewport={"width": w, "height": hh}, is_mobile=w < 700, has_touch=w < 700, locale="ko-KR")
+        pc.add_init_script("window.INSOONI_CONFIG = {board: true, kakao: true};")
+        pc.route(re.compile(r"https://%s/.*" % re.escape(SUPA)), pf.handle)
+        if board_src is not None:
+            pc.route(re.compile(r".*/assets/js/board\.min\.js.*"),
+                     lambda r: r.fulfill(status=200, content_type="text/javascript", body=board_src))
+        pp = pc.new_page()
+        pp.on("pageerror", lambda e: errs.append(str(e)[:160]))
+        pp.goto(B + "community.html", wait_until="load"); pp.wait_for_timeout(1300)
+        pp.click(".cafe-menu a[data-b=letters]"); pp.wait_for_timeout(600)
+        pp.evaluate("location.hash = '#p%d'" % hello_id); pp.wait_for_timeout(1000)
+        cur = pp.evaluate("(document.querySelector('.cafe-menu a[aria-current]') || {dataset: {}}).dataset.b")
+        t("P1 %d 편지 탭을 거쳐 가입인사 글로 → 탭 표시가 '가입인사'(그 글의 게시판)" % w, cur == "hello", cur)
+        pp.goto("about:blank"); pp.goto(B + "community.html", wait_until="load"); pp.wait_for_timeout(1300)
+        pp.evaluate("window.scrollTo(0, 900)"); pp.wait_for_timeout(200)
+        a6 = pp.locator("#bd-list .cafe-row").nth(5)
+        rid = a6.get_attribute("data-id")
+        a6.locator("a").scroll_into_view_if_needed(); a6.locator("a").click(); pp.wait_for_timeout(1000)
+        # 돌아오는 순간 회선이 끊겼다 — 아까 그린 목록이 그대로 서 있어야 한다(비웠다 다시 받지 않는다)
+        pf.fail["board_list"] = {"ok": False, "reason": "network"}
+        pp.go_back(); pp.wait_for_timeout(1200)
+        pf.fail.pop("board_list", None)
+        d = pp.evaluate("""(id) => { const li = document.querySelector('#bd-list [data-id="' + id + '"]'); if (!li) return null; const r = li.getBoundingClientRect();
+          return {mid: (r.top + r.bottom) / 2, vh: innerHeight, focus: document.activeElement === li.querySelector('a'),
+                  set: document.getElementById('setlist').getBoundingClientRect().top}; }""", rid)
+        t("P2 %d 목록 깊은 곳에서 연 글 → 뒤로(그 순간 회선 끊김) → 그 줄이 화면 가운데 · 초점 · 신청곡이 위로 올라오지 않음" % w,
+          d and d["vh"] / 3 <= d["mid"] <= d["vh"] * 2 / 3 and d["focus"] and d["set"] > d["vh"] / 2, d)
+        pp.evaluate("window.scrollTo(0, 1100)"); pp.wait_for_timeout(300)
+        # 화면 맨 위에 보이던 글 줄이 새로고침 뒤에도 같은 자리에 있는가(스크롤 값이 아니라 보이는 것으로 —
+        # 머리의 숫자 줄이 늦게 들어오면 브라우저가 그만큼 스크롤을 밀어 '보이는 자리'를 지킨다)
+        TOPROW = """() => { const r = [...document.querySelectorAll('#bd-list .cafe-row')].find(e => e.getBoundingClientRect().top >= 60);
+          return r ? [r.getAttribute('data-id'), Math.round(r.getBoundingClientRect().top), Math.round(scrollY)] : null; }"""
+        a0 = pp.evaluate(TOPROW)
+        pp.reload(wait_until="load"); pp.wait_for_timeout(1800)
+        a1 = pp.evaluate("(id) => { const r = document.querySelector('#bd-list [data-id=\"' + id + '\"]'); return r ? [id, Math.round(r.getBoundingClientRect().top), Math.round(scrollY)] : null; }", a0[0]) if a0 else None
+        t("P3 %d 목록 깊은 곳에서 새로고침 → 보던 줄이 같은 자리(±40) — 늦게 온 목록에 밀려 신청곡으로 떨어지지 않음" % w,
+          a0 and a1 and abs(a1[1] - a0[1]) <= 40, (a0, a1))
+        pc.close()
 
     t("Z1 JS 오류 0", not errs, errs[:3])
     t("Z2 가짜 서버가 못 받은 요청 0(운영 DB·외부로 새는 것 없음)", not fake.unhandled, fake.unhandled[:4])
@@ -942,9 +1009,9 @@ if __name__ == "__main__":
                 ("팬 글을 innerHTML 로", "    if (text !== undefined && text !== null) n.textContent = text;",
                  "    if (text !== undefined && text !== null) n.innerHTML = text;"),
                 ("쓰던 글을 저장하지 않음", "  function draftSave() {\n", "  function draftSave() { return;\n"),
-                ("주소창에 코드를 남김", '      try { history.replaceState(null, "", location.pathname + "#board"); } catch (e) {}\n', ""),
+                ("주소창에 코드를 남김", "      setURL(back.url);\n", ""),
                 ("닫힌 카페가 서버에 물음", "  function live() { return S.open && S.ready; }", "  function live() { return true; }"),
-                ("공지를 맨 위에 안 그림", "        (r.notices || []).forEach(function (n) { pins.appendChild(row(n, true)); });\n", ""),
+                ("공지를 맨 위에 안 그림", "    (notices || []).slice(0, narrow() ? 1 : 3).forEach(function (n) { pins.appendChild(row(n, true)); });\n", ""),
                 ("뒤로 가기가 카페 안에서 안 통함", '      window.addEventListener("hashchange", function () { if (sec && document.body.contains(sec)) route(); });\n', ""),
                 ("로그인 뒤 하던 일을 잊음", "  function continueNext() {\n", "  function continueNext() { return;\n"),
                 ("실패해도 쓴 글을 비움", "      if (!res || !res.ok) { handleWriteFail(res, msg); return; }   /* 실패하면 쓴 글을 그대로 둔다 */",
@@ -957,6 +1024,12 @@ if __name__ == "__main__":
                 ("token_hash 링크를 못 받음", "      if (th) {\n", "      if (false) {\n"),
                 ("만료된 세션을 붙들고 있음", "        if (r.status === 401 && at) { clearS(); return { ok: false, reason: \"expired\" }; }",
                  "        if (r.status === 401 && at) { return { ok: false, reason: \"expired\" }; }"),
+                ("글 보기에서 탭 표시를 안 바꿈(markTab 호출 제거)", "    markTab(p.board);\n", ""),
+                ("목록으로 돌아올 때 비웠다 다시 그림(캐시 무시)", "    var cached = !more && S.rowsBoard === want && S.rows.length > 0;",
+                 "    var cached = false;"),
+                ("돌아올 줄을 적지 않음", "      ssSet(BKEY, { board: S.board, id: li ? li.getAttribute(\"data-id\") : null, y: Math.round(window.scrollY) });\n", ""),
+                ("새로고침 자리를 되돌리지 않음", "    window.scrollTo(0, y);\n  }", "  }"),
+                ("'목록으로'가 기록을 쌓음(history.back 대신 새 기록)", "      if (S.trail && S.trail.to === location.hash) { S.trail = null; history.back(); return; }\n", ""),
             ]
             for name, a, b in MUT:
                 if BOARD_SRC.count(a) != 1:

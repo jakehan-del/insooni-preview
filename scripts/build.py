@@ -217,6 +217,24 @@ def check_archive_preload():
                  % (pre, lead.group(1) if lead else "없음"))
 
 
+def check_min_js(files):
+    """축소본마다 node 로 구문만 검사한다(실행하지 않는다 — new Function 은 만들기만 한다)."""
+    import shutil, subprocess
+    node = shutil.which("node")
+    if not node:
+        print("  (node 가 없어 축소본 구문 검사를 건너뜀)")
+        return
+    bad = []
+    for f in files:
+        r = subprocess.run([node, "-e", "new Function(require('fs').readFileSync(process.argv[1], 'utf8'))", f],
+                           capture_output=True, text=True)
+        if r.returncode != 0:
+            bad.append("%s: %s" % (os.path.basename(f), (r.stderr.strip().splitlines() or ["?"])[-1]))
+    if bad:
+        sys.exit("✗ 축소본 구문 오류 — " + " / ".join(bad))
+    print("  축소본 구문 검사 %d개 통과" % len(files))
+
+
 def run():
     check_archive_preload()
     restamp_site_url()
@@ -243,6 +261,10 @@ def run():
         tot_b += sb
         print("  %-26s %6.1f KB → %6.1f KB" % (os.path.basename(a), sa / 1024, sb / 1024))
     print("합계 %.1f KB → %.1f KB (%.0f%% 절감)" % (tot_a / 1024, tot_b / 1024, 100 * (1 - tot_b / tot_a)))
+
+    # 축소기는 줄 단위라 정규식·문자열 안의 '//'·'/*' 를 잘못 자를 수 있다(2026-10-02 board.min.js 사고).
+    # 만든 축소본을 node 로 구문 검사한다 — 깨졌으면 여기서 멈춘다(배포 전에).
+    check_min_js([b for a, b in made if b.endswith(".min.js")])
 
     # 파생본을 다 만든 뒤에 해시를 찍는다 — 순서가 뒤바뀌면 옛 내용으로 해시한다
     restamp_cache_bust()

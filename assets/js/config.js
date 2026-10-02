@@ -54,8 +54,34 @@ if (typeof window.INSOONI_CONFIG.board === "undefined") {
   window.INSOONI_CONFIG.board = true;
 }
 
-/* 카카오 로그인 버튼 스위치 — 서버(Supabase)에서 카카오가 켜져 있어도 여기서 false 면 버튼을 숨긴다.
-   2026-10-02 잠시 껐다가(동의항목이 덜 끝나 KOE205) 형님 폰으로 카카오 가입까지 확인한 뒤 다시 켬. */
+/* 카카오 로그인 단추 스위치 — 2026-10-02 KOE205 사고에서 나왔다.
+   Supabase 에서 카카오를 켜 두면 서버(settings)는 '된다'고 답한다. 그런데 카카오 개발자 콘솔의
+   동의항목(이메일·프로필 사진)이 비어 있으면 카카오 화면에서 KOE205 로 막혀 돌아오지 못한다 —
+   서버의 '켜짐'은 실제 왕복이 된다는 증거가 아니다. 그래서 형님이 본인 카카오 계정으로
+   카카오톡 인앱 1회 · 아이폰 사파리 1회 끝까지 왕복해 본 뒤에만 true 로 바꾼다.
+   false 인 동안 회원 창에는 이메일만 보인다(서버가 카카오를 켜 둬도).
+   2026-10-02 밤: 형님 폰 한 대로 가입이 된 뒤 true 로 켰으나(f66cba1) 'KOE205 오류도 나와' 재보고 —
+   GoTrue 는 account_email·profile_image·profile_nickname 셋을 늘 요청하므로 동의항목 셋이 모두 있어야 한다.
+   일반 카카오 계정 2개로 왕복을 다시 확인할 때까지 false. */
 if (typeof window.INSOONI_CONFIG.kakao === "undefined") {
-  window.INSOONI_CONFIG.kakao = true;
+  window.INSOONI_CONFIG.kakao = false;
+}
+
+/* 공연 모드(supabase/011) 스위치 — 공연 화면(/live)과 사랑방의 '오늘 공연' 줄.
+   011 을 운영에 실행하고 ✅ 를 확인한 뒤 true. 꺼져 있으면 공연 관련 서버 함수를 부르지 않는다
+   (없는 함수를 부르면 PostgREST 404 가 모든 방문자의 콘솔에 남는다 — board 스위치와 같은 이유). */
+if (typeof window.INSOONI_CONFIG.live === "undefined") {
+  window.INSOONI_CONFIG.live = false;
+}
+
+/* 공연장에서 연 회원 창에 이메일 '처음 가입'을 보일지. 이메일 가입은 확인 메일 왕복이 필요하고
+   Supabase 기본 메일은 시간당 몇 통뿐이라 객석에서는 사실상 막힌다 — 카카오만 권한다.
+   이메일 로그인(이미 가입한 분)은 늘 남는다. 커스텀 SMTP 를 붙인 뒤 true 로 바꿀 수 있다. */
+if (typeof window.INSOONI_CONFIG.liveEmail === "undefined") {
+  window.INSOONI_CONFIG.liveEmail = false;
+}
+
+/* 이메일 소식지 폼 — 보낼 도구(발송 서비스)가 없는 동안은 숨긴다. 신청만 받고 보내지 못하면 거짓 약속이 된다. */
+if (typeof window.INSOONI_CONFIG.newsletter === "undefined") {
+  window.INSOONI_CONFIG.newsletter = false;
 }

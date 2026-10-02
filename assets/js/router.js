@@ -20,6 +20,9 @@
     return a.pathname === b.pathname && a.search === b.search;
   }
   function internal(url) {
+    /* 공연 화면(/live)은 따로 사는 문서다 — 헤더·푸터·라디오가 없고 싣는 스크립트도 다르다.
+       <main> 만 갈아끼우면 사랑방 틀 안에 공연 화면이 반쯤 끼어 버린다. 늘 새로 연다. */
+    if (/^\/live(\.html)?$/.test(url.pathname)) return false;
     return url.origin === location.origin && /\.html$|\/$/.test(url.pathname);
   }
 
@@ -43,6 +46,9 @@
   }
 
   function swap(html, url) {
+    /* 사랑방은 목록으로 돌아올 때 스크롤을 스스로 맞추려고 'manual' 로 둔다(board.js).
+       다른 페이지로 넘어가면 브라우저의 기본 복원으로 되돌린다 */
+    try { history.scrollRestoration = "auto"; } catch (e) {}
     var doc = new DOMParser().parseFromString(html, "text/html");
     var nextMain = doc.getElementById("main");
     var curMain = document.getElementById("main");
@@ -51,6 +57,11 @@
     curMain.replaceWith(nextMain);
     /* 홈 전용 클래스 (필름스트립·코너 푸터) 동기화 */
     document.body.className = doc.body.className;
+    /* 페이지별 조명·범위 CSS 는 body[data-page] 에 걸려 있다. 클래스만 옮기면 이전 페이지 값이
+       남아(소식 → 사랑방이 소식 조명 .13 으로 그려졌다) 사랑방 전용 규칙이 하나도 안 걸린다 */
+    var dp = doc.body.getAttribute("data-page");
+    if (dp) document.body.setAttribute("data-page", dp);
+    else document.body.removeAttribute("data-page");
     /* 푸터도 페이지마다 다를 수 있어 교체 */
     var nf = doc.querySelector(".footer-min"), cf = document.querySelector(".footer-min");
     if (nf && cf) cf.replaceWith(nf);
@@ -100,6 +111,8 @@
     if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     var a = e.target.closest ? e.target.closest("a[href]") : null;
     if (!a || a.target === "_blank" || a.hasAttribute("download")) return;
+    /* 문서를 반드시 새로 열어야 하는 링크(공연 화면 등) — 라우터가 손대지 않는다 */
+    if (a.getAttribute("data-router") === "off") return;
     var url;
     try { url = new URL(a.href); } catch (err) { return; }
     if (!internal(url)) return;
@@ -114,6 +127,11 @@
     if (samePage(u, here)) { here = u; return; }   /* '#' 만 바뀜 — 페이지의 몫 */
     go(u, false);
   });
+
+  /* 회원 왕복(카카오·메일 링크)에서 돌아온 뒤 board.js 가 주소창의 ?code·?bd 를 지우면(replaceState)
+     여기 기억해 둔 주소와 어긋난다. 그대로 두면 카페 안의 '#' 이동(뒤로 가기)이 '다른 페이지'로 읽혀
+     <main> 을 통째로 다시 받아 버린다. 주소를 손댄 쪽이 알려 준다. */
+  window.INSOONI_ROUTER = { sync: function () { here = new URL(location.href); } };
 
   /* 마우스를 올린 링크를 미리 받아 두면 전환이 즉시 일어난다 */
   document.addEventListener("pointerover", function (e) {

@@ -7,21 +7,21 @@
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
 <title>사랑방 | 인순이 INSOONI</title>
 <meta property="og:title" content="사랑방 | 인순이 INSOONI">
-<meta property="og:description" content="편지를 쓰고, 응원 카드를 만들고, 마음을 전하는 곳.">
+<meta property="og:description" content="인순이가 직접 남긴 편지를 읽고, 팬들과 이야기를 나누는 공식 사랑방.">
 <meta property="og:image" content="https://insooni.com/assets/img/og/community.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:alt" content="노란 꽃을 꽂고 미소 짓는 인순이">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="description" content="편지를 쓰고, 팬 번호증과 응원 카드를 만들고, 공식 채널로 마음을 전하는 곳. 인순이 공식 사랑방.">
+<meta name="description" content="인순이가 직접 남긴 편지를 읽고, 팬들과 이야기를 나누는 공식 사랑방.">
 <!-- 본문 글꼴은 먼저 확실히 깐다(미뤄 봤지만 첫 화면이 빨라지지 않았다).
      제목용 서체는 화면이 뜬 뒤 들어온다 — font-display:swap이라 늦어도 글자는 보인다. -->
-<link rel="stylesheet" href="assets/fonts/body.css?v434a60a2">
-<link rel="stylesheet" href="assets/fonts/mono.css?v434a60a2">
-<link rel="stylesheet" href="assets/fonts/display.css?v434a60a2" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/fonts/display.css?v434a60a2"></noscript>
-<link rel="stylesheet" href="assets/css/style.min.css?v434a60a2">
+<link rel="stylesheet" href="assets/fonts/body.css?v12e1c6c2">
+<link rel="stylesheet" href="assets/fonts/mono.css?v12e1c6c2">
+<link rel="stylesheet" href="assets/fonts/display.css?v12e1c6c2" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?v12e1c6c2"></noscript>
+<link rel="stylesheet" href="assets/css/style.min.css?v12e1c6c2">
 <link rel="canonical" href="https://insooni.com/community">
 <meta property="og:url" content="https://insooni.com/community">
 <meta property="og:type" content="website">
@@ -31,7 +31,7 @@
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
 <meta name="twitter:title" content="사랑방 | 인순이 INSOONI">
-<meta name="twitter:description" content="편지를 쓰고, 응원 카드를 만들고, 마음을 전하는 곳.">
+<meta name="twitter:description" content="인순이가 직접 남긴 편지를 읽고, 팬들과 이야기를 나누는 공식 사랑방.">
 <meta name="twitter:image" content="https://insooni.com/assets/img/og/community.jpg">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://insooni.com/"},{"@type":"ListItem","position":2,"name":"사랑방","item":"https://insooni.com/community"}]}</script>
 </head>
@@ -66,30 +66,36 @@
 </header>
 
 <main id="main">
-  <section class="page-hero">
-    <div class="container">
-      <h1 data-i18n="ph.community.t">사랑방</h1>
-      <p data-i18n="ph.community.d">인순이와 팬들이 모여 글을 쓰고 이야기를 나누는 카페입니다.</p>
-    </div>
+  <!-- ── 사랑방 v4 (2026-10-02 밤) ────────────────────────────────
+       형님: "지금 구성이 이상하자나… 정돈되어야 해" · "너무 올드해 — 비욘세만큼의 완벽함이 없다".
+       올드함은 옛 게시판 문법(번호 열·대괄호 머리말·회색 고정 줄·점선 상자·작은 배지 상자)에서 왔다.
+       그 문법을 걷고, 머리(h1 사랑방) → 탭 → 목록 세 단계만 남긴다. 제목은 화면에 하나 —
+       '사랑방 카페'·'전체글' 같은 중복 제목은 화면낭독기 전용으로 내렸다(탭이 지금 위치를 말한다).
+       정렬선은 하나: 모든 섹션이 .container 안의 .cafe-col 왼끝(1280 에서 x=64)에 선다.
+       로그인·회원가입 입구는 여기 없다 — 모든 페이지의 헤더 오른쪽에 하나뿐이다(board.js initMember). -->
+  <section class="page-hero page-hero--cafe">
+    <div class="container"><div class="cafe-col cafe-hero">
+      <div class="cafe-hero-t">
+        <h1 data-i18n="ph.community.t">사랑방</h1>
+        <p class="cafe-lede" id="cafe-lede" data-i18n="ph.community.d">인순이의 편지와 팬들의 글이 모이는 공식 사랑방입니다.</p>
+      </div>
+      <div class="cafe-hero-meta"><p class="cafe-stat" id="cafe-stat" hidden></p></div>
+      <p class="cafe-prog" id="bd-note" hidden></p>
+      <!-- 공연 당일 줄 — config.live 가 켜지고 서버가 '지금 열린 공연'을 알려 줄 때만(board.js renderToday).
+           공연 화면은 따로 사는 문서라 라우터가 가로채지 않게 data-router="off" -->
+      <a class="cafe-today" id="cafe-today" hidden data-router="off"></a>
+    </div></div>
   </section>
 
-  
-
   <!-- ── 사랑방 카페 ──────────────────────────────────────────
-       형님(2026-10-02): "한 줄 남기기를 없애고 정말 카페같이". 매니저: 운영자 지정 + 등업.
-       게시판 메뉴 · 공지 고정 · 번호/제목[댓글]/글쓴이(등급)/날짜 목록 · 글 보기 화면 · 글쓰기.
+       게시판 탭 · 공지 고정 · 글 목록 · 글 보기 · 글쓰기. 화면을 고르는 것은 주소창의 # 이다
+       (board.js route) — 폰의 '뒤로 가기'가 카페 안에서 그대로 통한다.
        '인순이의 편지'는 2005년 본인이 쓴 원문(letters.json)이라 회원 글과 섞지 않고 따로 싣는다.
-       화면을 고르는 것은 주소창의 # 이다(board.js route) — 폰의 '뒤로 가기'가 카페 안에서 통한다.
-       config.js 의 board 스위치가 꺼져 있으면 카페 틀과 편지만 열리고 서버에는 묻지 않는다. -->
+       config.js 의 board 스위치가 꺼져 있으면(또는 서버에 010 이 없으면) 탭·도구줄을 숨기고
+       편지 두 편만 특집으로 연다 — 서버에는 묻지 않는다. -->
   <section class="section cafe" id="board" aria-labelledby="h-board">
-    <div class="container">
-      <div class="cafe-head">
-        <div class="cafe-title-box">
-          <h2 id="h-board" data-i18n="bd.h">사랑방 카페</h2>
-          <p class="cafe-stat" id="cafe-stat" hidden></p>
-        </div>
-        <div class="bd-whobox" id="bd-who" hidden></div>
-      </div>
+    <div class="container"><div class="cafe-col">
+      <h2 id="h-board" class="sr-only" data-i18n="bd.h">사랑방 카페</h2>
 
       <nav class="cafe-menu" aria-label="게시판" data-i18n-aria="bd.menuAria">
         <a href="#b=all" data-b="all" data-i18n="bd.b.all">전체글</a>
@@ -100,95 +106,106 @@
         <a href="#b=review" data-b="review" data-i18n="bd.b.review">공연·방송 후기</a>
       </nav>
 
+      <!-- 도구줄: 지금 게시판의 한 줄 설명 + 이 화면의 유일한 채운 버튼 '글쓰기'.
+           쓸 수 없는 게시판(편지·공지)에서는 단추를 숨기되 자리는 남긴다(.is-off) — 줄 높이가 뛰지 않게 -->
+      <div class="cafe-tools">
+        <p class="cafe-board-d" id="cafe-board-d"></p>
+        <button type="button" class="btn btn--solid bd-write" id="bd-write-btn" data-i18n="bd.write">글쓰기</button>
+      </div>
+
       <p class="sb-msg bd-msg" id="bd-msg" role="status" aria-live="polite"></p>
-      <p class="bd-note" id="bd-note" hidden></p>
 
       <!-- 목록 -->
       <div class="cafe-list" id="cafe-list">
-        <div class="cafe-bar">
-          <h3 class="cafe-board-h" id="cafe-board-h" data-i18n="bd.b.all">전체글</h3>
-          <button type="button" class="btn btn--gold bd-write" id="bd-write-btn" hidden data-i18n="bd.write">글쓰기</button>
-        </div>
-        <p class="cafe-board-d" id="cafe-board-d" hidden></p>
-        <p class="cafe-closed" id="cafe-closed" hidden data-i18n="bd.closed">회원 게시판은 문을 여는 중입니다. 곧 이 자리에서 글을 쓰고 읽으실 수 있습니다. 그동안 '인순이의 편지'를 먼저 읽어 보세요.</p>
+        <h3 class="sr-only" id="cafe-board-h" data-i18n="bd.b.all">전체글</h3>
+        <p class="cafe-closed" id="cafe-closed" hidden data-i18n="bd.closed">회원 게시판은 곧 문을 엽니다. 그동안 인순이가 직접 남긴 편지를 먼저 읽어 보세요.</p>
+        <ol class="cafe-features" id="cafe-features" hidden></ol>
         <ol class="cafe-rows cafe-pins" id="bd-pins"></ol>
         <details class="bd-mine" id="bd-mine" hidden>
-          <summary class="bd-mine-s"><span data-i18n="bd.mineS">확인을 기다리는 내 글</span> <span class="bd-mine-n" id="bd-mine-n"></span></summary>
+          <summary class="bd-mine-s"><span data-i18n="bd.mineS">확인을 기다리는 내 글</span> <span class="bd-mine-n" id="bd-mine-n"></span><span class="bd-mine-t" aria-hidden="true"></span></summary>
           <ol class="cafe-rows" id="bd-mine-list"></ol>
         </details>
         <ol class="cafe-rows" id="bd-list"></ol>
-        <p class="bd-empty" id="bd-empty" hidden data-i18n="bd.empty">아직 글이 없습니다. 첫 이야기를 남겨 주세요.</p>
-        <p class="sb-msg is-bad" id="bd-list-msg" role="status" hidden></p>
-        <p class="sb-more-wrap"><button type="button" class="btn btn--ghost btn--sm" id="bd-more" hidden data-i18n="sb.more">더 보기</button></p>
+        <p class="bd-loading" id="bd-loading" hidden data-i18n="bd.loadingList">불러오는 중입니다…</p>
+        <p class="bd-empty" id="bd-empty" hidden data-i18n="bd.empty">아직 글이 없습니다. 첫 글을 남겨 주세요.</p>
+        <div class="bd-fail" id="bd-fail" hidden>
+          <p class="sb-msg is-bad" id="bd-list-msg" role="status"></p>
+          <button type="button" class="btn btn--ghost bd-retry" id="bd-retry" data-i18n="bd.retryList">다시 불러오기</button>
+        </div>
+        <p class="sb-more-wrap"><button type="button" class="btn btn--ghost bd-more" id="bd-more" hidden data-i18n="sb.more">더 보기</button></p>
       </div>
 
       <!-- 글 보기 -->
       <article class="cafe-post" id="cafe-post" hidden></article>
 
-      <!-- 글쓰기 · 고치기 -->
+      <!-- 글쓰기 · 고치기 — 탭·도구줄·목록은 숨고 이 칸만 남는다(#board.is-writing) -->
       <form class="bd-form" id="bd-form" hidden>
+        <a class="cafe-back" id="bd-form-back" href="#b=all" data-i18n="bd.stopWriting">← 쓰기 그만두기</a>
         <h3 class="bd-form-h" id="bd-form-h" data-i18n="bd.newH">새 글 쓰기</h3>
-        <div class="form-field">
-          <label for="bd-boardsel" data-i18n="bd.boardL">게시판</label>
-          <select id="bd-boardsel"></select>
-        </div>
+        <fieldset class="bd-pick" id="bd-pick">
+          <legend data-i18n="bd.boardL">게시판</legend>
+          <div class="bd-pick-row" id="bd-pick-row"></div>
+        </fieldset>
         <div class="form-field">
           <label for="bd-title" data-i18n="bd.titleL">제목</label>
           <input id="bd-title" type="text" maxlength="60" autocomplete="off" placeholder="예) 홍천에서 인사드립니다" data-i18n-ph="bd.titlePh">
         </div>
         <div class="form-field">
           <label for="bd-body" data-i18n="bd.bodyL">내용</label>
-          <textarea id="bd-body" maxlength="4000" rows="10" placeholder="하고 싶은 이야기를 편하게 적어 주세요. 쓰는 동안 이 기기에 저절로 저장됩니다." data-i18n-ph="bd.bodyPh"></textarea>
+          <textarea id="bd-body" maxlength="4000" rows="8" placeholder="하고 싶은 이야기를 편하게 적어 주세요. 쓰는 동안 이 기기에 저절로 저장됩니다." data-i18n-ph="bd.bodyPh"></textarea>
           <p class="form-hint bd-count" id="bd-count" aria-live="off">0 / 4,000</p>
         </div>
-        <p class="form-hint" id="bd-form-hint"></p>
+        <p class="form-hint bd-form-hint" id="bd-form-hint"></p>
         <div class="bd-form-acts">
-          <button type="submit" class="btn btn--gold" id="bd-go" data-i18n="bd.post">올리기</button>
-          <button type="button" class="btn btn--ghost btn--sm" id="bd-cancel" data-i18n="bd.cancelWrite">쓰기 그만두기</button>
+          <button type="submit" class="btn btn--solid" id="bd-go" data-i18n="bd.post">올리기</button>
+          <button type="button" class="btn btn--text" id="bd-cancel" data-i18n="bd.cancelWrite">쓰기 그만두기</button>
         </div>
       </form>
-    </div>
+    </div></div>
   </section>
 
-    <!-- ── 다음 무대에서 듣고 싶은 노래 ─────────────────────────
-         백엔드(supabase/001_init.sql)에 request_song 과 song_requests 표가
-         처음부터 있었는데 화면에 나온 적이 없었다. 집계용 select 정책까지
-         열려 있다 — 실시간 순위를 보여주라고 만들어 둔 것이다.
-
-         자유 입력이 아니라 songs.json 의 103곡에서 고르게 한다.
-         "거위의꿈"·"거위의 꿈"·"Goose's Dream"이 따로 세어지면 순위가 거짓이 된다. -->
-    <section class="section section--band" id="setlist" aria-labelledby="h-setlist">
-      <div class="container">
-        <div class="section-head">
-          <h2 id="h-setlist" data-i18n="sl.h">다음 무대에서 듣고 싶은 노래</h2>
-        </div>
-        <p class="lede" data-i18n="sl.lede">고른 노래는 모여서 순위가 됩니다. 무대를 준비할 때 실제로 참고합니다.</p>
-
-        <div class="sl-pick">
-          <label class="sr-only" for="sl-q" data-i18n="sl.search">노래 찾기</label>
-          <input id="sl-q" type="search" autocomplete="off" class="sl-input"
-                 placeholder="노래 제목으로 찾기" data-i18n-ph="sl.ph">
-          <ul class="sl-opts" id="sl-opts" role="listbox" aria-label="노래 후보"></ul>
-          <p class="form-hint" id="sl-msg" role="status" aria-live="polite"></p>
-        </div>
-
-        <ol class="sl-rank" id="sl-rank"></ol>
-        <p class="form-hint" id="sl-tally"></p>
+  <!-- ── 다음 무대에서 듣고 싶은 노래 ─────────────────────────
+       백엔드(supabase/001_init.sql)에 request_song 과 song_requests 표가
+       처음부터 있었는데 화면에 나온 적이 없었다. 집계용 select 정책까지
+       열려 있다 — 실시간 숫자를 보여주라고 만들어 둔 것이다.
+       자유 입력이 아니라 songs.json 의 103곡에서 고르게 한다.
+       "거위의꿈"·"거위의 꿈"·"Goose's Dream"이 따로 세어지면 숫자가 거짓이 된다.
+       v4: 밴드 배경·섹션 조명을 걷었다 — 섹션 사이는 가운데가 밝은 1px 이음매 하나뿐. -->
+  <section class="section" id="setlist" aria-labelledby="h-setlist">
+    <div class="container"><div class="cafe-col">
+      <div class="section-head">
+        <h2 id="h-setlist" class="sec-h" data-i18n="sl.h">다음 무대에서 듣고 싶은 노래</h2>
       </div>
-    </section>
+      <p class="lede" data-i18n="sl.lede">고른 노래는 곡마다 모여 아래에 숫자로 보입니다.</p>
 
+      <div class="sl-pick">
+        <label class="sr-only" for="sl-q" data-i18n="sl.search">노래 찾기</label>
+        <input id="sl-q" type="search" autocomplete="off" class="sl-input"
+               placeholder="노래 제목으로 찾기" data-i18n-ph="sl.ph">
+        <ul class="sl-opts" id="sl-opts" role="listbox" aria-label="노래 후보"></ul>
+        <p class="form-hint" id="sl-msg" role="status" aria-live="polite"></p>
+      </div>
 
-  <!-- ── 나가는 문 ─────────────────────────────────────────────
+      <ol class="sl-rank" id="sl-rank"></ol>
+      <p class="form-hint" id="sl-tally"></p>
+      <!-- 오늘 공연이 열려 있으면 그 공연의 앵콜 투표로 가는 길(board.js renderToday 가 채운다) -->
+      <p class="sl-live" id="sl-live" hidden><a id="sl-live-a" data-router="off" data-i18n="sl.liveLink">오늘 공연의 앵콜 투표는 공연 화면에서 →</a></p>
+    </div></div>
+  </section>
+
+  <!-- ── 나가는 길 ─────────────────────────────────────────────
        방이 아니라 나가는 길이다. 그래서 카드가 아니라 각주로 둔다.
-       이메일 소식지 폼은 계속 숨겨 둔다 — 보낼 도구가 아직 없다. -->
+       이메일 소식지 폼은 config.newsletter 가 켜질 때까지 숨긴다 — 보낼 도구가 아직 없다. -->
   <section class="section sb-doors" id="sb-doors" aria-labelledby="h-doors">
-    <div class="container">
-      <h2 id="h-doors" class="sb-doors-h" data-i18n="sb.doorsH">여기서 나가는 길</h2>
+    <div class="container"><div class="cafe-col">
+      <div class="section-head">
+        <h2 id="h-doors" class="sec-h" data-i18n="sb.doorsH">공식 채널과 다른 팬 모임</h2>
+      </div>
       <ul class="sb-door-list">
-        <li><a href="https://www.youtube.com/@insooni8081" target="_blank" rel="noopener">YouTube <span data-i18n="sb.doorYt">공식 채널 — 새 무대 영상이 가장 먼저 올라옵니다</span></a></li>
-        <li><a href="https://www.instagram.com/ins00ni/" target="_blank" rel="noopener">Instagram <span data-i18n="sb.doorIg">공식 계정</span></a></li>
-        <li><a href="https://cafe.daum.net/seoulsister" target="_blank" rel="noopener"><span data-i18n="sb.doorCafe1">다음 카페 '인순사랑'</span> <span data-i18n="sb.doorCafe1d">— 2005년부터 이어져 온 팬 공간</span></a></li>
-        <li><a href="https://cafe.naver.com/imsoone" target="_blank" rel="noopener"><span data-i18n="sb.doorCafe2">네이버 '인순이 팬카페'</span> <span data-i18n="sb.doorCafe2d">— 2007년 문을 연 또 하나의 마당</span></a></li>
+        <li><a href="https://www.youtube.com/@insooni8081" target="_blank" rel="noopener"><span class="door-n">YouTube</span><span class="door-d" data-i18n="sb.doorYt">공식 채널 — 새 무대 영상이 가장 먼저 올라옵니다</span><span class="door-x" aria-hidden="true">↗</span><span class="sr-only" data-i18n="sb.newWin">(새 창)</span></a></li>
+        <li><a href="https://www.instagram.com/ins00ni/" target="_blank" rel="noopener"><span class="door-n">Instagram</span><span class="door-d" data-i18n="sb.doorIg">공식 계정</span><span class="door-x" aria-hidden="true">↗</span><span class="sr-only" data-i18n="sb.newWin">(새 창)</span></a></li>
+        <li><a href="https://cafe.daum.net/seoulsister" target="_blank" rel="noopener"><span class="door-n" data-i18n="sb.doorCafe1">다음 카페 '인순사랑'</span><span class="door-d" data-i18n="sb.doorCafe1d">2005년부터 이어져 온 팬 공간 · 다른 사이트</span><span class="door-x" aria-hidden="true">↗</span><span class="sr-only" data-i18n="sb.newWin">(새 창)</span></a></li>
+        <li><a href="https://cafe.naver.com/imsoone" target="_blank" rel="noopener"><span class="door-n" data-i18n="sb.doorCafe2">네이버 '인순이 팬카페'</span><span class="door-d" data-i18n="sb.doorCafe2d">2007년 문을 연 또 하나의 마당 · 다른 사이트</span><span class="door-x" aria-hidden="true">↗</span><span class="sr-only" data-i18n="sb.newWin">(새 창)</span></a></li>
       </ul>
       <form id="sub-form" class="sb-sub" hidden>
         <label class="sr-only" for="sub-email" data-i18n="sub.label">이메일 주소</label>
@@ -196,8 +213,8 @@
         <button class="btn btn--gold btn--sm" type="submit" data-i18n="sub.btn">소식지 신청</button>
       </form>
       <p id="sub-msg" class="form-ok" role="status" hidden></p>
-      <p class="form-hint" id="sub-note" data-i18n="sb.mailSoon">이메일 소식지는 보낼 도구가 준비되면 이 자리에서 신청받겠습니다.</p>
-    </div>
+      <p class="form-hint" id="sub-note" hidden data-i18n="sb.mailSoon">이메일 소식지는 보낼 도구가 준비되면 이 자리에서 신청받겠습니다.</p>
+    </div></div>
   </section>
 
 </main>
@@ -214,18 +231,18 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동" data-i18n-aria="aria.toTop">TOP</button>
-<script src="assets/js/config.js?v434a60a2" defer></script>
-<script src="assets/js/backend.js?v434a60a2" defer></script>
-<script src="assets/js/i18n.min.js?v434a60a2" defer></script>
-<script src="assets/js/data.min.js?v434a60a2" defer></script>
-<script src="assets/js/tracklinks.min.js?v434a60a2" defer></script>
-<script src="assets/js/albums-full.min.js?v434a60a2" defer></script>
-<script src="assets/js/albums-en.min.js?v434a60a2" defer></script>
-<script src="assets/js/song-moods.min.js?v434a60a2" defer></script>
-<script src="assets/js/main.min.js?v434a60a2" defer></script>
-<script src="assets/js/board.min.js?v434a60a2" defer></script>
-<script src="assets/js/motion.min.js?v434a60a2" defer></script>
-<script src="assets/js/router.min.js?v434a60a2" defer></script>
-<script src="assets/js/deck.min.js?v434a60a2" defer></script>
+<script src="assets/js/config.js?v12e1c6c2" defer></script>
+<script src="assets/js/backend.js?v12e1c6c2" defer></script>
+<script src="assets/js/i18n.min.js?v12e1c6c2" defer></script>
+<script src="assets/js/data.min.js?v12e1c6c2" defer></script>
+<script src="assets/js/tracklinks.min.js?v12e1c6c2" defer></script>
+<script src="assets/js/albums-full.min.js?v12e1c6c2" defer></script>
+<script src="assets/js/albums-en.min.js?v12e1c6c2" defer></script>
+<script src="assets/js/song-moods.min.js?v12e1c6c2" defer></script>
+<script src="assets/js/main.min.js?v12e1c6c2" defer></script>
+<script src="assets/js/board.min.js?v12e1c6c2" defer></script>
+<script src="assets/js/motion.min.js?v12e1c6c2" defer></script>
+<script src="assets/js/router.min.js?v12e1c6c2" defer></script>
+<script src="assets/js/deck.min.js?v12e1c6c2" defer></script>
 </body>
 </html>
