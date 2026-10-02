@@ -1,6 +1,6 @@
 {
- "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-03 01:08",
+ "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
+ "updated": "2026-10-02 21:18",
  "count": 69,
  "items": [
   {
@@ -23,24 +23,10 @@
   },
   {
    "date": "2026-09-30",
-   "title": "최백호·인순이·소찬휘 총출동…윤항기 \"일생에 한 번뿐인 헌정 공연, 후배들 바쁜데도 함께해줘\"",
-   "source": "엑스포츠뉴스",
+   "title": "최백호·인순이·소찬휘 총출동…윤항기 \"일생에 한 번뿐인 헌정 공연, 후배들 바쁜데도 함께해줘\" [엑's 현장]",
+   "source": "xportsnews.com",
    "sourceSite": "https://www.xportsnews.com",
    "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5lelZwRHh2UTVaTUlSc2FHQl81c0xUVDByb1FIVVFSRkpkaHp4QXBvaUxaVUhNaHRZNGJZcEFtcjBPMEVtdDV4bnJ1akMxY2c3WXdVaw?oc=5",
-   "type": "공연",
-   "auto": true,
-   "rawTitle": "최백호·인순이·소찬휘 총출동…윤항기 \"일생에 한 번뿐인 헌정 공연, 후배들 바쁜데도 함께해줘\" [엑's 현장]",
-   "rawSource": "xportsnews.com",
-   "tags": [
-    "엑's 현장"
-   ]
-  },
-  {
-   "date": "2026-09-28",
-   "title": "진해아트홀 개관기념 특별공연 ‘인순이 스페셜 콘서트’ 10월 3일 개최",
-   "source": "뉴스경남",
-   "sourceSite": "https://www.newsgn.com",
-   "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9rRzdVNlBfVG1CS3RneE9NTGVwQy10OW43NWRMQlQzeThwXzBvdkZQSXU4ZTkxbFJ2d1RLZGVjMzBpZGNMU3hiSEJXZFlIYTh5YUJzSmp2YVZGNDlHczhIY21HUE1MRm55?oc=5",
    "type": "공연",
    "auto": true
   },
@@ -51,16 +37,8 @@
    "sourceSite": "http://m.koreajn.co.kr",
    "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9NV2VSNGVWWVF2SXJnUGZmTUZJMDJ4Q0FpdkRzRXdza3BfRG9TMlNRdzdMNkxzMm9pUFc4dUJlRVVpN2syaVpkZl9PMkpLOGttaHBJaVR4dXJNR3V1QndEdDV3S2RJdVBV?oc=5",
    "type": "공연",
-   "auto": true
-  },
-  {
-   "date": "2026-09-28",
-   "title": "진해아트홀 개관기념 특별공연 ‘인순이 스페셜 콘서트’ 10월 3일 개최",
-   "source": "시사코리아저널",
-   "sourceSite": "http://www.koreajn.co.kr",
-   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9XcGZ4aGhzN2lKc2xhNVpQZUFSZS1zMUJib2NIckZMUVlURzdCMERZd3YyZFhZdUItOXdvazRTV1NwTjBsR2JCVmhocWVOdWt0RzhONnRfU3A5VTNJRHlLcjZJbDc1MEpXLTdJ?oc=5",
-   "type": "공연",
-   "auto": true
+   "auto": true,
+   "also": 1
   },
   {
    "date": "2026-09-28",
@@ -70,6 +48,26 @@
    "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5JY1RFMGRYczNrUnpXRTMzUlpjaUxjWHhKMV8yelBBbHdQNlZuZ1NIRkViOFRJN0haNHluVmczX3gyUkcwWXhDa2dKMnNEb0kwcTItbmtQdTBoV21LNVNqTnozU3dwSmJCdC130gFvQVVfeXFMTW9iS21HNVZ1aW1SUmdDc08tSzVDYTNUbW52eUptVXZLdVd0R0hHMDJwaVpmYTBJR3pNTUl2cnhJVms4eWZGWk5WVXpkaFhTMW0tdFpCc0IweVdQYmhYeUs0WDlKbFVrLXZRM0tvVG9V?oc=5",
    "type": "보도",
    "auto": true
+  },
+  {
+   "date": "2026-09-28",
+   "title": "진해아트홀 개관기념 특별공연 ‘인순이 스페셜 콘서트’ 10월 3일 개최",
+   "source": "뉴스경남",
+   "sourceSite": "https://www.newsgn.com",
+   "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9rRzdVNlBfVG1CS3RneE9NTGVwQy10OW43NWRMQlQzeThwXzBvdkZQSXU4ZTkxbFJ2d1RLZGVjMzBpZGNMU3hiSEJXZFlIYTh5YUJzSmp2YVZGNDlHczhIY21HUE1MRm55?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 2
+  },
+  {
+   "date": "2026-09-28",
+   "title": "진해아트홀 개관기념 특별공연 ‘인순이 스페셜 콘서트’ 10월 3일 개최",
+   "source": "시사코리아저널",
+   "sourceSite": "http://www.koreajn.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9XcGZ4aGhzN2lKc2xhNVpQZUFSZS1zMUJib2NIckZMUVlURzdCMERZd3YyZFhZdUItOXdvazRTV1NwTjBsR2JCVmhocWVOdWt0RzhONnRfU3A5VTNJRHlLcjZJbDc1MEpXLTdJ?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 2
   },
   {
    "date": "2026-09-24",
@@ -82,29 +80,20 @@
   },
   {
    "date": "2026-09-21",
-   "title": "'나는 행복합니다' 윤항기 65주년 헌정 공연..인순이·최백호 합류",
-   "source": "스타뉴스",
-   "sourceSite": "https://www.starnewskorea.com",
-   "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE44cl8zSV9YdFNOb2ZTS0ktcU14SU1WUVdqbF9MTWlpZVdnTk5YYzBCUjE4M2Q3N0hhSGxvemF5bFJlc0dtMXgxMTJOYVcxQkR5N3ZVUU9HLWdjOTBmdU9NQXZmRFgyY2tGSk9XQjJPUkJWZmt4?oc=5",
-   "type": "공연",
-   "auto": true,
-   "rawSource": "starnewskorea.com"
-  },
-  {
-   "date": "2026-09-21",
    "title": "윤항기 65주년 헌정 공연, 최백호·인순이·전영록 등 출연…10명 후배들이 각자 색깔로 재해석 '헌정'",
    "source": "SPOTV NEWS",
    "sourceSite": "https://www.spotvnews.co.kr",
    "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1PSVZrNjJyV0N4UVhqS0xxWE5sXzZ5ZGcteVRDVkhialJyVTk3aUQ0VXJFVjBtM3BGWjJmeGJMdU9lSFAxM1FZUkxtNlMzd1Fqbk9aVEQwMklmWUg3QjJRMmNmSTdGZkNPSzIzR241cW8?oc=5",
    "type": "공연",
-   "auto": true
+   "auto": true,
+   "also": 4
   },
   {
    "date": "2026-09-21",
-   "title": "윤항기, 데뷔 65주년 공연 개최…최백호·인순이 등 후배 10팀 출연",
-   "source": "Queen 이코노미퀸",
-   "sourceSite": "https://www.queen.co.kr",
-   "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1rcEtPYjBhUWRNSk9aNy1XTHZxenhiY2JrUXB3c3MzT1ZmTGdQNktuSFlvd0hjWjFYN184T1E0dXVEMzg5aUY0T2F1UUpCTkhYR1hQR2liQ0VsVTNvNkJtYkxQR0V4ZWJPRXc?oc=5",
+   "title": "'나는 행복합니다' 윤항기 65주년 헌정 공연..인순이·최백호 합류",
+   "source": "starnewskorea.com",
+   "sourceSite": "https://www.starnewskorea.com",
+   "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE44cl8zSV9YdFNOb2ZTS0ktcU14SU1WUVdqbF9MTWlpZVdnTk5YYzBCUjE4M2Q3N0hhSGxvemF5bFJlc0dtMXgxMTJOYVcxQkR5N3ZVUU9HLWdjOTBmdU9NQXZmRFgyY2tGSk9XQjJPUkJWZmt4?oc=5",
    "type": "공연",
    "auto": true
   },
@@ -115,6 +104,26 @@
    "sourceSite": "https://m.newsen.com",
    "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE1laVRqV00xUHpHazN4U01abDcwR0hKeGZpZ1lDNlBZRUQxUUJTZmJ4X0tIeGdUMDVCcG8xckVPd3E4cHZTRFBRV3NHVXhVNGN6MWpfV2N0N3NXbm1yTmFDaENxZkg5ZDFK?oc=5",
    "type": "공연",
+   "auto": true,
+   "also": 1
+  },
+  {
+   "date": "2026-09-21",
+   "title": "윤항기, 데뷔 65주년 공연 개최…최백호·인순이 등 후배 10팀 출연",
+   "source": "Queen 이코노미퀸",
+   "sourceSite": "https://www.queen.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1rcEtPYjBhUWRNSk9aNy1XTHZxenhiY2JrUXB3c3MzT1ZmTGdQNktuSFlvd0hjWjFYN184T1E0dXVEMzg5aUY0T2F1UUpCTkhYR1hQR2liQ0VsVTNvNkJtYkxQR0V4ZWJPRXc?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 1
+  },
+  {
+   "date": "2026-09-18",
+   "title": "‘나는 행복합니다’ 윤항기, 65년 음악 인생 헌정무대…최백호·인순이 등 후배 총출동",
+   "source": "매일경제",
+   "sourceSite": "https://www.mk.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1LV3VwV3hJV3gwUXZoeEdtX3JORFdybUg2X0dNQXgzai1SQWl0M25EczhBZlNlQkZIci15YXZJcDZoRXlhZDdlZ1ZNQmZhb0xDQ0pZQ2JTbmg?oc=5",
+   "type": "공연",
    "auto": true
   },
   {
@@ -123,15 +132,6 @@
    "source": "뉴스브라이트",
    "sourceSite": "https://www.newsbrite.net",
    "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFB1QWQ4aTdtNEhBMFJPWEpWamRuRkxiYkM4SUV0VC1ya2YyaHpvSU1BdGR5dWo5RWtTR2w2UGlILUprRkExV2oyNVFIWi1OVzd0Z1pJSkFtOGdJTHpJSFpfVmIya25STWgxRjU1bA?oc=5",
-   "type": "공연",
-   "auto": true
-  },
-  {
-   "date": "2026-09-18",
-   "title": "‘나는 행복합니다’ 윤항기, 65년 음악 인생 헌정무대…최백호·인순이 등 후배 총출동",
-   "source": "매일경제",
-   "sourceSite": "https://www.mk.co.kr",
-   "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1LV3VwV3hJV3gwUXZoeEdtX3JORFdybUg2X0dNQXgzai1SQWl0M25EczhBZlNlQkZIci15YXZJcDZoRXlhZDdlZ1ZNQmZhb0xDQ0pZQ2JTbmg?oc=5",
    "type": "공연",
    "auto": true
   },
@@ -151,15 +151,25 @@
    "sourceSite": "https://www.kookminnews.com",
    "url": "https://news.google.com/rss/articles/CBMiSkFVX3lxTFA5Z2J4YmNia3ZZU0F1VVhzV1Q1RWdvY0FFaG50aWZpc0RtVC1qQ3FvcmtiMlhWVXQ5UDdfd1NyMkI4d3JaT3R6Y0dn?oc=5",
    "type": "보도",
-   "auto": true
+   "auto": true,
+   "also": 1
   },
   {
    "date": "2026-09-02",
    "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
-   "source": "뉴스1",
-   "sourceSite": "https://www.news1.kr",
-   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBQZmF0LTNUNUY0UEtIbGtsUGRfdDh6dEhnU2MzXzFPQjEtdVdMNFRnMGJMbUF1S1JEQzlIelBSYmxoQlpZUDJfX1J0b25qSGFKb2ROdmtYZERhaUhEVnROLWI0RTVGUktoZzlYc2ZqN3RMM3hMVVFB0gF3QVVfeXFMUFBmYXQtM1Q1RjRQS0hsa2xQZF90OHp0SGdTYzNfMU9CMS11V0w0VGcwYkxtQXVLUkRDOUh6UFJibGhCWllQMl9fUnRvbmpIYUpvZE52a1hkRGFpSERWdE4tYjRFNUZSS2hnOVhzZmo3dEwzeExVUUE?oc=5",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1PbW94SVNDRWJUQjNqTFJYSkV4UjVaRkZnbERjVXNSeDJlNE00eTNyekdvQ19jd2hjWEJOYXcwaTF3Q2k5ZnBwWmRhWUdaX1k?oc=5",
    "type": "방송",
+   "auto": true
+  },
+  {
+   "date": "2026-09-02",
+   "title": "‘플레이리스트 109’ 장동선-김영옥, 버텨낸 사람이 건넨 위로! 인순이 ‘거위의 꿈’에 함께 울고.. 89세 인생 선배의 한마디가 준 깨달음에 위로 받았다!",
+   "source": "뉴스팟",
+   "sourceSite": "http://www.todaysn.com",
+   "url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTE1iVzZWaC1DcW9kZ3psSVozQjJnbDFDWm9jTzM2cjNhUURBRGhvYzVrbDhjZUpueTVra3NfUndZSmg4RlU?oc=5",
+   "type": "보도",
    "auto": true
   },
   {
@@ -174,61 +184,47 @@
   {
    "date": "2026-09-02",
    "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
-   "source": "다음 뉴스",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE1TQklOR2c5eDBrdGxWU3lSMEQ2UllqdWV1Qm9ERFhCUFJLVzdudkdQUVhXQ1BKMDNBd3cxMTZOSktuM0phTko0Mll4ZlZGTGcwaHc2bA?oc=5",
+   "source": "뉴스1",
+   "sourceSite": "https://www.news1.kr",
+   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBQZmF0LTNUNUY0UEtIbGtsUGRfdDh6dEhnU2MzXzFPQjEtdVdMNFRnMGJMbUF1S1JEQzlIelBSYmxoQlpZUDJfX1J0b25qSGFKb2ROdmtYZERhaUhEVnROLWI0RTVGUktoZzlYc2ZqN3RMM3hMVVFB0gF3QVVfeXFMUFBmYXQtM1Q1RjRQS0hsa2xQZF90OHp0SGdTYzNfMU9CMS11V0w0VGcwYkxtQXVLUkRDOUh6UFJibGhCWllQMl9fUnRvbmpIYUpvZE52a1hkRGFpSERWdE4tYjRFNUZSS2hnOVhzZmo3dEwzeExVUUE?oc=5",
    "type": "방송",
-   "auto": true,
-   "rawSource": "v.daum.net"
+   "auto": true
   },
   {
    "date": "2026-09-02",
    "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
-   "source": "다음 뉴스",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1PbW94SVNDRWJUQjNqTFJYSkV4UjVaRkZnbERjVXNSeDJlNE00eTNyekdvQ19jd2hjWEJOYXcwaTF3Q2k5ZnBwWmRhWUdaX1k?oc=5",
-   "type": "방송",
-   "auto": true,
-   "rawSource": "v.daum.net"
-  },
-  {
-   "date": "2026-09-02",
-   "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
-   "source": "다음 뉴스",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1iTEMtbDdnOUZQWWtPZlJHTTVOd0hGRmtSQk1ELWFBb1RyNFJ0NE9aWFRDY09rUWFTeWRrZTV6eHVVUlpOVU1RT2JWVQ?oc=5",
-   "type": "방송",
-   "auto": true,
-   "rawSource": "v.daum.net"
-  },
-  {
-   "date": "2026-09-02",
-   "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
-   "source": "다음 뉴스",
+   "source": "v.daum.net",
    "sourceSite": "https://v.daum.net",
    "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTFBSY0JLUGRCWWN3S2U1UHdudkJybHVOWlpNYzlLUUNDVnRyd1gwdFQ0d3pPN3d4SkVCaXhrbE1xcGxra19BaXc?oc=5",
    "type": "방송",
-   "auto": true,
-   "rawSource": "v.daum.net"
+   "auto": true
   },
   {
    "date": "2026-09-02",
-   "title": "‘플레이리스트 109’ 장동선-김영옥, 버텨낸 사람이 건넨 위로! 인순이 ‘거위의 꿈’에 함께 울고.. 89세 인생 선배의 한마디가 준 깨달음에 위로 받았다!",
-   "source": "뉴스팟",
-   "sourceSite": "http://www.todaysn.com",
-   "url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTE1iVzZWaC1DcW9kZ3psSVozQjJnbDFDWm9jTzM2cjNhUURBRGhvYzVrbDhjZUpueTVra3NfUndZSmg4RlU?oc=5",
-   "type": "보도",
+   "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1iTEMtbDdnOUZQWWtPZlJHTTVOd0hGRmtSQk1ELWFBb1RyNFJ0NE9aWFRDY09rUWFTeWRrZTV6eHVVUlpOVU1RT2JWVQ?oc=5",
+   "type": "방송",
+   "auto": true
+  },
+  {
+   "date": "2026-09-02",
+   "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE1TQklOR2c5eDBrdGxWU3lSMEQ2UllqdWV1Qm9ERFhCUFJLVzdudkdQUVhXQ1BKMDNBd3cxMTZOSktuM0phTko0Mll4ZlZGTGcwaHc2bA?oc=5",
+   "type": "방송",
    "auto": true
   },
   {
    "date": "2026-08-23",
    "title": "'나는 가수다'에서 '아버지'를 열창한 인순이",
-   "source": "오마이뉴스",
+   "source": "OhmyNews",
    "sourceSite": "https://www.ohmynews.com",
    "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTFBXYVRjd0hEQUlxdnBrdEFoQ0xLUE9Uak9KaDd4dDBtRjdkTHFtVEVial9yS2FaMkV5NnFpZEVubUN1UmF4NV9TdzgtWVFHdFpIY2xfQnhUUVFrb2toT1ZyNDloaHJCb2tzRVd0TG9hTHVnZ3BnLTBBVA?oc=5",
    "type": "공연",
-   "auto": true,
-   "rawSource": "OhmyNews"
+   "auto": true
   },
   {
    "date": "2026-08-05",
@@ -248,6 +244,7 @@
    "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE9WeVM3ZWl3bXF2S0FkQTJBUkNaV1dHdnZKdmM1QXdsRU5oczJYUXhCdDRoMVc1VUtJazBaa3BiNGk4T29RQjYzVFdjZnc4RllncEE?oc=5",
    "type": "방송",
    "auto": true,
+   "also": 1,
    "ai": true
   },
   {
@@ -258,75 +255,57 @@
    "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTFAzTWhaNDdxOU5GUDhweThvOWg5SXNqbVZYRXQ0MFRSMV9EdkZLclRCaDRnSGwtRGxROUs4UlQ3WHlPOUNaSS1yMA?oc=5",
    "type": "방송",
    "auto": true,
+   "also": 1,
    "ai": true
   },
   {
    "date": "2026-08-04",
    "title": "가수 남진·인순이, KBS '가요무대'서 환상적인 듀엣 무대…",
-   "source": "대한청년일보",
+   "source": "kcemedia.com",
    "sourceSite": "http://knpp.co.kr",
    "url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTE9UWFp3dGdyY09vbkg4c2E1YzlkOXZLNk5fS292ZHFzQkRxTDJTajBLWXp2NjROSjVaZzJYUWVvSERUYnc?oc=5",
    "type": "방송",
    "auto": true,
-   "rawSource": "kcemedia.com",
+   "also": 1,
    "ai": true
   },
   {
    "date": "2026-08-03",
-   "title": "남진 & 인순이 - 님과 함께",
-   "source": "KBS",
+   "title": "남진 & 인순이 - 님과 함께 | KBS 260803 방송",
+   "source": "대한민국 대표 공영미디어 KBS",
    "sourceSite": "https://www.kbs.co.kr",
    "url": "https://news.google.com/rss/articles/CBMiwgJBVV95cUxOT1lyU3BxV0N5UEZZeHdFV2FVUzlEaFhJcC1lRVAzcWtzYS1zZ2NldEw1VW9EemFDNm1mVUpTQmloOVlFUEg0MTByU3JuSlA4M1BzQjJiRVlQSGJhaEpQN3pUSC1PckRtRDZpcTgtYkM2dGtoRDl6NVFQWWdVa0NPNUowWmJoWWlIYjZoMlcwdVlOUXBRNEYzUUFtUHNKVW84VjdHZEZ5d1p4Ti1aMnJGOG1CU2pFb0h2anJ5XzlHQTBPeXhSLTR6R1Bnc1NIY3hKU0owVFQ0QXA1dkhJdTA1TVNHckdINmF2bkJ5NXlza1VDRzlFdG1LUGlEMmhIeEpyNHpINzVtbTJidFI1ZU0wV0NGT0pfcGVHalNqcXhCOHpHMllvQTNrRVZDcnNsNU0wMjQ1eXhzSnBHREtUdW00eHln?oc=5",
    "type": "방송",
    "auto": true,
-   "rawTitle": "남진 & 인순이 - 님과 함께 | KBS 260803 방송",
-   "rawSource": "대한민국 대표 공영미디어 KBS",
-   "tags": [
-    "KBS 260803 방송"
-   ],
    "ai": true
   },
   {
    "date": "2026-07-31",
-   "title": "류원정 X 공훈 '내 사랑 투유', 절제하며 맞춘 듀엣 호흡! 인순이 X 서지오 심사평은?",
-   "source": "SBS",
+   "title": "류원정 X 공훈 '내 사랑 투유', 절제하며 맞춘 듀엣 호흡! 인순이 X 서지오 심사평은? [인생은 오디션]",
+   "source": "sbs.co.kr",
    "sourceSite": "https://programs.sbs.co.kr",
    "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9YMWVGWGZZNThtWDZlZEducS1WeEczOGM2T2w0RzgxMDE1OTVWbU1IVnB4VllXa1BUX0ktbFQ0RXV5SnVxeFpIeUg3bVp6UmhCc01Jc1ZRT1l4Sk9YaGFIcTA1Wk1LZ1BlSDdmWU9EWXFKelV3bFFR?oc=5",
    "type": "방송",
-   "auto": true,
-   "rawTitle": "류원정 X 공훈 '내 사랑 투유', 절제하며 맞춘 듀엣 호흡! 인순이 X 서지오 심사평은? [인생은 오디션]",
-   "rawSource": "sbs.co.kr",
-   "tags": [
-    "인생은 오디션"
-   ]
+   "auto": true
   },
   {
    "date": "2026-07-29",
-   "title": "황우림 X 송별이 '엄마 꽃', 심사위원도 위로받은 아름다운 하모니! 인순이 X 서지오 심사평은?",
-   "source": "SBS",
-   "sourceSite": "https://programs.sbs.co.kr",
-   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9ZcWV1QU5OV1RSUF90RmRaWUVBLVdLSHJzMHVnZmJKREtlc3pBUlgxclpVZFZOM1NzZTZJNkRJd1RadHpnX0JURzBLclNuUS1MTkJEU3lkaFNvVUI0Skh1Y3NLcGo4SUEwd2lJMVVmZVhITkJUQmM4?oc=5",
+   "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE9kLTZJcnFMUmF6Vkl2TWxKejBVblBxS0RTU0NYbkhhNlJPc3FfU2dBTGd0NG1RLVBaX3NybTZMR2owdXVidjdYTzYxMVBxNlhpOEkyaQ?oc=5",
    "type": "방송",
    "auto": true,
-   "rawTitle": "황우림 X 송별이 '엄마 꽃', 심사위원도 위로받은 아름다운 하모니! 인순이 X 서지오 심사평은? [인생은 오디션]",
-   "rawSource": "sbs.co.kr",
-   "tags": [
-    "인생은 오디션"
-   ]
+   "ai": true
   },
   {
    "date": "2026-07-29",
-   "title": "김중연 X 송민경 '밤이면 밤마다', 원곡자 인순이 앞에서 펼친 용감한 퍼포먼스! 인순이 X 서지오 심사평은?",
-   "source": "SBS",
-   "sourceSite": "https://programs.sbs.co.kr",
-   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9WbUVadXdhX3pWWXgzZjE4QnpSRXFzS2dwdm5FcnVUWWVWMDZHd1l4Z09wWHE2OVBwZXF0WW5QUUxUNnY0dEFXNEhDc2szUGxlc2g1ZzIxWEVtVk4tU1JxaFBNS1Yxcy1ZcTYtNzV5LS1xVzVvLWg0?oc=5",
+   "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE5PdnVpdURVSXh5MXE2OWYtWV9Belp0RHVKQXhCOFZfcmxyZVduclFWSjhrYnY5VEJJaXZndUozMU5vZjlxYWc?oc=5",
    "type": "방송",
-   "auto": true,
-   "rawTitle": "김중연 X 송민경 '밤이면 밤마다', 원곡자 인순이 앞에서 펼친 용감한 퍼포먼스! 인순이 X 서지오 심사평은? [인생은 오디션]",
-   "rawSource": "sbs.co.kr",
-   "tags": [
-    "인생은 오디션"
-   ]
+   "auto": true
   },
   {
    "date": "2026-07-29",
@@ -340,71 +319,48 @@
   {
    "date": "2026-07-29",
    "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
-   "source": "다음 뉴스",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE9kLTZJcnFMUmF6Vkl2TWxKejBVblBxS0RTU0NYbkhhNlJPc3FfU2dBTGd0NG1RLVBaX3NybTZMR2owdXVidjdYTzYxMVBxNlhpOEkyaQ?oc=5",
-   "type": "방송",
-   "auto": true,
-   "rawSource": "v.daum.net",
-   "ai": true
-  },
-  {
-   "date": "2026-07-29",
-   "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
-   "source": "다음 뉴스",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1jYUFXYzVtWVFJT3I4TTFUR3RqUEw1RDJINHZvYlVCeFp2bjRZWmRUQ0dTdE1vRUhJQnpWMHZkMGYtRDFHc1lVcmxUU25CVnM?oc=5",
-   "type": "방송",
-   "auto": true,
-   "rawSource": "v.daum.net"
-  },
-  {
-   "date": "2026-07-29",
-   "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
-   "source": "다음 뉴스",
+   "source": "v.daum.net",
    "sourceSite": "https://v.daum.net",
    "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5MNFpYdWwyZDZ0Y1pjdlMwci01clU3enoxMlF0NkQwX2hGNjl6MEx6ZTdpOXZlY1pVU1lfRVVQU0dLeGI4Y1VSTHB5NA?oc=5",
    "type": "방송",
-   "auto": true,
-   "rawSource": "v.daum.net"
+   "auto": true
   },
   {
    "date": "2026-07-29",
    "title": "윤서령, ‘인생은 오디션’ 듀엣 미션서 191점…인순이 “두 사람의 노래로 만들었다”",
-   "source": "다음 뉴스",
+   "source": "v.daum.net",
    "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE5PdnVpdURVSXh5MXE2OWYtWV9Belp0RHVKQXhCOFZfcmxyZVduclFWSjhrYnY5VEJJaXZndUozMU5vZjlxYWc?oc=5",
+   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1jYUFXYzVtWVFJT3I4TTFUR3RqUEw1RDJINHZvYlVCeFp2bjRZWmRUQ0dTdE1vRUhJQnpWMHZkMGYtRDFHc1lVcmxUU25CVnM?oc=5",
    "type": "방송",
-   "auto": true,
-   "rawSource": "v.daum.net"
+   "auto": true
   },
   {
-   "date": "2026-07-28",
-   "title": "듀엣 경연의 핵심은 둘의 호흡과 개성?! 심사위원 인순이 X 서지오가 말하는 심사 포인트!",
-   "source": "SBS",
+   "date": "2026-07-29",
+   "title": "황우림 X 송별이 '엄마 꽃', 심사위원도 위로받은 아름다운 하모니! 인순이 X 서지오 심사평은? [인생은 오디션]",
+   "source": "sbs.co.kr",
    "sourceSite": "https://programs.sbs.co.kr",
-   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBPQ041WGZ5MlRYTXZOOTdtdHBWWGRLTDkyWXc0SmhGU3ZrWnY1N2huSU5rbVd4WlY2SWxRb1Jha0pHZ0hFZ3dFWmNNOU45YjBpa3VKMFBmeWRUcGVOVUN2dUZTaDU5QWZ4QnhXYlpHRDFfaWNJTTN3?oc=5",
+   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9ZcWV1QU5OV1RSUF90RmRaWUVBLVdLSHJzMHVnZmJKREtlc3pBUlgxclpVZFZOM1NzZTZJNkRJd1RadHpnX0JURzBLclNuUS1MTkJEU3lkaFNvVUI0Skh1Y3NLcGo4SUEwd2lJMVVmZVhITkJUQmM4?oc=5",
    "type": "방송",
-   "auto": true,
-   "rawTitle": "듀엣 경연의 핵심은 둘의 호흡과 개성?! 심사위원 인순이 X 서지오가 말하는 심사 포인트! [인생은 오디션]",
-   "rawSource": "sbs.co.kr",
-   "tags": [
-    "인생은 오디션"
-   ]
+   "auto": true
+  },
+  {
+   "date": "2026-07-29",
+   "title": "김중연 X 송민경 '밤이면 밤마다', 원곡자 인순이 앞에서 펼친 용감한 퍼포먼스! 인순이 X 서지오 심사평은? [인생은 오디션]",
+   "source": "sbs.co.kr",
+   "sourceSite": "https://programs.sbs.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9WbUVadXdhX3pWWXgzZjE4QnpSRXFzS2dwdm5FcnVUWWVWMDZHd1l4Z09wWHE2OVBwZXF0WW5QUUxUNnY0dEFXNEhDc2szUGxlc2g1ZzIxWEVtVk4tU1JxaFBNS1Yxcy1ZcTYtNzV5LS1xVzVvLWg0?oc=5",
+   "type": "방송",
+   "auto": true
   },
   {
    "date": "2026-07-28",
-   "title": "한강 X 문초희, '이제는', 고음과 안무에도 빛난 듀엣 호흡! 인순이 X 서지오 심사평은?",
-   "source": "SBS",
+   "title": "한강 X 문초희, '이제는', 고음과 안무에도 빛난 듀엣 호흡! 인순이 X 서지오 심사평은? [인생은 오디션]",
+   "source": "sbs.co.kr",
    "sourceSite": "https://programs.sbs.co.kr",
    "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFAxUHNaU29ORTRFc1VEUVBxQ0Vid2xTY0stTDZFbXVvWUZrUGNOZWxfRlZzcENhU1U4eGxSdFpkc1JCVU50OW9MUUZXdVZodkp5UGROeGpJT1N2YzZMVzZYeHo4Q0U1elpIbXJZQ2VwNXpIeGcxb1Z3?oc=5",
    "type": "방송",
    "auto": true,
-   "rawTitle": "한강 X 문초희, '이제는', 고음과 안무에도 빛난 듀엣 호흡! 인순이 X 서지오 심사평은? [인생은 오디션]",
-   "rawSource": "sbs.co.kr",
-   "tags": [
-    "인생은 오디션"
-   ]
+   "also": 3
   },
   {
    "date": "2026-07-28",
@@ -414,27 +370,77 @@
    "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5zQ1VQT1VmdGtPLWFZQVpRQ3ZPRFlUS3hNRGxoOXhUZ2F0N1VPSDlqU2RkVHlkb29wbWJPZVhYcUVGXzZaN1RQNk4zcEhSNGQwZkdfSWdGc2V4elE?oc=5",
    "type": "방송",
    "auto": true,
+   "also": 3,
    "ai": true
   },
   {
    "date": "2026-07-28",
-   "title": "총상금 1억 ‘인생은 오디션’, 서지오 심사 출격…인순이와 트롯 스타 발굴",
-   "source": "다음 뉴스",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5JWEt5blRnY2J3Nk1KdS1QZVBuakh3N0ZNQnduUm1TWGlCYm5tanc2eHg2M29fVk9xOF9QUUtYRVVOSHBtZVBKN2UzMnFCOWM?oc=5",
+   "title": "듀엣 경연의 핵심은 둘의 호흡과 개성?! 심사위원 인순이 X 서지오가 말하는 심사 포인트! [인생은 오디션]",
+   "source": "sbs.co.kr",
+   "sourceSite": "https://programs.sbs.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBPQ041WGZ5MlRYTXZOOTdtdHBWWGRLTDkyWXc0SmhGU3ZrWnY1N2huSU5rbVd4WlY2SWxRb1Jha0pHZ0hFZ3dFWmNNOU45YjBpa3VKMFBmeWRUcGVOVUN2dUZTaDU5QWZ4QnhXYlpHRDFfaWNJTTN3?oc=5",
    "type": "방송",
    "auto": true,
-   "rawSource": "v.daum.net"
+   "also": 1
   },
   {
    "date": "2026-07-28",
    "title": "총상금 1억 ‘인생은 오디션’, 서지오 심사 출격…인순이와 트롯 스타 발굴",
-   "source": "다음 뉴스",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5JWEt5blRnY2J3Nk1KdS1QZVBuakh3N0ZNQnduUm1TWGlCYm5tanc2eHg2M29fVk9xOF9QUUtYRVVOSHBtZVBKN2UzMnFCOWM?oc=5",
+   "type": "방송",
+   "auto": true
+  },
+  {
+   "date": "2026-07-28",
+   "title": "총상금 1억 ‘인생은 오디션’, 서지오 심사 출격…인순이와 트롯 스타 발굴",
+   "source": "v.daum.net",
    "sourceSite": "https://v.daum.net",
    "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5OQTh1N3N0U3FoX2JxZ0lMQ1dBV3FWd0tEaS1wLXB5Rk1VRlRHc2pWV2didmpfNkJkYm9MRlYxNlBPTXVRWl9XQkdCVQ?oc=5",
    "type": "방송",
+   "auto": true
+  },
+  {
+   "date": "2026-07-27",
+   "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1GX3hoUzdOcG1SMngyNXBGVmF4YUlMTmdMZkJyZXV4a3RXRHpwVnlFT3NfWHMxTzhmWHFlRTF4MHV0ODNjTFNVRG9KWEtxWlE?oc=5",
+   "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-07-27",
+   "title": "\"인순이 공연에 감동\"…마샬이 다문화 학교에 스피커 보낸 사연",
+   "source": "네이트",
+   "sourceSite": "https://news.nate.com",
+   "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFB2U2lCYmlCVFpqTk14TnlCLTl1cW5Tbld1aWF5cDVuOWxMaGtjX0NpTWp3S2FJTC1ycllEb01Lcm9CVTV5WDRFTkI4ODVEeU1jSGtJ?oc=5",
+   "type": "나눔",
    "auto": true,
-   "rawSource": "v.daum.net"
+   "also": 1,
+   "ai": true
+  },
+  {
+   "date": "2026-07-27",
+   "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE52cFRPVGYyaTNTdl8xRlFaRUdicmFpOWo5aW03WUhjcHYxekVGckRYbTNnSk1hTTJkS01iRURPOVpuRlFzcnc?oc=5",
+   "type": "나눔",
+   "auto": true,
+   "also": 1,
+   "ai": true
+  },
+  {
+   "date": "2026-07-27",
+   "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
+   "source": "v.daum.net",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1ha0ZobU9TdWhIMEw1N05GX05Hd3B5UU5SSGtTZWF2ZG9xNEE3UElMVG1uVGNoVlUxSTJZeG5IZl9wYUdzOUxQa3d1bw?oc=5",
+   "type": "나눔",
+   "auto": true,
+   "ai": true
   },
   {
    "date": "2026-07-27",
@@ -457,61 +463,9 @@
   {
    "date": "2026-07-27",
    "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
-   "source": "다음 뉴스",
+   "source": "v.daum.net",
    "sourceSite": "https://v.daum.net",
    "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE40WkVmSF9QRWk2V01WNnIwUTlBaFlXRG53ZUhpd3ZIQl9DQzVfUzltVFJsYlFyZlpHcU9EbThHT1ZDeXZ6ek1tQ3U3OUFlcU5LMVJxaA?oc=5",
-   "type": "공연",
-   "auto": true,
-   "rawSource": "v.daum.net"
-  },
-  {
-   "date": "2026-07-27",
-   "title": "\"인순이 공연에 감동\"…마샬이 다문화 학교에 스피커 보낸 사연",
-   "source": "네이트",
-   "sourceSite": "https://news.nate.com",
-   "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFB2U2lCYmlCVFpqTk14TnlCLTl1cW5Tbld1aWF5cDVuOWxMaGtjX0NpTWp3S2FJTC1ycllEb01Lcm9CVTV5WDRFTkI4ODVEeU1jSGtJ?oc=5",
-   "type": "나눔",
-   "auto": true,
-   "ai": true
-  },
-  {
-   "date": "2026-07-27",
-   "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
-   "source": "다음 뉴스",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1GX3hoUzdOcG1SMngyNXBGVmF4YUlMTmdMZkJyZXV4a3RXRHpwVnlFT3NfWHMxTzhmWHFlRTF4MHV0ODNjTFNVRG9KWEtxWlE?oc=5",
-   "type": "공연",
-   "auto": true,
-   "rawSource": "v.daum.net"
-  },
-  {
-   "date": "2026-07-27",
-   "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
-   "source": "다음 뉴스",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1ha0ZobU9TdWhIMEw1N05GX05Hd3B5UU5SSGtTZWF2ZG9xNEE3UElMVG1uVGNoVlUxSTJZeG5IZl9wYUdzOUxQa3d1bw?oc=5",
-   "type": "나눔",
-   "auto": true,
-   "rawSource": "v.daum.net",
-   "ai": true
-  },
-  {
-   "date": "2026-07-27",
-   "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
-   "source": "다음 뉴스",
-   "sourceSite": "https://v.daum.net",
-   "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE52cFRPVGYyaTNTdl8xRlFaRUdicmFpOWo5aW03WUhjcHYxekVGckRYbTNnSk1hTTJkS01iRURPOVpuRlFzcnc?oc=5",
-   "type": "나눔",
-   "auto": true,
-   "rawSource": "v.daum.net",
-   "ai": true
-  },
-  {
-   "date": "2026-07-24",
-   "title": "경수진 시구→인순이 애국가 ‘특집 불꽃야구 생중계’ 고척돔 달군다",
-   "source": "뉴스엔",
-   "sourceSite": "https://m.newsen.com",
-   "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTFBIa3ZIblV0NmRXVU53MkwxdV9Uazd2MW1rb2dKWXRhRDZGSEl4Z1JpNElKcVVkUmRKdzNLQjFkd3BBVzgtb0RtbUg5cWx1VEVtOThWejlvX0wzUVUxYmJZbURFZEVoTGhf?oc=5",
    "type": "공연",
    "auto": true
   },
@@ -522,30 +476,37 @@
    "sourceSite": "https://news.nate.com",
    "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1tV0FhNmZMendjUkhqd1VCeGFXNWJzYVJzdXpiaFM2aWNOdk5yMC1FLVVvVm92SVFHRUdEQUNTYVdaSkdWX2NlNTJSenpEV1ZjU3A0?oc=5",
    "type": "공연",
-   "auto": true
+   "auto": true,
+   "also": 3
   },
   {
    "date": "2026-07-24",
-   "title": "경수진 시구·인순이 애국가 가창…'특집 불꽃야구 생중계' 화려한 라인업",
+   "title": "경수진 시구→인순이 애국가 ‘특집 불꽃야구 생중계’ 고척돔 달군다",
+   "source": "뉴스엔",
+   "sourceSite": "https://m.newsen.com",
+   "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTFBIa3ZIblV0NmRXVU53MkwxdV9Uazd2MW1rb2dKWXRhRDZGSEl4Z1JpNElKcVVkUmRKdzNLQjFkd3BBVzgtb0RtbUg5cWx1VEVtOThWejlvX0wzUVUxYmJZbURFZEVoTGhf?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 2
+  },
+  {
+   "date": "2026-07-24",
+   "title": "경수진 시구·인순이 애국가 가창…'특집 불꽃야구 생중계' 화려한 라인업 : 스포츠",
    "source": "kstars.kr",
    "sourceSite": "https://kstars.kr",
    "url": "https://news.google.com/rss/articles/CBMiQkFVX3lxTE9WRnJFR21jVFBScXRNa1pqNjUxQkhJTHg4U1plWnY2M200aXFXTk10RWdoNnB3V0ROeEh2djRSaFlnZw?oc=5",
    "type": "공연",
    "auto": true,
-   "rawTitle": "경수진 시구·인순이 애국가 가창…'특집 불꽃야구 생중계' 화려한 라인업 : 스포츠",
-   "tags": [
-    "스포츠"
-   ]
+   "also": 2
   },
   {
    "date": "2026-07-12",
    "title": "'열린음악회' 출연진 라인업 노라조·인순이",
-   "source": "bnt뉴스",
+   "source": "bntnews.co.kr",
    "sourceSite": "https://www.bntnews.co.kr",
    "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBnMzUyVWRJSndBT1BaeEtmblNmWlREUldPbmJIY1IyRng5dmxGMGh3VTN3RmM4X0hVNWltd2I3TGFrcmZKR29QSVUzalVEQTBjaGZuLWZ5LTE4V0JCdFYtZ0ZGSTQ?oc=5",
    "type": "방송",
-   "auto": true,
-   "rawSource": "bntnews.co.kr"
+   "auto": true
   },
   {
    "date": "2026-07-11",
@@ -563,7 +524,8 @@
    "sourceSite": "https://www.koreancenter.or.kr",
    "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1lUFFLT19OWU14SWNZbmNUUVBkUkxJaXp4ekRnWHpjRlFHNkpoMnBqRGZkY3RtODNldmZUenNLVms3Wm1mRm12d2dmRzJpaGhId2V6OF9uSDR2TWhEOHc2cDZFOTFnRkdSODJTcXJYQXhudGNZ?oc=5",
    "type": "공연",
-   "auto": true
+   "auto": true,
+   "also": 2
   },
   {
    "date": "2026-06-30",
@@ -572,26 +534,8 @@
    "sourceSite": "https://www.newsis.com",
    "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9qd09CNUJrVUUwVG9jbGxKMXBGSXRHQTd3Y1Q4QnA4WnppbVJrU0NHYWYzcDBLZnNYM1RVREdUN0t5TzFqOWEybTJ5aEo3cE1BNDhXakRWZk9Dc2lWc1gwVw?oc=5",
    "type": "공연",
-   "auto": true
-  },
-  {
-   "date": "2026-06-23",
-   "title": "'11회 청주시 시민의 날 기념행사' 내달 1일 개최…염유리·인순이 공연",
-   "source": "뉴스1",
-   "sourceSite": "https://www.news1.kr",
-   "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5pWndrbExpeXFyTENrOFYwWE9neTZPbnFtZWRPelZGLVZWSzlQczU4a2xBLXpaSHNDdUVNZlVOVUpKd3JmVkpLblhtSWJsbXc1dWVvU2hyTVppdnpDeVNn?oc=5",
-   "type": "공연",
-   "auto": true
-  },
-  {
-   "date": "2026-06-23",
-   "title": "'11회 청주시 시민의 날 기념행사' 내달 1일 개최…염유리·인순이 공연",
-   "source": "뉴스1",
-   "sourceSite": "https://www.news1.kr",
-   "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5pWndrbExpeXFyTENrOFYwWE9neTZPbnFtZWRPelZGLVZWSzlQczU4a2xBLXpaSHNDdUVNZlVOVUpKd3JmVkpLblhtSWJsbXc1dWVvU2hyTVppdnpDeVNn0gFkQVVfeXFMTWlMNy00Y3dDTEJpUWhMdktwNGlib3pldDJ6ZVBsblQtenF2bmVoRDNpUGRkUVAtYWNlZVNJZ2lxSkc2LTEwZTlxTThtNE5ILWRQNFJDcHFGaDdfamlmcHozWjU3UQ?oc=5",
-   "type": "공연",
    "auto": true,
-   "rawSource": "news1.kr"
+   "also": 1
   },
   {
    "date": "2026-06-23",
@@ -600,18 +544,38 @@
    "sourceSite": "https://news.nate.com",
    "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBDVFB1djFpS0ZCRWZOZmVicDJyYjg0UEEwWWNqV2VCMGFZa1BIQ05DM0tUQm5sWl8zQS1VRWtMZ1dJb2I3Rjk4TDZHLXB0ZXZId0xj?oc=5",
    "type": "공연",
-   "auto": true
+   "auto": true,
+   "also": 1
   },
   {
    "date": "2026-06-23",
    "title": "가수 인순이·염유리 청주온다…시민의날 기념행사 7월 1일",
-   "source": "다음 뉴스",
+   "source": "v.daum.net",
    "sourceSite": "https://v.daum.net",
    "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE04WWM0VmRRWWFUVjdaTXk2Vjg0czVDeWFZd2JpaC1Fc1MxeWtIOXpjN2RocXU0WjNPTnlPckdsZ2drS1lWNjdWaUJPZUJtd2c?oc=5",
    "type": "공연",
    "auto": true,
-   "rawSource": "v.daum.net",
    "ai": true
+  },
+  {
+   "date": "2026-06-23",
+   "title": "'11회 청주시 시민의 날 기념행사' 내달 1일 개최…염유리·인순이 공연",
+   "source": "뉴스1",
+   "sourceSite": "https://www.news1.kr",
+   "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5pWndrbExpeXFyTENrOFYwWE9neTZPbnFtZWRPelZGLVZWSzlQczU4a2xBLXpaSHNDdUVNZlVOVUpKd3JmVkpLblhtSWJsbXc1dWVvU2hyTVppdnpDeVNn?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 1
+  },
+  {
+   "date": "2026-06-23",
+   "title": "'11회 청주시 시민의 날 기념행사' 내달 1일 개최…염유리·인순이 공연",
+   "source": "news1.kr",
+   "sourceSite": "https://www.news1.kr",
+   "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5pWndrbExpeXFyTENrOFYwWE9neTZPbnFtZWRPelZGLVZWSzlQczU4a2xBLXpaSHNDdUVNZlVOVUpKd3JmVkpLblhtSWJsbXc1dWVvU2hyTVppdnpDeVNn0gFkQVVfeXFMTWlMNy00Y3dDTEJpUWhMdktwNGlib3pldDJ6ZVBsblQtenF2bmVoRDNpUGRkUVAtYWNlZVNJZ2lxSkc2LTEwZTlxTThtNE5ILWRQNFJDcHFGaDdfamlmcHozWjU3UQ?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 1
   },
   {
    "date": "2026-06-17",
@@ -629,6 +593,16 @@
    "sourceSite": "https://www.joongangenews.com",
    "url": "https://news.google.com/rss/articles/CBMickFVX3lxTFBoNzItOFZCb1dPeFJ2TDd2bjhCSWU1SDVvZWh4bVV5ajRBWjVUX0YxWWNMRndFQndCZTRTcE1Ecnhkc3VqZ0Y3SXY4QnlYMU5wcG9JRTBaa2FtS3pVTE9URDF3djl1dHVfMWZBckRnQTNpQQ?oc=5",
    "type": "보도",
+   "auto": true,
+   "also": 1
+  },
+  {
+   "date": "2026-06-11",
+   "title": "뉴욕 브랜드 '노아' 가수 인순이 만났다… 다양성·공존 담은 화보 선봬",
+   "source": "fashionbiz.co.kr",
+   "sourceSite": "https://fashionbiz.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5tV2hkSzFRelFoWEY3OHhKaWd1Z0N0MUh2M0V1VThxcDJKWUNZZ3pPM3BlUU5UU1oxV01VUGp0NEpvNk1UeDFPdVlPMGhNaHU1?oc=5",
+   "type": "보도",
    "auto": true
   },
   {
@@ -641,27 +615,13 @@
    "auto": true
   },
   {
-   "date": "2026-06-11",
-   "title": "뉴욕 브랜드 '노아' 가수 인순이 만났다… 다양성·공존 담은 화보 선봬",
-   "source": "패션비즈",
-   "sourceSite": "https://fashionbiz.co.kr",
-   "url": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5tV2hkSzFRelFoWEY3OHhKaWd1Z0N0MUh2M0V1VThxcDJKWUNZZ3pPM3BlUU5UU1oxV01VUGp0NEpvNk1UeDFPdVlPMGhNaHU1?oc=5",
-   "type": "보도",
-   "auto": true,
-   "rawSource": "fashionbiz.co.kr"
-  },
-  {
    "date": "2026-06-05",
-   "title": "김태우·인순이, '2026 봉황대 뮤직스퀘어' 오프닝 무대 성황",
+   "title": "K채널 / 김태우·인순이, '2026 봉황대 뮤직스퀘어' 오프닝 무대 성황",
    "source": "K채널",
    "sourceSite": "https://www.kchannel.kr",
    "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE8zbkRNWlBGMzN1QWV4aGZ6N0puSFZzNlo1MERPTDBFVWxDZjBPZktod0dEcUtUQXFOc2FfRUxEQzBVb2FKSGxxWHNkel94OWFRa2RXVXV6UFJzek5CRXVwMlVHRWVYYkt6ekE?oc=5",
    "type": "공연",
-   "auto": true,
-   "rawTitle": "K채널 / 김태우·인순이, '2026 봉황대 뮤직스퀘어' 오프닝 무대 성황",
-   "tags": [
-    "K채널"
-   ]
+   "auto": true
   },
   {
    "date": "2026-05-21",
@@ -679,7 +639,8 @@
    "sourceSite": "https://www.slist.kr",
    "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE43cGYzUlpRSmdMN3ZWTy1Wems0cGdMVDY4b3FiWkZqVmlGcFZWQk85d1RkZGJtd1N5TWEyYmIwQlBSd1VBV3d2eXF3b0pmUkI3NnQwOGFsaWFVR25SOTAyUXY2OWdKZw?oc=5",
    "type": "보도",
-   "auto": true
+   "auto": true,
+   "also": 1
   },
   {
    "date": "2026-05-12",
@@ -694,12 +655,11 @@
   {
    "date": "2026-05-06",
    "title": "가수 인순이·명창 유지숙, 안동서 9일 특별기획 공연",
-   "source": "다음 뉴스",
+   "source": "v.daum.net",
    "sourceSite": "https://v.daum.net",
    "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE9uY003blVwdUQyOENMZUtTaGNmSVpNekk1Z1NXQ1dLVGtKX2VUaXNSbDdTTDE0R0ZVd0FCNEZ3MzFIMV9QSXc?oc=5",
    "type": "공연",
-   "auto": true,
-   "rawSource": "v.daum.net"
+   "auto": true
   }
  ]
 }

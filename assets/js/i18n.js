@@ -169,11 +169,13 @@ window.I18N_EN = {
   "alt.40": "In profile, head lifted, in a black dress",
 
   "form.lcat": "Category",
-  "dyn.newsAuto": "Auto-collected news",
+  "dyn.newsWhen": "Reported {s}",
   "strip.swipe": "Swipe to see more",
-  "dyn.newsBy": "Reported by",
-  "dyn.newsOpen": "Read the original",
-  "dyn.newsNote": "The full article is the publisher's copyrighted work, so it is not reproduced here. You can read the original at the link below.",
+  "dyn.newTab": "(opens in a new tab)",
+  "dyn.newsArticles": "{s} articles",
+  "dyn.newsRelated": "{s} related articles",
+  "dyn.newsOlder": "Show {s} earlier items",
+  "news.note": "Press coverage is gathered automatically from Google News and grouped by story. Dates are when the article ran, which may differ from the date of the event. Headlines are shown as published, with only the outlet or column tag removed; full articles belong to their publishers and are not reproduced here.",
   "arch.fan1d": "Old concert tickets, photographs taken from the floor, keepsakes held on to for decades — what you have kept is Insooni's history. Share it in the Fan Room and it will be reviewed and added to the archive.",
   "arch.fan2d": "Tell us the story you carry with one of Insooni's songs. Selected stories are published alongside the song, so that each one gathers the memories of the people who heard it.",
 

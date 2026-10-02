@@ -1,0 +1,158 @@
+{
+ "note": "인순이 관련 좋은 소식 자동 수집 (Google News RSS). 부정 키워드 제외 후 규칙 기반으로 같은 사건을 묶고 사진 캡션·곁다리 기사를 걸러냅니다. 제목과 링크는 원문 그대로입니다.",
+ "mode": "규칙 기반",
+ "updated": "2026-10-02 21:18",
+ "items": [
+  {
+   "date": "2026-10-02",
+   "title": "제19회 세계인 큰 잔치, 국가별 입장 및 인순이 등 공연",
+   "source": "씨티 21",
+   "sourceSite": "http://m.city21.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBuQk1xT0lobVY1MWRGOUZBUHlJOE5wc0NTRkc1SWJzc1BtMGY1dklrLWlMc3RwZ1NyUERoc0F3TnYxbTZ2OERBOUtVNVE0M19ZV2hBOG1KWTM0OHhEc1NoTGpGbVR6QQ?oc=5",
+   "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-09-30",
+   "title": "최백호·인순이·소찬휘 총출동…윤항기 \"일생에 한 번뿐인 헌정 공연, 후배들 바쁜데도 함께해줘\" [엑's 현장]",
+   "source": "xportsnews.com",
+   "sourceSite": "https://www.xportsnews.com",
+   "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5lelZwRHh2UTVaTUlSc2FHQl81c0xUVDByb1FIVVFSRkpkaHp4QXBvaUxaVUhNaHRZNGJZcEFtcjBPMEVtdDV4bnJ1akMxY2c3WXdVaw?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 1
+  },
+  {
+   "date": "2026-09-28",
+   "title": "진해아트홀 개관기념 특별공연 ‘인순이 스페셜 콘서트’ 10월 3일 개최",
+   "source": "koreajn.co.kr",
+   "sourceSite": "http://www.koreajn.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9XcGZ4aGhzN2lKc2xhNVpQZUFSZS1zMUJib2NIckZMUVlURzdCMERZd3YyZFhZdUItOXdvazRTV1NwTjBsR2JCVmhocWVOdWt0RzhONnRfU3A5VTNJRHlLcjZJbDc1MEpXLTdJ?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 2
+  },
+  {
+   "date": "2026-09-28",
+   "title": "'거위의 꿈' 진해서 울린다…인순이, 아트홀 개관 축하",
+   "source": "한스경제",
+   "sourceSite": "http://www.hansbiz.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5JY1RFMGRYczNrUnpXRTMzUlpjaUxjWHhKMV8yelBBbHdQNlZuZ1NIRkViOFRJN0haNHluVmczX3gyUkcwWXhDa2dKMnNEb0kwcTItbmtQdTBoV21LNVNqTnozU3dwSmJCdC130gFvQVVfeXFMTW9iS21HNVZ1aW1SUmdDc08tSzVDYTNUbW52eUptVXZLdVd0R0hHMDJwaVpmYTBJR3pNTUl2cnhJVms4eWZGWk5WVXpkaFhTMW0tdFpCc0IweVdQYmhYeUs0WDlKbFVrLXZRM0tvVG9V?oc=5",
+   "type": "보도",
+   "auto": true
+  },
+  {
+   "date": "2026-09-21",
+   "title": "윤항기 65주년 헌정 공연, 최백호·인순이·전영록 등 출연…10명 후배들이 각자 색깔로 재해석 '헌정'",
+   "source": "SPOTV NEWS",
+   "sourceSite": "https://www.spotvnews.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1PSVZrNjJyV0N4UVhqS0xxWE5sXzZ5ZGcteVRDVkhialJyVTk3aUQ0VXJFVjBtM3BGWjJmeGJMdU9lSFAxM1FZUkxtNlMzd1Fqbk9aVEQwMklmWUg3QjJRMmNmSTdGZkNPSzIzR241cW8?oc=5",
+   "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-09-21",
+   "title": "'나는 행복합니다' 윤항기 65주년 헌정 공연..인순이·최백호 합류",
+   "source": "starnewskorea.com",
+   "sourceSite": "https://www.starnewskorea.com",
+   "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE44cl8zSV9YdFNOb2ZTS0ktcU14SU1WUVdqbF9MTWlpZVdnTk5YYzBCUjE4M2Q3N0hhSGxvemF5bFJlc0dtMXgxMTJOYVcxQkR5N3ZVUU9HLWdjOTBmdU9NQXZmRFgyY2tGSk9XQjJPUkJWZmt4?oc=5",
+   "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-09-18",
+   "title": "‘나는 행복합니다’ 윤항기, 65년 음악 인생 헌정무대…최백호·인순이 등 후배 총출동 - 스타투데이",
+   "source": "매일경제",
+   "sourceSite": "https://www.mk.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1LV3VwV3hJV3gwUXZoeEdtX3JORFdybUg2X0dNQXgzai1SQWl0M25EczhBZlNlQkZIci15YXZJcDZoRXlhZDdlZ1ZNQmZhb0xDQ0pZQ2JTbmg?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 1
+  },
+  {
+   "date": "2026-09-18",
+   "title": "윤항기 데뷔 65주년 기념 헌정 콘서트...최백호·서유석·인순이 등 출연",
+   "source": "뉴스브라이트",
+   "sourceSite": "https://www.newsbrite.net",
+   "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFB1QWQ4aTdtNEhBMFJPWEpWamRuRkxiYkM4SUV0VC1ya2YyaHpvSU1BdGR5dWo5RWtTR2w2UGlILUprRkExV2oyNVFIWi1OVzd0Z1pJSkFtOGdJTHpJSFpfVmIya25STWgxRjU1bA?oc=5",
+   "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-09-09",
+   "title": "윤항기 66주년 헌정 기념 공연, 최백호 인순이 등 후배들과 함께한다",
+   "source": "issuedaily.com",
+   "sourceSite": "https://issuedaily.com",
+   "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9xdXJNdXpqQUlhYjlEdGJyQTA3TlRKc0R5OVhpeUVYU0dHNHhQdkthVnZnTHZsVi1BTGE2VmpJYXF6a01wajJUdVJHT0VzTjBSZGQ5RzJn?oc=5",
+   "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-09-03",
+   "title": "‘플레이리스트 109’ 장동선-김영옥, 버텨낸 사람이 건넨 위로! 인순이 ‘거위의 꿈’에 함께 울고.. 89세 인생 선배의 한마디가 준 깨달음에 위로 받았다!",
+   "source": "kookminnews.com",
+   "sourceSite": "https://www.kookminnews.com",
+   "url": "https://news.google.com/rss/articles/CBMiSkFVX3lxTFA5Z2J4YmNia3ZZU0F1VVhzV1Q1RWdvY0FFaG50aWZpc0RtVC1qQ3FvcmtiMlhWVXQ5UDdfd1NyMkI4d3JaT3R6Y0dn?oc=5",
+   "type": "보도",
+   "auto": true,
+   "also": 1
+  },
+  {
+   "date": "2026-09-02",
+   "title": "추석 인순이, 김영임 등 민요와 가요 더한 무대 펼친다",
+   "source": "Korearetro",
+   "sourceSite": "https://www.korearetro.com",
+   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE0zY2IwS1J4TkFlQ1ZHYVMwa0xPbzNiczlXNDJGd01tMlo2c0toem1oTG5nemdZUlRlTXFQVkRWeUhWUExuWDVVZEI4djJFOGdVcmVScXQyRUpnUTVNUW5NM09FOEtMdDFYWmZn?oc=5",
+   "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-08-04",
+   "title": "가수 남진·인순이, KBS '가요무대'서 환상적인 듀엣 무대…",
+   "source": "대한청년일보",
+   "sourceSite": "http://knpp.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTE9UWFp3dGdyY09vbkg4c2E1YzlkOXZLNk5fS292ZHFzQkRxTDJTajBLWXp2NjROSjVaZzJYUWVvSERUYnc?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 1
+  },
+  {
+   "date": "2026-07-29",
+   "title": "황우림 X 송별이 '엄마 꽃', 심사위원도 위로받은 아름다운 하모니! 인순이 X 서지오 심사평은? [인생은 오디션]",
+   "source": "sbs.co.kr",
+   "sourceSite": "https://programs.sbs.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9ZcWV1QU5OV1RSUF90RmRaWUVBLVdLSHJzMHVnZmJKREtlc3pBUlgxclpVZFZOM1NzZTZJNkRJd1RadHpnX0JURzBLclNuUS1MTkJEU3lkaFNvVUI0Skh1Y3NLcGo4SUEwd2lJMVVmZVhITkJUQmM4?oc=5",
+   "type": "방송",
+   "auto": true,
+   "also": 1
+  },
+  {
+   "date": "2026-07-27",
+   "title": "“인순이 공연에 감동”…마샬이 다문화 학교에 스피커 보낸 사연",
+   "source": "donga.com",
+   "sourceSite": "https://www.donga.com",
+   "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTFAwQkJha0MzSzFWQnRSTG4xd0g5b3ZMcGh3OVVTS0xvYUI5dWlfUnBJSldQQ0xZM2hSZEVHMUI3RnRWOFNCNVJJeW1FelNlckJSUjlQV3BUTHR4ZVlhelpQWlVnYVl0S3BjZkdrWTUyVTUyN3pSS1HSAWZBVV95cUxNSDU5LXd4UFZ4VXdocDRjcVprTFhYTzlsM3hMZGNTOXRoTU40bGV1Y1pIZk8ya3l6cGJTTWszVU5yQmhjbzNKTFlOQXVVMkRmSzBFdmdoY2pyTWY1V0lDd3hmSk9MNUE?oc=5",
+   "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-07-24",
+   "title": "경수진 시구·인순이 애국가 가창…'특집 불꽃야구 생중계' 화려한 라인업 : 스포츠",
+   "source": "kstars.kr",
+   "sourceSite": "https://kstars.kr",
+   "url": "https://news.google.com/rss/articles/CBMiQkFVX3lxTE9WRnJFR21jVFBScXRNa1pqNjUxQkhJTHg4U1plWnY2M200aXFXTk10RWdoNnB3V0ROeEh2djRSaFlnZw?oc=5",
+   "type": "공연",
+   "auto": true,
+   "also": 2
+  },
+  {
+   "date": "2026-07-11",
+   "title": "영탁, '좋은 인상' 입담부터 100점 만점 \"조율\"까지…인순이마저 감탄한 레전드 무대",
+   "source": "톱스타뉴스",
+   "sourceSite": "https://www.topstarnews.net",
+   "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE9vQVJqUjNmellvZUZZcXFSVm1YR1ZQOVhrWl9RSENjR1hiNVVSUmg2TE5EeldXMlM1TFZERm9kcWhIS1N0LUNNNGpaNk1XaWQ2MUZHRlVvQWRCdzZ2QjVCUl96Q2xTUnFMeXRsR2tDMFZDQQ?oc=5",
+   "type": "공연",
+   "auto": true
+  }
+ ]
+}

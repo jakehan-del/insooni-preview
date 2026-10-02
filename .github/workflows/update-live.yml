@@ -44,6 +44,15 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         continue-on-error: true
 
+      # 소식 묶기·언론사 이름·꼬리표가 망가졌으면(scripts/check_news.py — 네트워크 없이 1초)
+      # 이번 소식 갱신만 버린다. 공연·일정 갱신은 그대로 커밋된다. 실패는 경고로 남긴다.
+      - name: 소식 검사
+        run: |
+          if ! python3 scripts/check_news.py; then
+            echo "::warning::check_news 실패 — 이번 소식 갱신을 버립니다"
+            git checkout -- assets/data/live-news.json assets/data/news-archive.json
+          fi
+
       - name: 바뀐 것이 있으면 커밋
         run: |
           git config user.name  "insooni-bot"

@@ -52,7 +52,7 @@
   }
   function kindLabel(k) {
     var map = { "공지": "Notice", "공연": "Show", "방송": "Broadcast", "발매": "Release", "수상": "Award", "행사": "Event", "보도": "Press",
-                "촬영": "Filming", "라디오": "Radio", "일정": "Schedule" };
+                "촬영": "Filming", "라디오": "Radio", "일정": "Schedule", "나눔": "Giving" };
     return document.documentElement.getAttribute("lang") === "en" && map[k] ? map[k] : k;
   }
   /* 동적 문자열 이중 언어 헬퍼 */
@@ -164,100 +164,241 @@
     targets.forEach(function (t) { io.observe(t); });
   }
 
-  /* ---------- 4. 뉴스 렌더링 ---------- */
-  function newsCard(item, asLink) {
-    /* 자동 수집 기사는 사이트를 떠나지 않고 이 안에서 펼쳐 본다(버튼 → 리더 패널).
-       큐레이션 소식은 기존 그대로. */
-    var isAuto = item.auto && item.url;
-    var a = el(isAuto ? "button" : (asLink ? "a" : "article"), "news-item" + (isAuto ? " news-item--auto" : ""));
-    if (isAuto) {
-      a.type = "button";
-      a.setAttribute("aria-haspopup", "dialog");
-      a.addEventListener("click", function () { openNewsReader(item, a); });
-    } else if (asLink) a.href = "news.html";
-    var body = "<div><h3>" + esc(tr(item, "title")) + "</h3>";
-    if (isAuto) {
-      body += '<p class="excerpt news-src">' + esc(t("dyn.newsAuto", "자동 수집 소식")) +
-        (item.source ? " · " + esc(item.source) : "") + "</p>";
-    } else {
-      body += '<p class="excerpt">' + esc(tr(item, "excerpt")) + "</p>";
-    }
-    body += "</div>";
-    a.innerHTML =
-      "<time datetime=\"" + esc(item.date) + '">' + fmtDate(item.date) + "</time>" +
-      '<span class="badge badge--' + (item.type === "공지" ? "gold" : "wine") + '">' + esc(kindLabel(item.type)) + "</span>" +
-      body;
-    return a;
+  /* ---------- 4. 소식 (news.html) ----------
+     2026-10-03 전면 개편 — 라이브에서 본 문제
+       · 같은 사건이 언론사만 바꿔 줄줄이(윤항기 헌정 공연 6줄) → 수집기가 사건 단위로 묶고(live-news.json
+         의 articles), 여기서는 한 사건 = 한 줄 + 「기사 N건」(펼치면 언론사 목록)으로 그린다.
+       · 제목이 고정폭(모노) 서체 — 한글 낱말 간격이 2.5배로 벌어졌다 → 본문 서체.
+       · 「공연」 라벨이 폰에서 화면 폭 전체 상자 → 글자만.
+       · 자동 수집과 손으로 쓴 소식이 다른 모양 → 같은 줄 문법. 같은 일을 다루면 손으로 쓴 쪽에
+         「관련 기사 N건」으로 붙인다(겹치면 사람이 다듬은 문장을 남긴다).
+       · 언론 기사의 날짜는 행사일이 아니라 보도일이다 → 「보도」라고 적는다.
+     기사 본문은 언론사의 저작물이라 옮겨 싣지 않는다. 제목은 원문에서 꼬리표만 덜어 낸 것이다. */
+  var NEWS_KINDS = ["공지", "공연", "방송", "발매", "수상", "나눔", "보도"];
+  var NEWS_PAGE = 12;                 /* 처음에 보이는 줄 수 — 나머지는 「지난 소식 더 보기」 */
+  var newsLive = null;                /* null = 아직 안 받음, [] = 받지 못함(손으로 쓴 소식만) */
+  var newsLoading = false, newsWait = [];
+  var newsFilter = "전체", newsAll = false, newsSeq = 0;
+
+  /* 종류 이름 — 데이터의 「보도」(일반 언론 기사)는 화면에서 「언론」이라 부른다.
+     날짜 옆 「… 보도」(보도일)와 같은 낱말이 한 줄에 두 번, 다른 뜻으로 서지 않게. */
+  function nwKind(k) {
+    if (document.documentElement.getAttribute("lang") === "en") return kindLabel(k);
+    return k === "보도" ? "언론" : k;
+  }
+  function nwTpl(key, ko, v) { return t(key, ko).replace("{s}", v); }
+  /* "2026. 9. 9. – 9. 30." — 같은 해면 뒤쪽 연도를 줄인다 */
+  function nwRange(a, b) {
+    if (!a || !b || a === b) return fmtDate(b || a);
+    var db = new Date(b + "T00:00:00");
+    var tail = a.slice(0, 4) === b.slice(0, 4) ? (db.getMonth() + 1) + ". " + db.getDate() + "." : fmtDate(b);
+    return fmtDate(a) + " – " + tail;
+  }
+  /* 언론 기사는 「2026. 9. 21. 보도」(EN: Reported 2026. 9. 21.) — 행사일로 읽히지 않게 */
+  function nwWhen(iso, text, reported) {
+    var tm = '<time datetime="' + esc(iso) + '">' + esc(text) + "</time>";
+    if (!reported) return tm;
+    var p = t("dyn.newsWhen", "{s} 보도").split("{s}");
+    return esc(p[0]) + tm + esc(p[1] || "");
+  }
+  /* 수집 파일의 주소는 바깥에서 온 값이다 — http(s) 가 아니면 링크로 만들지 않는다.
+     (정규식에 빗금 두 개를 쓰면 build.py 축소기가 줄 주석으로 잘라 버린다 — 실제로 그랬다) */
+  function nwUrl(u) { return /^https?:/i.test(String(u || "")) ? String(u) : ""; }
+  function nwShort(iso) {
+    var d = new Date(iso + "T00:00:00");
+    return (d.getMonth() + 1) + ". " + d.getDate() + ".";
   }
 
-  /* ---------- 소식 리더 (사이트 안에서 보기) ----------
-     기사를 누르면 밖으로 나가지 않고 이 패널이 열린다. 팬이 사이트에 머문 채
-     제목·매체·날짜를 확인하고, 전문을 읽고 싶을 때만 원문으로 나간다.
-     기사 본문은 언론사의 저작물이라 이곳에 옮겨 싣지 않는다. */
-  var newsEl = null, newsOpener = null;
-  function ensureNewsReader() {
-    if (newsEl) return newsEl;
-    newsEl = el("div", "news-reader");
-    newsEl.setAttribute("role", "dialog");
-    newsEl.setAttribute("aria-modal", "true");
-    newsEl.hidden = true;
-    newsEl.innerHTML =
-      '<button type="button" class="lightbox-close nr-close" aria-label="닫기" data-i18n-aria="aria.close">×</button>' +
-      '<article class="nr-card"><div class="nr-body"></div></article>';
-    document.body.appendChild(newsEl);
-    function close() {
-      newsEl.hidden = true;
-      document.body.style.overflow = "";
-      if (newsOpener) { newsOpener.focus(); newsOpener = null; }
-    }
-    $(".nr-close", newsEl).addEventListener("click", close);
-    newsEl.addEventListener("click", function (e) { if (e.target === newsEl) close(); });
-    document.addEventListener("keydown", function (e) {
-      if (!newsEl.hidden && e.key === "Escape") close();
+  /* 손으로 쓴 소식과 자동 수집 사건이 같은 일인가 — 날짜가 가깝고 특징적인 낱말을 나눠 가지면.
+       손:  "고척스카이돔에서 애국가 열창"            (7/26)
+       자동: "경수진 시구→인순이 애국가 … 고척돔 달군다" (7/24)
+     낱말 둘 이상이면 이레 안(예고 기사는 행사 며칠 전에 나온다),
+     낱말 하나뿐이면 사흘 안이고 세 글자 이상일 때만(두 글자 낱말은 우연히 겹친다). */
+  var NW_STOP = { "인순이": 1, "인순": 1, "가수": 1, "공연": 1, "무대": 1, "콘서트": 1, "출연": 1, "개최": 1,
+                  "소식": 1, "발표": 1, "함께": 1, "이번": 1, "특집": 1, "방송": 1, "열창": 1, "노래": 1,
+                  "기념": 1, "특별": 1, "행사": 1, "현장": 1, "합류": 1, "출격": 1, "라인업": 1 };
+  var NW_TAIL = ["에서", "으로", "에게", "까지", "부터", "은", "는", "이", "가", "을", "를", "에", "의", "와", "과", "도", "로", "서"];
+  /* 낱말 → 조사를 떼기 전 길이. 「애국가」는 끝의 「가」가 조사처럼 떨어져 「애국」이 되지만
+     양쪽이 똑같이 떨어지므로 비교에는 문제가 없다 — 다만 '세 글자 이상' 판단은 원래 길이로 한다. */
+  function nwWords(s) {
+    var out = {};
+    String(s || "").split(/[^가-힣A-Za-z0-9]+/).forEach(function (w) {
+      if (w.length < 2 || NW_STOP[w]) return;
+      var n = w.length;
+      for (var i = 0; i < NW_TAIL.length; i++) {
+        var p = NW_TAIL[i];
+        if (w.length >= p.length + 2 && w.slice(-p.length) === p) { w = w.slice(0, -p.length); break; }
+      }
+      if (w.length >= 2 && !NW_STOP[w]) out[w] = Math.max(out[w] || 0, n);
     });
-    applyLang(curLang());
-    return newsEl;
+    return out;
   }
-  function openNewsReader(item, opener) {
-    var box = ensureNewsReader();
-    newsOpener = opener || null;
-    var outlet = item.source || "";
-    box.setAttribute("aria-label", tr(item, "title"));
-    $(".nr-body", box).innerHTML =
-      '<span class="nr-kicker">' + esc(kindLabel(item.type)) + " · " + esc(fmtDate(item.date)) + "</span>" +
-      "<h2>" + esc(tr(item, "title")) + "</h2>" +
-      (outlet ? '<p class="nr-outlet">' + esc(t("dyn.newsBy", "보도")) + " · " + esc(outlet) + "</p>" : "") +
-      '<p class="nr-note">' + esc(t("dyn.newsNote",
-        "기사 전문은 해당 언론사에 저작권이 있어 이곳에 옮겨 싣지 않습니다. 아래에서 원문을 확인하실 수 있습니다.")) + "</p>" +
-      '<p class="nr-actions"><a class="btn btn--gold btn--sm" href="' + esc(item.url) + '" target="_blank" rel="noopener">' +
-        esc(t("dyn.newsOpen", "원문 보기")) + ' <span aria-hidden="true">↗</span></a></p>';
-    box.hidden = false;
-    document.body.style.overflow = "hidden";
-    $(".nr-close", box).focus();
+  function nwSame(hand, story) {
+    var wh = nwWords(hand.title);
+    return (story.articles || [story]).some(function (a) {
+      var gap = Math.abs(new Date(a.date + "T00:00:00") - new Date(hand.date + "T00:00:00")) / 86400000;
+      if (!(gap <= 7)) return false;
+      var wa = nwWords(a.title), n = 0, long = false;
+      for (var k in wh) {
+        if (!wh.hasOwnProperty(k) || !wa[k]) continue;
+        n++;
+        if (Math.min(wh[k], wa[k]) >= 3) long = true;
+      }
+      return n >= 2 || (long && gap <= 3);
+    });
   }
-  function sortedNews() {
-    return D.news.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; });
+
+  /* 화면에 그릴 줄: 손으로 쓴 소식 + 자동 수집 사건. 최신순(같은 날이면 손으로 쓴 쪽 먼저). */
+  function newsEntries() {
+    var hand = (D.news || []).filter(function (n) { return !n.auto; }).map(function (n) {
+      var c = {};
+      for (var k in n) if (n.hasOwnProperty(k)) c[k] = n[k];
+      c.press = [];
+      return c;
+    });
+    var out = hand.slice();
+    (newsLive || []).forEach(function (s) {
+      if (!s || !s.title || !s.date) return;
+      var h = null;
+      for (var i = 0; i < hand.length; i++) if (nwSame(hand[i], s)) { h = hand[i]; break; }
+      if (h) h.press = h.press.concat(s.articles && s.articles.length ? s.articles : [s]);
+      else out.push(s);
+    });
+    out.sort(function (a, b) {
+      if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+      return (a.auto ? 1 : 0) - (b.auto ? 1 : 0);
+    });
+    return out;
   }
+
+  function newsRow(n, lead) {
+    var auto = !!n.auto;
+    var press = (auto ? (n.articles || []) : (n.press || [])).filter(function (a) { return nwUrl(a.url); });
+    var row = el("article", "nw-item" + (lead ? " nw-item--lead" : "") + (auto ? " nw-item--press" : ""));
+    var when = auto ? nwRange(n.first, n.date) : fmtDate(n.date);
+    var html = '<p class="nw-meta">' +
+      '<span class="nw-kind">' + esc(nwKind(n.type)) + "</span>" +
+      '<span class="nw-when">' + nwWhen(n.date, when, auto) + "</span>" +
+      (auto && n.source ? '<span class="nw-src">' + esc(n.source) + "</span>" : "") +
+      "</p>";
+    var title = esc(auto ? n.title : tr(n, "title"));
+    if (auto && nwUrl(n.url)) {
+      html += '<h3 class="nw-title"><a href="' + esc(nwUrl(n.url)) + '" target="_blank" rel="noopener">' + title +
+        '<span class="nw-ext" aria-hidden="true"> ↗</span><span class="sr-only">' + esc(t("dyn.newTab", "(새 창)")) + "</span></a></h3>";
+    } else {
+      html += '<h3 class="nw-title">' + title + "</h3>";
+    }
+    if (!auto && tr(n, "excerpt")) html += '<p class="nw-ex">' + esc(tr(n, "excerpt")) + "</p>";
+    /* 한 건뿐인 사건은 목록을 펼칠 것이 없다 — 위 메타 줄이 곧 그 기사다 */
+    var showList = auto ? press.length >= 2 : press.length >= 1;
+    if (showList) {
+      var id = "nw-p-" + (++newsSeq);
+      var label = auto ? nwTpl("dyn.newsArticles", "기사 {s}건", press.length)
+                       : nwTpl("dyn.newsRelated", "관련 기사 {s}건", press.length);
+      html += '<button type="button" class="nw-more" aria-expanded="false" aria-controls="' + id + '">' +
+        "<span>" + esc(label) + '</span><span class="nw-pm" aria-hidden="true"></span></button>' +
+        '<ul class="nw-press" id="' + id + '" hidden>' + press.map(function (a) {
+          return '<li><a href="' + esc(nwUrl(a.url)) + '" target="_blank" rel="noopener">' +
+            '<span class="nw-p-src">' + esc(a.source || "") + "</span>" +
+            '<time class="nw-p-date" datetime="' + esc(a.date) + '">' + esc(nwShort(a.date)) + "</time>" +
+            '<span class="nw-p-t">' + esc(a.title) + "</span>" +
+            '<span class="sr-only">' + esc(t("dyn.newTab", "(새 창)")) + "</span></a></li>";
+        }).join("") + "</ul>";
+    }
+    row.innerHTML = html;
+    return row;
+  }
+
+  function loadLiveNews(done) {
+    if (newsLive) { done(); return; }
+    newsWait.push(done);
+    if (newsLoading) return;
+    newsLoading = true;
+    var settled = false;
+    function finish(items) {
+      if (items) newsLive = items;
+      else if (!newsLive) newsLive = [];
+      var w = newsWait; newsWait = [];
+      if (!settled) { settled = true; w.forEach(function (f) { f(); }); }
+      else if (items) safe(renderNewsPage);      /* 늦게 도착하면 한 번 더 그린다 */
+    }
+    /* 느린 회선에서도 손으로 쓴 소식은 4초 안에 보이게 */
+    setTimeout(function () { if (!settled) finish(null); }, 4000);
+    fetch("assets/data/live-news.json?" + Date.now())
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        newsLoading = false;
+        finish(d && d.items && d.items.length ? d.items : null);
+      })
+      .catch(function () { newsLoading = false; finish(null); });
+  }
+
   function renderNewsPage() {
     var box = $("#news-list"), bar = $("#news-filter");
-    if (!box || !D.news) return;
-    function draw(type) {
-      box.innerHTML = "";
-      var items = sortedNews().filter(function (n) { return type === "전체" || n.type === type; });
-      var st = $("#news-status");
-      if (st) st.textContent = items.length + t("dyn.newsCount", "건의 소식 표시 중");
-      if (!items.length) { box.appendChild(el("p", "empty-note", t("dyn.noCat", "해당 분류의 소식이 아직 없습니다."))); return; }
-      items.forEach(function (n) { box.appendChild(newsCard(n, false)); });
-    }
+    if (!box) return;
+    if (!newsLive) { loadLiveNews(function () { safe(renderNewsPage); }); return; }
+    var all = newsEntries();
+    /* 거르개는 실제로 있는 종류만 — 비어 있는 「공지」를 눌러 빈 화면을 보는 일이 없게 */
+    var have = {};
+    all.forEach(function (n) { have[n.type] = 1; });
+    var kinds = NEWS_KINDS.filter(function (k) { return have[k]; });
+    Object.keys(have).forEach(function (k) { if (k && kinds.indexOf(k) < 0) kinds.push(k); });
+    if (newsFilter !== "전체" && !have[newsFilter]) newsFilter = "전체";
     if (bar) {
-      bar.addEventListener("click", function (e) {
-        var b = e.target.closest("button");
+      bar.innerHTML = ["전체"].concat(kinds).map(function (k) {
+        return '<button type="button" data-type="' + esc(k) + '" aria-pressed="' + (k === newsFilter) + '">' +
+          esc(k === "전체" ? t("filter.all", "전체") : nwKind(k)) + "</button>";
+      }).join("");
+      if (!bar.dataset.bound) {
+        bar.dataset.bound = "1";
+        bar.addEventListener("click", function (e) {
+          var b = e.target.closest ? e.target.closest("button[data-type]") : null;
+          if (!b) return;
+          newsFilter = b.getAttribute("data-type");
+          newsAll = false;
+          safe(renderNewsPage);
+          var nb = $('button[data-type="' + newsFilter + '"]', bar);
+          if (nb) nb.focus();
+        });
+      }
+    }
+    var items = all.filter(function (n) { return newsFilter === "전체" || n.type === newsFilter; });
+    var st = $("#news-status");
+    if (st) st.textContent = items.length + t("dyn.newsCount", "건의 소식 표시 중");
+    box.innerHTML = "";
+    if (!items.length) { box.appendChild(el("p", "nw-empty", esc(t("dyn.noCat", "해당 분류의 소식이 아직 없습니다.")))); return; }
+    var shown = newsAll ? items : items.slice(0, NEWS_PAGE);
+    shown.forEach(function (n, i) { box.appendChild(newsRow(n, i === 0)); });
+    if (shown.length < items.length) {
+      var more = el("button", "nw-older");
+      more.type = "button";
+      more.textContent = nwTpl("dyn.newsOlder", "지난 소식 {s}건 더 보기", items.length - shown.length);
+      more.addEventListener("click", function () {
+        var first = shown.length;
+        newsAll = true;
+        safe(renderNewsPage);
+        /* 새로 펼친 첫 줄로 초점을 옮긴다 — 키보드·화면 낭독기 사용자가 맨 위로 튀지 않게 */
+        var row = $all(".nw-item", box)[first];
+        if (row) {
+          var a = $(".nw-title a", row);
+          if (a) a.focus();
+          else { row.setAttribute("tabindex", "-1"); row.focus(); }
+        }
+      });
+      box.appendChild(more);
+    }
+    if (!box.dataset.bound) {
+      box.dataset.bound = "1";
+      box.addEventListener("click", function (e) {
+        var b = e.target.closest ? e.target.closest(".nw-more") : null;
         if (!b) return;
-        $all("button", bar).forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
-        draw(b.dataset.type);
+        var list = document.getElementById(b.getAttribute("aria-controls"));
+        if (!list) return;
+        var open = b.getAttribute("aria-expanded") !== "true";
+        b.setAttribute("aria-expanded", String(open));
+        list.hidden = !open;
       });
     }
-    draw("전체");
   }
 
   /* ---------- 5. 일정 ---------- */
@@ -3971,64 +4112,8 @@
         })
         .catch(function () {});
     }
-    /* 인순이 관련 좋은 소식 자동 수집(Google News 일일) 병합 — 소식 페이지·홈에 반영 */
-    if (!window.__newsMerged) {
-      window.__newsMerged = true;
-      fetch("assets/data/live-news.json?" + Date.now())
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (d) {
-          if (!d || !d.items || !d.items.length) return;
-          var have = {};
-          (D.news || []).forEach(function (n) { have[norm(tr(n, "title"))] = 1; });
-
-          /* 손으로 쓴 소식과 자동 수집분이 같은 사건을 두 번 보여 주던 문제.
-             제목 글자를 통째로 비교하면 절대 안 걸린다 —
-               손:  "고척스카이돔에서 애국가 열창"
-               자동: "경수진 시구→인순이 애국가 '특집 불꽃야구 생중계' 고척돔 달군다"
-             날짜가 가깝고 특징적인 낱말을 나눠 가지면 같은 사건으로 본다.
-             겹치면 **손으로 쓴 쪽을 남긴다** — 사람이 다듬은 문장이 낫다. */
-          var STOP2 = { "인순이": 1, "가수": 1, "공연": 1, "무대": 1, "콘서트": 1, "출연": 1,
-                        "개최": 1, "소식": 1, "발표": 1, "함께": 1, "이번": 1, "특집": 1 };
-          function words(t) {
-            var out = {}, parts = String(t || "").split(/[^가-힣A-Za-z0-9]+/);
-            parts.forEach(function (w) {
-              if (w.length >= 2 && !STOP2[w]) out[w] = 1;
-            });
-            return out;
-          }
-          function sameStory(a, b) {
-            var gap = Math.abs(new Date(a.date) - new Date(b.date)) / 86400000;
-            if (!(gap <= 5)) return false;
-            var wa = words(a.title), wb = words(tr(b, "title")), n = 0;
-            for (var k in wa) if (wa.hasOwnProperty(k) && wb[k]) n++;
-            return n >= 1 && (function () {
-              /* 낱말 하나만 겹칠 때는 그 낱말이 충분히 특징적이어야 한다 */
-              for (var k in wa) if (wa.hasOwnProperty(k) && wb[k] && k.length >= 3) return true;
-              return n >= 2;
-            })();
-          }
-
-          var added = 0, skipped = 0;
-          d.items.forEach(function (it) {
-            var k = norm(it.title || "");
-            if (!k || have[k]) return;
-            /* 이미 손으로 쓴 소식이 같은 사건을 다루고 있으면 넣지 않는다 */
-            var dupe = (D.news || []).some(function (n) { return !n.auto && sameStory(it, n); });
-            if (dupe) { skipped++; return; }
-            have[k] = 1;
-            D.news.push({
-              date: it.date, type: it.type || "소식", title: it.title,
-              excerpt: "", source: it.source || "", url: it.url || "", auto: true
-            });
-            added++;
-          });
-          if (added) safe(renderNewsPage);
-        })
-        .catch(function () {});
-    }
+    /* 소식 페이지의 자동 수집분은 renderNewsPage 가 직접 받는다(loadLiveNews) — 다른 페이지는 받지 않는다 */
   }
-
-  function norm(s) { return String(s || "").replace(/[\s'"`·.,!?()\[\]/\-]/g, "").toLowerCase(); }
 
   window.INSOONI_PAGE_INIT = window.INSOONI_PAGE_INIT || [];
   window.INSOONI_PAGE_INIT.push(pageInit);
