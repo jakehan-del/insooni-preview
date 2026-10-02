@@ -174,12 +174,15 @@ def restamp_cache_bust():
     바뀐 파일만 새 값을 받는다. 사람이 기억할 것이 하나 줄어든다.
     """
     import hashlib, re
-    # backend·admin 도 넣는다 — 전에는 빠져 있어서 backend.js 만 고치면 해시가
-    # 그대로였고, 브라우저가 옛 서버 어댑터를 계속 썼다(2026-10-01 발견).
-    keys = ["assets/css/style.min.css", "assets/js/main.min.js",
-            "assets/js/i18n.min.js", "assets/js/data.min.js",
-            "assets/js/backend.min.js", "assets/js/admin.min.js",
-            "assets/js/board.min.js"]
+    # 손으로 적은 목록은 또 빠진다 — 2026-10-01 backend.js, 2026-10-02 config.js(카페 스위치를
+    # 켜도 해시가 그대로라 브라우저가 '꺼짐'을 계속 쓸 뻔했다). 목록에는 backend.min.js 가 있었는데
+    # 페이지가 싣는 것은 backend.js 였다. 그래서 HTML 이 실제로 ?v 를 붙여 싣는 파일을 전부 해시한다.
+    keys = set()
+    for html in glob.glob(os.path.join(ROOT, "*.html")):
+        for m in re.finditer(r"(?:src|href)=[\"'](assets/[^\"'?]+)\?v[0-9a-f]{2,10}[\"']",
+                             io.open(html, encoding="utf-8").read()):
+            keys.add(m.group(1))
+    keys = sorted(keys)
     h = hashlib.sha1()
     for k in keys:
         f = os.path.join(ROOT, k)

@@ -40,7 +40,9 @@ if (typeof window.INSOONI_CONFIG.anonKey === "undefined") {
    꺼져 있는 동안 게시판 섹션은 숨고 서버에 아무것도 묻지 않는다.
    왜 자동 감지가 아니라 스위치인가 — 없는 함수를 부르면 PostgREST 가 404 를 주고, 그 404 가
    모든 방문자의 콘솔과 사이트 회귀 검사(verify.py)에 오류로 남는다. 그리고 검증 전에 기능이
-   공개되지 않게 막는 문이기도 하다. */
+   공개되지 않게 막는 문이기도 하다.
+   2026-10-02 켬 — 010 운영 적용(공개 키로 board_list·cafe_info 200, 새 표 7개 잠김, 라이브 점검 36/36)과
+   카카오·돌아올 주소 설정을 확인한 뒤. */
 if (typeof window.INSOONI_CONFIG.board === "undefined") {
-  window.INSOONI_CONFIG.board = false;
+  window.INSOONI_CONFIG.board = true;
 }
