@@ -62,9 +62,12 @@ if (typeof window.INSOONI_CONFIG.board === "undefined") {
    false 인 동안 회원 창에는 이메일만 보인다(서버가 카카오를 켜 둬도).
    2026-10-02 밤: 형님 폰 한 대로 가입이 된 뒤 true 로 켰으나(f66cba1) 'KOE205 오류도 나와' 재보고 —
    GoTrue 는 account_email·profile_image·profile_nickname 셋을 늘 요청하므로 동의항목 셋이 모두 있어야 한다.
-   일반 카카오 계정 2개로 왕복을 다시 확인할 때까지 false. */
+   그 뒤 형님이 비즈 앱 전환 → 동의항목 셋(닉네임 필수·프로필 사진 선택·이메일 선택)을 채웠고,
+   KOE006(리다이렉트 URI 가 다른 키에 있었다)까지 고친 다음 형님 카카오 계정으로 왕복이 끝까지 됐다
+   (Supabase auth 로그 10/02 18:31:44 /callback login provider=kakao → /token). 그래서 true.
+   다시 KOE 가 보고되면 false 로 돌리고 원인을 찾는다. */
 if (typeof window.INSOONI_CONFIG.kakao === "undefined") {
-  window.INSOONI_CONFIG.kakao = false;
+  window.INSOONI_CONFIG.kakao = true;
 }
 
 /* 공연 모드(supabase/011) 스위치 — 공연 화면(/live)과 사랑방의 '오늘 공연' 줄.
