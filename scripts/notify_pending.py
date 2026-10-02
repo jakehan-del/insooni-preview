@@ -10,6 +10,9 @@ OpenClaw 가 텔레그램으로 보낸다. 아무것도 안 쓰면 아무것도 
       월요일에 대기 0건이면 '정상 작동' 한 줄만 보낸다
   insooni-pending-pm  매일 19:00  --slot evening
       오늘 09시 이후 새로 들어온 대기가 있을 때만 보낸다
+  insooni-pending-live  공연 당일만 15분마다  --slot live --every 15
+      직전 15분 칸에 새로 들어온 대기가 있을 때만 보낸다(2026-10-03 진해아트홀 공연 —
+      형님 결정: 현장 새싹 글은 검수 후 공개 + 텔레그램 알림. 하루 두 번으로는 공연 중에 늦다)
 
 왜 이렇게 나눴나
   · 매번 같은 내용이 울리면 3주 뒤엔 알림을 안 본다. 저녁은 '새 글'일 때만.
@@ -35,7 +38,7 @@ OpenClaw 가 텔레그램으로 보낸다. 아무것도 안 쓰면 아무것도 
 
 stderr 에는 아무것도 쓰지 않는다. OpenClaw 는 stdout 이 비면 stderr 를 그대로 보낸다.
 
-실행:  python3 scripts/notify_pending.py --slot morning|evening [--now ISO] [--test]
+실행:  python3 scripts/notify_pending.py --slot morning|evening|live [--every 분] [--now ISO] [--test]
        (--slot auto 는 손으로 돌릴 때만 — 09~19시면 아침 규칙)
 """
 import argparse, json, os, re, sys, time, urllib.request, urllib.error
@@ -104,9 +107,14 @@ def kinds(s):
     return " · ".join("%s %d" % (label, s[k]) for k, label in KINDS if s.get(k))
 
 
-def window(slot, now):
+def window(slot, now, every=15):
     """'새 글'의 기준 시각. 아침은 전날 19시, 저녁은 그날 09시(그 전이면 전날 09시).
-    정기 작업이 늦게 돌아도 기준은 정해진 슬롯 시각이라 빈틈이 없다."""
+    정기 작업이 늦게 돌아도 기준은 정해진 슬롯 시각이라 빈틈이 없다.
+    live 는 지금이 속한 every 분 칸의 앞 칸 시작 — 14:15:07 에 돌면 14:00 부터. 칸 경계로 자르니
+    몇 초 늦게 돌아도 칸 사이에 빈틈이 없다(겹치는 것은 경계의 몇 초뿐)."""
+    if slot == "live":
+        top = now.replace(minute=(now.minute // every) * every, second=0, microsecond=0)
+        return top - timedelta(minutes=every)
     if slot == "morning":
         return now.replace(hour=EVENING, minute=0, second=0, microsecond=0) - timedelta(days=1)
     base = now.replace(hour=MORNING, minute=0, second=0, microsecond=0)
@@ -129,6 +137,13 @@ def compose(slot, s, now, base):
             lines.append("가장 오래 기다린 글: %s %02d시대에 들어옴" % (day_word(o, now), o.hour))
         if s.get("since"):
             lines.append("%s 새로 들어온 글 %d건" % (since_txt, s["since"]))
+    elif slot == "live":
+        new = s.get("since") or 0
+        if new <= 0:
+            return ""
+        lines = ["🎤 공연 중 새 글 %d건 (%02d:%02d 이후) — 검수 대기 전체 %d건 (%s)"
+                 % (new, base.hour, base.minute, total, kinds(s)),
+                 "새싹 회원 글은 '올리기'를 눌러야 모두에게 보입니다."]
     else:
         new = s.get("since") or 0
         if new <= 0:
@@ -140,8 +155,10 @@ def compose(slot, s, now, base):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description="사랑방 검수 대기 알림")
-    ap.add_argument("--slot", choices=("auto", "morning", "evening"), default="auto",
-                    help="정기 작업은 morning/evening 을 명시한다. auto 는 손으로 돌릴 때만")
+    ap.add_argument("--slot", choices=("auto", "morning", "evening", "live"), default="auto",
+                    help="정기 작업은 morning/evening/live 를 명시한다. auto 는 손으로 돌릴 때만")
+    ap.add_argument("--every", type=int, default=15, choices=(5, 10, 15, 20, 30, 60),
+                    help="live 칸 크기(분) — 정기 작업의 주기와 같게")
     ap.add_argument("--now", help="시험용 현재 시각 (ISO, 오프셋 포함)")
     ap.add_argument("--tries", type=int, default=4)
     ap.add_argument("--wait", type=float, default=10.0, help="재시도 간격 기본값(초) — n번째는 n배")
@@ -152,7 +169,7 @@ def main(argv=None):
 
     now = datetime.fromisoformat(a.now).astimezone(KST) if a.now else datetime.now(KST)
     slot = a.slot if a.slot != "auto" else ("morning" if MORNING <= now.hour < EVENING else "evening")
-    base = window(slot, now)
+    base = window(slot, now, a.every)
     s, why = fetch(base, max(1, a.tries), max(0.0, a.wait), max(1.0, a.deadline))
     if s is None:
         print("⚠️ 사랑방 검수 알림 — 대기 건수를 확인하지 못했습니다 (%s).\n"

@@ -179,6 +179,20 @@ def suite(script):
     t("--test 인데 서버 함수 없음 → 시험 성공처럼 굴지 않고 실패 알림", c == 1 and "연결 시험" not in out
       and "009 미적용" in out, repr(out))
 
+    # 11) 공연 당일 live — 직전 15분 칸에 새 글이 있을 때만, 칸 경계로 자른 기준 시각
+    GIG = "2026-10-03T17:15:07+09:00"
+    c, out, err, seen, _ = run(script, [(200, S(total=3, bpost=2, comment=1, since=2))], GIG, "live")
+    t("live 새 글 2건 → '공연 중 새 글 2건 (17:00 이후)'", c == 0 and "공연 중 새 글 2건" in out and "(17:00 이후)" in out
+      and "게시판 글 2 · 댓글 1" in out and "올리기" in out, repr(out))
+    t("live 기준 시각 = 앞 칸 시작 17:00 KST(몇 초 늦게 돌아도)", since_of(seen) == "2026-10-03T17:00:00+09:00", since_of(seen))
+    c, out, err, seen, _ = run(script, [(200, S(total=5, bpost=5, since=0))], GIG, "live")
+    t("live 대기는 있지만 새 글 0 → 조용(같은 대기를 15분마다 다시 울리지 않음)", c == 0 and out == "", repr(out))
+    c, out, err, seen, _ = run(script, [(200, S(total=1, bpost=1, since=1))], "2026-10-03T17:44:59+09:00", "live",
+                               extra=["--every", "30"])
+    t("live --every 30 → 17:44 에 돌면 기준 17:00", since_of(seen) == "2026-10-03T17:00:00+09:00", since_of(seen))
+    c, out, err, seen, _ = run(script, [(404, {})], GIG, "live")
+    t("live 인데 서버 함수 없음 → 실패 알림(조용히 넘기지 않음)", c == 1 and "확인하지 못했습니다" in out, repr(out))
+
     # 10) stderr 로는 아무것도 새지 않는다 (OpenClaw 는 stdout 이 비면 stderr 를 보낸다)
     t("모든 경우(%d회) stderr 비어 있음" % len(ERRS), not any(ERRS), repr([e for e in ERRS if e][:1]))
     c, out, err, seen, _ = run(script, [(200, S())], FRI_AM, "noon", record=False)
@@ -198,7 +212,8 @@ if __name__ == "__main__":
     print("\n본 검사: %d/%d 통과" % (len(R) - fail, len(R)))
 
     MUT = [
-        ("저녁에도 대기만 있으면 보냄", 'new = s.get("since") or 0', 'new = s.get("total") or 0'),
+        ("저녁에도 대기만 있으면 보냄", '    else:\n        new = s.get("since") or 0',
+         '    else:\n        new = s.get("total") or 0'),
         ("월요일 아닌 날도 0건 신호", "            if now.weekday() == HEARTBEAT_WEEKDAY:", "            if True:"),
         ("월요일 신호 없음", "            if now.weekday() == HEARTBEAT_WEEKDAY:", "            if False:"),
         ("404 를 0건으로 착각", 'return None, "서버에 알림 함수가 없습니다(supabase/009 미적용)"',
@@ -216,6 +231,10 @@ if __name__ == "__main__":
          'since_txt = "오늘 %02d시 이후" % base.hour'),
         ("시험 모드가 실패를 덮음", "    if s is None:\n", "    if s is None and not a.test:\n"),
         ("들어온 때를 UTC 그대로 표시", 'o = parse_ts(s["oldest_at"]).astimezone(KST)', 'o = parse_ts(s["oldest_at"])'),
+        ("live 가 대기만 있어도 울림", '    elif slot == "live":\n        new = s.get("since") or 0',
+         '    elif slot == "live":\n        new = s.get("total") or 0'),
+        ("live 기준을 지금 시각으로(칸 경계 없음)", "        return top - timedelta(minutes=every)", "        return now - timedelta(minutes=every)"),
+        ("live 칸 크기 무시", "    base = window(slot, now, a.every)", "    base = window(slot, now)"),
     ]
     caught = 0
     with tempfile.TemporaryDirectory() as d:
