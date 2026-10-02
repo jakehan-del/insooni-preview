@@ -48,8 +48,7 @@ if (typeof window.INSOONI_CONFIG.board === "undefined") {
 }
 
 /* 카카오 로그인 버튼 스위치 — 서버(Supabase)에서 카카오가 켜져 있어도 여기서 false 면 버튼을 숨긴다.
-   2026-10-02 끔: 카카오 개발자 콘솔의 동의항목(이메일·프로필 사진)이 덜 끝나 로그인하면 KOE205 가 났다.
-   형님 폰으로 동의 화면까지 확인되면 true 로 바꾼다. 그동안 이메일 가입은 그대로 된다. */
+   2026-10-02 잠시 껐다가(동의항목이 덜 끝나 KOE205) 형님 폰으로 카카오 가입까지 확인한 뒤 다시 켬. */
 if (typeof window.INSOONI_CONFIG.kakao === "undefined") {
-  window.INSOONI_CONFIG.kakao = false;
+  window.INSOONI_CONFIG.kakao = true;
 }
