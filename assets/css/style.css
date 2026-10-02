@@ -3193,7 +3193,7 @@ html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
    CROSSFADER · RECAP · TOP · EN · YOUTUBE · 날짜 숫자)은 목록에 없다 — 모노 그대로.
    숫자만 남은 자리(아카이브 캡션의 연도)는 main.js 가 숫자를 .arch-y 로 감싸 모노를 지킨다.
    제목 구실을 하는 자리는 모노 400 의 '다른 서체'로 구별되던 것을 굵기 600 으로 옮긴다.
-   상주 검사: scripts/check_polish.py ④ 「한글 모노 0」(직접 텍스트 노드 · 숨은 패널 포함).
+   상주 검사: scripts/check_polish.py ⑥ 「한글 모노 0」(직접 텍스트 노드 · 숨은 패널 포함).
    사랑방의 섹션 제목(.sec-h)은 그쪽 규칙(본문 서체 700 · 1.25rem)이 맡는다 — 건드리지 않는다.
    ══════════════════════════════════════════════════════════════════ */
 html[lang="ko"] .section-head h2:not(.sec-h),
