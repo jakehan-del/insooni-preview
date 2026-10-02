@@ -26,7 +26,7 @@ OpenClaw 가 텔레그램으로 보낸다. 아무것도 안 쓰면 아무것도 
 'sendMessage failed' 로 두 건이 사라진 것이 그 때문이다. 그래서 이 작업은 best-effort
 없이 등록한다. 다시 돌 때 이 스크립트가 새로 센다.
 
-글 내용·이름은 가져오지 않는다. 서버 함수(supabase/009)가 애초에 건수와
+글 내용·이름은 가져오지 않는다. 서버 함수(supabase/009·010)가 애초에 건수와
 시(時) 단위로 내린 시각만 내준다. 공개키로 부른다 — 비밀 키가 필요 없다.
 
 실패를 조용히 넘기지 않는다. 서버에 못 닿으면 정해진 시간(--deadline) 안에서 몇 번
@@ -51,7 +51,7 @@ MORNING, EVENING = 9, 19
 HEARTBEAT_WEEKDAY = 0      # 월요일
 TRY_TIMEOUT = 20           # 한 번 시도의 상한(초)
 DEADLINE = 140             # 전체 상한(초) — 정기 작업 제한 180초 안에서 실패 글까지 쓸 여유
-KINDS = (("note", "한 줄"), ("dream", "꿈"), ("letter", "편지"), ("post", "게시글"))
+KINDS = (("bpost", "게시판 글"), ("comment", "댓글"), ("note", "한 줄"), ("dream", "꿈"), ("letter", "편지"), ("post", "옛 게시글"))
 
 
 def fetch(since, tries, wait, deadline):

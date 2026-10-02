@@ -57,9 +57,10 @@ BASE = "http://127.0.0.1:%d" % srv.server_port
 ERRS = []
 
 
-def S(total=0, note=0, dream=0, letter=0, post=0, oldest=None, since=None):
+def S(total=0, note=0, dream=0, letter=0, post=0, oldest=None, since=None, bpost=0, comment=0):
     return {"ok": True, "total": total, "note": note, "dream": dream, "letter": letter,
-            "post": post, "oldest_at": oldest, "since": since, "at": "2026-10-02T00:00:00+00:00"}
+            "post": post, "bpost": bpost, "comment": comment,
+            "oldest_at": oldest, "since": since, "at": "2026-10-02T00:00:00+00:00"}
 
 
 def run(script, plan, now=None, slot="auto", tries=3, base=BASE, extra=(), record=True):
@@ -106,6 +107,8 @@ def suite(script):
     t("아침의 기준 = 전날 19:00 KST", since_of(seen) == "2026-10-01T19:00:00+09:00", since_of(seen))
     t("공개키로 부른다(apikey 헤더)", seen and (seen[0]["apikey"] or "").startswith("sb_publishable_"), "")
     t("부르는 함수 = pending_summary", seen and seen[0]["path"] == "/rest/v1/rpc/pending_summary", seen and seen[0]["path"])
+    c, out, err, seen, _ = run(script, [(200, S(3, bpost=2, comment=1, oldest="2026-10-01T13:00:00+00:00"))], FRI_AM, "morning")
+    t("게시판 글·댓글도 종류별로 센다(010)", "게시판 글 2 · 댓글 1" in out, out)
     c, out, err, seen, _ = run(script, [(200, S(1, dream=1, oldest="2026-10-01T13:00:00+00:00"))], FRI_AM, "morning")
     t("어젯밤 들어온 글 → '어제 22시대에 들어옴'", "어제 22시대에 들어옴" in out, out)
 
