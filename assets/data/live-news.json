@@ -1,29 +1,35 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-03 01:08",
+ "updated": "2026-10-03 08:21",
  "items": [
   {
    "date": "2026-10-02",
    "first": "2026-10-02",
-   "title": "제19회 세계인 큰 잔치, 국가별 입장 및 인순이 등 공연",
-   "source": "씨티 21",
-   "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBuQk1xT0lobVY1MWRGOUZBUHlJOE5wc0NTRkc1SWJzc1BtMGY1dklrLWlMc3RwZ1NyUERoc0F3TnYxbTZ2OERBOUtVNVE0M19ZV2hBOG1KWTM0OHhEc1NoTGpGbVR6QQ?oc=5",
+   "title": "다문화와 평화의 축제, '김포 세계인 큰잔치' 11일 김포아트빌리지...인순이 공연도",
+   "source": "글로벌이코노믹",
+   "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxNSGUyVE9oMFhtQjdqQnJSWDRoaHZYUzNNZGxTSEN3bW9EQXMzZS1FdE5GY2tiTllnU0liWWxCR0dyYUhVRFREenYzM29uMnBYSC1wOTBzTUFBbWV0TG1QNFRWNXVEX2N3dUM3QmxFMVN2Mlkxdmg5a3phUUVRNXlTLTc3UDgtdFNmbm9R?oc=5",
    "type": "공연",
    "auto": true,
-   "count": 2,
+   "count": 3,
    "articles": [
-    {
-     "date": "2026-10-02",
-     "title": "제19회 세계인 큰 잔치, 국가별 입장 및 인순이 등 공연",
-     "source": "씨티 21",
-     "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBuQk1xT0lobVY1MWRGOUZBUHlJOE5wc0NTRkc1SWJzc1BtMGY1dklrLWlMc3RwZ1NyUERoc0F3TnYxbTZ2OERBOUtVNVE0M19ZV2hBOG1KWTM0OHhEc1NoTGpGbVR6QQ?oc=5"
-    },
     {
      "date": "2026-10-02",
      "title": "다문화와 평화의 축제, '김포 세계인 큰잔치' 11일 김포아트빌리지...인순이 공연도",
      "source": "글로벌이코노믹",
      "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxNSGUyVE9oMFhtQjdqQnJSWDRoaHZYUzNNZGxTSEN3bW9EQXMzZS1FdE5GY2tiTllnU0liWWxCR0dyYUhVRFREenYzM29uMnBYSC1wOTBzTUFBbWV0TG1QNFRWNXVEX2N3dUM3QmxFMVN2Mlkxdmg5a3phUUVRNXlTLTc3UDgtdFNmbm9R?oc=5"
+    },
+    {
+     "date": "2026-10-02",
+     "title": "인순이 공연부터 세계음식까지”…김포아트빌리지서 ‘세계인 큰잔치’ 열린다",
+     "source": "로컬세계",
+     "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9iMk1adnhWWEVKUm5ZNGkxdlNvLVh6S0V3SDZqbzVaWEczb1h1d0paX1JQMnBydTJsa3doeTgtUXl3QS0xclV5c2pFY1p2d1ZHYnQ5dDB4TTRVREJ6U3dLX9IBWEFVX3lxTE1vNUl2ZFhGRHlhM3V6d0hsWUY1eXZVb3U1X21pVU5aTS03MVVxcW1ZQmlUbDZQNC1qXzItdVh4clNDaEgyQ2twYlJBekNVZjl2RERIVUkwbnU?oc=5"
+    },
+    {
+     "date": "2026-10-02",
+     "title": "제19회 세계인 큰 잔치, 국가별 입장 및 인순이 등 공연",
+     "source": "씨티 21",
+     "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBuQk1xT0lobVY1MWRGOUZBUHlJOE5wc0NTRkc1SWJzc1BtMGY1dklrLWlMc3RwZ1NyUERoc0F3TnYxbTZ2OERBOUtVNVE0M19ZV2hBOG1KWTM0OHhEc1NoTGpGbVR6QQ?oc=5"
     }
    ]
   },

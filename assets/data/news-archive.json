@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-03 01:08",
- "count": 69,
+ "updated": "2026-10-03 08:21",
+ "count": 70,
  "items": [
   {
    "date": "2026-10-02",
@@ -18,6 +18,15 @@
    "source": "씨티 21",
    "sourceSite": "http://m.city21.co.kr",
    "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBuQk1xT0lobVY1MWRGOUZBUHlJOE5wc0NTRkc1SWJzc1BtMGY1dklrLWlMc3RwZ1NyUERoc0F3TnYxbTZ2OERBOUtVNVE0M19ZV2hBOG1KWTM0OHhEc1NoTGpGbVR6QQ?oc=5",
+   "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-10-02",
+   "title": "인순이 공연부터 세계음식까지”…김포아트빌리지서 ‘세계인 큰잔치’ 열린다",
+   "source": "로컬세계",
+   "sourceSite": "https://localsegye.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9iMk1adnhWWEVKUm5ZNGkxdlNvLVh6S0V3SDZqbzVaWEczb1h1d0paX1JQMnBydTJsa3doeTgtUXl3QS0xclV5c2pFY1p2d1ZHYnQ5dDB4TTRVREJ6U3dLX9IBWEFVX3lxTE1vNUl2ZFhGRHlhM3V6d0hsWUY1eXZVb3U1X21pVU5aTS03MVVxcW1ZQmlUbDZQNC1qXzItdVh4clNDaEgyQ2twYlJBekNVZjl2RERIVUkwbnU?oc=5",
    "type": "공연",
    "auto": true
   },
