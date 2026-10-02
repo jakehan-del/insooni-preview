@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 소식 전체. 한 번 들어온 것은 지우지 않는다. live-news.json 은 최근 것만 보여 주는 창이고, 이 파일이 기록이다.",
- "updated": "2026-10-02 08:49",
- "count": 68,
+ "updated": "2026-10-02 14:11",
+ "count": 69,
  "items": [
   {
    "date": "2026-10-02",
@@ -9,6 +9,15 @@
    "source": "글로벌이코노믹",
    "sourceSite": "https://www.g-enews.com",
    "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxNSGUyVE9oMFhtQjdqQnJSWDRoaHZYUzNNZGxTSEN3bW9EQXMzZS1FdE5GY2tiTllnU0liWWxCR0dyYUhVRFREenYzM29uMnBYSC1wOTBzTUFBbWV0TG1QNFRWNXVEX2N3dUM3QmxFMVN2Mlkxdmg5a3phUUVRNXlTLTc3UDgtdFNmbm9R?oc=5",
+   "type": "공연",
+   "auto": true
+  },
+  {
+   "date": "2026-10-02",
+   "title": "제19회 세계인 큰 잔치, 국가별 입장 및 인순이 등 공연",
+   "source": "씨티 21",
+   "sourceSite": "http://m.city21.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBuQk1xT0lobVY1MWRGOUZBUHlJOE5wc0NTRkc1SWJzc1BtMGY1dklrLWlMc3RwZ1NyUERoc0F3TnYxbTZ2OERBOUtVNVE0M19ZV2hBOG1KWTM0OHhEc1NoTGpGbVR6QQ?oc=5",
    "type": "공연",
    "auto": true
   },
