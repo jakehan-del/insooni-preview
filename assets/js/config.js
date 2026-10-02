@@ -22,6 +22,13 @@
    두 글자만 다릅니다. publishable 인지 secret 인지 넣기 전에 꼭 확인하세요.
    실수로 secret 키를 노출했다면 대시보드에서 즉시 폐기(revoke)하고 새로 발급하세요.
    ============================================================ */
+/* www.insooni.com 으로 들어오면 insooni.com 으로 옮긴다(2026-10-02).
+   www 도 사이트를 그대로 보여 주는데, 브라우저에게 둘은 다른 사이트라 로그인·쓰던 글·카카오 로그인
+   검증값이 따로 저장된다. 그래서 www 에서 카카오 로그인을 하면 돌아올 때 insooni.com 첫 화면에 떨어지고
+   다시 로그인하라고 했다(형님 실측). 주소 하나로 모은다. */
+if (location.hostname === "www.insooni.com") {
+  location.replace("https://insooni.com" + location.pathname + location.search + location.hash);
+}
 window.INSOONI_CONFIG = window.INSOONI_CONFIG || {};
 
 /* 이미 정해진 값이 있으면 손대지 않는다.
