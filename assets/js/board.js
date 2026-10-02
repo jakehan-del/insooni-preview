@@ -369,13 +369,36 @@
   }
 
   /* ---------- 상태 ---------- */
-  var S = { me: null, settings: null, ready: true, rows: [], more: false, open: null, editing: null, cdraft: {} };
+  /* ---------- 카페의 게시판들 ----------
+     공지는 운영자만 쓴다. 인순이의 편지는 서버가 아니라 옛 원문(letters.json)에서 싣는다 —
+     본인이 2005년에 쓴 글이라 회원 글과 섞지 않고, 고치거나 지울 수 없다. */
+  var BOARDS = [
+    { k: "all",     key: "bd.b.all",     ko: "전체글",        dkey: "bd.bd.all",     d: "" },
+    { k: "notice",  key: "bd.b.notice",  ko: "공지",          dkey: "bd.bd.notice",  d: "운영진이 알려 드리는 소식입니다." },
+    { k: "letters", key: "bd.b.letters", ko: "인순이의 편지", dkey: "bd.bd.letters", d: "2005년, 인순이가 팬들에게 직접 남긴 글입니다. 맞춤법도 띄어쓰기도 손대지 않았습니다." },
+    { k: "hello",   key: "bd.b.hello",   ko: "가입인사",      dkey: "bd.bd.hello",   d: "새로 오신 분들의 첫인사입니다. 어디서 오셨는지, 어떤 노래를 좋아하시는지 들려주세요." },
+    { k: "free",    key: "bd.b.free",    ko: "자유게시판",    dkey: "bd.bd.free",    d: "무엇이든 편하게 이야기 나누는 곳입니다." },
+    { k: "review",  key: "bd.b.review",  ko: "공연·방송 후기", dkey: "bd.bd.review", d: "다녀오신 공연, 보신 방송의 기억을 남겨 주세요." }
+  ];
+  function boardOf(k) { for (var i = 0; i < BOARDS.length; i++) if (BOARDS[i].k === k) return BOARDS[i]; return BOARDS[0]; }
+  function boardName(k) { var b = boardOf(k); return t(b.key, b.ko); }
+  function writable() {
+    var w = ["hello", "free", "review"];
+    if (S.me && S.me.admin) w.unshift("notice");
+    return w;
+  }
+
+  var S = { me: null, settings: null, ready: true, open: true, board: "all", rows: [], more: false,
+            editing: null, cdraft: {}, letters: null, view: "list" };
   var sec = null;     /* 지금 화면의 #board (라우터가 <main> 을 갈아끼우면 바뀐다) */
 
   function joined() { return !!(S.me && S.me.ok && S.me.joined); }
   function canWrite() { return joined() && S.me.level !== "blocked"; }
+  /* 회원 게시판을 쓸 수 있는가 — config.js 스위치가 켜졌고 서버에 010 이 있다 */
+  function live() { return S.open && S.ready; }
 
   function loadMe() {
+    if (!live()) { S.me = null; return Promise.resolve(null); }
     return token().then(function (at) {
       if (!at) { S.me = null; return null; }
       return rpc("member_me", {}, true).then(function (me) {
@@ -386,11 +409,13 @@
     });
   }
 
-  /* ---------- 위쪽 줄: 누가 들어와 있나 ---------- */
+  /* ---------- 위쪽 줄: 누가 들어와 있나 · 카페 숫자 ---------- */
   function renderWho() {
     var box = $("#bd-who", sec);
     if (!box) return;
     box.textContent = "";
+    box.hidden = !live();
+    if (!live()) { renderNote(); return; }
     if (!S.me) {
       var b = el("button", "btn btn--ghost btn--sm", t("bd.login", "로그인 · 가입"));
       b.type = "button";
@@ -411,6 +436,16 @@
     }
     renderNote();
   }
+  function renderStat() {
+    var n = $("#cafe-stat", sec);
+    if (!n) return;
+    if (!live()) { n.hidden = true; return; }
+    rpc("cafe_info", {}).then(function (r) {
+      if (!r || !r.ok) { n.hidden = true; return; }
+      n.textContent = t("bd.stat1", "회원 ") + r.members + t("bd.stat2", "명 · 글 ") + r.posts + t("bd.stat3", "개");
+      n.hidden = false;
+    });
+  }
 
   function progressText(me) {
     /* 운영자가 등급을 정한 새싹은 기준을 채워도 저절로 오르지 않는다 — 숫자를 보이면 거짓 약속이 된다 */
@@ -422,7 +457,7 @@
   function renderNote() {
     var n = $("#bd-note", sec);
     if (!n) return;
-    if (!joined()) { n.hidden = true; return; }
+    if (!live() || !joined() || S.view !== "list") { n.hidden = true; return; }
     var me = S.me;
     if (me.admin) n.textContent = t("bd.noteStaff", "운영자로 들어와 있습니다. 글과 댓글이 바로 올라갑니다.");
     else if (me.level === "member") n.textContent = t("bd.noteMember", "정회원입니다. 글과 댓글이 바로 올라갑니다.");
@@ -431,78 +466,143 @@
     n.hidden = false;
   }
 
-  /* ---------- 목록 ---------- */
+  /* ---------- 화면 고르기(주소창의 # 으로) ----------
+     #b=free 게시판 · #p123 글 보기 · #l0 인순이의 편지 · #write(=board) 글쓰기 · #edit=123 고치기.
+     주소에 담으니 폰의 '뒤로 가기'가 카페 안에서 그대로 통한다(글 → 목록). */
+  function parseHash() {
+    var h = (location.hash || "").replace(/^#/, "");
+    var m;
+    if ((m = /^p(\d+)$/.exec(h))) return { view: "post", id: +m[1] };
+    if ((m = /^l(\d)$/.exec(h))) return { view: "letter", id: +m[1] };
+    if ((m = /^edit=(\d+)$/.exec(h))) return { view: "write", edit: +m[1] };
+    if ((m = /^write(?:=(\w+))?$/.exec(h))) return { view: "write", board: m[1] || null };
+    if ((m = /^b=(\w+)$/.exec(h))) return { view: "list", board: m[1] };
+    return { view: "list", board: null };
+  }
+  function go(hash) {
+    if (location.hash === hash) route(); else location.hash = hash;
+  }
+  function show(view) {
+    S.view = view;
+    $("#cafe-list", sec).hidden = view !== "list";
+    $("#cafe-post", sec).hidden = view !== "post";
+    $("#bd-form", sec).hidden = view !== "write";
+    renderNote();
+  }
+  function toTop() {
+    var top = sec.getBoundingClientRect().top;
+    if (top < -10 || top > window.innerHeight * .5) sec.scrollIntoView({ block: "start" });
+  }
+
+  function route() {
+    if (!sec || !document.body.contains(sec)) return;
+    var r = parseHash();
+    say($("#bd-msg", sec), S.flash || "", S.flashKind);
+    S.flash = "";
+    if (r.view === "letter") { openLetter(r.id); return; }
+    if (r.view === "post") {
+      if (!live()) { go("#b=" + S.board); return; }
+      openPost(r.id);
+      return;
+    }
+    if (r.view === "write") {
+      if (!live()) { go("#b=all"); return; }
+      if (!S.me) { lsSet(NKEY, { what: "write", board: r.board || null }); go("#b=" + S.board); openSheet("start", $("#bd-write-btn", sec), t("bd.needLogin", "글을 쓰려면 먼저 회원으로 들어와 주세요.")); return; }
+      if (!S.me.joined) { lsSet(NKEY, { what: "write", board: r.board || null }); go("#b=" + S.board); openSheet("join", null); return; }
+      if (S.me.level === "blocked") { S.flash = why("blocked"); S.flashKind = "bad"; go("#b=" + S.board); return; }
+      if (r.edit) startEdit(r.edit); else openForm(null, r.board);
+      return;
+    }
+    var b = r.board && boardOf(r.board).k === r.board ? r.board : (r.board ? "all" : S.board);
+    S.board = b;
+    show("list");
+    renderMenu();
+    loadList(false);
+  }
+
+  /* ---------- 메뉴 · 목록 ---------- */
+  function renderMenu() {
+    Array.prototype.forEach.call(sec.querySelectorAll(".cafe-menu a"), function (a) {
+      if (a.getAttribute("data-b") === S.board) a.setAttribute("aria-current", "page");
+      else a.removeAttribute("aria-current");
+    });
+    var b = boardOf(S.board);
+    $("#cafe-board-h", sec).textContent = t(b.key, b.ko);
+    var d = $("#cafe-board-d", sec);
+    d.textContent = b.d ? t(b.dkey, b.d) : "";
+    d.hidden = !b.d;
+    var w = $("#bd-write-btn", sec);
+    /* 편지 게시판엔 쓸 수 없다. 공지는 운영자만 */
+    w.hidden = !live() || S.board === "letters" || (S.board === "notice" && !(S.me && S.me.admin));
+  }
+
   function loadList(more) {
+    var msg = $("#bd-list-msg", sec), list = $("#bd-list", sec), pins = $("#bd-pins", sec);
+    var closed = $("#cafe-closed", sec);
+    msg.hidden = true;
+    closed.hidden = true;
+    if (S.board === "letters") {
+      pins.textContent = ""; $("#bd-mine", sec).hidden = true; $("#bd-more", sec).hidden = true;
+      return loadLetters().then(function (L) {
+        list.textContent = "";
+        L.forEach(function (l, i) { list.appendChild(letterRow(l, i)); });
+        $("#bd-empty", sec).hidden = L.length > 0;
+      });
+    }
+    if (!live()) {
+      /* 회원 게시판이 아직 닫혀 있다 — 서버에 묻지 않고 그 사실을 그대로 말한다 */
+      list.textContent = ""; pins.textContent = "";
+      $("#bd-empty", sec).hidden = true; $("#bd-more", sec).hidden = true; $("#bd-mine", sec).hidden = true;
+      if (S.board === "all") loadLetters().then(function () { pins.textContent = ""; pins.appendChild(lettersPin()); });
+      closed.hidden = false;
+      return Promise.resolve();
+    }
     var before = more && S.rows.length ? S.rows[S.rows.length - 1].id : null;
-    var msg = $("#bd-list-msg", sec);
-    return rpc("board_list", { p_before: before, p_limit: 20 }).then(function (r) {
-      if (r && r.reason === "not_ready") { S.ready = false; hideBoard(); return; }
+    var want = S.board;
+    return rpc("board_list", { p_board: want === "all" ? null : want, p_before: before, p_limit: 20 }).then(function (r) {
+      if (want !== S.board) return;                       /* 그사이 다른 게시판을 눌렀다 */
+      if (r && r.reason === "not_ready") { S.ready = false; renderWho(); renderMenu(); loadList(false); return; }
       if (!r || !r.ok) {
         /* 「글 0건」과 「못 불러옴」을 같은 화면으로 보이지 않는다 */
         say(msg, t("bd.listFail", "게시판을 불러오지 못했습니다. 잠시 뒤 다시 시도해 주세요."), "bad");
         msg.hidden = false;
         return;
       }
-      msg.hidden = true;
       S.rows = more ? S.rows.concat(r.rows || []) : (r.rows || []);
       S.more = !!r.more;
-      renderList();
-    });
-  }
-
-  function renderList() {
-    var list = $("#bd-list", sec), empty = $("#bd-empty", sec), moreBtn = $("#bd-more", sec);
-    if (!list) return;
-    list.textContent = "";
-    S.rows.forEach(function (row) { list.appendChild(item(row)); });
-    empty.hidden = S.rows.length > 0;
-    moreBtn.hidden = !S.more;
-    if (S.open) {
-      var li = list.querySelector('[data-id="' + S.open + '"]');
-      if (li) openItem(li, S.open, true);
-      else {
-        var want = S.open;
-        rpc("board_read", { p_id: want }).then(function (r) {
-          if (!r || !r.ok || S.open !== want || list.querySelector('[data-id="' + want + '"]')) return;
-          var p = r.post;
-          var one = item({ id: p.id, title: p.title, excerpt: "", nickname: p.nickname, level: p.level, staff: p.staff,
-                           created_at: p.created_at, comments: r.comments.filter(function (c) { return c.status === "approved"; }).length,
-                           status: p.status });
-          one.classList.add("bd-item--linked");
-          list.insertBefore(one, list.firstChild);
-          $("#bd-empty", sec).hidden = true;
-          openItem(one, want, true);
-          if (one.scrollIntoView) one.scrollIntoView({ block: "start" });
-        });
+      if (!more) {
+        pins.textContent = "";
+        (r.notices || []).forEach(function (n) { pins.appendChild(row(n, true)); });
+        if (want === "all") loadLetters().then(function (L) { if (L.length && S.board === "all") pins.appendChild(lettersPin()); });
       }
-    }
+      list.textContent = "";
+      S.rows.forEach(function (x) { list.appendChild(row(x, false)); });
+      $("#bd-empty", sec).hidden = S.rows.length > 0;
+      $("#bd-more", sec).hidden = !S.more;
+      loadMine();
+    });
   }
 
-  function item(row) {
-    var li = el("li", "bd-item");
-    li.setAttribute("data-id", row.id);
-    var sum = el("button", "bd-sum");
-    sum.type = "button";
-    sum.setAttribute("aria-expanded", "false");
-    sum.setAttribute("aria-controls", "bd-d-" + row.id);
-    sum.appendChild(el("span", "bd-title", row.title));
-    if (row.excerpt) sum.appendChild(el("span", "bd-ex", row.excerpt + (row.cut ? "…" : "")));
-    var meta = el("span", "bd-meta");
-    meta.appendChild(author(row.nickname, row.level, row.staff));
+  function row(x, pin) {
+    var li = el("li", "cafe-row" + (pin ? " cafe-row--pin" : ""));
+    li.setAttribute("data-id", x.id);
+    var a = el("a", "cafe-link");
+    a.href = "#p" + x.id;
+    a.appendChild(el("span", "cafe-no", pin ? t("bd.b.notice", "공지") : String(x.id)));
+    var main = el("span", "cafe-main");
+    var line = el("span", "cafe-line");
+    if (S.board === "all" && !pin && x.board) line.appendChild(el("span", "cafe-tag", boardName(x.board)));
+    line.appendChild(el("span", "cafe-title", x.title));
+    if (x.comments) line.appendChild(el("span", "cafe-cn", "[" + x.comments + "]"));
+    if (x.status && x.status !== "approved") line.appendChild(statusBadge(x.status));
+    main.appendChild(line);
+    var meta = el("span", "cafe-meta");
+    meta.appendChild(author(x.nickname, x.level, x.staff));
     meta.appendChild(el("span", "bd-dot", "·"));
-    meta.appendChild(el("span", "bd-when", when(row.created_at)));
-    if (row.status && row.status !== "approved") meta.appendChild(statusBadge(row.status));
-    meta.appendChild(el("span", "bd-dot", "·"));
-    meta.appendChild(el("span", "bd-cn", t("bd.cmts", "댓글 ") + (row.comments || 0)));
-    sum.appendChild(meta);
-    var det = el("div", "bd-detail");
-    det.id = "bd-d-" + row.id;
-    det.hidden = true;
-    sum.addEventListener("click", function () {
-      if (det.hidden) openItem(li, row.id); else closeItem(li);
-    });
-    li.appendChild(sum);
-    li.appendChild(det);
+    meta.appendChild(el("span", "bd-when", when(x.created_at)));
+    main.appendChild(meta);
+    a.appendChild(main);
+    li.appendChild(a);
     return li;
   }
   function statusBadge(st) {
@@ -510,45 +610,124 @@
       st === "pending" ? t("bd.st.pending", "확인 중") : t("bd.st.rejected", "내려감"));
   }
 
-  function closeItem(li) {
-    var sum = li.querySelector(".bd-sum"), det = li.querySelector(".bd-detail");
-    det.hidden = true;
-    sum.setAttribute("aria-expanded", "false");
-    li.classList.remove("is-open");
-    if (S.open === +li.getAttribute("data-id")) S.open = null;
+  /* ---------- 인순이의 편지(옛 원문) ---------- */
+  function loadLetters() {
+    if (S.letters) return Promise.resolve(S.letters);
+    return fetch("assets/data/letters.json").then(function (r) { return r.json(); })
+      .then(function (d) { S.letters = (d && d.items) || []; return S.letters; })["catch"](function () { return []; });
+  }
+  function letterDate(l) {
+    var p = l.posted.split("-");
+    return isEN() ? l.posted : (parseInt(p[0], 10) + ". " + parseInt(p[1], 10) + ". " + parseInt(p[2], 10) + ".");
+  }
+  function artist() {
+    var w = el("span", "bd-who-line");
+    w.appendChild(el("span", "bd-nick", t("bd.artist", "인순이")));
+    w.appendChild(el("span", "bd-badge bd-badge--artist", t("bd.artistBadge", "아티스트")));
+    return w;
+  }
+  function letterRow(l, i) {
+    var li = el("li", "cafe-row cafe-row--letter");
+    var a = el("a", "cafe-link");
+    a.href = "#l" + i;
+    a.appendChild(el("span", "cafe-no", l.posted.slice(0, 4)));
+    var main = el("span", "cafe-main");
+    var line = el("span", "cafe-line");
+    line.appendChild(el("span", "cafe-title", "「" + l.title + "」"));
+    main.appendChild(line);
+    var meta = el("span", "cafe-meta");
+    meta.appendChild(artist());
+    meta.appendChild(el("span", "bd-dot", "·"));
+    meta.appendChild(el("span", "bd-when", letterDate(l)));
+    main.appendChild(meta);
+    a.appendChild(main);
+    li.appendChild(a);
+    return li;
+  }
+  function lettersPin() {
+    var li = el("li", "cafe-row cafe-row--pin cafe-row--letter");
+    var a = el("a", "cafe-link");
+    a.href = "#b=letters";
+    a.appendChild(el("span", "cafe-no", t("bd.pinLetters", "편지")));
+    var main = el("span", "cafe-main");
+    var line = el("span", "cafe-line");
+    line.appendChild(el("span", "cafe-title", t("bd.lettersPin", "인순이가 팬들에게 직접 남긴 편지") + " " + (S.letters || []).length + t("bd.lettersPin2", "편")));
+    main.appendChild(line);
+    var meta = el("span", "cafe-meta");
+    meta.appendChild(artist());
+    main.appendChild(meta);
+    a.appendChild(main);
+    li.appendChild(a);
+    return li;
+  }
+  function openLetter(i) {
+    show("post");
+    var box = $("#cafe-post", sec);
+    box.textContent = "";
+    loadLetters().then(function (L) {
+      var l = L[i];
+      if (!l) { box.appendChild(el("p", "sb-msg is-bad", why("not_found"))); return; }
+      box.appendChild(backLink("letters"));
+      box.appendChild(el("p", "cafe-post-board", boardName("letters")));
+      box.appendChild(el("h3", "cafe-post-title", "「" + l.title + "」"));
+      var meta = el("p", "cafe-post-meta");
+      meta.appendChild(artist());
+      var years = new Date().getFullYear() - parseInt(l.posted.slice(0, 4), 10);
+      meta.appendChild(el("span", "bd-when cafe-letter-when", isEN()
+        ? (l.posted + " — " + years + " years ago · " + l.hit + " reads and " + l.comments + " replies at the time")
+        : (letterDate(l) + " — " + years + "년 전 · 당시 조회 " + l.hit + " · 댓글 " + l.comments)));
+      box.appendChild(meta);
+      /* 원문 존중: textContent 로만, 번역하지 않는다. 손글씨 체 그대로 */
+      var body = el("div", "letter-body cafe-letter-body", l.body);
+      body.setAttribute("lang", "ko");
+      box.appendChild(body);
+      box.appendChild(el("p", "form-hint", t("bd.letterNote", "인순이가 2005년 팬 게시판에 직접 쓴 글입니다. 맞춤법도 띄어쓰기도 손대지 않았습니다.")));
+      box.appendChild(backLink("letters", true));
+      toTop();
+    });
+  }
+  function backLink(board, bottom) {
+    var a = el("a", bottom ? "btn btn--ghost btn--sm cafe-back cafe-back--bottom" : "cafe-back", t("bd.back2", "← 목록으로"));
+    a.href = "#b=" + (board || S.board);
+    return a;
   }
 
-  function openItem(li, id, quiet) {
-    /* 한 번에 하나만 펼친다 — 긴 글 여러 편이 한꺼번에 열리면 다시 어지러워진다 */
-    Array.prototype.forEach.call(sec.querySelectorAll(".bd-item.is-open"), function (o) { if (o !== li) closeItem(o); });
-    var sum = li.querySelector(".bd-sum"), det = li.querySelector(".bd-detail");
-    det.hidden = false;
-    sum.setAttribute("aria-expanded", "true");
-    li.classList.add("is-open");
-    S.open = id;
-    det.textContent = "";
-    det.appendChild(el("p", "bd-loading", t("bd.loading", "불러오는 중…")));
+  /* ---------- 글 보기 ---------- */
+  function openPost(id) {
+    show("post");
+    var box = $("#cafe-post", sec);
+    box.textContent = "";
+    box.appendChild(el("p", "bd-loading", t("bd.loading", "불러오는 중…")));
+    toTop();
     rpc("board_read", { p_id: id }).then(function (r) {
-      det.textContent = "";
-      if (!r || !r.ok) { det.appendChild(el("p", "sb-msg is-bad", why(r && r.reason))); return; }
-      renderDetail(det, r, li);
-      if (!quiet && li.scrollIntoView) {
-        var top = li.getBoundingClientRect().top;
-        if (top < 60 || top > window.innerHeight * .6) li.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (S.view !== "post" || parseHash().id !== id) return;
+      box.textContent = "";
+      if (!r || !r.ok) {
+        box.appendChild(backLink());
+        box.appendChild(el("p", "sb-msg is-bad", why(r && r.reason)));
+        return;
       }
+      renderPost(box, r);
     });
   }
 
-  function renderDetail(det, r, li) {
+  function renderPost(box, r) {
     var p = r.post;
-    var body = el("div", "bd-body", p.body);
-    det.appendChild(body);
-    if (p.edited_at) det.appendChild(el("p", "bd-edited", t("bd.edited", "고친 글 · ") + when(p.edited_at)));
+    box.appendChild(backLink(p.board === "notice" ? "notice" : S.board));
+    box.appendChild(el("p", "cafe-post-board", boardName(p.board)));
+    box.appendChild(el("h3", "cafe-post-title", p.title));
+    var meta = el("p", "cafe-post-meta");
+    meta.appendChild(author(p.nickname, p.level, p.staff));
+    meta.appendChild(el("span", "bd-dot", "·"));
+    meta.appendChild(el("span", "bd-when", when(p.created_at)));
+    if (p.edited_at) { meta.appendChild(el("span", "bd-dot", "·")); meta.appendChild(el("span", "bd-when", t("bd.editedShort", "고친 글"))); }
+    if (p.status !== "approved") meta.appendChild(statusBadge(p.status));
+    box.appendChild(meta);
+    box.appendChild(el("div", "bd-body", p.body));
     if (p.mine) {
       var acts = el("div", "bd-acts");
-      var ed = el("button", "btn btn--ghost btn--sm", t("bd.edit", "고치기"));
-      ed.type = "button";
-      ed.addEventListener("click", function () { startEdit(p); });   /* p.status 도 함께 — 안내 문구가 상태를 따른다 */
+      var ed = el("a", "btn btn--ghost btn--sm", t("bd.edit", "고치기"));
+      ed.href = "#edit=" + p.id;
       var del = el("button", "btn btn--ghost btn--sm", t("bd.del", "지우기"));
       del.type = "button";
       del.addEventListener("click", function () {
@@ -557,25 +736,22 @@
         rpc("board_delete", { p_id: p.id }, true).then(function (res) {
           del.disabled = false;
           if (res && res.ok) {
-            S.rows = S.rows.filter(function (x) { return x.id !== p.id; });
-            S.open = null;
-            renderList();
-            loadMine();
-            say($("#bd-msg", sec), t("bd.deleted", "지웠습니다."), "ok");
-          } else say(det.querySelector(".bd-cmsg"), why(res && res.reason), "bad");
+            S.flash = t("bd.deleted", "지웠습니다."); S.flashKind = "ok";
+            go("#b=" + S.board);
+            renderStat();
+          } else say(box.querySelector(".bd-cmsg"), why(res && res.reason), "bad");
         });
       });
       acts.appendChild(ed);
       acts.appendChild(del);
-      det.appendChild(acts);
+      box.appendChild(acts);
     }
 
     /* 댓글 */
     var cwrap = el("div", "bd-cmts");
-    var ch = el("h3", "bd-cmts-h", t("bd.cmtsH", "댓글") + " " + r.comments.filter(function (c) { return c.status === "approved"; }).length);
-    cwrap.appendChild(ch);
+    cwrap.appendChild(el("h4", "bd-cmts-h", t("bd.cmtsH", "댓글") + " " + r.comments.filter(function (c) { return c.status === "approved"; }).length));
     var ol = el("ol", "bd-clist");
-    r.comments.forEach(function (c) { ol.appendChild(comment(c, p.id, li)); });
+    r.comments.forEach(function (c) { ol.appendChild(comment(c, p.id)); });
     cwrap.appendChild(ol);
     var cmsg = el("p", "sb-msg bd-cmsg");
     cmsg.setAttribute("role", "status");
@@ -592,7 +768,7 @@
       ta.maxLength = 1000;
       ta.rows = 3;
       ta.placeholder = t("bd.cmtPh", "따뜻한 한마디를 남겨 주세요");
-      /* 목록을 다시 그려도(더 보기·다시 들어옴) 쓰던 댓글을 지킨다 */
+      /* 다시 그려도(다른 글 보고 돌아옴·댓글 올림) 쓰던 댓글을 지킨다 */
       ta.value = S.cdraft[p.id] || "";
       ta.addEventListener("input", function () { S.cdraft[p.id] = ta.value; });
       var send = el("button", "btn btn--gold btn--sm", t("bd.cmtSend", "댓글 올리기"));
@@ -608,29 +784,29 @@
           if (res && res.ok) {
             ta.value = "";
             delete S.cdraft[p.id];
-            if (res.status === "approved") say(cmsg, t("bd.cmtOk", "댓글을 올렸습니다."), "ok");
-            else say(cmsg, t("bd.cmtWaitOk", "댓글을 받았습니다. 운영자가 확인한 뒤 모두에게 보입니다."), "ok");
-            refreshOpen(li, p.id, cmsg.textContent);
+            refreshPost(p.id, res.status === "approved" ? t("bd.cmtOk", "댓글을 올렸습니다.")
+                                                        : t("bd.cmtWaitOk", "댓글을 받았습니다. 운영자가 확인한 뒤 모두에게 보입니다."));
           } else handleWriteFail(res, cmsg);
         });
       });
       cwrap.appendChild(f);
     } else {
-      var go = el("button", "btn btn--ghost btn--sm",
+      var gb = el("button", "btn btn--ghost btn--sm",
         !S.me ? t("bd.cmtLogin", "로그인하고 댓글 쓰기") : !S.me.joined ? t("bd.cmtJoin", "가입 마치고 댓글 쓰기") : why("blocked"));
-      go.type = "button";
-      if (S.me && S.me.joined) go.disabled = true;
-      go.addEventListener("click", function () {
+      gb.type = "button";
+      if (S.me && S.me.joined) gb.disabled = true;
+      gb.addEventListener("click", function () {
         lsSet(NKEY, { what: "open", id: p.id });
-        openSheet(S.me ? "join" : "start", go);
+        openSheet(S.me ? "join" : "start", gb);
       });
-      cwrap.appendChild(go);
+      cwrap.appendChild(gb);
     }
     cwrap.appendChild(cmsg);
-    det.appendChild(cwrap);
+    box.appendChild(cwrap);
+    box.appendChild(backLink(p.board === "notice" ? "notice" : S.board, true));
   }
 
-  function comment(c, postId, li) {
+  function comment(c, postId) {
     var it = el("li", "bd-c");
     var head = el("p", "bd-c-head");
     head.appendChild(author(c.nickname, c.level, c.staff));
@@ -645,7 +821,7 @@
       del.addEventListener("click", function () {
         if (!window.confirm(t("bd.cdelQ", "이 댓글을 지울까요?"))) return;
         rpc("comment_delete", { p_id: c.id }, true).then(function (res) {
-          if (res && res.ok) refreshOpen(li, postId, t("bd.deleted", "지웠습니다."));
+          if (res && res.ok) refreshPost(postId, t("bd.deleted", "지웠습니다."));
           else window.alert(why(res && res.reason));
         });
       });
@@ -654,35 +830,30 @@
     return it;
   }
 
-  function refreshOpen(li, id, note) {
+  function refreshPost(id, note) {
     rpc("board_read", { p_id: id }).then(function (r) {
-      var det = li.querySelector(".bd-detail");
-      det.textContent = "";
-      if (!r || !r.ok) { det.appendChild(el("p", "sb-msg is-bad", why(r && r.reason))); return; }
-      renderDetail(det, r, li);
-      if (note) say(det.querySelector(".bd-cmsg"), note, "ok");
-      var cnt = r.comments.filter(function (c) { return c.status === "approved"; }).length;
-      var cn = li.querySelector(".bd-cn");
-      if (cn) cn.textContent = t("bd.cmts", "댓글 ") + cnt;
-      S.rows.forEach(function (x) { if (x.id === id) x.comments = cnt; });
+      if (S.view !== "post") return;
+      var box = $("#cafe-post", sec);
+      box.textContent = "";
+      if (!r || !r.ok) { box.appendChild(backLink()); box.appendChild(el("p", "sb-msg is-bad", why(r && r.reason))); return; }
+      renderPost(box, r);
+      if (note) say(box.querySelector(".bd-cmsg"), note, "ok");
     });
     loadMe().then(renderWho);
   }
 
-  /* ---------- 내 글(검수 중·내려감) ---------- */
+  /* ---------- 확인을 기다리는 내 글 ---------- */
   function loadMine() {
     var box = $("#bd-mine", sec);
     if (!box) return;
-    if (!joined()) { box.hidden = true; return; }
+    if (!live() || !joined() || S.board === "letters") { box.hidden = true; return; }
     rpc("board_mine", {}, true).then(function (r) {
       var waiting = (r && r.ok ? r.rows : []).filter(function (x) { return x.status !== "approved"; });
       var ol = $("#bd-mine-list", box);
       ol.textContent = "";
       waiting.forEach(function (x) {
-        var li = item({ id: x.id, title: x.title, nickname: S.me.nickname, level: S.me.level, staff: S.me.admin,
-                        created_at: x.created_at, comments: x.comments, status: x.status });
-        li.classList.add("bd-item--mine");
-        ol.appendChild(li);
+        ol.appendChild(row({ id: x.id, board: x.board, title: x.title, nickname: S.me.nickname, level: S.me.level, staff: S.me.admin,
+                             created_at: x.created_at, comments: x.comments, status: x.status }, false));
       });
       $("#bd-mine-n", box).textContent = waiting.length;
       box.hidden = waiting.length === 0;
@@ -694,32 +865,47 @@
   /* ---------- 글쓰기 ---------- */
   function draftSave() {
     if (S.editing) return;   /* 고치는 중인 글은 초안으로 저장하지 않는다(새 글 초안을 덮지 않게) */
-    var ti = $("#bd-title", sec), bo = $("#bd-body", sec);
+    var ti = sec && $("#bd-title", sec), bo = sec && $("#bd-body", sec), bs = sec && $("#bd-boardsel", sec);
     if (!ti || !bo) return;
     if (!ti.value && !bo.value) { lsDel(DKEY); return; }
-    lsSet(DKEY, { title: ti.value, body: bo.value, at: Date.now() });
+    lsSet(DKEY, { title: ti.value, body: bo.value, board: bs ? bs.value : "free", at: Date.now() });
   }
   function counter() {
     var bo = $("#bd-body", sec), c = $("#bd-count", sec);
     if (bo && c) c.textContent = bo.value.length.toLocaleString() + " / 4,000";
   }
+  function fillBoards(sel, current) {
+    sel.textContent = "";
+    writable().forEach(function (k) {
+      var o = el("option", null, boardName(k));
+      o.value = k;
+      if (k === current) o.selected = true;
+      sel.appendChild(o);
+    });
+    if (writable().indexOf(current) < 0) sel.value = "free";
+  }
 
-  function openForm(edit) {
+  function openForm(edit, board) {
     var f = $("#bd-form", sec);
     if (!f) return;
-    var ti = $("#bd-title", sec), bo = $("#bd-body", sec), hint = $("#bd-form-hint", sec), go = $("#bd-go", sec);
+    var ti = $("#bd-title", sec), bo = $("#bd-body", sec), hint = $("#bd-form-hint", sec), gob = $("#bd-go", sec);
+    var bs = $("#bd-boardsel", sec);
     S.editing = edit || null;
+    show("write");
     if (edit) {
       ti.value = edit.title;
       bo.value = edit.body;
-      go.textContent = t("bd.saveEdit", "고친 내용 올리기");
+      fillBoards(bs, edit.board);
+      gob.textContent = t("bd.saveEdit", "고친 내용 올리기");
       $("#bd-form-h", sec).textContent = t("bd.editH", "글 고치기");
       $("#bd-cancel", sec).textContent = t("bd.closeEdit", "고치지 않고 닫기");
     } else {
-      go.textContent = t("bd.post", "올리기");
-      $("#bd-cancel", sec).textContent = t("bd.closeForm", "접어 두기");
+      gob.textContent = t("bd.post", "올리기");
+      $("#bd-cancel", sec).textContent = t("bd.cancelWrite", "쓰기 그만두기");
       $("#bd-form-h", sec).textContent = t("bd.newH", "새 글 쓰기");
       var d = lsGet(DKEY);
+      var pick = board || (d && d.board) || (S.board !== "all" && S.board !== "letters" ? S.board : "free");
+      fillBoards(bs, pick);
       if (d && (d.title || d.body) && !ti.value && !bo.value) {
         ti.value = d.title || "";
         bo.value = d.body || "";
@@ -735,29 +921,24 @@
       : edit ? t("bd.hintEditSprout", "고친 글은 운영자가 다시 확인한 뒤 올라갑니다.")
              : t("bd.hintSprout", "새싹 회원의 글은 운영자가 확인한 뒤 올라갑니다. 보통 하루 안에 올라갑니다.");
     counter();
-    f.hidden = false;
-    $("#bd-write-btn", sec).hidden = true;
-    if (f.scrollIntoView) f.scrollIntoView({ behavior: "smooth", block: "start" });
+    toTop();
     setTimeout(function () { (ti.value ? bo : ti).focus(); }, 250);
   }
   function closeForm() {
-    var f = $("#bd-form", sec);
-    if (!f) return;
-    f.hidden = true;
-    $("#bd-write-btn", sec).hidden = false;
-    if (S.editing) { $("#bd-title", sec).value = ""; $("#bd-body", sec).value = ""; S.editing = null; }
+    if (S.editing && sec) { $("#bd-title", sec).value = ""; $("#bd-body", sec).value = ""; }
+    S.editing = null;
   }
-  function startEdit(p) {
-    if (!canWrite()) { say($("#bd-msg", sec), why("blocked"), "bad"); return; }
-    openForm({ id: p.id, title: p.title, body: p.body, status: p.status });
+  function startEdit(id) {
+    if (!canWrite()) { S.flash = why("blocked"); S.flashKind = "bad"; go("#b=" + S.board); return; }
+    rpc("board_read", { p_id: id }).then(function (r) {
+      if (!r || !r.ok || !r.post.mine) { S.flash = why((r && r.reason) || "not_found"); S.flashKind = "bad"; go("#b=" + S.board); return; }
+      var p = r.post;
+      openForm({ id: p.id, board: p.board, title: p.title, body: p.body, status: p.status });
+    });
   }
 
   function onWrite() {
-    if (!S.ready) { say($("#bd-msg", sec), why("not_ready"), "bad"); return; }
-    if (!S.me) { lsSet(NKEY, { what: "write" }); openSheet("start", $("#bd-write-btn", sec), t("bd.needLogin", "글을 쓰려면 먼저 회원으로 들어와 주세요.")); return; }
-    if (!S.me.joined) { lsSet(NKEY, { what: "write" }); openSheet("join", $("#bd-write-btn", sec)); return; }
-    if (S.me.level === "blocked") { say($("#bd-msg", sec), why("blocked"), "bad"); return; }
-    openForm(null);
+    go("#write" + (S.board !== "all" && S.board !== "letters" ? "=" + S.board : ""));
   }
 
   function handleWriteFail(res, node) {
@@ -769,40 +950,55 @@
 
   function onSubmit(e) {
     e.preventDefault();
-    var ti = $("#bd-title", sec), bo = $("#bd-body", sec), go = $("#bd-go", sec), msg = $("#bd-msg", sec);
-    var title = ti.value.trim(), body = bo.value.trim();
+    var ti = $("#bd-title", sec), bo = $("#bd-body", sec), gob = $("#bd-go", sec), msg = $("#bd-msg", sec);
+    var bsel = $("#bd-boardsel", sec);
+    var title = ti.value.trim(), body = bo.value.trim(), board = bsel.value;
     if (title.length < 2) { say(msg, why("title_empty"), "bad"); ti.focus(); return; }
     if (body.length < 2) { say(msg, why("empty"), "bad"); bo.focus(); return; }
-    go.disabled = true;
+    gob.disabled = true;
     var editing = S.editing;
     var call = editing
-      ? rpc("board_edit", { p_id: editing.id, p_title: title, p_body: body }, true)
-      : rpc("board_write", { p_title: title, p_body: body }, true);
+      ? rpc("board_edit", { p_id: editing.id, p_board: board, p_title: title, p_body: body }, true)
+      : rpc("board_write", { p_board: board, p_title: title, p_body: body }, true);
     call.then(function (res) {
-      go.disabled = false;
+      gob.disabled = false;
       if (!res || !res.ok) { handleWriteFail(res, msg); return; }   /* 실패하면 쓴 글을 그대로 둔다 */
       if (!editing) lsDel(DKEY);
+      S.editing = null;
       ti.value = ""; bo.value = "";
-      closeForm();
+      S.board = board;
+      renderStat();
+      loadMe().then(renderWho);
       if (res.status === "approved") {
-        say(msg, editing ? t("bd.editOk", "고친 내용을 올렸습니다.") : t("bd.postOk", "올렸습니다. 사랑방에 바로 보입니다."), "ok");
-        S.open = editing ? editing.id : res.id;
-      } else if (res.status === "rejected") {
-        say(msg, t("bd.editRejected", "고친 내용을 저장했습니다. 내려간 글이라 공개되지는 않습니다."), "ok");
-        S.open = null;
-      } else if (editing && editing.status === "pending" && S.me && (S.me.level === "member" || S.me.admin)) {
-        say(msg, t("bd.editStillWait", "고친 내용을 저장했습니다. 확인이 끝나면 올라갑니다."), "ok");
-        S.open = null;
-      } else {
-        say(msg, editing ? t("bd.editWait", "고친 글을 받았습니다. 운영자가 다시 확인한 뒤 올라갑니다.")
-                         : t("bd.postWait", "글을 받았습니다. 운영자가 확인한 뒤 올라갑니다. '확인을 기다리는 내 글'에서 볼 수 있어요."), "ok");
-        S.open = null;
+        S.flash = editing ? t("bd.editOk", "고친 내용을 올렸습니다.") : t("bd.postOk", "올렸습니다. 사랑방에 바로 보입니다.");
+        S.flashKind = "ok";
+        go("#p" + (editing ? editing.id : res.id));
+        return;
+      }
+      S.flashKind = "ok";
+      if (res.status === "rejected") S.flash = t("bd.editRejected", "고친 내용을 저장했습니다. 내려간 글이라 공개되지는 않습니다.");
+      else if (editing && editing.status === "pending" && S.me && (S.me.level === "member" || S.me.admin))
+        S.flash = t("bd.editStillWait", "고친 내용을 저장했습니다. 확인이 끝나면 올라갑니다.");
+      else {
+        S.flash = editing ? t("bd.editWait", "고친 글을 받았습니다. 운영자가 다시 확인한 뒤 올라갑니다.")
+                          : t("bd.postWait", "글을 받았습니다. 운영자가 확인한 뒤 올라갑니다. '확인을 기다리는 내 글'에서 볼 수 있어요.");
         S.showMine = true;
       }
-      loadList(false);
-      loadMine();
-      loadMe().then(renderWho);
+      go("#b=" + board);
     });
+  }
+
+  function onCancel() {
+    if (S.editing) {
+      var changed = $("#bd-title", sec).value !== S.editing.title || $("#bd-body", sec).value !== S.editing.body;
+      if (changed && !window.confirm(t("bd.dropEdit", "고친 내용을 버리고 닫을까요?"))) return;
+      var back = S.editing.id;
+      closeForm();
+      go("#p" + back);
+      return;
+    }
+    draftSave();
+    go("#b=" + S.board);
   }
 
   /* 로그아웃·탈퇴 뒤 — 이 기기에 남은 쓰던 글·이어서 할 일·댓글 초안을 치운다.
@@ -815,7 +1011,7 @@
     var ti = sec && $("#bd-title", sec), bo = sec && $("#bd-body", sec);
     if (ti) ti.value = "";
     if (bo) bo.value = "";
-    closeForm();
+    if (S.view === "write") go("#b=" + S.board);
   }
 
   /* ---------- 회원 창(로그인·가입·내 정보) ---------- */
@@ -922,15 +1118,15 @@
     if (!S.me.joined) { openSheet("join", null); return; }
     lsDel(NKEY);
     closeSheet();
-    if (n.what === "write") openForm(null);
-    if (n.what === "open" && n.id) { S.open = n.id; renderList(); }
+    if (n.what === "write") go("#write" + (n.board ? "=" + n.board : ""));
+    if (n.what === "open" && n.id) go("#p" + n.id);
   }
 
   function afterLogin(note) {
     return loadMe().then(function () {
       renderWho();
-      loadList(false);
-      loadMine();
+      renderMenu();
+      route();
       if (!S.me) { openSheet("start", null, why("auth_fail")); return; }
       if (!S.me.joined) { openSheet("join", null, note); return; }
       closeSheet();
@@ -1264,11 +1460,8 @@
     return s;
   }
 
-  /* ---------- 숨기기 · 시작 ---------- */
-  function hideBoard() {
-    if (sec) sec.hidden = true;
-  }
-
+  /* ---------- 시작 ---------- */
+  var bound = false;
   function initBoard() {
     var s = document.getElementById("board");
     if (s !== sec) closeSheet();
@@ -1276,20 +1469,14 @@
     if (s.__bd) return;          /* 같은 <main> 에 두 번 걸지 않는다 */
     s.__bd = true;
     sec = s;
-    if (!cfg() || !(window.INSOONI_CONFIG || {}).board) { hideBoard(); return; }   /* config.js 의 스위치 */
+    /* config.js 의 스위치. 꺼져 있으면 카페 틀과 '인순이의 편지'만 열고 서버에는 묻지 않는다 */
+    S.open = !!(cfg() && (window.INSOONI_CONFIG || {}).board);
+    S.ready = true;
+    S.board = "all"; S.rows = []; S.view = "list";
 
     $("#bd-write-btn", sec).addEventListener("click", onWrite);
     $("#bd-form", sec).addEventListener("submit", onSubmit);
-    $("#bd-cancel", sec).addEventListener("click", function () {
-      if (S.editing) {
-        var changed = $("#bd-title", sec).value !== S.editing.title || $("#bd-body", sec).value !== S.editing.body;
-        if (changed && !window.confirm(t("bd.dropEdit", "고친 내용을 버리고 닫을까요?"))) return;
-        closeForm();
-        return;
-      }
-      draftSave();
-      closeForm();
-    });
+    $("#bd-cancel", sec).addEventListener("click", onCancel);
     $("#bd-more", sec).addEventListener("click", function () { loadList(true); });
     var dt = null;
     ["#bd-title", "#bd-body"].forEach(function (q) {
@@ -1299,22 +1486,22 @@
         dt = setTimeout(draftSave, 400);
       });
     });
-    /* 창을 닫거나 다른 데로 가도 쓰던 글을 지킨다 */
-    window.addEventListener("pagehide", draftSave);
+    $("#bd-boardsel", sec).addEventListener("change", draftSave);
+    if (!bound) {
+      bound = true;
+      /* 창을 닫거나 다른 데로 가도 쓰던 글을 지킨다 */
+      window.addEventListener("pagehide", draftSave);
+      window.addEventListener("hashchange", function () { if (sec && document.body.contains(sec)) route(); });
+    }
 
-    var m = /^#p(\d+)$/.exec(location.hash || "");
-    if (m) S.open = +m[1];
-
+    if (!S.open) { renderWho(); renderStat(); route(); return; }
     S.settingsP = Auth.settings().then(function (st) { S.settings = st; return st; });
     Auth.callback().then(function (cb) {
       return loadMe().then(function () {
-        if (!S.ready) { hideBoard(); return; }
-        sec.hidden = false;
         renderWho();
-        loadList(false);
-        loadMine();
-        if (!cb) return;
-        if (sec.scrollIntoView) sec.scrollIntoView({ block: "start" });
+        renderStat();
+        route();
+        if (!cb || !live()) return;
         if (cb.kind === "error" && cb.reason === "link_expired") {
           if (cb.purpose === "recover") openSheet("recover", null, t("bd.linkOldRe", "링크가 만료됐거나 이미 쓰였습니다. 비밀번호 메일을 다시 받아 주세요."));
           else openSheet("start", null, t("bd.linkOldUp", "링크가 만료됐거나 이미 쓰였습니다. 가입 확인 전이라면 '처음 가입'을 같은 이메일로 다시 누르면 확인 메일이 다시 갑니다."));
@@ -1340,21 +1527,11 @@
     Array.prototype.forEach.call(sheet.querySelectorAll(".bd-kakao"), function (b) { b.disabled = false; });
   });
 
-  /* 언어를 바꾸면 동적으로 만든 글자도 다시 그린다 */
-  try {
-    new MutationObserver(function () {
-      if (!sec || !document.body.contains(sec) || sec.hidden) return;
-      renderWho();
-      renderList();
-      if (sheet && !sheet.hidden) closeSheet();
-    }).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
-  } catch (e) {}
-
   window.INSOONI_PAGE_INIT = window.INSOONI_PAGE_INIT || [];
   window.INSOONI_PAGE_INIT.push(initBoard);
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initBoard);
   else initBoard();
 
   /* 시험용 창구 — 화면 검사기가 상태를 들여다볼 수 있게(권한과 무관한 읽기 전용) */
-  window.INSOONI_BOARD = { state: function () { return { me: S.me, rows: S.rows.length, ready: S.ready }; } };
+  window.INSOONI_BOARD = { state: function () { return { me: S.me, rows: S.rows.length, ready: S.ready, open: S.open, view: S.view, board: S.board }; } };
 })();

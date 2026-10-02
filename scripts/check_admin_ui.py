@@ -1,6 +1,5 @@
 # 실행: 사이트 루트에서 `python3 -m http.server 8908` 을 띄운 뒤 playwright 파이썬으로.
-# Supabase 요청은 전부 가짜 서버가 받는다 — 운영 DB 에 글이 들어가지 않는다.
-# 사랑방 '내 글 지우기' + 운영자 화면 — 실제 브라우저로 눌러 본다.
+# 운영자 화면(옛 사연·꿈·한 줄 검수) — 실제 브라우저로 눌러 본다. 회원·게시판 검수는 check_board_ui.py.
 # Supabase 로 가는 요청은 전부 가짜 서버가 받는다. 운영 DB 에 테스트 글이 들어가면 안 된다.
 # 가짜 서버가 처리하지 못한 요청은 막고(abort) 기록한다 — 하나라도 있으면 실패다.
 import json, sys, time
@@ -129,107 +128,8 @@ def names(f): return [c[0] for c in f.calls]
 with sync_playwright() as p:
     br = p.chromium.launch()
 
-    # ════════════ A. 사랑방 — 내 글 지우기 ════════════
-    def community(fake, prep=None):
-        ctx = br.new_context(viewport={"width": 390, "height": 844})
-        errs = []
-        pg = ctx.new_page()
-        pg.on("pageerror", lambda e: errs.append(str(e)))
-        pg.route("**://%s/**" % SUPA, fake.handle)
-        if prep: pg.add_init_script(prep)
-        pg.goto(B + "community.html", wait_until="load")
-        pg.wait_for_timeout(1500)
-        return ctx, pg, errs
-
-    def open_fold(pg):
-        pg.evaluate("document.querySelector('#sb-fold').open = true")
-        pg.wait_for_timeout(200)
-
-    def send(pg, text):
-        pg.fill("#sb-body", text)
-        pg.click("#sb-form button[type=submit]")
-        pg.wait_for_timeout(800)
-
-    f = Fake()
-    ctx, pg, errs = community(f)
-    pg.on("dialog", lambda d: d.accept())                          # 확인창에서 '확인'
-    open_fold(pg)
-    send(pg, "테스트 한 줄입니다")
-    check("A1 글 보낸 뒤 '지금 지우기' 보임", pg.is_visible("#sb-cancel"))
-    check("A2 '내가 남긴 글' 목록에 1개", pg.is_visible("#sb-mine") and pg.locator("#sb-mine-list li").count() == 1,
-          pg.inner_text("#sb-mine") if pg.is_visible("#sb-mine") else "숨음")
-    stored = pg.evaluate("localStorage.getItem('insooni_my_notes')")
-    check("A3 토큰과 첫머리가 기기에 남음", stored and "tok-1" in stored and "테스트 한 줄" in stored, stored)
-    pg.click("#sb-cancel"); pg.wait_for_timeout(800)
-    check("A4 지우기 → withdraw_note(tok-1) 호출", ("withdraw_note", {"p_token": "tok-1"}) in f.calls, names(f))
-    check("A5 지운 뒤 '지웠습니다' 안내·목록 비움", "지웠습니다" in pg.inner_text("#sb-msg") and pg.is_hidden("#sb-mine"),
-          pg.inner_text("#sb-msg"))
-
-    # 칩(바로 오르는 글)도 지울 수 있다 — 예전엔 단추를 숨겼다
-    send(pg, "오늘도 건강하세요")
-    check("A6 칩으로 바로 오른 글에도 '지금 지우기' 보임", pg.is_visible("#sb-cancel"))
-    reloads_before = names(f).count("view:public_notes")
-    pg.click("#sb-mine summary"); pg.wait_for_timeout(200)
-    pg.click("#sb-mine-list li button"); pg.wait_for_timeout(1000)
-    check("A7 목록에서 지우기 → 올라간 글도 지움, '사랑방에서도 사라졌습니다'",
-          "사라졌습니다" in pg.inner_text("#sb-mine-msg"), pg.inner_text("#sb-mine-msg"))
-    check("A8 올라간 글을 지우면 줄기를 바로 다시 읽음", names(f).count("view:public_notes") > reloads_before,
-          "%d→%d" % (reloads_before, names(f).count("view:public_notes")))
-    check("A9 지운 글은 서버에도 없음", not f.notes, json.dumps(f.notes))
-
-    ctx.close()
-
-    # 확인창에서 '취소'하면 아무 일도 없다
-
-    f2 = Fake()
-    ctx, pg, errs2 = community(f2)
-    pg.on("dialog", lambda d: d.dismiss())                         # 확인창에서 '취소'
-    open_fold(pg); send(pg, "취소 확인용 글")
-    n0 = names(f2).count("withdraw_note")
-    pg.click("#sb-cancel"); pg.wait_for_timeout(600)
-    check("A10 확인창에서 취소 → 서버 호출 없음·단추 다시 눌림",
-          names(f2).count("withdraw_note") == n0 and pg.is_enabled("#sb-cancel") and "tok-1" in f2.notes)
-    ctx.close()
-
-    # 008 이 아직 서버에 없을 때(404) — 예전 통로로 물러난다
-    f3 = Fake(withdraw_404=True)
-    ctx, pg, errs3 = community(f3)
-    pg.on("dialog", lambda d: d.accept())
-    open_fold(pg); send(pg, "아직 검수 전 글")
-    pg.click("#sb-cancel"); pg.wait_for_timeout(800)
-    check("A11 서버 준비 전(404) → cancel_note 로 물러나 검수 전 글은 지움",
-          "cancel_note" in names(f3) and "tok-1" not in f3.notes and "지웠습니다" in pg.inner_text("#sb-msg"),
-          names(f3))
-    send(pg, "오늘도 건강하세요"); pg.click("#sb-cancel"); pg.wait_for_timeout(800)
-    check("A12 서버 준비 전 + 올라간 글 → 지운 척하지 않고 사실대로 안내",
-          "이미 사랑방에 올라간" in pg.inner_text("#sb-msg") and "tok-2" in f3.notes, pg.inner_text("#sb-msg"))
-    ctx.close()
-
-    # 예전 방식으로 남은 토큰 하나 → 목록으로 옮겨진다 / 서버에 없으면 정리된다
-    f4 = Fake(); f4.notes["old-tok"] = "approved"
-    ctx, pg, errs4 = community(f4, "localStorage.setItem('insooni_note_token','old-tok')")
-    pg.wait_for_timeout(600)
-    check("A13 옛 토큰이 '내가 남긴 글'로 옮겨짐", pg.is_visible("#sb-mine")
-          and "이전에 남긴 글" in (pg.text_content("#sb-mine-list") or ""), pg.text_content("#sb-mine"))
-    ctx.close()
-
-    # 남이 지웠거나 이미 없는 글 / 글 내용에 태그가 들어 있어도 글자로만
-    f5 = Fake()
-    ctx, pg, errs5 = community(f5, "localStorage.setItem('insooni_my_notes', JSON.stringify([{t:'gone-tok',b:'<img src=x onerror=window.__xss=1>',at:'2026-09-30T00:00:00Z'}]))")
-    pg.on("dialog", lambda d: d.accept())
-    pg.wait_for_timeout(400)
-    check("A14 목록의 글 내용은 글자로만(태그 실행 안 됨)",
-          pg.locator("#sb-mine-list img").count() == 0 and not pg.evaluate("window.__xss"))
-    pg.click("#sb-mine summary"); pg.wait_for_timeout(200)
-    pg.click("#sb-mine-list li button"); pg.wait_for_timeout(800)
-    check("A15 서버에 없는 글 → '찾을 수 없는 글' 안내·목록에서 걷음",
-          "찾을 수 없는" in pg.inner_text("#sb-mine-msg") and pg.is_hidden("#sb-mine"), pg.inner_text("#sb-mine-msg"))
-    ctx.close()
-
-    allerr = errs + errs2 + errs3 + errs4 + errs5
-    check("A16 사랑방 화면 JS 오류 0", not allerr, allerr[:2])
-    leak = f.unhandled + f2.unhandled + f3.unhandled + f4.unhandled + f5.unhandled
-    check("A17 가짜 서버가 못 받은 요청 0 (운영 DB 로 새는 것 없음)", not leak, leak[:4])
+    # (A. 사랑방 '한 줄 남기기 · 내 글 지우기'는 2026-10-02 카페 게시판으로 바뀌며 걷어냈다.
+    #  회원 글의 쓰기·고치기·지우기는 check_board_ui.py 가 본다.)
 
     # ════════════ B. 운영자 화면 ════════════
     def admin(fake, w=390, h=844):

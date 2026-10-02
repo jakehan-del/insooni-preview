@@ -1,90 +1,75 @@
-"""라이브 insooni.com 사랑방 — 팬이 하는 그대로 한 바퀴. 스스로 치운다.
+"""라이브 insooni.com 사랑방 카페 — 팬이 폰으로 처음 들어와 보는 그대로. 읽기만 한다.
 실행: playwright 가 있는 파이썬으로 `python scripts/check_live_fan.py`
-⚠️ 운영 DB 에 검수 대기 글 1줄을 실제로 쓰고 몇 초 안에 지운다(같은 토큰 재시도 = not_found 로 확인).
-   공개 줄기에는 한 번도 오르지 않는다. 자유글만 쓴다 — 칩 문구는 즉시 공개되므로 쓰지 않는다.
 
-폰 화면에서: 접힘 열기 → 자유글(칩 문구 아님 = 검수 대기, 공개 안 됨) 남기기
-→ 완료 상자 확인 → 「내가 남긴 글」 확인 → 지금 지우기 → 확인창 수락
-→ 서버 응답 was=pending 확인 → 같은 토큰으로 다시 지우기 = not_found (행이 정말 없다)
-→ 공개 줄기에 시험 글이 한 번도 나타나지 않았는지 확인.
+운영 DB 에 아무것도 쓰지 않는다(로그인·글쓰기 없음). 쓰기 흐름은 가짜 서버로
+check_board_ui.py 가 본다 — 라이브에서 시험 글을 쓰면 실제 팬 목록·알림에 섞인다.
+
+(2026-10-02 이전 이 파일은 '한 줄 남기기'를 실제로 쓰고 지웠다. 카페 게시판으로 바뀌며 그 기능이 없어졌다.)
+
+보는 것: 카페 탭 6개 · 인순이의 편지 2편이 열림 · 뒤로 가기 · 스위치 상태에 맞는 화면
+(꺼짐 = 닫힘 안내, 켜짐 = 서버 목록과 회원·글 숫자) · 글쓰기 → 회원 창 · JS 오류·실패 요청 0.
 """
-import json, sys, time
+import sys
 from playwright.sync_api import sync_playwright
 
-URL = "https://insooni.com/community.html"
-STAMP = time.strftime("%H%M%S")
-BODY = "자동 점검 %s — 곧 스스로 지워지는 시험 글입니다" % STAMP
-R, rpc_log = [], []
+B = "https://insooni.com/"
+R = []
 
-def chk(name, ok, info=""):
-    R.append((name, bool(ok), info))
+
+def t(name, ok, info=""):
+    R.append((name, bool(ok), str(info)[:160]))
+
 
 with sync_playwright() as p:
     br = p.chromium.launch()
-    ctx = br.new_context(viewport={"width": 375, "height": 812}, is_mobile=True, has_touch=True,
-                         device_scale_factor=2, locale="ko-KR")
+    ctx = br.new_context(viewport={"width": 375, "height": 812}, is_mobile=True, has_touch=True, locale="ko-KR")
     pg = ctx.new_page()
-    errs = []
-    pg.on("pageerror", lambda e: errs.append(str(e)[:120]))
-    pg.on("console", lambda m: m.type == "error" and errs.append(m.text[:120]))
-
-    def on_resp(r):
-        if "/rest/v1/rpc/" in r.url:
-            try: body = r.json()
-            except Exception: body = None
-            rpc_log.append((r.url.rsplit("/", 1)[-1], r.status, body))
-    pg.on("response", on_resp)
-    dialogs = []
-    pg.on("dialog", lambda d: (dialogs.append(d.message), d.accept()))
-
-    pg.goto(URL, wait_until="networkidle", timeout=45000)
-    pg.evaluate("document.getElementById('sb-fold').open = true")
-    pg.locator("#sb-body").fill(BODY)
-    pg.locator("#sb-name").fill("점검")
-    pg.locator("#sb-form button[type=submit]").click()
-    pg.wait_for_selector("#sb-done:not([hidden])", timeout=20000)
-
-    sub = [x for x in rpc_log if x[0] in ("submit_note", "submit_preset")]
-    chk("자유글은 submit_note 로 간다(칩 아님)", sub and sub[-1][0] == "submit_note", sub[-1][:2] if sub else "없음")
-    res = sub[-1][2] if sub else {}
-    token = (res or {}).get("token")
-    chk("서버 접수 ok · 즉시공개 아님", res and res.get("ok") and not res.get("instant"), json.dumps(res, ensure_ascii=False)[:120])
-    chk("완료 상자 문구", pg.locator("#sb-done-head").inner_text().strip(), pg.locator("#sb-done-head").inner_text()[:60])
-    chk("지금 지우기 버튼 보임", pg.locator("#sb-cancel").is_visible())
-    mine = json.loads(pg.evaluate("localStorage.getItem('insooni_my_notes') || '[]'"))
-    chk("이 기기 목록에 저장(토큰 일치)", any(m.get("t") == token for m in mine), "%d개" % len(mine))
-    chk("「내가 남긴 글」 나타남", pg.locator("#sb-mine").is_visible(), pg.locator("#sb-mine-n").inner_text())
-    stream_before = pg.locator("#sb-rows").inner_text()
-
-    pg.locator("#sb-cancel").click()
-    pg.wait_for_timeout(4000)
-    wd = [x for x in rpc_log if x[0] == "withdraw_note"]
-    chk("확인창이 먼저 뜸", dialogs, dialogs[-1][:40] if dialogs else "")
-    chk("withdraw_note HTTP 200", wd and wd[-1][1] == 200, wd[-1][:2] if wd else "호출 없음")
-    chk("지운 것 = 검수 대기 글", wd and (wd[-1][2] or {}).get("was") == "pending", json.dumps(wd[-1][2] if wd else None, ensure_ascii=False))
-    chk("완료 상자 닫힘", not pg.locator("#sb-done").is_visible())
-    mine2 = json.loads(pg.evaluate("localStorage.getItem('insooni_my_notes') || '[]'"))
-    chk("이 기기 목록에서도 빠짐", not any(m.get("t") == token for m in mine2), "%d개" % len(mine2))
-    msg = pg.evaluate("(document.getElementById('sb-msg').textContent + ' | ' + document.getElementById('sb-mine-msg').textContent).trim()")
-
-    # 서버에 행이 정말 없는가 — 같은 토큰으로 한 번 더 (지울 것이 없으면 not_found)
-    again = pg.evaluate("""async (tok) => {
-      const c = window.INSOONI_CONFIG || {};
-      const r = await fetch(c.url + '/rest/v1/rpc/withdraw_note', {method:'POST',
-        headers:{apikey:c.anonKey, 'Content-Type':'application/json'}, body: JSON.stringify({p_token: tok})});
-      return [r.status, await r.json()];
-    }""", token)
-    chk("같은 토큰 재시도 → not_found (행 없음)", again[1].get("reason") == "not_found", json.dumps(again, ensure_ascii=False)[:100])
-
-    pg.reload(wait_until="networkidle")
+    pg.set_default_timeout(10000)
+    errs, bad = [], []
+    pg.on("pageerror", lambda e: errs.append(str(e)[:160]))
+    pg.on("console", lambda m: m.type == "error" and errs.append("console: " + m.text[:140]))
+    pg.on("requestfailed", lambda r: bad.append(r.url[:100]))
+    pg.on("response", lambda r: r.status >= 400 and bad.append("%d %s" % (r.status, r.url[:100])))
+    pg.goto(B + "community", wait_until="load")
     pg.wait_for_timeout(2500)
-    stream_after = pg.locator("#sb-rows").inner_text()
-    chk("공개 줄기에 시험 글이 나타난 적 없음", STAMP not in stream_before and STAMP not in stream_after)
-    chk("페이지 오류 0", not errs, "; ".join(errs[:3]))
+
+    on = pg.evaluate("!!(window.INSOONI_CONFIG || {}).board")
+    tabs = pg.evaluate("[...document.querySelectorAll('.cafe-menu a')].map(a => a.textContent.trim())")
+    t("1 카페 탭 6개", tabs == ["전체글", "공지", "인순이의 편지", "가입인사", "자유게시판", "공연·방송 후기"], tabs)
+    t("2 옛 '한 줄 남기기'가 남아 있지 않음", pg.locator("#sb-today, #sb-stream, #sb-fold").count() == 0)
+    t("3 전체글 위에 '인순이의 편지' 고정 줄", "인순이가 팬들에게" in pg.inner_text("#bd-pins"), pg.inner_text("#bd-pins")[:60])
+    if on:
+        t("4 (스위치 켜짐) 닫힘 안내 없음 · 글쓰기 버튼", not pg.is_visible("#cafe-closed") and pg.is_visible("#bd-write-btn"))
+        stat = pg.inner_text("#cafe-stat")
+        t("5 (스위치 켜짐) 회원·글 숫자가 서버에서 옴", "회원" in stat and "명" in stat, stat)
+        pg.click("#bd-write-btn")
+        pg.wait_for_timeout(800)
+        sh = pg.inner_text("#bd-sheet") if pg.is_visible("#bd-sheet") else ""
+        t("6 (스위치 켜짐) 로그인 전 글쓰기 → 회원 창(카카오·이메일)", "카카오로 시작하기" in sh and "처음 가입" in sh, sh[:80])
+        pg.keyboard.press("Escape")
+    else:
+        t("4 (스위치 꺼짐) 닫힘 안내 · 글쓰기 버튼 없음", pg.is_visible("#cafe-closed") and not pg.is_visible("#bd-write-btn"))
+    pg.evaluate("document.getElementById('main').__keep = 1")
+    pg.click(".cafe-menu a[data-b=letters]")
+    pg.wait_for_timeout(800)
+    t("7 '인순이의 편지' 두 편", pg.locator("#bd-list .cafe-row").count() == 2)
+    pg.click("#bd-list .cafe-row >> nth=0 >> a")
+    pg.wait_for_timeout(800)
+    t("8 편지가 열림(원문 손글씨)", len(pg.inner_text("#cafe-post .letter-body")) > 20)
+    pg.go_back()
+    pg.wait_for_timeout(800)
+    t("9 뒤로 가기 → 편지 목록 · 본문을 새로 받지 않음", pg.is_visible("#cafe-list")
+      and pg.evaluate("document.getElementById('main').__keep") == 1, pg.evaluate("location.hash"))
+    over = pg.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth")
+    t("10 폰에서 가로 넘침 없음", over <= 1, over)
+    t("11 JS 오류 0", not errs, errs[:3])
+    t("12 실패한 요청 0", not bad, bad[:4])
+    print("스위치:", "켜짐" if on else "꺼짐")
     br.close()
 
+fail = 0
 for n, ok, info in R:
-    print(("  ✓ " if ok else "  ✗ ") + n + (("  — " + str(info)) if info not in ("", None) else ""))
-print("안내문:", msg if 'msg' in dir() else "")
-print("통과 %d/%d" % (sum(1 for x in R if x[1]), len(R)))
-sys.exit(0 if all(x[1] for x in R) else 1)
+    fail += not ok
+    print(("  ✓ " if ok else "  ✗ ") + n + ("" if ok else "   ← " + info))
+print("\n%d/%d 통과" % (len(R) - fail, len(R)))
+sys.exit(1 if fail else 0)

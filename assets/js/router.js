@@ -11,6 +11,10 @@
 
   var BUSY = false;
   var cache = {};
+  /* 지금 <main> 이 그리고 있는 주소. popstate 는 '#' 만 바뀌어도 오므로(사랑방 카페의
+     #p123 · #b=free) 이것과 비교해 같은 페이지면 <main> 을 갈아끼우지 않는다 —
+     갈아끼우면 열린 회원 창이 닫히고 쓰던 글자리가 맨 위로 튄다 */
+  var here = new URL(location.href);
 
   function samePage(a, b) {
     return a.pathname === b.pathname && a.search === b.search;
@@ -74,11 +78,14 @@
         }).then(function (t) { cache[url.href] = t; return t; });
 
     p.then(function (html) {
+      /* 주소를 먼저 바꾼다 — 새 페이지의 초기화 훅이 location.hash 를 읽는다
+         (예: 신청곡 페이지의 '사연 보내기' → community.html#write=free) */
+      if (push) history.pushState({ url: url.href }, "", url.href);
+      here = url;
       function apply() { swap(html, url); }
       if (document.startViewTransition) {
         document.startViewTransition(apply).finished.finally(done);
       } else { apply(); done(); }
-      if (push) history.pushState({ url: url.href }, "", url.href);
     }).catch(function () {
       location.href = url.href;
     });
@@ -103,7 +110,9 @@
   });
 
   window.addEventListener("popstate", function () {
-    go(new URL(location.href), false);
+    var u = new URL(location.href);
+    if (samePage(u, here)) { here = u; return; }   /* '#' 만 바뀜 — 페이지의 몫 */
+    go(u, false);
   });
 
   /* 마우스를 올린 링크를 미리 받아 두면 전환이 즉시 일어난다 */

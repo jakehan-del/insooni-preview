@@ -7,7 +7,8 @@
 --    · 로그인: 카카오 + 이메일 둘 다 (Supabase 인증이 맡는다 — 이 파일은 회원 '명부'만 만든다)
 --    · 등업: 운영자가 올린 글 3개 + 댓글 5개 → 자동으로 정회원. 운영자는 언제든 직접 올리고 내린다
 --    · 정회원의 글·댓글은 검수 없이 바로 공개. 새싹의 글·댓글은 운영자가 올려야 보인다
---    · 로그인 없는 '한 줄 남기기'는 그대로 둔다
+--    · (10/02 오후 정정) 사랑방은 '진짜 카페'로 — 한 줄 남기기는 화면에서 내리고, 게시판을 나눈다:
+--      공지(운영자만) · 가입인사 · 자유게시판 · 공연·방송 후기. 인순이의 편지는 화면이 따로 싣는다(옛 원문).
 --
 --  ⓘ 009 를 아직 실행하지 않았어도 이 파일 하나면 된다. 009 의 알림 함수(pending_summary)를
 --    게시판 글·댓글까지 세도록 새로 정의한다.
@@ -70,6 +71,7 @@ revoke all on public.members from anon, authenticated;
 create table if not exists public.board_posts (
   id          bigint generated always as identity primary key,
   user_id     uuid not null references public.members (user_id) on delete cascade,
+  board       text not null default 'free',
   title       text not null,
   body        text not null,
   status      text not null default 'pending',
@@ -79,7 +81,12 @@ create table if not exists public.board_posts (
   constraint bp_title_len check (char_length(title) between 2 and 60),
   constraint bp_body_len  check (char_length(body) between 2 and 4000)
 );
+-- 게시판 종류 — notice(공지, 운영자만) · hello(가입인사) · free(자유게시판) · review(공연·방송 후기)
+alter table public.board_posts add column if not exists board text not null default 'free';
+alter table public.board_posts drop constraint if exists bp_board_ok;
+alter table public.board_posts add constraint bp_board_ok check (board in ('notice', 'hello', 'free', 'review'));
 create index if not exists bp_status_id on public.board_posts (status, id desc);
+create index if not exists bp_board_id  on public.board_posts (board, status, id desc);
 create index if not exists bp_user      on public.board_posts (user_id);
 
 create table if not exists public.board_comments (
@@ -385,7 +392,9 @@ $fn$;
 
 -- ── 7. 게시판 읽기 (누구나) ───────────────────────────────────
 --  공개되는 것: 제목·본문·별명·등급·운영자 여부·시각·댓글 수. 계정 정보는 나가지 않는다.
-create or replace function public.board_list(p_before bigint default null, p_limit int default 20)
+--  p_board: null(전체글) · notice · hello · free · review. 전체글 첫 쪽에는 최근 공지 셋을 따로(notices) 얹는다.
+drop function if exists public.board_list(bigint, int);
+create or replace function public.board_list(p_board text default null, p_before bigint default null, p_limit int default 20)
 returns json
 language plpgsql
 stable
@@ -394,12 +403,17 @@ set search_path = public, pg_temp
 as $fn$
 declare
   v_lim  int := least(greatest(coalesce(p_limit, 20), 1), 50);
+  v_b    text := nullif(btrim(coalesce(p_board, '')), '');
   v_rows json;
   v_min  bigint;
+  v_pins json := '[]'::json;
 begin
+  if v_b is not null and v_b not in ('notice', 'hello', 'free', 'review') then
+    return json_build_object('ok', false, 'reason', 'bad_board');
+  end if;
   select coalesce(json_agg(x order by x.id desc), '[]'::json), min(x.id) into v_rows, v_min
   from (
-    select p.id, p.title, left(p.body, 140) as excerpt, char_length(p.body) > 140 as cut,
+    select p.id, p.board, p.title, left(p.body, 140) as excerpt, char_length(p.body) > 140 as cut,
            m.nickname, m.level,
            exists (select 1 from public.admins a where a.user_id = p.user_id) as staff,
            p.created_at, p.edited_at,
@@ -408,13 +422,42 @@ begin
       from public.board_posts p
       join public.members m on m.user_id = p.user_id
      where p.status = 'approved' and (p_before is null or p.id < p_before)
+       and (case when v_b is null then p.board <> 'notice' else p.board = v_b end)
      order by p.id desc
      limit v_lim
   ) x;
+  if v_b is null and p_before is null then
+    select coalesce(json_agg(n order by n.id desc), '[]'::json) into v_pins
+    from (
+      select p.id, p.board, p.title, m.nickname, m.level, true as staff, p.created_at,
+             (select count(*) from public.board_comments c where c.post_id = p.id and c.status = 'approved') as comments
+        from public.board_posts p join public.members m on m.user_id = p.user_id
+       where p.status = 'approved' and p.board = 'notice'
+       order by p.id desc
+       limit 3
+    ) n;
+  end if;
   return json_build_object(
-    'ok', true, 'rows', v_rows,
-    'more', v_min is not null and exists (select 1 from public.board_posts where status = 'approved' and id < v_min));
+    'ok', true, 'rows', v_rows, 'notices', v_pins,
+    'more', v_min is not null and exists (
+      select 1 from public.board_posts
+       where status = 'approved' and id < v_min
+         and (case when v_b is null then board <> 'notice' else board = v_b end)));
 end;
+$fn$;
+
+--  카페 머리의 숫자 — 실제로 센 값만. 쉬는 회원은 세지 않는다.
+create or replace function public.cafe_info()
+returns json
+language sql
+stable
+security definer
+set search_path = public, pg_temp
+as $fn$
+  select json_build_object(
+    'ok', true,
+    'members', (select count(*) from public.members where level <> 'blocked'),
+    'posts',   (select count(*) from public.board_posts where status = 'approved'));
 $fn$;
 
 --  글 한 편 + 댓글. 남의 글은 공개된 것만, 내 글은 검수 중이어도 보인다(기다리는 중임을 알 수 있게).
@@ -430,7 +473,7 @@ declare
   r      record;
   v_cmts json;
 begin
-  select p.id, p.user_id, p.title, p.body, p.status, p.created_at, p.edited_at, m.nickname, m.level,
+  select p.id, p.user_id, p.board, p.title, p.body, p.status, p.created_at, p.edited_at, m.nickname, m.level,
          exists (select 1 from public.admins a where a.user_id = p.user_id) as staff
     into r
     from public.board_posts p join public.members m on m.user_id = p.user_id
@@ -448,7 +491,7 @@ begin
   ) c;
   return json_build_object(
     'ok', true,
-    'post', json_build_object('id', r.id, 'title', r.title, 'body', r.body, 'status', r.status,
+    'post', json_build_object('id', r.id, 'board', r.board, 'title', r.title, 'body', r.body, 'status', r.status,
                               'created_at', r.created_at, 'edited_at', r.edited_at,
                               'nickname', r.nickname, 'level', r.level, 'staff', r.staff,
                               'mine', coalesce(r.user_id = v_uid, false)),
@@ -473,7 +516,7 @@ begin
   end if;
   select coalesce(json_agg(x order by x.id desc), '[]'::json) into v_rows
   from (
-    select p.id, p.title, p.status, p.created_at,
+    select p.id, p.board, p.title, p.status, p.created_at,
            (select count(*) from public.board_comments c where c.post_id = p.id and c.status = 'approved') as comments
       from public.board_posts p
      where p.user_id = v_uid
@@ -487,7 +530,9 @@ $fn$;
 
 -- ── 8. 게시판 쓰기 (로그인한 회원) ────────────────────────────
 --  정회원·운영자의 글은 바로 공개, 새싹의 글은 검수 대기. 차단된 회원은 쓸 수 없다.
-create or replace function public.board_write(p_title text, p_body text)
+--  공지(notice)는 운영자만 쓴다.
+drop function if exists public.board_write(text, text);
+create or replace function public.board_write(p_board text, p_title text, p_body text)
 returns json
 language plpgsql
 security definer
@@ -496,6 +541,7 @@ as $fn$
 declare
   v_uid    uuid := auth.uid();
   v_level  text;
+  v_board  text := coalesce(nullif(btrim(coalesce(p_board, '')), ''), 'free');
   v_title  text := btrim(coalesce(p_title, ''));
   v_body   text := btrim(coalesce(p_body, ''));
   v_status text;
@@ -511,6 +557,9 @@ begin
   if v_level = 'blocked' then
     return json_build_object('ok', false, 'reason', 'blocked');
   end if;
+  if v_board not in ('notice', 'hello', 'free', 'review') or (v_board = 'notice' and not public.is_admin()) then
+    return json_build_object('ok', false, 'reason', 'bad_board');
+  end if;
   if char_length(v_title) < 2 then return json_build_object('ok', false, 'reason', 'title_empty'); end if;
   if char_length(v_title) > 60 then return json_build_object('ok', false, 'reason', 'title_long'); end if;
   if char_length(v_body) < 2 then return json_build_object('ok', false, 'reason', 'empty'); end if;
@@ -520,8 +569,8 @@ begin
     return json_build_object('ok', false, 'reason', 'rate_limited');
   end if;
   v_status := case when v_level = 'member' or public.is_admin() then 'approved' else 'pending' end;
-  insert into public.board_posts (user_id, title, body, status)
-  values (v_uid, v_title, v_body, v_status)
+  insert into public.board_posts (user_id, board, title, body, status)
+  values (v_uid, v_board, v_title, v_body, v_status)
   returning id into v_id;
   return json_build_object('ok', true, 'id', v_id, 'status', v_status);
 end;
@@ -529,7 +578,8 @@ $fn$;
 
 --  고치기 — 내 글만. 새싹이 고치면 다시 검수를 받는다(올라간 뒤 내용을 바꿔치기하지 못하게).
 --  정회원은 상태를 그대로 둔다 — 운영자가 내린 글을 고친다고 다시 올라가지는 않는다.
-create or replace function public.board_edit(p_id bigint, p_title text, p_body text)
+drop function if exists public.board_edit(bigint, text, text);
+create or replace function public.board_edit(p_id bigint, p_board text, p_title text, p_body text)
 returns json
 language plpgsql
 security definer
@@ -542,6 +592,7 @@ declare
   v_level  text;
   v_title  text := btrim(coalesce(p_title, ''));
   v_body   text := btrim(coalesce(p_body, ''));
+  v_board  text := nullif(btrim(coalesce(p_board, '')), '');
   v_new    text;
 begin
   if v_uid is null then
@@ -559,11 +610,18 @@ begin
   if char_length(v_title) > 60 then return json_build_object('ok', false, 'reason', 'title_long'); end if;
   if char_length(v_body) < 2 then return json_build_object('ok', false, 'reason', 'empty'); end if;
   if char_length(v_body) > 4000 then return json_build_object('ok', false, 'reason', 'too_long'); end if;
+  if v_board is not null and (v_board not in ('notice', 'hello', 'free', 'review')
+                              or (v_board = 'notice' and not public.is_admin())) then
+    return json_build_object('ok', false, 'reason', 'bad_board');
+  end if;
   if not public.rate_ok('bedit', 30) then
     return json_build_object('ok', false, 'reason', 'rate_limited');
   end if;
   v_new := case when v_level = 'member' or public.is_admin() then v_status else 'pending' end;
-  update public.board_posts set title = v_title, body = v_body, edited_at = now(), status = v_new where id = p_id;
+  update public.board_posts
+     set title = v_title, body = v_body, edited_at = now(), status = v_new,
+         board = coalesce(v_board, board)
+   where id = p_id;
   return json_build_object('ok', true, 'status', v_new);
 end;
 $fn$;
@@ -684,28 +742,29 @@ begin
   from (
     select 'note'::text as kind, id, name, body as content, status,
            ai_verdict, ai_reason, created_at, preset, song_title,
-           null::text as title, null::bigint as post_id, null::text as level, null::timestamptz as ver
+           null::text as title, null::bigint as post_id, null::text as level, null::timestamptz as ver,
+           null::text as board
       from public.notes   where status = p_status
     union all
     select 'dream',  id, name, text, status, ai_verdict, ai_reason, created_at, null::int, null::text,
-           null::text, null::bigint, null::text, null::timestamptz
+           null::text, null::bigint, null::text, null::timestamptz, null::text
       from public.dreams  where status = p_status
     union all
     select 'letter', id, name, body, status, ai_verdict, ai_reason, created_at, null::int, null::text,
-           null::text, null::bigint, null::text, null::timestamptz
+           null::text, null::bigint, null::text, null::timestamptz, null::text
       from public.letters where status = p_status
     union all
     select 'post',   id, name, body, status, ai_verdict, ai_reason, created_at, null::int, null::text,
-           null::text, null::bigint, null::text, null::timestamptz
+           null::text, null::bigint, null::text, null::timestamptz, null::text
       from public.posts   where status = p_status
     union all
     select 'bpost', bp.id, m.nickname, bp.body, bp.status, null::text, null::text, bp.created_at, null::int, null::text,
-           bp.title, null::bigint, m.level, coalesce(bp.edited_at, bp.created_at)
+           bp.title, null::bigint, m.level, coalesce(bp.edited_at, bp.created_at), bp.board
       from public.board_posts bp join public.members m on m.user_id = bp.user_id
      where bp.status = p_status
     union all
     select 'comment', bc.id, m.nickname, bc.body, bc.status, null::text, null::text, bc.created_at, null::int, null::text,
-           bp.title, bc.post_id, m.level, null::timestamptz
+           bp.title, bc.post_id, m.level, null::timestamptz, bp.board
       from public.board_comments bc
       join public.members m on m.user_id = bc.user_id
       join public.board_posts bp on bp.id = bc.post_id
@@ -940,11 +999,12 @@ revoke execute on function public.member_me()                            from pu
 revoke execute on function public.member_join(text, boolean, boolean)    from public, anon, authenticated;
 revoke execute on function public.member_rename(text)                    from public, anon, authenticated;
 revoke execute on function public.member_leave()                         from public, anon, authenticated;
-revoke execute on function public.board_list(bigint, int)                from public, anon, authenticated;
+revoke execute on function public.board_list(text, bigint, int)          from public, anon, authenticated;
+revoke execute on function public.cafe_info()                            from public, anon, authenticated;
 revoke execute on function public.board_read(bigint)                     from public, anon, authenticated;
 revoke execute on function public.board_mine()                           from public, anon, authenticated;
-revoke execute on function public.board_write(text, text)                from public, anon, authenticated;
-revoke execute on function public.board_edit(bigint, text, text)         from public, anon, authenticated;
+revoke execute on function public.board_write(text, text, text)          from public, anon, authenticated;
+revoke execute on function public.board_edit(bigint, text, text, text)   from public, anon, authenticated;
 revoke execute on function public.board_delete(bigint)                   from public, anon, authenticated;
 revoke execute on function public.comment_write(bigint, text)            from public, anon, authenticated;
 revoke execute on function public.comment_delete(bigint)                 from public, anon, authenticated;
@@ -955,7 +1015,8 @@ revoke execute on function public.admin_set_status(text, bigint, text, timestamp
 revoke execute on function public.pending_summary(timestamptz)           from public, anon, authenticated;
 
 --  누구나: 게시판 읽기 · 알림 건수
-grant execute on function public.board_list(bigint, int)                 to anon, authenticated;
+grant execute on function public.board_list(text, bigint, int)           to anon, authenticated;
+grant execute on function public.cafe_info()                             to anon, authenticated;
 grant execute on function public.board_read(bigint)                      to anon, authenticated;
 grant execute on function public.pending_summary(timestamptz)            to anon, authenticated;
 --  로그인한 사람: 나·가입·쓰기·지우기 (안에서 다시 '회원인가·차단인가'를 본다)
@@ -964,8 +1025,8 @@ grant execute on function public.member_join(text, boolean, boolean)     to auth
 grant execute on function public.member_rename(text)                     to authenticated;
 grant execute on function public.member_leave()                          to authenticated;
 grant execute on function public.board_mine()                            to authenticated;
-grant execute on function public.board_write(text, text)                 to authenticated;
-grant execute on function public.board_edit(bigint, text, text)          to authenticated;
+grant execute on function public.board_write(text, text, text)           to authenticated;
+grant execute on function public.board_edit(bigint, text, text, text)    to authenticated;
 grant execute on function public.board_delete(bigint)                    to authenticated;
 grant execute on function public.comment_write(bigint, text)             to authenticated;
 grant execute on function public.comment_delete(bigint)                  to authenticated;
@@ -998,13 +1059,17 @@ begin
     raise exception '안전장치: 공개 키로 센 대기(%)가 운영자가 센 대기(%)와 다릅니다 — 전체를 취소합니다', v ->> 'total', owner_n;
   end if;
 
-  v := public.board_list(null, 1);
+  v := public.board_list(null, null, 1);
   if (v ->> 'ok') is distinct from 'true' then
     raise exception '안전장치: 공개 키로 게시판을 읽지 못합니다 — 전체를 취소합니다';
   end if;
   v := public.board_read(-1);
   if (v ->> 'reason') is distinct from 'not_found' then
     raise exception '안전장치: 없는 글 읽기가 not_found 가 아닙니다 — 전체를 취소합니다';
+  end if;
+  v := public.cafe_info();
+  if json_typeof(v -> 'members') is distinct from 'number' then
+    raise exception '안전장치: 공개 키로 카페 숫자를 읽지 못합니다 — 전체를 취소합니다';
   end if;
 
   begin perform * from public.members limit 1;
@@ -1025,7 +1090,7 @@ begin
   begin perform public.admin_set_status('bpost', 1, 'approved', null);
     raise exception '안전장치: 공개 키로 상태 바꾸기가 불립니다 — 전체를 취소합니다';
   exception when insufficient_privilege then null; end;
-  begin perform public.board_write('제목', '본문');
+  begin perform public.board_write('free', '제목', '본문');
     raise exception '안전장치: 공개 키로 글쓰기 함수가 불립니다 — 전체를 취소합니다';
   exception when insufficient_privilege then null; end;
   begin perform public.member_me();
@@ -1052,7 +1117,7 @@ begin
   if (v ->> 'reason') is distinct from 'not_logged_in' then
     raise exception '안전장치: 토큰 없는 member_me 가 not_logged_in 이 아닙니다 — 전체를 취소합니다';
   end if;
-  v := public.board_write('제목입니다', '본문입니다');
+  v := public.board_write('free', '제목입니다', '본문입니다');
   if (v ->> 'reason') is distinct from 'not_logged_in' then
     raise exception '안전장치: 토큰 없는 글쓰기가 막히지 않습니다 — 전체를 취소합니다';
   end if;
@@ -1087,10 +1152,10 @@ select 점검, 결과 from (
          to_regclass('public.members') is not null and to_regclass('public.board_posts') is not null
          and to_regclass('public.board_comments') is not null),
     (2,  '공개 키로 회원 명부를 못 읽는다',            not has_table_privilege('anon', 'public.members', 'SELECT')),
-    (3,  '공개 키로 게시판을 읽을 수 있다(함수로)',      has_function_privilege('anon', 'public.board_list(bigint, integer)', 'EXECUTE')),
-    (4,  '공개 키로 글을 쓸 수 없다',                   not has_function_privilege('anon', 'public.board_write(text, text)', 'EXECUTE')),
+    (3,  '공개 키로 게시판을 읽을 수 있다(함수로)',      has_function_privilege('anon', 'public.board_list(text, bigint, integer)', 'EXECUTE')),
+    (4,  '공개 키로 글을 쓸 수 없다',                   not has_function_privilege('anon', 'public.board_write(text, text, text)', 'EXECUTE')),
     (5,  '로그인한 사람은 가입·글쓰기를 할 수 있다',     has_function_privilege('authenticated', 'public.member_join(text, boolean, boolean)', 'EXECUTE')
-                                                      and has_function_privilege('authenticated', 'public.board_write(text, text)', 'EXECUTE')),
+                                                      and has_function_privilege('authenticated', 'public.board_write(text, text, text)', 'EXECUTE')),
     (6,  '등업 도우미는 밖에서 못 부른다',               not has_function_privilege('authenticated', 'public.member_recheck(uuid)', 'EXECUTE')),
     (7,  '알림 함수가 게시판 글·댓글까지 센다',          (select count(*) from json_object_keys(public.pending_summary(null))) = 11),
     (8,  '공개 키로 지우기 토큰은 여전히 못 읽는다',     not has_column_privilege('anon', 'public.notes', 'token', 'SELECT')),

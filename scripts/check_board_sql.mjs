@@ -91,9 +91,9 @@ async function suite(db) {
   let v;
 
   // ── 공개 키(익명) ─────────────────────────────────────────
-  v = await call(db, ANON, "board_list", [null, 20]);
+  v = await call(db, ANON, "board_list", [null, null, 20]);
   t("익명: 게시판 읽기 됨(빈 목록)", v && v.ok && Array.isArray(v.rows) && v.rows.length === 0, v);
-  t("익명: 글쓰기 함수 자체가 막힘", denied(await call(db, ANON, "board_write", ["제목", "본문"])));
+  t("익명: 글쓰기 함수 자체가 막힘", denied(await call(db, ANON, "board_write", ["free", "제목", "본문"])));
   t("익명: 회원 함수 막힘", denied(await call(db, ANON, "member_me")));
   for (const tb of ["members", "board_posts", "board_comments", "board_settings", "member_level_log"]) {
     const r = await as(db, ANON, `select * from public.${tb} limit 1`);
@@ -105,7 +105,7 @@ async function suite(db) {
   // ── 가입 ─────────────────────────────────────────────────
   v = await call(db, KA, "member_me");
   t("카카오: 가입 전 → joined false · 카카오 별명 미리 채움", v && v.ok && v.joined === false && v.suggest === "홍천팬" && v.provider === "kakao", v);
-  t("가입 전 글쓰기 → not_member", (await call(db, KA, "board_write", ["제목입니다", "본문입니다"]))?.reason === "not_member");
+  t("가입 전 글쓰기 → not_member", (await call(db, KA, "board_write", ["free", "제목입니다", "본문입니다"]))?.reason === "not_member");
   t("동의 안 함 → need_agree", (await call(db, KA, "member_join", ["홍천팬", false, true]))?.reason === "need_agree");
   t("14세 확인 안 함 → need_age", (await call(db, KA, "member_join", ["홍천팬", true, false]))?.reason === "need_age");
   for (const [nick, why] of [["인순이", "reserved_nick"], ["인 순 이", "reserved_nick"], ["INSOONI", "reserved_nick"],
@@ -129,15 +129,15 @@ async function suite(db) {
   t("카카오 회원은 새싹 · 기준 글 3 댓글 5 · 자동 등업 걸림", v && v.level === "sprout" && v.need_posts === 3 && v.need_comments === 5 && v.auto_up === true, v);
 
   // ── 새싹 글 → 검수 대기 ───────────────────────────────────
-  t("제목 1자 → title_empty", (await call(db, KA, "board_write", ["가", "본문입니다"]))?.reason === "title_empty");
-  t("제목 61자 → title_long", (await call(db, KA, "board_write", ["가".repeat(61), "본문입니다"]))?.reason === "title_long");
-  t("본문 4001자 → too_long", (await call(db, KA, "board_write", ["제목입니다", "가".repeat(4001)]))?.reason === "too_long");
-  v = await call(db, KA, "board_write", ["첫 인사드립니다", "홍천에서 왔습니다.\n늘 건강하세요."]);
+  t("제목 1자 → title_empty", (await call(db, KA, "board_write", ["free", "가", "본문입니다"]))?.reason === "title_empty");
+  t("제목 61자 → title_long", (await call(db, KA, "board_write", ["free", "가".repeat(61), "본문입니다"]))?.reason === "title_long");
+  t("본문 4001자 → too_long", (await call(db, KA, "board_write", ["free", "제목입니다", "가".repeat(4001)]))?.reason === "too_long");
+  v = await call(db, KA, "board_write", ["free", "첫 인사드립니다", "홍천에서 왔습니다.\n늘 건강하세요."]);
   const p1 = v && v.id;
   t("새싹 글 → pending", v && v.ok && v.status === "pending", v);
   v = await call(db, ANON, "pending_summary", [null]);
   t("알림: 새싹 글이 대기로 잡힌다(게시판 글 1 · 전체 2)", v && v.bpost === 1 && v.total === 2, v);
-  v = await call(db, ANON, "board_list", [null, 20]);
+  v = await call(db, ANON, "board_list", [null, null, 20]);
   t("검수 전 새싹 글은 공개 목록에 없다", v && v.rows && v.rows.length === 0, v);
   v = await call(db, KA, "board_read", [p1]);
   t("쓴 사람은 검수 중인 자기 글을 본다(mine·pending)", v && v.ok && v.post.mine === true && v.post.status === "pending", v);
@@ -155,28 +155,49 @@ async function suite(db) {
   // ── 바꿔치기: 운영자가 목록을 본 뒤 새싹이 고치면, 본 판으로는 승인되지 않는다 ──
   const seen = row && row.ver;
   t("운영자 목록의 게시판 글에 판(ver)이 있다", !!seen, row);
-  v = await call(db, KA, "board_edit", [p1, "첫 인사드립니다", "바꿔치기한 본문"]);
+  v = await call(db, KA, "board_edit", [p1, null, "첫 인사드립니다", "바꿔치기한 본문"]);
   t("검수 중에 새싹이 고침 → 계속 pending", v && v.status === "pending", v);
   v = await call(db, ADM, "admin_set_status", ["bpost", p1, "approved", seen]);
   t("운영자가 본 옛 판으로 올리기 → changed 로 거절(공개 안 됨)", v && v.reason === "changed", v);
-  t("거절된 뒤 공개 목록에 없음", ((await call(db, ANON, "board_list", [null, 20]))?.rows || []).length === 0);
+  t("거절된 뒤 공개 목록에 없음", ((await call(db, ANON, "board_list", [null, null, 20]))?.rows || []).length === 0);
   t("판 없이 올리기도 거절", (await call(db, ADM, "admin_set_status", ["bpost", p1, "approved"]))?.reason === "changed");
-  await call(db, KA, "board_edit", [p1, "첫 인사드립니다", "홍천에서 왔습니다.\n늘 건강하세요."]);
+  await call(db, KA, "board_edit", [p1, null, "첫 인사드립니다", "홍천에서 왔습니다.\n늘 건강하세요."]);
   v = await approveB(db, p1);
   t("운영자 올리기(지금 판) → ok · 아직 등업 아님", v && v.ok && v.levelup === false, v);
-  v = await call(db, ANON, "board_list", [null, 20]);
+  v = await call(db, ANON, "board_list", [null, null, 20]);
   t("올린 뒤 공개 목록에 보임", v && v.rows && v.rows.length === 1 && v.rows[0].id === p1 && v.rows[0].nickname === "홍천팬", v);
   t("공개 목록 칸에 계정 정보 없음", v && v.rows[0] && Object.keys(v.rows[0]).sort().join(",") ===
-    "comments,created_at,cut,edited_at,excerpt,id,level,mine,nickname,staff,title", v && v.rows[0] && Object.keys(v.rows[0]));
-  v = await call(db, ADM, "board_write", ["공지 — 사랑방 이용 안내", "서로 아껴 주세요."]);
+    "board,comments,created_at,cut,edited_at,excerpt,id,level,mine,nickname,staff,title", v && v.rows[0] && Object.keys(v.rows[0]));
+  v = await call(db, ADM, "board_write", ["free", "공지 — 사랑방 이용 안내", "서로 아껴 주세요."]);
   const pA = v && v.id;
   t("운영자 글 → 바로 공개", v && v.status === "approved", v);
-  v = await call(db, ANON, "board_list", [null, 20]);
+  v = await call(db, ANON, "board_list", [null, null, 20]);
   t("운영자 글은 staff 표시", v && (v.rows || []).find(r => r.id === pA)?.staff === true, v);
+
+  // ── 게시판 나누기 · 공지 ──
+  t("일반 회원이 공지 쓰기 → bad_board", (await call(db, ML, "board_write", ["notice", "공지인 척", "본문입니다"]))?.reason === "bad_board");
+  t("없는 게시판 → bad_board", (await call(db, KA, "board_write", ["secret", "제목입니다", "본문입니다"]))?.reason === "bad_board");
+  v = await call(db, ADM, "board_write", ["notice", "사랑방 카페 이용 안내", "공지 본문"]);
+  const pN = v && v.id;
+  t("운영자 공지 → 바로 공개", v && v.status === "approved", v);
+  v = await call(db, ADM, "board_write", ["review", "안동 공연 후기", "후기 본문"]);
+  const pR = v && v.id;
+  v = await call(db, ANON, "board_list", [null, null, 20]);
+  t("전체글: 공지는 맨 위 notices 로만(목록에는 안 섞임)", v && (v.notices || []).some(r => r.id === pN)
+    && !(v.rows || []).some(r => r.id === pN) && (v.rows || []).some(r => r.id === pR), v);
+  v = await call(db, ANON, "board_list", ["review", null, 20]);
+  t("게시판별 목록: 후기만", v && v.ok && v.rows.length >= 1 && v.rows.every(r => r.board === "review"), v);
+  v = await call(db, ANON, "board_list", ["notice", null, 20]);
+  t("공지 게시판에는 공지만 · notices 덧붙임 없음", v && v.rows.every(r => r.board === "notice") && (v.notices || []).length === 0, v);
+  t("없는 게시판 목록 → bad_board", (await call(db, ANON, "board_list", ["secret", null, 20]))?.reason === "bad_board");
+  v = await call(db, ANON, "board_read", [pR]);
+  t("글 보기에 게시판이 실림", v && v.post && v.post.board === "review", v && v.post);
+  v = await call(db, ANON, "cafe_info", []);
+  t("카페 숫자: 회원 3 · 공개 글 4(새싹 1 + 운영자 3)", v && v.ok && v.members === 3 && v.posts === 4, v);
 
   // ── 등업 경계값: 글 3 · 댓글 5 ─────────────────────────────
   const ids = [];
-  for (let i = 2; i <= 3; i++) { v = await call(db, KA, "board_write", [`두 번째부터 ${i}`, "본문입니다"]); ids.push(v && v.id); }
+  for (let i = 2; i <= 3; i++) { v = await call(db, KA, "board_write", ["free", `두 번째부터 ${i}`, "본문입니다"]); ids.push(v && v.id); }
   for (const id of ids) await approveB(db, id);
   const cids = [];
   for (let i = 1; i <= 5; i++) { v = await call(db, KA, "comment_write", [pA, `댓글 ${i}`]); cids.push(v && v.id); }
@@ -188,7 +209,7 @@ async function suite(db) {
   up = await call(db, ADM, "admin_set_status", ["comment", cids[4], "approved"]);
   v = await call(db, KA, "member_me");
   t("댓글 5번째 승인 → 자동 정회원", up && up.levelup === true && v && v.level === "member", { up, v });
-  v = await call(db, KA, "board_write", ["정회원이 되었어요", "감사합니다"]);
+  v = await call(db, KA, "board_write", ["free", "정회원이 되었어요", "감사합니다"]);
   const pMem = v && v.id;
   t("정회원 글 → 바로 공개", v && v.status === "approved", v);
   v = await call(db, KA, "comment_write", [pA, "정회원 댓글"]);
@@ -202,7 +223,7 @@ async function suite(db) {
   t("내 대기 댓글은 나에게만 보인다", v && (v.comments || []).some(c => c.id === cML && c.mine && c.status === "pending"), v);
   v = await call(db, ANON, "board_read", [pMem]);
   t("익명에게 대기 댓글은 안 보인다", v && v.ok && !(v.comments || []).some(c => c.id === cML), v);
-  t("남의 글 고치기 → not_found", (await call(db, ML, "board_edit", [pMem, "바꿔치기", "바꿔치기"]))?.reason === "not_found");
+  t("남의 글 고치기 → not_found", (await call(db, ML, "board_edit", [pMem, null, "바꿔치기", "바꿔치기"]))?.reason === "not_found");
   t("남의 글 지우기 → not_found", (await call(db, ML, "board_delete", [pMem]))?.reason === "not_found");
   t("남의 댓글 지우기 → not_found", (await call(db, KA, "comment_delete", [cML]))?.reason === "not_found");
   v = await call(db, KA, "board_read", [pMem]);
@@ -219,22 +240,25 @@ async function suite(db) {
   t("운영자 계정 등급은 못 바꾼다 → staff", (await call(db, ADM, "admin_set_level", [ADMIN, "sprout"]))?.reason === "staff");
   v = await call(db, ADM, "admin_set_level", [KAKAO, "sprout"]);
   t("운영자가 정회원을 새싹으로", v && v.ok && v.from === "member", v);
-  v = await call(db, KA, "board_write", ["새싹으로 돌아감", "본문입니다"]);
+  v = await call(db, KA, "board_write", ["free", "새싹으로 돌아감", "본문입니다"]);
   t("새싹으로 내린 뒤 글 → 다시 pending", v && v.status === "pending", v);
   up = await approveB(db, v && v.id);
   v = await call(db, KA, "member_me");
   t("운영자가 정한 새싹은 기준을 채워도 자동 등업 안 됨 · auto_up false", up && up.levelup === false && v && v.level === "sprout" && v.auto_up === false, { up, v });
-  v = await call(db, KA, "board_edit", [ids[0], "고친 제목입니다", "고친 본문"]);
+  v = await call(db, KA, "board_edit", [ids[0], null, "고친 제목입니다", "고친 본문"]);
   t("새싹이 올라간 글을 고치면 다시 검수(pending)", v && v.status === "pending", v);
+  t("새싹이 자기 글을 공지로 옮기기 → bad_board", (await call(db, KA, "board_edit", [ids[0], "notice", "고친 제목입니다", "고친 본문"]))?.reason === "bad_board");
+  v = await call(db, KA, "board_edit", [ids[0], "review", "고친 제목입니다", "고친 본문"]);
+  t("게시판 옮기기(후기로)", v && v.ok && (await db.query(`select board from public.board_posts where id = ${ids[0]}`)).rows[0].board === "review", v);
   await call(db, ADM, "admin_set_level", [KAKAO, "member"]);
   await call(db, ADM, "admin_set_status", ["bpost", ids[0], "rejected"]);
-  v = await call(db, KA, "board_edit", [ids[0], "내린 글 고침", "다시 올라가려 함"]);
+  v = await call(db, KA, "board_edit", [ids[0], null, "내린 글 고침", "다시 올라가려 함"]);
   t("정회원이 내려간 글을 고쳐도 다시 안 올라감(rejected 유지)", v && v.status === "rejected", v);
-  v = await call(db, KA, "board_edit", [pMem, "정회원 글 고침", "본문 고침"]);
+  v = await call(db, KA, "board_edit", [pMem, null, "정회원 글 고침", "본문 고침"]);
   t("정회원 글 고치기 → 공개 유지", v && v.status === "approved", v);
   v = await call(db, ADM, "admin_set_level", [MAIL, "blocked"]);
   t("차단", v && v.ok, v);
-  t("차단된 회원 글쓰기 → blocked", (await call(db, ML, "board_write", ["차단 후", "본문입니다"]))?.reason === "blocked");
+  t("차단된 회원 글쓰기 → blocked", (await call(db, ML, "board_write", ["free", "차단 후", "본문입니다"]))?.reason === "blocked");
   t("차단된 회원 댓글 → blocked", (await call(db, ML, "comment_write", [pMem, "차단 후"]))?.reason === "blocked");
   t("차단된 회원 별명 바꾸기 → blocked", (await call(db, ML, "member_rename", ["차단후새이름"]))?.reason === "blocked");
   for (const nn of ["홍천팬가", "홍천팬나", "홍천팬다"]) await call(db, KA, "member_rename", [nn], "192.0.2." + nn.length);
@@ -262,7 +286,7 @@ async function suite(db) {
 
   // ── 속도 제한(회원당 시간당 글 5개) ────────────────────────
   let last = null;
-  for (let i = 0; i < 6; i++) last = await call(db, KA, "board_write", [`연속 글 ${i}`, "본문입니다"], "198.51.100." + (10 + i));
+  for (let i = 0; i < 6; i++) last = await call(db, KA, "board_write", ["free", `연속 글 ${i}`, "본문입니다"], "198.51.100." + (10 + i));
   t("한 시간에 6번째 글 → rate_limited (IP 를 바꿔도)", last && last.reason === "rate_limited", last);
 
   // ── 탈퇴 ─────────────────────────────────────────────────
@@ -276,7 +300,7 @@ async function suite(db) {
       (select count(*) from public.board_comments where user_id = '${KAKAO}')::int as c,
       (select count(*) from public.member_level_log where target = '${KAKAO}')::int as l`)).rows[0];
   t("탈퇴 → 계정·명부·글·댓글·등급기록 전부 파기", left.u + left.m + left.p + left.c + left.l === 0, left);
-  v = await call(db, NJ, "board_write", ["가입 안 함", "본문입니다"]);
+  v = await call(db, NJ, "board_write", ["free", "가입 안 함", "본문입니다"]);
   t("가입 안 한 계정 글쓰기 → not_member", v && v.reason === "not_member", v);
 
   // ── 확인표 ───────────────────────────────────────────────
@@ -307,10 +331,13 @@ const MUT = [
   ["운영자도 탈퇴됨", s => s.replace("  if public.is_admin() then\n    return json_build_object('ok', false, 'reason', 'admin_cannot_leave');", "  if false then\n    return json_build_object('ok', false, 'reason', 'admin_cannot_leave');")],
   ["검수 중인 글에 댓글 허용", s => s.replace("if not exists (select 1 from public.board_posts where id = p_post_id and status = 'approved') then", "if not exists (select 1 from public.board_posts where id = p_post_id) then")],
   ["남의 글도 지워짐", s => s.replace("delete from public.board_posts where id = p_id and user_id = v_uid returning status into v_status;", "delete from public.board_posts where id = p_id returning status into v_status;")],
-  ["글쓰기를 공개 키에 엶", s => s.replace("grant execute on function public.board_write(text, text)                 to authenticated;", "grant execute on function public.board_write(text, text)                 to anon, authenticated;")],
+  ["글쓰기를 공개 키에 엶", s => s.replace("grant execute on function public.board_write(text, text, text)           to authenticated;", "grant execute on function public.board_write(text, text, text)           to anon, authenticated;")],
   ["등업 경계 하나 어긋남(>)", s => s.replace("if v_np >= public.bs('levelup_posts', 3) and v_nc >= public.bs('levelup_comments', 5) then", "if v_np >= public.bs('levelup_posts', 3) and v_nc > public.bs('levelup_comments', 5) then")],
   ["운영자 계정 등급도 바뀜", s => s.replace("  if exists (select 1 from public.admins where user_id = p_user) then\n    return json_build_object('ok', false, 'reason', 'staff');", "  if false then\n    return json_build_object('ok', false, 'reason', 'staff');")],
-  ["차단 회원도 글을 씀", s => s.replace("  if v_level = 'blocked' then\n    return json_build_object('ok', false, 'reason', 'blocked');\n  end if;\n  if char_length(v_title) < 2 then return json_build_object('ok', false, 'reason', 'title_empty'); end if;\n  if char_length(v_title) > 60 then return json_build_object('ok', false, 'reason', 'title_long'); end if;\n  if char_length(v_body) < 2 then return json_build_object('ok', false, 'reason', 'empty'); end if;\n  if char_length(v_body) > 4000 then return json_build_object('ok', false, 'reason', 'too_long'); end if;\n  if not public.rate_ok('bwrite', 20)", "  if char_length(v_title) < 2 then return json_build_object('ok', false, 'reason', 'title_empty'); end if;\n  if char_length(v_title) > 60 then return json_build_object('ok', false, 'reason', 'title_long'); end if;\n  if char_length(v_body) < 2 then return json_build_object('ok', false, 'reason', 'empty'); end if;\n  if char_length(v_body) > 4000 then return json_build_object('ok', false, 'reason', 'too_long'); end if;\n  if not public.rate_ok('bwrite', 20)")],
+  ["차단 회원도 글을 씀", s => s.replace("  if v_level = 'blocked' then\n    return json_build_object('ok', false, 'reason', 'blocked');\n  end if;\n  if v_board not in", "  if v_board not in")],
+  ["공지를 아무나 씀", s => s.replace("if v_board not in ('notice', 'hello', 'free', 'review') or (v_board = 'notice' and not public.is_admin()) then", "if v_board not in ('notice', 'hello', 'free', 'review') then")],
+  ["전체글에 공지가 섞임", s => s.replace("       and (case when v_b is null then p.board <> 'notice' else p.board = v_b end)\n     order by p.id desc\n     limit v_lim", "     order by p.id desc\n     limit v_lim")],
+  ["게시판 거르기 무시", s => s.replace("       and (case when v_b is null then p.board <> 'notice' else p.board = v_b end)\n     order by p.id desc\n     limit v_lim", "       and (v_b is not null or p.board <> 'notice')\n     order by p.id desc\n     limit v_lim")],
   ["알림이 게시판을 안 셈", s => s.replace("    union all\n    select 'bpost',   created_at from public.board_posts    where status = 'pending'", "")],
   ["바꿔치기한 글도 승인", s => s.replace("if found and p_status = 'approved' and (p_ver is null or p_ver is distinct from v_ver) then", "if false then")],
   ["차단 회원도 별명을 바꿈", s => s.replace("  if v_lv = 'blocked' then\n    return json_build_object('ok', false, 'reason', 'blocked');", "  if false then\n    return json_build_object('ok', false, 'reason', 'blocked');")],
