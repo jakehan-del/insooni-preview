@@ -45,7 +45,12 @@ with sync_playwright() as p:
         pg.click("#bd-write-btn")
         pg.wait_for_timeout(800)
         sh = pg.inner_text("#bd-sheet") if pg.is_visible("#bd-sheet") else ""
-        t("6 (스위치 켜짐) 로그인 전 글쓰기 → 회원 창(카카오·이메일)", "카카오로 시작하기" in sh and "처음 가입" in sh, sh[:80])
+        kk = pg.evaluate("(window.INSOONI_CONFIG || {}).kakao !== false")
+        if kk:
+            t("6 (스위치 켜짐) 로그인 전 글쓰기 → 회원 창(카카오·이메일)", "카카오로 시작하기" in sh and "처음 가입" in sh, sh[:80])
+        else:   # config.kakao=false — 카카오 동의항목이 덜 끝난 동안 버튼을 숨긴다
+            t("6 (스위치 켜짐·카카오 숨김) 로그인 전 글쓰기 → 회원 창(이메일만, 카카오 버튼 없음)",
+              "카카오로 시작하기" not in sh and "처음 가입" in sh and "로그인" in sh, sh[:80])
         pg.keyboard.press("Escape")
     else:
         t("4 (스위치 꺼짐) 닫힘 안내 · 글쓰기 버튼 없음", pg.is_visible("#cafe-closed") and not pg.is_visible("#bd-write-btn"))
