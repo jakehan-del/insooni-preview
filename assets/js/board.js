@@ -184,7 +184,10 @@
       return authFetch("settings", { method: "GET" }).then(function (r) {
         if (!r.ok || !r.body) return { ok: false };
         var ext = r.body.external || {};
-        return { ok: true, kakao: !!ext.kakao, email: !!ext.email, signup: !r.body.disable_signup };
+        /* 카카오는 서버에서 켜져 있어도 config.js 의 kakao:false 로 버튼만 숨길 수 있다 —
+           카카오 쪽 동의항목이 덜 끝나 팬이 KOE205 화면에 떨어지는 동안(2026-10-02) 쓰려고 */
+        var kk = !!ext.kakao && (window.INSOONI_CONFIG || {}).kakao !== false;
+        return { ok: true, kakao: kk, email: !!ext.email, signup: !r.body.disable_signup };
       });
     },
     signIn: function (email, pw) {
