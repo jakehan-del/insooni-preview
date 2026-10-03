@@ -65,7 +65,7 @@
   </div>
 </header>
 
-<main id="main">
+<main id="main" class="news">
   <section class="page-hero">
     <div class="container">
       <h1 data-i18n="ph.news.t">소식</h1>
@@ -73,20 +73,16 @@
     </div>
   </section>
 
-  <section class="section">
+  <section class="section nw-section">
     <div class="container">
-      <div id="news-filter" class="filter-bar" role="group" aria-label="소식 분류 필터" data-i18n-aria="aria.newsFilter">
-        <button type="button" data-type="전체" aria-pressed="true" data-i18n="filter.all">전체</button>
-        <button type="button" data-type="공지" aria-pressed="false" data-i18n="filter.notice">공지</button>
-        <button type="button" data-type="공연" aria-pressed="false" data-i18n="filter.show">공연</button>
-        <button type="button" data-type="방송" aria-pressed="false" data-i18n="filter.tv">방송</button>
-        <button type="button" data-type="보도" aria-pressed="false" data-i18n="filter.press">보도</button>
-      </div>
+      <!-- 거르개 단추는 실제로 있는 종류만 main.js(renderNewsPage)가 채운다 -->
+      <div id="news-filter" class="filter-bar nw-filter" role="group" aria-label="소식 분류 필터" data-i18n-aria="aria.newsFilter"></div>
       <p class="sr-only" role="status" id="news-status"></p>
       <h2 class="sr-only" data-i18n="news.listSr">소식 목록</h2>
-      <div id="news-list" class="news-list"></div>
-      <!-- scripts/collect-news.py가 매일 국내 언론 보도를 모아 assets/data/live-news.json에 쌓는다.
-           원문 링크를 함께 싣고, 사이트 안에서 읽을 수 있게 보여 준다. -->
+      <div id="news-list" class="nw-list"></div>
+      <!-- scripts/collect-news.py 가 2시간마다 국내 언론 보도를 모아 사건 단위로 묶는다(assets/data/live-news.json).
+           한 사건 = 한 줄 + 「기사 N건」. 손으로 쓴 소식은 assets/js/data.js 의 news. -->
+      <p class="nw-note" data-i18n="news.note">언론 보도는 구글 뉴스에서 자동으로 모아 같은 일끼리 묶습니다. 날짜는 기사가 나간 날(보도일)이라 행사 날짜와 다를 수 있습니다. 제목은 원문 그대로이며 끝에 붙은 언론사·코너 표시만 덜어 냈고, 기사 전문은 각 언론사의 저작물이라 옮겨 싣지 않습니다.</p>
     </div>
   </section>
 </main>

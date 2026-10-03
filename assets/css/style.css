@@ -450,67 +450,138 @@ html.js-anim .hero [data-rise="5"] { animation-delay: .5s; }
   color: var(--faint); margin: 0; max-width: 52em;
 }
 
-/* ---------- 9. 소식: 헤어라인 레저 ---------- */
-.news-list {
-  /* 목록이 채워질 때 아래가 밀리지 않도록 첫 화면 몫을 예약 (CLS 0.228 → 0) */
-  min-height: 80vh; display: flex; flex-direction: column; border-top: 1px solid var(--line); }
-.news-item {
-  display: grid; grid-template-columns: 7.5rem auto 1fr; gap: 1.6rem; align-items: center;
-  padding: 2.4rem .5rem; border-bottom: 1px solid var(--line);
-  text-decoration: none; color: inherit; transition: opacity .22s ease;
+/* ---------- 9. 소식 — 편집 목록 (2026-10-03 전면 개편) ----------
+   전부 .news(news.html 의 <main>) 안에서만 걸린다. 라우터가 <main> 을 통째로 갈아끼우므로
+   클래스도 함께 온다.
+   고친 것(라이브 폰 실측): 한글 제목이 고정폭 서체라 낱말 사이가 2.5배로 벌어졌다 ·
+   「공연」 라벨이 폰에서 화면 폭 전체 상자였다 · 자동 수집과 손으로 쓴 소식이 다른 모양이었다.
+   지금: 제목 = 본문 서체, 날짜·언론사 = 조용한 메타 줄, 종류 = 글자만, 첫 줄 = 대표 소식(크게).
+   숫자(날짜)만 고정폭 — 한글에는 쓰지 않는다. 한글 자간 0. 모서리 없음. 누를 것은 44px. */
+.news .nw-section { padding-top: clamp(2.2rem, 6vh, 4.2rem); }
+.news .nw-filter { gap: 0 1.3rem; margin-bottom: 1.4rem; }
+/* 폰: 종류가 일곱 개면 두 줄로 접혀 듬성해진다 — 한 줄로 둔다. 단추는 44px 폭이라 글자 사이는
+   이미 12px 비어 있다(간격 .3rem 을 더해 390px 폭에 일곱 개가 다 들어간다).
+   더 좁은 폰·큰 글자에서는 옆으로 민다 — 화면 끝까지 붙여(-24px) 잘려 보이는 끝 단추가 '더 있다'는 표시다. */
+@media (max-width: 640px) {
+  .news .nw-filter {
+    flex-wrap: nowrap; overflow-x: auto; gap: 0 .3rem; margin-inline: -24px; padding-inline: 24px;
+    scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  }
+  .news .nw-filter::-webkit-scrollbar { display: none; }
+  .news .nw-filter button { flex: none; }
+  /* 영어 낱말은 44px 보다 길어 단추 사이 빈칸이 .3rem 뿐이었다 — 글자 간격 9~10px 로
+     'Show Broadcast Release Award' 가 한 문장처럼 붙었다(375 실측, 한국어는 21px). */
+  html[lang="en"] .news .nw-filter { column-gap: .9rem; }
 }
-.news-list:hover .news-item:not(:hover) { opacity: .45; }
-.news-item time, .news-item .when {
-  font-family: var(--font-mono); font-weight: 400; font-size: .82rem;
-  color: var(--faint); letter-spacing: .06em;
+.news .nw-filter button {
+  font-family: var(--font-body); font-size: .95rem; font-weight: 500; letter-spacing: 0;
+  text-transform: none; color: var(--muted); padding-inline: .15em;
 }
-.news-item h3 { margin: 0 0 .15em; transition: color .2s ease; }
-.news-item:hover h3 { color: var(--gold); }
-.news-item .excerpt { color: var(--muted); font-size: 1rem; margin: 0; }
-/* 소식 리더: 사이트를 떠나지 않고 기사를 펼쳐 보는 패널 */
-.news-reader {
-  position: fixed; inset: 0; z-index: 150; display: grid; place-items: center;
-  background: var(--scrim); padding: 6vh 5vw;
-  backdrop-filter: blur(18px) saturate(1.1); -webkit-backdrop-filter: blur(18px) saturate(1.1);
+.news .nw-filter button:hover { color: var(--ivory); }
+.news .nw-filter button[aria-pressed="true"] {
+  color: #fff; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 7px;
 }
-.news-reader[hidden] { display: none; }
-.nr-card {
-  width: min(720px, 100%); max-height: 84vh; overflow: auto;
-  background: var(--panel); border: 1px solid var(--line-strong);
-  border-radius: var(--r-panel); padding: clamp(1.8rem, 5vw, 3.2rem);
-}
-.nr-kicker {
-  display: block; font-family: var(--font-mono); font-size: .76rem;
-  letter-spacing: var(--track-label); text-transform: uppercase; color: var(--gold); margin-bottom: 1rem;
-}
-.nr-card h2 {
-  font-family: var(--font-display); font-size: clamp(1.4rem, 3.4vw, 2.1rem);
-  line-height: 1.35; letter-spacing: 0; margin: 0 0 1rem; color: var(--ivory); word-break: keep-all;
-}
-.nr-outlet { font-family: var(--font-mono); font-size: .76rem; letter-spacing: var(--track-label); color: var(--faint); margin: 0 0 1.4rem; }
-.nr-note { font-size: .95rem; line-height: 1.75; color: var(--muted); margin: 0 0 1.8rem; }
-.nr-actions { margin: 0; }
-.nr-close { position: fixed; top: 20px; right: 20px; }
-@media (max-width: 640px) { .news-reader { padding: 4vh 4vw; } }
+/* 목록이 채워질 때 아래가 밀리지 않도록 첫 화면 몫을 예약하고, 채워지면 푼다 */
+.news .nw-list { min-height: 80vh; border-top: 1px solid var(--line); }
+.news .nw-list:not(:empty) { min-height: 0; }
 
-/* 자동 수집 소식: 원문으로 나가는 카드 — 출처를 모노로 조용히 표기 */
-/* border:0 을 빠뜨려 브라우저 기본 버튼 테두리(2px)가 남아 있었다.
-   검정 위 검정이라 눈에 잘 안 띄었지만, 자동 수집 소식만 상자에 갇힌 것처럼
-   보이게 만들어 목록의 결이 끊겼다. background 를 지웠으면 border 도 지워야 한다.
-   다만 그냥 border:0 으로 지우면 .news-item 의 목록 구분선까지 함께 사라진다
-   (button.news-item--auto 가 .news-item 보다 특정성이 높다).
-   그래서 기본 테두리만 지우고 아래 구분선은 되돌려 놓는다. */
-button.news-item--auto {
-  width: 100%; text-align: left; background: none; cursor: pointer; font: inherit;
-  border: 0; border-bottom: 1px solid var(--line);
+.news .nw-item { padding: 1.35rem 0 1.45rem; border-bottom: 1px solid var(--line); }
+.news .nw-meta {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: .15rem 0; margin: 0 0 .5rem;
+  font-family: var(--font-body); font-size: .85rem; line-height: 1.55; letter-spacing: 0; color: var(--faint);
 }
-button.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline; text-underline-offset: 4px; }
-.news-item .news-src {
-  font-family: var(--font-mono); font-size: .76rem; letter-spacing: var(--track-label);
-  text-transform: uppercase; color: var(--faint);
+.news .nw-kind { color: var(--ivory); font-weight: 600; }
+/* 고정폭 서체의 띄어쓰기는 글자 한 칸(.6em)이라 「2026. 9. 21.」이 성글게 벌어진다 — 낱말 간격만 좁힌다 */
+.news .nw-when time, .news .nw-p-date {
+  font-family: var(--font-mono); font-size: .8rem; letter-spacing: 0; word-spacing: -.32em;
+  font-variant-numeric: tabular-nums;
 }
-@media (max-width: 720px) {
-  .news-item { grid-template-columns: 1fr; gap: .5rem; padding: 1.3rem .2rem; }
+.news .nw-src { color: var(--muted); }
+/* 손으로 쓴 소식이 오늘 일일 때(main.js 가 날짜로 계산) — 「N년 전 오늘」과 같은 금빛 */
+.news .nw-today { color: var(--gold); font-weight: 600; }
+/* 폰: 한 줄 메타 — 공연 · 2026. 9. 21. 보도 · 스타뉴스
+   줄이 접히면 둘째 줄이 「· 스타뉴스」처럼 점으로 시작했다(375×17 기본 크기에서도, 검수 2바퀴).
+   점은 각 항목의 머리(폭 1.1rem)에 두고 항목을 그만큼 왼쪽으로 당긴다(margin-left:-1.1rem).
+   줄 가운데서는 앞 항목과의 간격(column-gap 1.1rem)이 당긴 만큼을 돌려줘 점이 낱말 사이에 서고,
+   줄 머리에서는 점이 상자 왼쪽 바깥으로 밀려 overflow:hidden 에 잘린다 — 줄 머리에 점이 서지 않는다. */
+@media (max-width: 899px) {
+  .news .nw-meta { column-gap: 1.1rem; overflow: hidden; }
+  .news .nw-when, .news .nw-today, .news .nw-src { margin-left: -1.1rem; }
+  .news .nw-when::before, .news .nw-today::before, .news .nw-src::before {
+    content: "·"; display: inline-block; width: 1.1rem; text-align: center; color: var(--faint);
+  }
+}
+
+.news .nw-title {
+  margin: 0; font-family: var(--font-body); font-weight: 600; font-size: 1.08rem; line-height: 1.55;
+  letter-spacing: 0; color: var(--ivory); word-break: keep-all; overflow-wrap: anywhere; text-wrap: pretty;
+}
+/* 제목 링크는 블록으로 — 한 줄 제목도 누르는 높이 44px(위 .6rem·아래 .35rem 을 여백에서 빌린다.
+   아래쪽은 「기사 N건」 단추의 위 여백(.45rem)보다 작아 두 단추의 누르는 영역이 겹치지 않는다) */
+.news .nw-title a { display: block; padding: .6rem 0 .35rem; margin: -.6rem 0 -.35rem; color: inherit; text-decoration: none; }
+.news .nw-title a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.news .nw-ext { color: var(--faint); font-weight: 400; }
+.news .nw-ex { margin: .45rem 0 0; font-size: 1rem; line-height: 1.7; color: var(--muted); max-width: 38em; word-break: keep-all; }
+
+/* 대표 소식 — 목록의 첫 줄. 같은 문법, 크기만 다르다 */
+.news .nw-item--lead { padding: 1.9rem 0 2.1rem; }
+.news .nw-item--lead .nw-title {
+  font-family: var(--font-display); font-weight: 700; font-size: clamp(1.45rem, 1.05rem + 1.7vw, 2.25rem);
+  line-height: 1.34; letter-spacing: 0;
+}
+.news .nw-item--lead .nw-ex { font-size: 1.06rem; }
+
+/* 「기사 N건」 — 글자 단추. 펼치면 언론사 목록(원문 링크) */
+.news .nw-more {
+  display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; margin: .45rem 0 -.5rem; padding: 0 .1rem;
+  border: 0; background: none; cursor: pointer;
+  font-family: var(--font-body); font-size: .92rem; font-weight: 500; letter-spacing: 0; color: var(--muted);
+}
+.news .nw-more:hover { color: var(--ivory); }
+.news .nw-pm::before { content: "+"; font-family: var(--font-mono); font-size: 1rem; }
+.news .nw-more[aria-expanded="true"] .nw-pm::before { content: "\2212"; }
+.news .nw-press { list-style: none; margin: .7rem 0 0; padding: 0; border-top: 1px solid var(--line); }
+.news .nw-press li + li { border-top: 1px solid var(--line); }
+.news .nw-press a {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "src date" "t t";
+  gap: .1rem .7rem; align-items: baseline; min-height: 44px; padding: .75rem 0;
+  color: inherit; text-decoration: none;
+}
+.news .nw-p-src { grid-area: src; font-size: .85rem; color: var(--ivory); letter-spacing: 0; }
+.news .nw-p-date { grid-area: date; font-size: .78rem; color: var(--faint); }
+.news .nw-p-t {
+  grid-area: t; font-size: .95rem; line-height: 1.6; color: var(--muted); letter-spacing: 0;
+  word-break: keep-all; overflow-wrap: anywhere;
+}
+.news .nw-press a:hover .nw-p-t { color: var(--ivory); text-decoration: underline; text-underline-offset: 3px; }
+
+.news .nw-older {
+  display: block; width: 100%; min-height: 56px; padding: 0; border: 0; border-bottom: 1px solid var(--line);
+  background: none; cursor: pointer; text-align: left;
+  font-family: var(--font-body); font-size: 1rem; font-weight: 500; letter-spacing: 0; color: var(--ivory);
+}
+.news .nw-older:hover { text-decoration: underline; text-underline-offset: 5px; }
+.news .nw-empty { padding: 2.4rem 0; color: var(--muted); font-size: 1rem; }
+.news .nw-note {
+  margin: 2.2rem 0 0; max-width: 40em; font-size: .9rem; line-height: 1.75; letter-spacing: 0;
+  color: var(--faint); word-break: keep-all;
+}
+
+/* 넓은 화면: 왼쪽 열에 메타(종류·날짜·언론사), 오른쪽에 제목 — 날짜가 세로로 줄을 선다 */
+@media (min-width: 900px) {
+  .news .nw-item {
+    display: grid; grid-template-columns: 11.5rem minmax(0, 1fr); column-gap: 2.6rem;
+    padding: 1.9rem 0 2rem;
+  }
+  .news .nw-meta { grid-column: 1; grid-row: 1 / span 4; flex-direction: column; gap: .2rem; margin: .2rem 0 0; }
+  .news .nw-when::before, .news .nw-src::before { content: none; }
+  .news .nw-item > :not(.nw-meta) { grid-column: 2; }
+  .news .nw-title { font-size: 1.2rem; max-width: 36em; }
+  .news .nw-item--lead { padding: 2.4rem 0 2.6rem; }
+  .news .nw-item--lead .nw-title { max-width: 26em; }
+  .news .nw-more { justify-self: start; }
+  .news .nw-press { max-width: 52rem; }
+  .news .nw-press a { grid-template-columns: 9rem 3.6rem minmax(0, 1fr); grid-template-areas: "src date t"; }
 }
 
 /* ---------- 10. 일정 ---------- */
@@ -532,7 +603,8 @@ button.news-item--auto:hover h3 { color: var(--gold); text-decoration: underline
 .event-info .where { color: var(--muted); font-size: .92rem; margin: 0; }
 @media (max-width: 720px) {
   .event-row { grid-template-columns: 1fr; gap: .8rem; padding: 1.5rem .2rem; }
-  .event-row .btn { justify-self: start; }
+  /* 상태 꼬리표(「방송」「매진」)도 글자 폭만 — 폰에서 320×32 테두리 상자가 입력칸처럼 보였다 */
+  .event-row .btn, .event-row > .badge { justify-self: start; }
 }
 
 /* ---------- 11. 무대 타일 (영상 포스터) ---------- */
@@ -1607,7 +1679,6 @@ button.show-cell:hover .show-cta, button.show-cell:focus-visible .show-cta { col
   letter-spacing: var(--track-label); text-transform: uppercase; color: #fff;
 }
 main h3 { font-family: var(--font-body); font-weight: 600; font-size: 1.02rem; letter-spacing: 0; }
-.news-item h3 { font-family: var(--font-mono); font-weight: 400; font-size: .88rem; letter-spacing: var(--track-label); }
 .album-row .a-year { font-family: var(--font-mono); font-size: .78rem; font-weight: 400; letter-spacing: var(--track-label); color: var(--faint); }
 .album-row .a-title { font-family: var(--font-mono); font-size: .92rem; font-weight: 400; letter-spacing: .06em; }
 .section-head h2 { font-size: 1rem; letter-spacing: var(--track-label); }
@@ -2541,7 +2612,6 @@ button.sr-row .sr-play { color: var(--gold); }
      한글 기준 1em ≈ 2자이므로 34em이면 약 68자. (40em은 80자로 길었다) */
   .legal-body > p, .legal-body > h2 { max-width: 34em; }
   .haemil-copy p { max-width: 34em; }
-  .news-item .excerpt { max-width: 36em; }
   .page-hero p { max-width: 34em; }
   /* HTML에 인라인으로 박힌 46em(=92자)을 읽기 폭으로 되돌린다 */
   .card-desc { max-width: 34em !important; }
@@ -2555,7 +2625,6 @@ button.sr-row .sr-play { color: var(--gold); }
 body.nav-open { overflow: hidden; touch-action: none; }
 @media (min-width: 1081px) { body.nav-open { overflow: visible; touch-action: auto; } }
 
-.news-list:not(:empty) { min-height: 0; }
 
 /* 자바스크립트가 채우는 목록들 — 채워지기 전에 자리를 잡아 두지 않으면
    내용이 들어오는 순간 아래가 통째로 밀린다(레이아웃 이동).
@@ -3113,8 +3182,100 @@ html[lang="ko"] .sc-title,
 html[lang="ko"] .sc-sub,
 html[lang="ko"] .rh-eyebrow,
 html[lang="ko"] .frame-note,
-html[lang="ko"] .news-src,
 html[lang="ko"] .album-detail h4 { letter-spacing: 0; }
+
+/* ══════════════════════════════════════════════════════════════════
+   한글에는 고정폭 서체를 쓰지 않는다 (2026-10-03 · 공연 당일 검수 2바퀴)
+   ------------------------------------------------------------------
+   위 블록은 자간만 0으로 돌렸다. 서체는 그대로 JetBrains Mono 였고 한글 글리프만
+   Pretendard 로 떨어졌다 — 그래서 '띄어쓰기'는 여전히 모노의 한 칸(.6em)이었다.
+   「걸어온  길」「258곡이  담겨  있습니다」「매주  월요일」처럼 낱말 사이가 2.5배로
+   벌어진 이유다. 실측(375×812, ko, 숨은 패널·검색 결과·뷰어 포함):
+   이야기 19 · 음악 434 · 공연 19 · 아카이브 32 · 해밀 5 · 약관 8 · 개인정보 11 · 홈 9 · 푸터 3(모든 쪽).
+   소식·사랑방·/live 는 이미 0 이었다 — 화면끼리 목소리가 갈렸다.
+
+   한국어 화면에서 한글이 실리는 자리만 본문 서체로 돌린다. 라틴 전용 라벨(DECK A ·
+   CROSSFADER · RECAP · TOP · EN · YOUTUBE · 날짜 숫자)은 목록에 없다 — 모노 그대로.
+   숫자만 남은 자리(아카이브 캡션의 연도)는 main.js 가 숫자를 .arch-y 로 감싸 모노를 지킨다.
+   제목 구실을 하는 자리는 모노 400 의 '다른 서체'로 구별되던 것을 굵기 600 으로 옮긴다.
+   상주 검사: scripts/check_polish.py ⑥ 「한글 모노 0」(직접 텍스트 노드 · 숨은 패널 포함).
+   사랑방의 섹션 제목(.sec-h)은 그쪽 규칙(본문 서체 700 · 1.25rem)이 맡는다 — 건드리지 않는다.
+   ══════════════════════════════════════════════════════════════════ */
+html[lang="ko"] .section-head h2:not(.sec-h),
+html[lang="ko"] .haemil-line h2,
+html[lang="ko"] .legal-body h2,
+html[lang="ko"] .recap-head h2,
+html[lang="ko"] .card-body h3,
+html[lang="ko"] .album-detail h4,
+html[lang="ko"] .album-detail .a-sub,
+html[lang="ko"] .btn,
+html[lang="ko"] .badge,
+html[lang="ko"] .filter-bar button,
+html[lang="ko"] .a-link,
+html[lang="ko"] .album-row .a-title,
+html[lang="ko"] .album-row .a-kind,
+html[lang="ko"] .di-title,
+html[lang="ko"] .di-link,
+html[lang="ko"] .tr-name,
+html[lang="ko"] .tr-play,
+html[lang="ko"] .ts-row .ts-play,
+html[lang="ko"] .sr-row .sr-meta,
+html[lang="ko"] .sr-row .sr-play,
+html[lang="ko"] .today-line,
+html[lang="ko"] .song-count,
+html[lang="ko"] .rh-eyebrow,
+html[lang="ko"] .bt-power .btp-label,
+html[lang="ko"] .bt-bpm,
+html[lang="ko"] .bt-mode button,
+html[lang="ko"] .event-date .m,
+html[lang="ko"] .event-info .where,
+html[lang="ko"] .fresh-row .fr-ch,
+html[lang="ko"] .recap-meta,
+html[lang="ko"] .recap-clip,
+html[lang="ko"] .arch-cap,
+html[lang="ko"] .lightbox-caption,
+html[lang="ko"] .old-kind,
+html[lang="ko"] .av-when,
+html[lang="ko"] .av-note,
+html[lang="ko"] .av-today,
+html[lang="ko"] .page-hero--portrait .ph-cap,
+html[lang="ko"] .vhero-label,
+html[lang="ko"] .strip-hint,
+html[lang="ko"] .footer-min a[data-i18n],
+html[lang="ko"] .ld-skip { font-family: var(--font-body); letter-spacing: 0; }
+html[lang="ko"] .section-head h2:not(.sec-h),
+html[lang="ko"] .recap-head h2,
+html[lang="ko"] .card-body h3 { font-weight: 600; }
+/* 영어 화면에도 한글이 남는 자리 — 번역이 없는 곡·앨범 제목, 채널 이름, 표창 메모, 언어 단추(「한국어」).
+   이 자리는 라벨이 아니라 내용이라 영어 화면에서도 본문 서체로 둔다(라틴 제목도 함께 — 한 목록 안에서
+   제목마다 서체가 갈리지 않게). 실측 EN 375: 음악 51 · 공연 6 · 이야기 6 · 모든 쪽 언어 단추 2 → 0 */
+html[lang="en"] .lang-toggle,
+html[lang="en"] .album-row .a-title,
+html[lang="en"] .a-link,
+html[lang="en"] .di-title,
+html[lang="en"] .sr-row .sr-meta,
+html[lang="en"] .fresh-row .fr-ch,
+html[lang="en"] .av-note { font-family: var(--font-body); letter-spacing: 0; }
+/* 약관·개인정보의 조항 제목이 본문(1rem)보다 작았다(.78rem) — 섹션 제목은 1rem */
+html[lang="ko"] .legal-body h2 { font-size: 1rem; font-weight: 600; }
+/* 숫자만 고정폭 — 아카이브 캡션의 연도(「2024 · 화보」의 2024), 공연 시각(「진해아트홀 · 17:00」) */
+.arch-cap .arch-y, .event-info .where .ev-time { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* 폰: 텍스트 머리 페이지(소식·공연·음악·아카이브·해밀·약관)의 제목이 헤더 밑선에 붙어 있었다.
+   실측 375×812 — 헤더 아래 65px = h1 위 65px(간격 0), 500~720px 폭에서는 헤더(69px)가
+   제목 윗부분 5px 을 덮었다. 히어로 위 여백이 8vh 라 화면 높이에 따라 우연히 맞았던 것.
+   사랑방(15~17px)과 같은 리듬으로 헤더 높이 + 1rem 을 바닥으로 둔다. 헤더는 px 고정
+   (64+1 / 68+1 px)이라 글자 크기를 키워도 그대로다. 사진 머리(이야기·사랑방)는 제외. */
+@media (max-width: 720px) {
+  .page-hero:not(.page-hero--portrait):not(.page-hero--cafe):not(.page-hero--photo) {
+    padding-top: max(clamp(3.2rem, 8vh, 5rem), calc(69px + 1rem));
+  }
+}
+@media (max-width: 480px) {
+  .page-hero:not(.page-hero--portrait):not(.page-hero--cafe):not(.page-hero--photo) {
+    padding-top: max(clamp(3.2rem, 8vh, 5rem), calc(65px + 1rem));
+  }
+}
 
 
 /* ══ 사랑방 — 인순이의 날들 · 접히는 글칸 · 인용 카드 ══════════════

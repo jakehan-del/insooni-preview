@@ -158,6 +158,9 @@ def curate(items, log=print):
         # 같은 사건을 몇 곳이 보도했는지는 사실이므로 그대로 남긴다
         if same:
             it["also"] = len(same)
+        # 부르는 쪽(collect-news.py)이 합쳐진 사건의 기사를 대표 사건 안에 그대로 남길 수 있게
+        # 어느 번호가 합쳐졌는지 알려 준다. 합쳐진 것은 버려진 것이 아니다.
+        it["_same"] = list(same)
         t = st.get("type")
         if t in ("공연", "방송", "나눔", "보도"):
             it["type"] = t
