@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-03 09:08",
- "count": 70,
+ "updated": "2026-10-03 13:53",
+ "count": 78,
  "items": [
   {
    "date": "2026-10-02",
@@ -20,6 +20,19 @@
    "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBuQk1xT0lobVY1MWRGOUZBUHlJOE5wc0NTRkc1SWJzc1BtMGY1dklrLWlMc3RwZ1NyUERoc0F3TnYxbTZ2OERBOUtVNVE0M19ZV2hBOG1KWTM0OHhEc1NoTGpGbVR6QQ?oc=5",
    "type": "공연",
    "auto": true
+  },
+  {
+   "date": "2026-10-02",
+   "title": "김포 세계인 큰잔치 11일 개최…인순이 공연·세계문화 체험",
+   "source": "매일일보",
+   "sourceSite": "https://www.m-i.kr",
+   "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE5mTXdrekg5LUlXLUZfNzgxenpITEtNdnYxNkI0WVhnbzRzLWZXN2JUdjUzX3J3aGNETFk2UnlkOHhMQjRFbEFfMDNhTmdZRExrY0xLTlVRYWVyTGVyUGxxTmZQNWw?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "김포 세계인 큰잔치 11일 개최…인순이 공연·세계문화 체험 - 매일일보",
+   "tags": [
+    "매일일보"
+   ]
   },
   {
    "date": "2026-10-02",
@@ -42,6 +55,32 @@
    "rawSource": "xportsnews.com",
    "tags": [
     "엑's 현장"
+   ]
+  },
+  {
+   "date": "2026-09-29",
+   "title": "진해아트홀 개관기념 특별공연 ‘인순이 스페셜 콘서트’ 개최",
+   "source": "경남도민신문",
+   "sourceSite": "http://www.gndomin.com",
+   "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE4wc0ZPR3ZDWjFHQzJ3b2lLTkdPVVBleTR2RWlSLXI0N3dyY1N4WnVHd2VVMDZ5X19RVDMzUF9LblFNY1hTYUh4WXoteHFrUmpaMXp1UlA2ZGhMYkVOc1pQWkF0UzUtM1c0?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "진해아트홀 개관기념 특별공연 ‘인순이 스페셜 콘서트’ 개최 - 경남도민신문",
+   "tags": [
+    "경남도민신문"
+   ]
+  },
+  {
+   "date": "2026-09-28",
+   "title": "진해아트홀 개관 기념...인순이 스페셜 콘서트 10월 3일 개최",
+   "source": "newfilenews.com",
+   "sourceSite": "https://www.newfilenews.com",
+   "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFBkVGdRd2xNYmQtdlhMRnQ0Qy0xeFp2dmNKTVNtbkxQcHMyXzV5V2R6TUUtR2p1U2ZlQm9yc25RZ05abEFTeXFzRnFHNGMyMVotalphQkVaV0dtN3d1YWVJcW5ZSTFpSjVjN1k2NHh3?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "진해아트홀 개관 기념...인순이 스페셜 콘서트 10월 3일 개최 - newfilenews.com",
+   "tags": [
+    "newfilenews.com"
    ]
   },
   {
@@ -84,10 +123,38 @@
    "date": "2026-09-24",
    "title": "안방엔 이승철, 공연장엔 인순이…추석 음악 한 상",
    "source": "서울신문",
+   "sourceSite": "https://m.go.seoul.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxOcWxsYjBEUmw4OE9oa3ZQTWdhd2dsSWNkRlBfSDlzZG1EX2EtSHFfRGcyY3FQWUdDS2tFRFN3UnhfbEFFUVBrSXd1OFllYjBudDUxWV9rMnpHNWRPTzYxSEZLQUo2VkVhUDNJX2Jac3gtMHFsQWNlWG5tdHFGUVdZNl9UX1I?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "안방엔 이승철, 공연장엔 인순이…추석 음악 한 상 - 서울Pn",
+   "rawSource": "서울Pn",
+   "tags": [
+    "서울Pn"
+   ]
+  },
+  {
+   "date": "2026-09-24",
+   "title": "안방엔 이승철, 공연장엔 인순이…추석 음악 한 상",
+   "source": "서울신문",
    "sourceSite": "https://www.seoul.co.kr",
    "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE1mSTZFeUV1d21ZdUljMkRzVG1VZDJqdGZ5dEQtYjdvX0tUdTdTMTJUTmwtNmxvbmh0WHBQUEZFb0t4aDJ6R3JjYnJFZk9sZnRYTkV2VmF5OVc1bWtLY2lXbFdPRnVxNHFRY3pTZWg4bGJTWWtkeDVFSUU0MA?oc=5",
    "type": "공연",
    "auto": true
+  },
+  {
+   "date": "2026-09-22",
+   "title": "인순이·전영록·소찬휘…윤항기 65주년 헌정 공연, 페스티벌급 라인업",
+   "source": "엑스포츠뉴스",
+   "sourceSite": "https://www.xportsnews.com",
+   "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE16aXNYZHFNSkFDWHpDTTNWSWNNSEd3QVJnblJGS0tSNHZhQXNsZ0lEaEpWS3k1ZFZfT18tNV92Smp6akdldW81bHNnOUVsS2JIU2stcg?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "인순이·전영록·소찬휘…윤항기 65주년 헌정 공연, 페스티벌급 라인업 - xportsnews.com",
+   "rawSource": "xportsnews.com",
+   "tags": [
+    "xportsnews.com"
+   ]
   },
   {
    "date": "2026-09-21",
@@ -125,6 +192,34 @@
    "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE1laVRqV00xUHpHazN4U01abDcwR0hKeGZpZ1lDNlBZRUQxUUJTZmJ4X0tIeGdUMDVCcG8xckVPd3E4cHZTRFBRV3NHVXhVNGN6MWpfV2N0N3NXbm1yTmFDaENxZkg5ZDFK?oc=5",
    "type": "공연",
    "auto": true
+  },
+  {
+   "date": "2026-09-21",
+   "title": "윤항기 65주년 헌정 공연, 서유석·최백호·인순이·장미화·전영록·소찬휘 등 페스티벌급 출연진 공개",
+   "source": "경향신문",
+   "sourceSite": "https://sports.khan.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTFA3NTFGbjl5Y0tiSG1pMHQwUjNUMFhSc2J6VzBVU0ttYVdqTzg3NWo1aGVleU03RzZjUThrdm5GRXJWSWI1Y193ekdFMlZtaDdCUzNIR1B2VFVKNWwtTEHSAWNBVV95cUxPY0xKNzJRc05yLVc1emZaNWN1cmVKSHVtWDhJTURRSXZGcThPWWkxS1NuR2ZibVFXaU11UWlfdHBEN3oxalZfMlVQbzBINkszTVg2ZUVMY2ZpZS1Nb2V1SDBKZUk?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "윤항기 65주년 헌정 공연, 서유석·최백호·인순이·장미화·전영록·소찬휘 등 페스티벌급 출연진 공개 - 스포츠경향",
+   "rawSource": "스포츠경향",
+   "tags": [
+    "스포츠경향"
+   ]
+  },
+  {
+   "date": "2026-09-21",
+   "title": "윤항기, 10월 데뷔 65주년 공연…최백호·인순이·소찬휘 등 지원사격",
+   "source": "다음 뉴스",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTFBwR3hha2c5YmRpeWRBUmZiRlFoZWNRcjZ0SXFidHB2WkZhbXl5azVkcVZxc3RaYVRSM1E1MzJCMVdNTmJMVnc?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "윤항기, 10월 데뷔 65주년 공연…최백호·인순이·소찬휘 등 지원사격 - v.daum.net",
+   "rawSource": "v.daum.net",
+   "tags": [
+    "v.daum.net"
+   ]
   },
   {
    "date": "2026-09-18",
@@ -523,6 +618,20 @@
    "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTFBIa3ZIblV0NmRXVU53MkwxdV9Uazd2MW1rb2dKWXRhRDZGSEl4Z1JpNElKcVVkUmRKdzNLQjFkd3BBVzgtb0RtbUg5cWx1VEVtOThWejlvX0wzUVUxYmJZbURFZEVoTGhf?oc=5",
    "type": "공연",
    "auto": true
+  },
+  {
+   "date": "2026-07-24",
+   "title": "‘불꽃야구 생중계’ 고척 빅매치…경수진 시구+인순이 애국가",
+   "source": "경향신문",
+   "sourceSite": "https://sports.khan.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTFA1X0VxTzh0WGVNdFZ2MXNJNUlXcHJBcVVHVk5Gb3ZzakdMb1RoajY1VndwNXRBZlU5aTJSNWlIaVh5Zk5iOE9mUzR3QmZDQVJvRTh6dXFFNDlaS1FxWkHSAWNBVV95cUxQSWVGSnRuYkx1TTJqSmZWUTUxU283cTJmRm9yM3k5Wkh5T2tMcDRtc0VTTzBZcDJLdG1nWnEtZEJxeHlEUjhKNmpCaDVKaDVLbjB0dGZibjhSUVpKOC1FdG1rXzg?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "‘불꽃야구 생중계’ 고척 빅매치…경수진 시구+인순이 애국가 - 스포츠경향",
+   "rawSource": "스포츠경향",
+   "tags": [
+    "스포츠경향"
+   ]
   },
   {
    "date": "2026-07-24",

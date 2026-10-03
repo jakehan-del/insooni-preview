@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-03 09:08",
+ "updated": "2026-10-03 13:53",
  "items": [
   {
    "date": "2026-10-02",
@@ -11,7 +11,7 @@
    "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxNSGUyVE9oMFhtQjdqQnJSWDRoaHZYUzNNZGxTSEN3bW9EQXMzZS1FdE5GY2tiTllnU0liWWxCR0dyYUhVRFREenYzM29uMnBYSC1wOTBzTUFBbWV0TG1QNFRWNXVEX2N3dUM3QmxFMVN2Mlkxdmg5a3phUUVRNXlTLTc3UDgtdFNmbm9R?oc=5",
    "type": "공연",
    "auto": true,
-   "count": 3,
+   "count": 4,
    "articles": [
     {
      "date": "2026-10-02",
@@ -27,6 +27,12 @@
     },
     {
      "date": "2026-10-02",
+     "title": "김포 세계인 큰잔치 11일 개최…인순이 공연·세계문화 체험",
+     "source": "매일일보",
+     "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE5mTXdrekg5LUlXLUZfNzgxenpITEtNdnYxNkI0WVhnbzRzLWZXN2JUdjUzX3J3aGNETFk2UnlkOHhMQjRFbEFfMDNhTmdZRExrY0xLTlVRYWVyTGVyUGxxTmZQNWw?oc=5"
+    },
+    {
+     "date": "2026-10-02",
      "title": "제19회 세계인 큰 잔치, 국가별 입장 및 인순이 등 공연",
      "source": "씨티 21",
      "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBuQk1xT0lobVY1MWRGOUZBUHlJOE5wc0NTRkc1SWJzc1BtMGY1dklrLWlMc3RwZ1NyUERoc0F3TnYxbTZ2OERBOUtVNVE0M19ZV2hBOG1KWTM0OHhEc1NoTGpGbVR6QQ?oc=5"
@@ -36,24 +42,30 @@
   {
    "date": "2026-09-30",
    "first": "2026-09-09",
-   "title": "'나는 행복합니다' 윤항기 65주년 헌정 공연..인순이·최백호 합류",
-   "source": "스타뉴스",
-   "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE44cl8zSV9YdFNOb2ZTS0ktcU14SU1WUVdqbF9MTWlpZVdnTk5YYzBCUjE4M2Q3N0hhSGxvemF5bFJlc0dtMXgxMTJOYVcxQkR5N3ZVUU9HLWdjOTBmdU9NQXZmRFgyY2tGSk9XQjJPUkJWZmt4?oc=5",
+   "title": "윤항기 데뷔 65주년 기념 헌정 콘서트...최백호·서유석·인순이 등 출연",
+   "source": "뉴스브라이트",
+   "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFB1QWQ4aTdtNEhBMFJPWEpWamRuRkxiYkM4SUV0VC1ya2YyaHpvSU1BdGR5dWo5RWtTR2w2UGlILUprRkExV2oyNVFIWi1OVzd0Z1pJSkFtOGdJTHpJSFpfVmIya25STWgxRjU1bA?oc=5",
    "type": "공연",
    "auto": true,
-   "count": 8,
+   "count": 11,
    "articles": [
     {
-     "date": "2026-09-21",
-     "title": "'나는 행복합니다' 윤항기 65주년 헌정 공연..인순이·최백호 합류",
-     "source": "스타뉴스",
-     "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE44cl8zSV9YdFNOb2ZTS0ktcU14SU1WUVdqbF9MTWlpZVdnTk5YYzBCUjE4M2Q3N0hhSGxvemF5bFJlc0dtMXgxMTJOYVcxQkR5N3ZVUU9HLWdjOTBmdU9NQXZmRFgyY2tGSk9XQjJPUkJWZmt4?oc=5"
+     "date": "2026-09-18",
+     "title": "윤항기 데뷔 65주년 기념 헌정 콘서트...최백호·서유석·인순이 등 출연",
+     "source": "뉴스브라이트",
+     "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFB1QWQ4aTdtNEhBMFJPWEpWamRuRkxiYkM4SUV0VC1ya2YyaHpvSU1BdGR5dWo5RWtTR2w2UGlILUprRkExV2oyNVFIWi1OVzd0Z1pJSkFtOGdJTHpJSFpfVmIya25STWgxRjU1bA?oc=5"
     },
     {
      "date": "2026-09-30",
      "title": "최백호·인순이·소찬휘 총출동…윤항기 \"일생에 한 번뿐인 헌정 공연, 후배들 바쁜데도 함께해줘\"",
      "source": "엑스포츠뉴스",
      "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5lelZwRHh2UTVaTUlSc2FHQl81c0xUVDByb1FIVVFSRkpkaHp4QXBvaUxaVUhNaHRZNGJZcEFtcjBPMEVtdDV4bnJ1akMxY2c3WXdVaw?oc=5"
+    },
+    {
+     "date": "2026-09-22",
+     "title": "인순이·전영록·소찬휘…윤항기 65주년 헌정 공연, 페스티벌급 라인업",
+     "source": "엑스포츠뉴스",
+     "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE16aXNYZHFNSkFDWHpDTTNWSWNNSEd3QVJnblJGS0tSNHZhQXNsZ0lEaEpWS3k1ZFZfT18tNV92Smp6akdldW81bHNnOUVsS2JIU2stcg?oc=5"
     },
     {
      "date": "2026-09-21",
@@ -69,15 +81,27 @@
     },
     {
      "date": "2026-09-21",
+     "title": "윤항기 65주년 헌정 공연, 서유석·최백호·인순이·장미화·전영록·소찬휘 등 페스티벌급 출연진 공개",
+     "source": "경향신문",
+     "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTFA3NTFGbjl5Y0tiSG1pMHQwUjNUMFhSc2J6VzBVU0ttYVdqTzg3NWo1aGVleU03RzZjUThrdm5GRXJWSWI1Y193ekdFMlZtaDdCUzNIR1B2VFVKNWwtTEHSAWNBVV95cUxPY0xKNzJRc05yLVc1emZaNWN1cmVKSHVtWDhJTURRSXZGcThPWWkxS1NuR2ZibVFXaU11UWlfdHBEN3oxalZfMlVQbzBINkszTVg2ZUVMY2ZpZS1Nb2V1SDBKZUk?oc=5"
+    },
+    {
+     "date": "2026-09-21",
      "title": "최백호 김수희→전영록 인순이 한 자리에, 윤항기 65주년 공연 라인업",
      "source": "뉴스엔",
      "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE1laVRqV00xUHpHazN4U01abDcwR0hKeGZpZ1lDNlBZRUQxUUJTZmJ4X0tIeGdUMDVCcG8xckVPd3E4cHZTRFBRV3NHVXhVNGN6MWpfV2N0N3NXbm1yTmFDaENxZkg5ZDFK?oc=5"
     },
     {
-     "date": "2026-09-18",
-     "title": "윤항기 데뷔 65주년 기념 헌정 콘서트...최백호·서유석·인순이 등 출연",
-     "source": "뉴스브라이트",
-     "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFB1QWQ4aTdtNEhBMFJPWEpWamRuRkxiYkM4SUV0VC1ya2YyaHpvSU1BdGR5dWo5RWtTR2w2UGlILUprRkExV2oyNVFIWi1OVzd0Z1pJSkFtOGdJTHpJSFpfVmIya25STWgxRjU1bA?oc=5"
+     "date": "2026-09-21",
+     "title": "윤항기, 10월 데뷔 65주년 공연…최백호·인순이·소찬휘 등 지원사격",
+     "source": "다음 뉴스",
+     "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTFBwR3hha2c5YmRpeWRBUmZiRlFoZWNRcjZ0SXFidHB2WkZhbXl5azVkcVZxc3RaYVRSM1E1MzJCMVdNTmJMVnc?oc=5"
+    },
+    {
+     "date": "2026-09-21",
+     "title": "'나는 행복합니다' 윤항기 65주년 헌정 공연..인순이·최백호 합류",
+     "source": "스타뉴스",
+     "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE44cl8zSV9YdFNOb2ZTS0ktcU14SU1WUVdqbF9MTWlpZVdnTk5YYzBCUjE4M2Q3N0hhSGxvemF5bFJlc0dtMXgxMTJOYVcxQkR5N3ZVUU9HLWdjOTBmdU9NQXZmRFgyY2tGSk9XQjJPUkJWZmt4?oc=5"
     },
     {
      "date": "2026-09-18",
@@ -94,20 +118,32 @@
    ]
   },
   {
-   "date": "2026-09-28",
+   "date": "2026-09-29",
    "first": "2026-09-28",
    "title": "진해아트홀 개관기념 특별공연 ‘인순이 스페셜 콘서트’ 10월 3일 개최",
    "source": "뉴스경남",
    "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9rRzdVNlBfVG1CS3RneE9NTGVwQy10OW43NWRMQlQzeThwXzBvdkZQSXU4ZTkxbFJ2d1RLZGVjMzBpZGNMU3hiSEJXZFlIYTh5YUJzSmp2YVZGNDlHczhIY21HUE1MRm55?oc=5",
    "type": "공연",
    "auto": true,
-   "count": 3,
+   "count": 5,
    "articles": [
     {
      "date": "2026-09-28",
      "title": "진해아트홀 개관기념 특별공연 ‘인순이 스페셜 콘서트’ 10월 3일 개최",
      "source": "뉴스경남",
      "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9rRzdVNlBfVG1CS3RneE9NTGVwQy10OW43NWRMQlQzeThwXzBvdkZQSXU4ZTkxbFJ2d1RLZGVjMzBpZGNMU3hiSEJXZFlIYTh5YUJzSmp2YVZGNDlHczhIY21HUE1MRm55?oc=5"
+    },
+    {
+     "date": "2026-09-29",
+     "title": "진해아트홀 개관기념 특별공연 ‘인순이 스페셜 콘서트’ 개최",
+     "source": "경남도민신문",
+     "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE4wc0ZPR3ZDWjFHQzJ3b2lLTkdPVVBleTR2RWlSLXI0N3dyY1N4WnVHd2VVMDZ5X19RVDMzUF9LblFNY1hTYUh4WXoteHFrUmpaMXp1UlA2ZGhMYkVOc1pQWkF0UzUtM1c0?oc=5"
+    },
+    {
+     "date": "2026-09-28",
+     "title": "진해아트홀 개관 기념...인순이 스페셜 콘서트 10월 3일 개최",
+     "source": "newfilenews.com",
+     "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFBkVGdRd2xNYmQtdlhMRnQ0Qy0xeFp2dmNKTVNtbkxQcHMyXzV5V2R6TUUtR2p1U2ZlQm9yc25RZ05abEFTeXFzRnFHNGMyMVotalphQkVaV0dtN3d1YWVJcW5ZSTFpSjVjN1k2NHh3?oc=5"
     },
     {
      "date": "2026-09-28",
@@ -140,7 +176,10 @@
      "date": "2026-09-24",
      "title": "안방엔 이승철, 공연장엔 인순이…추석 음악 한 상",
      "source": "서울신문",
-     "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE1mSTZFeUV1d21ZdUljMkRzVG1VZDJqdGZ5dEQtYjdvX0tUdTdTMTJUTmwtNmxvbmh0WHBQUEZFb0t4aDJ6R3JjYnJFZk9sZnRYTkV2VmF5OVc1bWtLY2lXbFdPRnVxNHFRY3pTZWg4bGJTWWtkeDVFSUU0MA?oc=5"
+     "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE1mSTZFeUV1d21ZdUljMkRzVG1VZDJqdGZ5dEQtYjdvX0tUdTdTMTJUTmwtNmxvbmh0WHBQUEZFb0t4aDJ6R3JjYnJFZk9sZnRYTkV2VmF5OVc1bWtLY2lXbFdPRnVxNHFRY3pTZWg4bGJTWWtkeDVFSUU0MA?oc=5",
+     "alt": [
+      "https://news.google.com/rss/articles/CBMihAFBVV95cUxOcWxsYjBEUmw4OE9oa3ZQTWdhd2dsSWNkRlBfSDlzZG1EX2EtSHFfRGcyY3FQWUdDS2tFRFN3UnhfbEFFUVBrSXd1OFllYjBudDUxWV9rMnpHNWRPTzYxSEZLQUo2VkVhUDNJX2Jac3gtMHFsQWNlWG5tdHFGUVdZNl9UX1I?oc=5"
+     ]
     }
    ]
   },
@@ -368,7 +407,7 @@
    "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTFBIa3ZIblV0NmRXVU53MkwxdV9Uazd2MW1rb2dKWXRhRDZGSEl4Z1JpNElKcVVkUmRKdzNLQjFkd3BBVzgtb0RtbUg5cWx1VEVtOThWejlvX0wzUVUxYmJZbURFZEVoTGhf?oc=5",
    "type": "공연",
    "auto": true,
-   "count": 2,
+   "count": 3,
    "articles": [
     {
      "date": "2026-07-24",
@@ -384,6 +423,12 @@
      "title": "경수진 시구·인순이 애국가 가창…'특집 불꽃야구 생중계' 화려한 라인업",
      "source": "kstars.kr",
      "url": "https://news.google.com/rss/articles/CBMiQkFVX3lxTE9WRnJFR21jVFBScXRNa1pqNjUxQkhJTHg4U1plWnY2M200aXFXTk10RWdoNnB3V0ROeEh2djRSaFlnZw?oc=5"
+    },
+    {
+     "date": "2026-07-24",
+     "title": "‘불꽃야구 생중계’ 고척 빅매치…경수진 시구+인순이 애국가",
+     "source": "경향신문",
+     "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTFA1X0VxTzh0WGVNdFZ2MXNJNUlXcHJBcVVHVk5Gb3ZzakdMb1RoajY1VndwNXRBZlU5aTJSNWlIaVh5Zk5iOE9mUzR3QmZDQVJvRTh6dXFFNDlaS1FxWkHSAWNBVV95cUxQSWVGSnRuYkx1TTJqSmZWUTUxU283cTJmRm9yM3k5Wkh5T2tMcDRtc0VTTzBZcDJLdG1nWnEtZEJxeHlEUjhKNmpCaDVKaDVLbjB0dGZibjhSUVpKOC1FdG1rXzg?oc=5"
     }
    ]
   },
