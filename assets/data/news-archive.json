@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-04 01:03",
- "count": 80,
+ "updated": "2026-10-04 05:55",
+ "count": 81,
  "items": [
   {
    "date": "2026-10-02",
@@ -218,6 +218,20 @@
    "rawTitle": "윤항기, 10월 데뷔 65주년 공연…최백호·인순이·소찬휘 등 지원사격 - 뉴스1",
    "tags": [
     "뉴스1"
+   ]
+  },
+  {
+   "date": "2026-09-21",
+   "title": "윤항기, 10월 데뷔 65주년 공연…최백호·인순이·소찬휘 등 지원사격",
+   "source": "다음 뉴스",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5WQ05qSGg1X0t4Mk5nNFV0ZTBzbTYxYm5IeUZUVEw5dzZjazVKS3N3VERYdTh2MGxiSkViYWM5clZ4czBJQjVYam1VSQ?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "윤항기, 10월 데뷔 65주년 공연…최백호·인순이·소찬휘 등 지원사격 - v.daum.net",
+   "rawSource": "v.daum.net",
+   "tags": [
+    "v.daum.net"
    ]
   },
   {
