@@ -25,6 +25,7 @@
   var SLOW_MS = 8000;
   var MAX_GAP = 120000;
   var ALPH = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";   /* 0·O·1·I·L 은 객석 조명 아래에서 서로 헷갈린다 */
+  var POP_MS = 700;   /* 공연 화면이 먼저 그려진 뒤에 — 무슨 화면 위에 뜬 창인지 보이게 */
   var NEXTS = ["checkin", "cheer", "vote", "gb"];   /* gb — '로그인하고 방명록 남기기'를 누르고 들어온 사람(검토 4바퀴 12번) */
 
   /* ---------- 작은 도구 ---------- */
@@ -307,6 +308,35 @@
       poll(true);
       boundary();
       runNext();
+      autoPop();
+    });
+  }
+
+  /* 가입 창을 한 번 먼저 띄운다 — 공연 담당 피드백(2026-10-03): QR 로 들어온 관객이 화면 아래 단추만 보고는
+     가입하는 곳을 알아채지 못했다. 이 탭에서 한 번만(닫으면 다시 뜨지 않는다 — 아래 단추로 언제든 다시 연다).
+     띄우지 않는 때: 가입을 이미 마쳤다 · 도장이 닫힌 단계(방명록만·끝남·차단) · 로그인 왕복에서 막 돌아왔다(그쪽 창이 뜬다) ·
+     무엇을 하러 왔다(이어서 할 일이 남았다 · #gig-vote 같은 바로가기) · 이미 다른 창이 열려 있다 · 운영자 미리보기.
+     도장이 열려 있으면 가입을 마치는 대로 도장이 찍힌다(아래 단추 '도장 찍기'와 같은 길) */
+  var POP_KEY = "insooni_gig_pop";
+  function autoPop() {
+    if (S.popTried || !M.openSheet) return;
+    S.popTried = true;
+    var seen = false;
+    try { seen = sessionStorage.getItem(POP_KEY) === "1"; } catch (e) {}
+    if (seen) return;
+    var ready = M.ready && M.ready.then ? M.ready : Promise.resolve(null);
+    ready.then(function (cb) {
+      setTimeout(function () {
+        if (cb || !S.ev || S.ev.preview || /^#gig-[a-z]+$/.test(location.hash)) return;
+        var L = lstate(), me = S.me;
+        if (!(L === "L4" || L === "L5" || L === "L6") || (me && me.joined)) return;
+        if (M.hasNext && M.hasNext(NEXTS.concat(["early"]))) return;
+        var sh = byId("bd-sheet");
+        if (sh && !sh.hidden) return;
+        try { sessionStorage.setItem(POP_KEY, "1"); } catch (e) {}
+        M.setNext({ what: S.phase === "open" ? "checkin" : "early", code: S.code });
+        M.openSheet(me ? "join" : "start", go, null, { ctx: "gig", why: "pop" });
+      }, POP_MS);
     });
   }
   function notFound() {

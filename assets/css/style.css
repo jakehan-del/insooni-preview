@@ -5091,3 +5091,36 @@ html:has(#gig-gb-ta:focus, #gig-code-in:focus) { scroll-padding-top: calc(57px +
   .album-row > div { min-width: 0; }
   .album-row .a-kind { grid-column: 2; white-space: normal; overflow-wrap: anywhere; }
 }
+
+/* 공연 화면 회원 창 '회원이 되면' 줄 — 첫 문장 아래, 단추 위. 실제로 있는 기능만 세 줄 이내(board.js gigPerks) */
+.bd-perks { list-style: none; margin: -.4rem 0 1.2rem; padding: 0; }
+.bd-perks li { position: relative; margin: 0; padding: .3rem 0 .3rem 1.7rem; line-height: 1.5; color: var(--ivory); }
+.bd-perks li::before {
+  content: ""; position: absolute; left: .2rem; top: .78em; width: .7rem; height: .38rem;
+  border-left: 2px solid var(--ivory); border-bottom: 2px solid var(--ivory); transform: rotate(-45deg);
+}
+
+/* 아주 낮은 화면(320×568 등)에서는 이 줄이 카카오 단추를 엄지 자리 밖으로 밀어낸다(L14c 실측: 큰 글자에서 단추 top 260/568).
+   거기서는 단추가 먼저 — 소식 메일은 가입 마치기 창의 체크 칸이 다시 권한다 */
+@media (max-height: 600px) { .bd-perks { display: none; } }
+
+/* 가입 마치기의 소식 메일(선택) — 동의 칸들과 구분되는 한 칸. 체크하면 주소 칸이 열린다 */
+.bd-news { margin: .2rem 0 1rem; padding: .7rem .9rem .8rem; border: 1px solid var(--line-strong); }
+.bd-news .bd-check { margin: 0; font-weight: 600; }
+.bd-news-opt {
+  display: inline-block; margin-right: .45em; padding: .12em .4em; border: 1px solid var(--line-strong);
+  font: 600 .78rem/1.2 var(--font-body); letter-spacing: 0; color: var(--muted); vertical-align: .08em;
+}
+.bd-news-b { margin: .5rem 0 0; }
+.bd-news-b[hidden] { display: none; }
+.bd-news-b .form-field { margin: 0; }
+.bd-news-h { margin: .55rem 0 0; font-size: .9rem; }
+
+/* 내 정보 — 소식 메일 */
+.me-news-d { margin: 0 0 .9rem; }
+.me-news-cur { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .7rem; margin: 0 0 .8rem; font-size: 1.06rem; line-height: 1.5; }
+.me-news-e { font-weight: 700; color: var(--ivory); overflow-wrap: anywhere; }
+.me-news-f { display: flex; flex-wrap: wrap; align-items: flex-end; gap: .6rem 1rem; max-width: 30rem; }
+.me-news-f .form-field { flex: 1 1 14rem; margin: 0; }
+#cafe-me .me-news-f .form-field input[type="email"] { min-height: 48px; border-radius: 0; border-color: rgba(243, 239, 231, .42); }
+#cafe-me .me-news-f .form-field input[type="email"]:focus { border-color: var(--ivory); outline: 3px solid var(--focus); outline-offset: 2px; }

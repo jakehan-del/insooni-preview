@@ -17,6 +17,7 @@ RESERVED = ("인순이", "인순", "김인순", "insooni", "운영자", "관리�
 # 013 의 정본 103곡(member_song_choices) — 서버는 songs.json 을 그대로 옮겼다(md5 지문 대조). 가짜 서버도 같은 파일에서
 SONGS = [{"k": x["k"], "title": x["t"], "year": int(x["y"]) if str(x.get("y", "")).isdigit() else None, "sort": i}
          for i, x in enumerate(json.loads((ROOT / "assets/data/songs.json").read_text(encoding="utf-8"))["songs"])]
+F015 = ("member_news_set", "member_news_get")
 F013 = ("member_set_song", "member_page", "member_my_posts", "member_my_comments", "admin_member_songs")
 
 
@@ -47,6 +48,9 @@ class Fake:
         self.edits = 0
         self.songs = {}       # uid -> {"k", "at"}  (013 member_songs)
         self.no013 = False    # 013 이 서버에 없다 — 013 함수만 404(010·011 은 그대로)
+        self.news = {}        # uid -> {"email", "source"}  (015 member_news)
+        self.subs = []        # 001 subscribe 로 들어온 주소(015 전 대체 경로)
+        self.no015 = False    # 015 가 서버에 없다 — 015 함수만 404
 
     # ── 도구 ──
     def nid(self):
@@ -220,6 +224,8 @@ class Fake:
             board_fns = ("member_", "board_", "comment_")
             if self.not_ready and name.startswith(board_fns):
                 return J({"code": "PGRST202", "message": "Could not find the function"}, 404)
+            if self.no015 and name in F015:
+                return J({"code": "PGRST202", "message": "Could not find the function"}, 404)
             if self.no013 and name in F013:
                 return J({"code": "PGRST202", "message": "Could not find the function"}, 404)
             fn = getattr(self, "rpc_" + name, None)
@@ -294,6 +300,39 @@ class Fake:
         s = self.songs.get(uid)
         c = s and next((x for x in SONGS if x["k"] == s["k"]), None)
         return c and {"k": c["k"], "title": c["title"], "year": c["year"], "at": s["at"]}
+
+    # 015 — 회원 소식 메일(선택). 규칙은 SQL 과 같게: 회원만 · 차단은 받기 불가(그만 받기는 됨) · 주소 모양
+    def rpc_member_news_set(self, uid, b):
+        if not uid:
+            return {"ok": False, "reason": "not_logged_in"}
+        m = self.members.get(uid)
+        if not m:
+            return {"ok": False, "reason": "not_member"}
+        if not b.get("p_on"):
+            self.news.pop(uid, None)
+            return {"ok": True, "on": False}
+        if m.get("level") == "blocked":
+            return {"ok": False, "reason": "blocked"}
+        em = (b.get("p_email") or "").strip()
+        if not re.match(r"^[^@\s]+@[^@\s.]+\.[^@\s]+$", em):
+            return {"ok": False, "reason": "bad_email"}
+        self.news[uid] = {"email": em, "source": b.get("p_source")}
+        return {"ok": True, "on": True, "email": em}
+
+    def rpc_member_news_get(self, uid, b):
+        if not uid:
+            return {"ok": False, "reason": "not_logged_in"}
+        if uid not in self.members:
+            return {"ok": False, "reason": "not_member"}
+        n = self.news.get(uid)
+        return {"ok": True, "on": bool(n), **({"email": n["email"]} if n else {})}
+
+    def rpc_subscribe(self, uid, b):
+        em = (b.get("p_email") or "").strip()
+        if not re.match(r"^[^@\s]+@[^@\s.]+\.[^@\s]+$", em):
+            return {"ok": False, "reason": "bad_email"}
+        self.subs.append(em)
+        return {"ok": True}
 
     def rpc_member_set_song(self, uid, b):
         if not uid:

@@ -686,8 +686,8 @@ def s17(br, src=None, css=None):
     P.go("community.html#me", 2200)
     d = P.js("""() => ({kick: (document.querySelector('#cafe-me .me-kick') || {}).textContent, secs: [...document.querySelectorAll('#cafe-me .me-sec-h')].map(h => h.firstChild.textContent.trim()),
       back: (document.querySelector('#cafe-me .cafe-back') || {}).textContent, st: [...document.querySelectorAll('#cafe-me .me-st')].map(x => x.textContent)})""")
-    t("S17 영어 — 'My page' · Level · Shows you attended · My song · My posts · My replies · Change nickname · 상태 Public/Being checked/Taken down",
-      d["kick"] == "My page" and d["secs"] == ["Level", "Shows you attended", "My song", "My posts", "My replies", "Change nickname"]
+    t("S17 영어 — 'My page' · Level · Shows you attended · My song · My posts · My replies · News emails · Change nickname · 상태 Public/Being checked/Taken down",
+      d["kick"] == "My page" and d["secs"] == ["Level", "Shows you attended", "My song", "My posts", "My replies", "News emails", "Change nickname"]
       and d["back"] == "← Back to the Fan Room" and set(d["st"]) <= {"Public", "Being checked", "Taken down"} and "Being checked" in d["st"], d)
     t("S17z 오류 0", not P.errs and not f.unhandled, P.errs)
     c.close()

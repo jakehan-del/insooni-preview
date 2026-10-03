@@ -89,6 +89,9 @@
   /* 014(모든 글 바로 공개)가 운영에 있다 — 화면이 '확인 뒤 올라갑니다'라고 말하지 않게. 서버가 정하는 것은 그대로 서버가
      정하고(응답의 status), 이 스위치는 쓰기 전에 보여 주는 안내 문장만 바꾼다(형님 10/03 결정) */
   function instantOn() { return conf().instant === true; }
+  /* 가입할 때 '인순이 새 소식을 이메일로' 선택 동의 — 공연 담당 피드백(2026-10-03). 015 를 실행하면 회원별로 저장되고,
+     실행 전이면 001 의 구독 명단(subscribe)에 넣는다. 꺼 두면 칸 자체가 없다 */
+  function newsOn() { return conf().news === true; }
   /* 마이페이지의 013 칸(내 댓글·내 노래·가입 질문) — 스위치가 켜졌고, 서버가 아직 '없다'(404)고 하지 않았다 */
   function mypageOn() { return boardOn() && conf().mypage === true && S.mp !== false; }
   function onLivePage() { return document.body && document.body.getAttribute("data-page") === "live"; }
@@ -100,6 +103,8 @@
   /* 공연 화면 회원 창의 제목·첫 문장·가입 단추 — 창을 연 목적(wy)과 지금 단계(ph)에 맞춘다(검토 4바퀴 12·18번).
      단계를 아직 모르면('') 도장 받는 중으로 본다 — 공연 화면은 대부분 그때 열리고, 단계가 정해지면 syncGigSheet 가 고친다 */
   function gigStartH(wy, ph) {
+    /* 자동으로 뜬 창(gig.js autoPop) — 아무것도 누르지 않은 사람에게 '도장을 남기려면'은 엉뚱하다 */
+    if (wy === "pop") return t("bd.sheetHGigPop", "회원으로 오늘 공연을 함께해 주세요");
     return wy === "cheer" ? t("bd.sheetHGigCheer", "응원을 보내려면 회원으로 들어와 주세요")
       : wy === "vote" ? t("bd.sheetHGigVote", "투표하려면 회원으로 들어와 주세요")
       : wy === "gb" ? t("bd.sheetHGigGb", "방명록을 남기려면 회원으로 들어와 주세요")
@@ -117,6 +122,18 @@
     if (what) return what + " " + (kakaoTop ? t("bd.sheetFast", "카카오로 시작하면 가장 빠릅니다.") : t("bd.sheetMailOr", "이메일로 가입하거나, 이미 회원이면 로그인해 주세요."));
     return kakaoTop ? t("bd.sheetLedeGig", "도장을 찍으면 오늘 다녀온 공연이 내 정보에 남습니다. 카카오로 시작하면 가장 빠릅니다.")
                     : t("bd.sheetLedeGigMail", "도장을 찍으면 오늘 다녀온 공연이 내 정보에 남습니다. 이메일로 가입하거나, 이미 회원이면 로그인해 주세요.");
+  }
+  /* 공연 화면 회원 창의 '회원이 되면' 줄 — 실제로 있는 기능만(혜택은 지어내지 않는다, 검토 43번).
+     도장·응원·투표는 그것이 아직 열려 있을 때(시작 전·받는 중)만 말한다 */
+  function gigPerks(ph) {
+    var ul = el("ul", "bd-perks");
+    ul.setAttribute("aria-label", t("bd.perksAria", "회원이 되면"));
+    var items = [];
+    if (!ph || ph === "open" || ph === "before") items.push(t("bd.perkGig", "오늘 공연 도장 · 응원 한마디 · 앵콜곡 투표"));
+    items.push(t("bd.perkGb", "공연 방명록과 사랑방에 글 남기기"));
+    if (newsOn()) items.push(t("bd.perkNews", "원하시면 인순이 새 공연·방송 소식을 이메일로 먼저"));
+    items.forEach(function (x) { ul.appendChild(el("li", null, x)); });
+    return ul;
   }
   function joinGoText(gig, wy, ph) {
     if (gig && wy === "gb") return t("bd.doJoinGb", "가입 마치고 방명록 남기기");
@@ -306,6 +323,18 @@
     };
   }
   function getS() { return lsGet(SKEY); }
+  /* 로그인 열쇠(JWT)에 실린 이메일 — 이메일로 가입했거나 카카오에서 이메일 제공에 동의한 분. 없으면 빈 값.
+     소식 메일 칸을 미리 채우는 데만 쓴다(서버에 따로 보내지 않는다) */
+  function tokenEmail() {
+    var s0 = getS();
+    if (!s0 || !s0.at) return "";
+    try {
+      var p = String(s0.at).split(".")[1].split("-").join("+").split("_").join("/");
+      while (p.length % 4) p += "=";
+      var j = JSON.parse(decodeURIComponent(escape(atob(p))));
+      return typeof j.email === "string" ? j.email : "";
+    } catch (e) { return ""; }
+  }
   function setS(b) { lsSet(SKEY, pack(b)); }
   function clearS() { lsDel(SKEY); }
 
@@ -699,7 +728,7 @@
             trail: null, flash: "", flashKind: "",
             mp: null,          /* 013 이 서버에 있는가 — null 모름 · true 있음 · false 없음(404) */
             songsP: null,      /* songs.json(103곡) — 처음 고를 때 한 번 받는다 */
-            songNote: "" };    /* 가입은 됐는데 고른 노래를 저장하지 못했다 — 인사 끝에 한 줄 붙인다 */
+            songNote: "", newsNote: "" };    /* 가입은 됐는데 고른 노래를 저장하지 못했다 — 인사 끝에 한 줄 붙인다 */
   var sec = null;     /* 지금 화면의 #board (라우터가 <main> 을 갈아끼우면 바뀐다) */
   var memberReady = false;
   var listeners = [];
@@ -977,6 +1006,7 @@
      공연 화면은 제 자리의 안내(gig.js)를 쓴다 */
   /* 가입은 됐는데 고른 노래를 저장하지 못했으면 인사 끝에 한 줄 — 조용히 버리지 않는다(가입은 그대로 유지된다) */
   function withSongNote(text) {
+    if (S.newsNote) text += " " + S.newsNote;
     return S.songNote ? text + " " + S.songNote : text;
   }
   /* how = "join" 이면 방금 가입을 마쳤다 — 공연 화면이 '가입을 마쳤습니다'와 '로그인'을 가려 말한다 */
@@ -1044,6 +1074,7 @@
       welcome(note, how);
       continueNext(how);
       S.songNote = "";
+      S.newsNote = "";
     });
   }
 
@@ -2336,6 +2367,9 @@
     box.appendChild(mePosts(p, res.full));
     if (res.full) box.appendChild(meCmts(p));
     else box.appendChild(el("p", "form-hint me-soon", t("bd.me.soon", "내 댓글 모아 보기와 '내 노래' 고르기는 준비하고 있습니다.")));
+    /* 소식 메일은 내 글·댓글 아래(별명 바꾸기 앞) — 서버 답을 받은 뒤에 나타나는 칸이라, 위에 두면 나타나는 순간
+       아래 목록을 밀어 '← 내 정보로' 돌아온 자리가 어긋났다(S3b 실측 +373px) */
+    if (res.full && newsOn()) box.appendChild(meNews());
     box.appendChild(meNick(p));
     box.appendChild(meAcct(p, res.full));
   }
@@ -2469,6 +2503,78 @@
       });
     }
     paint();
+    return s;
+  }
+
+  /* 소식 메일 — 받는 중이면 주소와 '그만 받기', 아니면 주소 칸과 '소식 받기'. 가입 창이 '내 정보에서 언제든 끊을 수
+     있습니다'라고 약속한 자리다. 015 가 없으면(not_ready) 칸을 숨긴 채 둔다(없는 기능을 보여 주지 않는다) */
+  function meNews() {
+    var s = meSec("me-news", t("bd.me.newsH", "소식 메일"));
+    s.hidden = true;
+    s.appendChild(el("p", "form-hint me-news-d", t("bd.me.newsD", "인순이 새 공연·방송 소식을 이메일로 받습니다. 주소는 다른 회원에게 보이지 않고, 소식 메일 외에는 쓰지 않습니다.")));
+    var cur = el("p", "me-news-cur");
+    var acts = el("div", "me-news-acts");
+    var msg = msgNode();
+    s.appendChild(cur);
+    s.appendChild(acts);
+    s.appendChild(msg);
+    var on = false, mail = "", busy = false;
+    function paint(focus) {
+      cur.textContent = "";
+      acts.textContent = "";
+      var first;
+      if (on) {
+        cur.appendChild(el("span", "bd-badge me-news-on", t("bd.me.newsOn", "받는 중")));
+        cur.appendChild(el("span", "me-news-e", mail));
+        first = btn("btn btn--ghost btn--sm me-news-b", t("bd.me.newsOff", "그만 받기"));
+        first.addEventListener("click", function () { save(false); });
+        acts.appendChild(first);
+      } else {
+        cur.appendChild(el("span", "me-song-none", t("bd.me.newsNone", "받지 않습니다.")));
+        var fm = el("form", "me-news-f");
+        fm.setAttribute("novalidate", "");
+        var fe = field("me-news-e", t("bd.newsEmail", "소식 받을 이메일"), "email", { autocomplete: "email", inputmode: "email", maxlength: "254", spellcheck: "false" });
+        var inp = $("input", fe);
+        inp.value = mail || tokenEmail();
+        fm.appendChild(fe);
+        first = btn("btn btn--ghost btn--sm me-news-b", t("bd.me.newsGo", "소식 받기"), "submit");
+        fm.appendChild(first);
+        fm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          var v = inp.value.trim();
+          if (!(v && v.length <= 254 && EMAIL_RE.test(v))) { say(msg, why("bad_email"), "bad"); try { inp.focus(); } catch (e2) {} return; }
+          save(true, v);
+        });
+        acts.appendChild(fm);
+      }
+      if (focus) { try { first.focus(); } catch (e) {} }
+    }
+    function save(want, v) {
+      if (busy) return;
+      busy = true;
+      say(msg, t("bd.me.saving", "저장하는 중…"));
+      rpc("member_news_set", { p_on: want, p_email: want ? v : null, p_source: "me" }, true).then(function (r) {
+        busy = false;
+        if (r && r.ok) {
+          on = !!r.on;
+          mail = r.email || (want ? v : "");
+          paint(true);
+          say(msg, on ? fmt(t("bd.me.newsOkF", "{e} 로 소식을 보내 드립니다."), { e: mail }) : t("bd.me.newsOffOk", "소식 메일을 그만 받습니다. 주소를 지웠습니다."), "ok");
+          return;
+        }
+        say(msg, why(r && r.reason), "bad");
+      });
+    }
+    rpc("member_news_get", {}, true).then(function (r) {
+      if (!r || !r.ok) return;
+      on = !!r.on;
+      mail = r.email || "";
+      s.hidden = false;
+      paint(false);
+      /* 탈퇴 경고에 한 문장 — 015 의 명단(회원과 묶임)에 있을 때만 참이다(탈퇴하면 함께 지워진다) */
+      var ln = on && s.parentNode && s.parentNode.querySelector(".bd-leave-note");
+      if (ln && !ln.__news) { ln.__news = 1; ln.appendChild(document.createTextNode(" " + t("bd.leaveNoteNews", "소식 메일 주소도 함께 지웁니다."))); }
+    });
     return s;
   }
 
@@ -3029,6 +3135,73 @@
     return { node: w, value: function () { return chosen; } };
   }
 
+  /* 소식 메일 받기(선택) — 체크하지 않아도 가입된다(모두 동의에 묶지 않는다). 받는 것·쓰는 곳·보관을 칸 바로 아래에서
+     말한다(개인정보 선택 동의 — 항목·목적·보유 기간·거부할 수 있다는 것). 주소 칸은 체크했을 때만 연다 */
+  var EMAIL_RE = /^[^@\s]+@[^@\s.]+\.[^@\s]+$/;
+  function newsQuestion() {
+    var w = el("div", "bd-news");
+    var lb = el("label", "bd-check bd-news-c");
+    var c = el("input"); c.type = "checkbox"; c.id = "bd-jnews";
+    lb.appendChild(c);
+    var tx = el("span");
+    tx.appendChild(el("span", "bd-news-opt", t("bd.newsOpt", "선택")));
+    tx.appendChild(document.createTextNode(t("bd.newsQ", "인순이 새 공연·방송 소식을 이메일로 먼저 받겠습니다")));
+    lb.appendChild(tx);
+    w.appendChild(lb);
+    var box = el("div", "bd-news-b");
+    box.hidden = true;
+    /* type=email 이 아니라 text + inputmode=email — 가입 폼의 브라우저 기본 검사가 영어 말풍선으로 막지 않게(틀린 주소는 아래 value() 가
+       칸 바로 아래에 우리 말로 알린다). 폰 자판은 그대로 이메일 자판이다 */
+    var fe = field("bd-jne", t("bd.newsEmail", "소식 받을 이메일"), "text", { autocomplete: "email", inputmode: "email", maxlength: "254", spellcheck: "false", autocapitalize: "off" });
+    box.appendChild(fe);
+    var err = el("p", "bd-ferr");
+    err.id = "bd-jne-err";
+    err.setAttribute("role", "status");
+    box.appendChild(err);
+    w.appendChild(box);
+    w.appendChild(el("p", "form-hint bd-news-h", t("bd.newsHint", "받는 것: 이메일 주소 · 쓰는 곳: 인순이 공연·방송 소식 메일 · 보관: 그만 받을 때까지(탈퇴하면 바로 지웁니다). 체크하지 않아도 가입됩니다. 내 정보에서 언제든 끊을 수 있습니다.")));
+    var inp = $("input", fe);
+    var pre = tokenEmail();
+    if (pre) inp.value = pre;
+    function clearErr() { err.textContent = ""; inp.removeAttribute("aria-invalid"); inp.removeAttribute("aria-describedby"); }
+    c.addEventListener("change", function () {
+      box.hidden = !c.checked;
+      clearErr();
+      if (c.checked && !inp.value) { try { inp.focus(); } catch (e) {} }
+    });
+    inp.addEventListener("input", clearErr);
+    return {
+      node: w,
+      /* 체크했으면 주소 — 모양이 틀리면 칸 아래에 말하고 null(가입을 멈춘다). 체크하지 않았으면 "" */
+      value: function () {
+        if (!c.checked) return "";
+        var v = inp.value.trim();
+        if (v && v.length <= 254 && EMAIL_RE.test(v)) return v;
+        err.textContent = v ? t("bd.newsBad", "이메일 주소를 다시 확인해 주세요. 소식을 받지 않으려면 위 칸의 체크를 풀어 주세요.")
+                            : t("bd.newsEmpty", "소식 받을 이메일을 적어 주세요. 받지 않으려면 위 칸의 체크를 풀어 주세요.");
+        inp.setAttribute("aria-invalid", "true");
+        inp.setAttribute("aria-describedby", err.id);
+        try { inp.focus({ preventScroll: true }); } catch (e) { inp.focus(); }
+        if (inp.scrollIntoView) inp.scrollIntoView({ block: "nearest" });
+        return null;
+      }
+    };
+  }
+  /* 소식 메일 저장 — 015(회원별 member_news_set)가 없으면 001 의 구독 명단으로. 실패해도 가입은 그대로다 */
+  function saveNews(email, src) {
+    return rpc("member_news_set", { p_on: true, p_email: email, p_source: src || null }, true).then(function (r) {
+      if (r && r.reason === "not_ready") {
+        return rpc("subscribe", { p_email: email }, true).then(function (r2) { return { ok: !!(r2 && r2.ok), legacy: true }; });
+      }
+      return r || { ok: false };
+    });
+  }
+  function newsSrc(gig) {
+    var code = "";
+    try { code = (gig && window.INSOONI_GIG && window.INSOONI_GIG.state().code) || ""; } catch (e) {}
+    return code && /^[A-Z0-9]{1,12}$/.test(code) ? "gig:" + code : "join";
+  }
+
   var VIEWS = {
     start: function (h, body, note, opts) {
       var gig = opts.ctx === "gig";
@@ -3058,6 +3231,8 @@
                                          : t("bd.sheetLede", "글쓰기와 댓글은 회원만 할 수 있습니다. 읽기는 누구나 됩니다.")));
       /* 공연 단계를 아직 모를 때(공연 화면이 서버 답을 받기 전 — 카카오 왕복 직후 등) 연 창은 단계가 정해지면 제목·첫 문장을
          그 자리에서 고친다(syncGigSheet). 창을 새로 그리지 않는다 — 초점·입력이 그대로 남게 */
+      /* 회원이 되면 무엇을 하는지 — 응원·투표·방명록을 누르고 온 사람에게는 이미 첫 문장이 말했으니 줄을 더하지 않는다 */
+      if (gig && !note && !/^(cheer|vote|gb)$/.test(wy || "")) body.appendChild(gigPerks(ph));
       sheet.__gs = gig ? { view: "start", wy: wy, ph: ph, kt: kakaoTop, note: !!note } : null;
       if (!st) {
         /* 설정을 받는 중 — 창은 바로 띄우고(누른 반응이 늦으면 다시 누른다) 도착하면 채운다 */
@@ -3360,6 +3535,9 @@
         : t("bd.nickHint", "2~12자 · 한글·영문·숫자. '인순이'·'운영자'처럼 오해를 부르는 이름은 쓸 수 없습니다.")));
       /* 가입 질문 하나 — 좋아하는 인순이 노래(선택). 013 이 켜졌을 때만(없는 함수에 답을 맡기지 않는다) */
       var songQ = mypageOn() ? songQuestion(gig) : null;
+      /* 소식 메일(선택)은 노래 질문 앞 — 공연 담당이 가장 먼저 권하고 싶은 것이다. 접지 않는다(체크 한 번이면 된다) */
+      var newsQ = newsOn() ? newsQuestion() : null;
+      if (newsQ) f.appendChild(newsQ.node);
       if (songQ) f.appendChild(songQ.node);
       /* 주 단추는 창 아래에 붙는다(.bd-jfoot, position: sticky) — 별명·노래 어느 칸에서 자판이 올라와도
          '가입 마치기'가 보이는 창 맨 아래에 남는다. 별명 오류(m)도 단추 바로 아래 같은 띠 안에 */
@@ -3415,8 +3593,19 @@
           if (fc.closest("label").scrollIntoView) fc.closest("label").scrollIntoView({ block: "nearest" });
           return;
         }
+        /* 소식을 받겠다고 체크했는데 주소가 틀리면 가입 전에 멈춘다 — 가입한 뒤에 '저장 못 함'으로 버리지 않게 */
+        var news = newsQ ? newsQ.value() : "";
+        if (news === null) return;
         go2.disabled = true;
         rpc("member_join", { p_nickname: $("#bd-jn", f).value, p_agree: true, p_age14: true }, true).then(function (r) {
+          /* 가입이 된 뒤에만 — 소식 저장이 실패해도 가입은 그대로다(인사 끝에 한 줄, 내 정보에서 다시) */
+          if (!(r && r.ok && news)) return r;
+          return saveNews(news, newsSrc(gig)).then(function (nr) {
+            S.newsNote = nr && nr.ok ? fmt(t("bd.newsDoneF", "소식 메일은 {e} 로 보내 드립니다."), { e: news })
+                                     : t("bd.newsLater", "소식 메일 신청은 저장하지 못했습니다. 내 정보에서 다시 신청할 수 있습니다.");
+            return r;
+          });
+        }).then(function (r) {
           /* 가입이 된 뒤에만, 고른 노래가 있을 때만 — 노래 저장이 실패해도 가입은 그대로다(내 정보에서 다시 고른다) */
           var pick = songQ && songQ.value();
           if (!(r && r.ok && pick)) return r;

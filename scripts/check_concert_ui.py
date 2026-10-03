@@ -449,12 +449,16 @@ def sess(f, uid):
 
 
 def ctx_of(br, f, w=375, h=812, conf="{board: true, kakao: true, live: true}", fs=17, session=None, lang=None,
-           reduced=False, hold=None, gig_src=None, qr_src=None, admin_session=None, init_extra=""):
+           reduced=False, hold=None, gig_src=None, qr_src=None, admin_session=None, init_extra="", pop=False):
     mobile = w < 768
     c = br.new_context(viewport={"width": w, "height": h}, is_mobile=mobile, has_touch=mobile, locale="ko-KR",
                        device_scale_factor=1, reduced_motion="reduce" if reduced else "no-preference")
     init = ("window.INSOONI_CONFIG = %s;" % conf) if conf is not None else ""
     init += "try{localStorage.setItem('insooni_fs', '%d');sessionStorage.setItem('insooni_intro','1')}catch(e){}" % {17: 0, 19: 1, 21: 2}[fs]
+    # 가입 창 자동 팝업(gig.js autoPop)은 탭마다 한 번 — 다른 검사가 그 창에 가로막히지 않게 기본은 '이미 봤음'.
+    # 팝업 자체를 보는 검사만 pop=True
+    if not pop:
+        init += "try{sessionStorage.setItem('insooni_gig_pop','1')}catch(e){}"
     if lang:
         init += "try{localStorage.setItem('insooni_lang', JSON.stringify('%s'))}catch(e){}" % lang
     if session:
@@ -1625,6 +1629,104 @@ def group_l(br, gig_src=None, only=None):
         t("LXf 공연 모드가 켜지면 탈퇴 경고가 '글·댓글·도장·응원·투표 기록이 함께 지워집니다'", warn == "탈퇴하면 글·댓글·도장·응원·투표 기록이 함께 지워집니다.", warn)
         c.close()
 
+    if want("L24"):
+        # 2026-10-03 공연 담당 피드백 — QR 로 들어온 관객에게 가입 창을 한 번 먼저 · 가입 때 소식 메일(선택)
+        print("── L24 가입 창 자동 팝업 · 소식 메일 동의")
+        SHEET = """() => { const s = document.getElementById('bd-sheet'); const open = !!s && !s.hidden;
+          return {open, h: open ? (s.querySelector('.bd-sheet-h') || {}).textContent : '', txt: open ? s.innerText : '',
+                  perks: open ? [...s.querySelectorAll('.bd-perks li')].map(x => x.textContent) : [],
+                  kakao: open && !!s.querySelector('.bd-kakao'), news: open && !!s.querySelector('#bd-jnews'),
+                  newsOn: open && !!(s.querySelector('#bd-jnews') || {}).checked,
+                  box: open && !!s.querySelector('.bd-news-b') && !s.querySelector('.bd-news-b').hidden,
+                  pop: sessionStorage.getItem('insooni_gig_pop'), over: document.documentElement.scrollWidth - document.documentElement.clientWidth}; }"""
+        # a — 도장 받는 중 · 로그아웃: 0.7초 뒤 한 번 뜬다 · 제목 · '회원이 되면' 세 줄 · 카카오 단추 · 닫으면 다시 안 뜬다
+        f, uid, url, conf, hold = setup("L5")
+        c = ctx_of(br, f, conf=conf, gig_src=gig_src, pop=True); pg = c.new_page()
+        pg.goto("about:blank"); pg.goto(B + url, wait_until="load"); pg.wait_for_timeout(300)
+        early = pg.evaluate(SHEET)["open"]
+        pg.wait_for_timeout(1800)
+        a1 = pg.evaluate(SHEET)
+        pg.keyboard.press("Escape"); pg.wait_for_timeout(300)
+        foc = pg.evaluate("document.activeElement && document.activeElement.id")
+        pg.reload(wait_until="load"); pg.wait_for_timeout(2200)
+        a2 = pg.evaluate(SHEET)
+        t("L24a 도장 받는 중·로그아웃 → 화면이 먼저 그려진 뒤(0.3초엔 아직) 가입 창 · '회원으로 오늘 공연을 함께해 주세요' · '회원이 되면' 3줄(소식 메일 포함) · 카카오 단추 · 넘침 0",
+          not early and a1["open"] and a1["h"] == "회원으로 오늘 공연을 함께해 주세요" and len(a1["perks"]) == 3
+          and "이메일로 먼저" in a1["perks"][2] and a1["kakao"] and a1["over"] == 0, (early, a1))
+        t("L24b 닫으면 초점이 아래 '도장 찍기' · 새로 고쳐도 다시 안 뜸(탭마다 한 번)", foc == "gig-go" and not a2["open"] and a2["pop"] == "1", (foc, a2))
+        c.close()
+        # c — 띄우지 않는 때: 가입을 마친 회원 · 방명록만(L9) · 바로가기(#gig-vote) · 시작 전(L4)은 띄운다
+        res = {}
+        for key, st, who, frag in (("joined", "L7", "mem", ""), ("L9", "L9", None, ""), ("hash", "L5", None, "#gig-vote"), ("L4", "L4", None, "")):
+            f, uid, url, conf, hold = setup(st)
+            w2 = {"mem": uid}
+            c = ctx_of(br, f, conf=conf, session=sess(f, uid) if who else None, gig_src=gig_src, pop=True); pg = c.new_page()
+            pg.goto("about:blank"); pg.goto(B + url + frag, wait_until="load"); pg.wait_for_timeout(2300)
+            res[key] = pg.evaluate(SHEET)
+            c.close()
+        t("L24c 띄우지 않음 — 가입 마친 회원 · 방명록만 남은 단계 · #gig-vote 바로가기", not res["joined"]["open"] and not res["L9"]["open"] and not res["hash"]["open"],
+          {k: (v["open"], v["h"]) for k, v in res.items()})
+        t("L24d 시작 전(L4)·로그아웃은 띄움 — 첫 문장 '미리 가입해 두시면…' · 도장 줄 포함", res["L4"]["open"] and "미리 가입해 두시면" in res["L4"]["txt"]
+          and any("도장" in x for x in res["L4"]["perks"]), res["L4"])
+
+        def join_case(news=None, email=None, no015=False, nick="객석의팬", prefill=None):
+            f = GigFake(); w = seed(f)
+            f.no015 = no015
+            c = ctx_of(br, f, session=sess(f, w["kakao"]), gig_src=gig_src, pop=True); pg = c.new_page()
+            pg.goto("about:blank"); pg.goto(B + "live?e=K7Q2M", wait_until="load"); pg.wait_for_timeout(2300)
+            d0 = pg.evaluate(SHEET)
+            if news:
+                pg.check("#bd-jnews"); pg.wait_for_timeout(150)
+            d1 = pg.evaluate(SHEET)
+            if prefill:   # 카카오 이메일이 미리 채워진 칸(로그인 열쇠의 email) — 체크하지 않았으면 보내면 안 된다
+                pg.evaluate("v => { document.getElementById('bd-jne').value = v; }", prefill)
+            if email is not None:
+                pg.fill("#bd-jne", email)
+            pg.fill("#bd-jn", nick); pg.check("#bd-jall")
+            pg.click("#bd-sheet form .btn--solid"); pg.wait_for_timeout(2400)
+            out = {"d0": d0, "d1": d1, "joined": w["kakao"] in f.members, "news": dict(f.news), "subs": list(f.subs),
+                   "set": len(rpc_calls(c, "member_news_set")), "sub": len(rpc_calls(c, "subscribe")),
+                   "stamped": any(u == w["kakao"] for (e, u) in f.checkins),
+                   "msg": pg.evaluate("document.getElementById('gig-msg').textContent + ' | ' + document.getElementById('gig-phase').textContent"),
+                   "err": pg.evaluate("(document.getElementById('bd-jne-err') || {}).textContent || ''"),
+                   "inv": pg.evaluate("(document.getElementById('bd-jne') || {getAttribute(){return null}}).getAttribute('aria-invalid')"),
+                   "kid": w["kakao"]}
+            c.close()
+            return out
+        j1 = join_case(news=True, email="fan@example.com")
+        t("L24e 카카오 가입 전(L6) → 가입 마치기 창이 뜸 · 소식 칸 체크 전엔 주소 칸 닫힘 · 체크하면 열림",
+          j1["d0"]["open"] and j1["d0"]["h"] == "가입 마치기" and j1["d0"]["news"] and not j1["d0"]["newsOn"] and not j1["d0"]["box"] and j1["d1"]["box"], (j1["d0"], j1["d1"]))
+        t("L24f 체크 + 주소 → 가입 · 소식 저장(fan@example.com · gig:K7Q2M) · 이어서 도장까지 · 인사 끝에 '소식 메일은 fan@example.com 로 보내 드립니다.'",
+          j1["joined"] and j1["news"].get(j1["kid"]) == {"email": "fan@example.com", "source": "gig:K7Q2M"} and j1["stamped"]
+          and "소식 메일은 fan@example.com 로 보내 드립니다." in j1["msg"], j1)
+        j2 = join_case(news=False, prefill="kakao@example.com")
+        t("L24g 체크하지 않으면 → 가입은 되고 소식 요청 0(미리 채워진 카카오 이메일도 보내지 않는다)", j2["joined"] and j2["set"] == 0 and j2["sub"] == 0 and not j2["news"], j2)
+        j3 = join_case(news=True, email="not-an-email")
+        t("L24h 체크했는데 주소가 틀리면 → 가입 전에 멈춤(가입 0) · 칸 아래 안내 · aria-invalid",
+          not j3["joined"] and j3["set"] == 0 and "이메일 주소를 다시 확인해 주세요" in j3["err"] and j3["inv"] == "true", j3)
+        j4 = join_case(news=True, email="old@example.com", no015=True)
+        t("L24i 015 전(소식 함수 404) → 001 구독 명단(subscribe)으로 · 가입은 그대로", j4["joined"] and j4["subs"] == ["old@example.com"] and j4["sub"] == 1, j4)
+        # j — 내 정보의 소식 메일: 받는 중 → 그만 받기 → 다시 받기(꼬리표 me) · 015 전이면 칸이 없다
+        f = GigFake(); w = seed(f)
+        f.news[w["mem"]] = {"email": "home@example.com", "source": "gig:K7Q2M"}
+        c = ctx_of(br, f, session=sess(f, w["mem"])); pg = c.new_page(); fresh(pg, "community.html#me", 2200)
+        m1 = pg.evaluate("(() => { const s = document.querySelector('#cafe-me .me-news'); return s && !s.hidden ? s.innerText : null; })()")
+        lv1 = pg.evaluate("(document.querySelector('#cafe-me .bd-leave-note') || {}).textContent || ''")
+        pg.click("#cafe-me .me-news-b"); pg.wait_for_timeout(700)
+        m2 = pg.evaluate("[document.querySelector('#cafe-me .me-news').innerText, document.activeElement && document.activeElement.textContent]")
+        gone = w["mem"] not in f.news
+        pg.fill("#me-news-e", "again@example.com"); pg.click("#cafe-me .me-news-b"); pg.wait_for_timeout(700)
+        m3 = pg.evaluate("document.querySelector('#cafe-me .me-news').innerText")
+        c.close()
+        f2 = GigFake(); w2 = seed(f2); f2.no015 = True
+        c = ctx_of(br, f2, session=sess(f2, w2["mem"])); pg = c.new_page(); fresh(pg, "community.html#me", 2200)
+        m4 = pg.evaluate("(() => { const s = document.querySelector('#cafe-me .me-news'); return s ? !s.hidden : false; })()")
+        c.close()
+        t("L24j 내 정보 '소식 메일' — 받는 중 · home@example.com → 그만 받기(주소 지움 · 초점 '소식 받기') → 다시 받기(again@example.com · 꼬리표 me) · 015 전이면 칸 없음 · 받는 중이면 탈퇴 경고에 '소식 메일 주소도 함께 지웁니다.'",
+          m1 and "받는 중" in m1 and "home@example.com" in m1 and gone and "받지 않습니다" in m2[0] and m2[1] == "소식 받기"
+          and f.news.get(w["mem"]) == {"email": "again@example.com", "source": "me"} and "again@example.com" in m3 and m4 is False
+          and lv1.endswith(" 소식 메일 주소도 함께 지웁니다."), (m1, m2, m3, m4, lv1))
+
 
 # ═══ A — 운영 화면 공연 탭 · QR ═════════════════════════════════════
 def admin_session(f, uid):
@@ -1770,6 +1872,11 @@ def mutations(br):
         ("느릴 때 aria-busy 를 풀지 않음", "gig", 'document.getElementById("main").removeAttribute("aria-busy");\nsetPhase(t("gig.slowPhase"', 'setPhase(t("gig.slowPhase"', ["L0"]),
         # (형식 비트의 정정 수준만 틀리게 적는 뮤테이션은 macOS Vision 이 수준을 바꿔 가며 읽어 내 잡히지 않는다 — 실측.
         #  그래서 해독기가 되살릴 수 없는 '마스크 번호' 를 틀리게 적는다)
+        # 2026-10-03 — 가입 창 자동 팝업 · 소식 메일
+        ("자동 팝업을 탭마다 한 번으로 묶지 않음", "gig", 'try { sessionStorage.setItem(POP_KEY, "1"); } catch (e) {}', "", ["L24"]),
+        ("가입을 마친 회원에게도 팝업", "gig", 'if (!(L === "L4" || L === "L5" || L === "L6") || (me && me.joined)) return;', 'if (!(L === "L4" || L === "L5" || L === "L6" || L === "L7")) return;', ["L24"]),
+        ("소식 칸을 체크하지 않아도 주소를 보냄", "board", "if (!c.checked) return \"\";", "if (!c.checked) return inp.value.trim();", ["L24"]),
+        ("주소가 틀려도 가입을 진행", "board", "if (news === null) return;", "if (news === null) news = \"\";", ["L24"]),
         ("QR 형식 비트의 마스크 번호 틀림", "qr", "applyMask(best);\nformat(best);", "applyMask(best);\nformat((best + 1) % 8);", ["L11"]),
     ]
     caught = 0
