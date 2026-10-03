@@ -5103,6 +5103,9 @@ html:has(#gig-gb-ta:focus, #gig-code-in:focus) { scroll-padding-top: calc(57px +
 /* 아주 낮은 화면(320×568 등)에서는 이 줄이 카카오 단추를 엄지 자리 밖으로 밀어낸다(L14c 실측: 큰 글자에서 단추 top 260/568).
    거기서는 단추가 먼저 — 소식 메일은 가입 마치기 창의 체크 칸이 다시 권한다 */
 @media (max-height: 600px) { .bd-perks { display: none; } }
+/* 큰 글자(19·21px)에서는 더 높은 폰에서도 넘친다(사전 검토 실측: 601–700px 높이 · 21px 에서 약관 줄이 화면 밖) */
+@media (max-height: 700px) { html[data-fs="2"] .bd-perks { display: none; } }
+@media (max-height: 800px) { html[data-fs="3"] .bd-perks { display: none; } }
 
 /* 가입 마치기의 소식 메일(선택) — 동의 칸들과 구분되는 한 칸. 체크하면 주소 칸이 열린다 */
 .bd-news { margin: .2rem 0 1rem; padding: .7rem .9rem .8rem; border: 1px solid var(--line-strong); }

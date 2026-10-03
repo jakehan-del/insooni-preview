@@ -24,7 +24,7 @@ QUICK = "--quick" in sys.argv
 ONLY = {a for a in sys.argv[1:] if not a.startswith("--")} or None
 BOARD_SRC = (ROOT / "assets/js/board.js").read_text(encoding="utf-8")
 ADMIN_SRC = (ROOT / "assets/js/admin.js").read_text(encoding="utf-8")
-ON = "{board: true, kakao: true, live: true, mypage: true}"       # 013 이 운영에 올라간 뒤
+ON = "{board: true, kakao: true, live: true, mypage: true, news: true}"       # 013 이 운영에 올라간 뒤
 OFF = "{board: true, kakao: true, live: true}"                    # 지금 운영(스위치 꺼짐 — config.js 기본값)
 R = []
 

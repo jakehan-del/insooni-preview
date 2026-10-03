@@ -2536,13 +2536,14 @@
         var fe = field("me-news-e", t("bd.newsEmail", "소식 받을 이메일"), "email", { autocomplete: "email", inputmode: "email", maxlength: "254", spellcheck: "false" });
         var inp = $("input", fe);
         inp.value = mail || tokenEmail();
+        inp.addEventListener("input", function () { inp.removeAttribute("aria-invalid"); });
         fm.appendChild(fe);
         first = btn("btn btn--ghost btn--sm me-news-b", t("bd.me.newsGo", "소식 받기"), "submit");
         fm.appendChild(first);
         fm.addEventListener("submit", function (e) {
           e.preventDefault();
           var v = inp.value.trim();
-          if (!(v && v.length <= 254 && EMAIL_RE.test(v))) { say(msg, why("bad_email"), "bad"); try { inp.focus(); } catch (e2) {} return; }
+          if (!emailOk(v)) { say(msg, why("bad_email"), "bad"); inp.setAttribute("aria-invalid", "true"); try { inp.focus(); } catch (e2) {} return; }
           save(true, v);
         });
         acts.appendChild(fm);
@@ -3138,6 +3139,8 @@
   /* 소식 메일 받기(선택) — 체크하지 않아도 가입된다(모두 동의에 묶지 않는다). 받는 것·쓰는 곳·보관을 칸 바로 아래에서
      말한다(개인정보 선택 동의 — 항목·목적·보유 기간·거부할 수 있다는 것). 주소 칸은 체크했을 때만 연다 */
   var EMAIL_RE = /^[^@\s]+@[^@\s.]+\.[^@\s]+$/;
+  /* 'a@b..com'·'a@b.com.' 같은 오타를 동의 주소로 받지 않는다 */
+  function emailOk(v) { return !!v && v.length <= 254 && EMAIL_RE.test(v) && v.indexOf("..") < 0 && v.charAt(v.length - 1) !== "."; }
   function newsQuestion() {
     var w = el("div", "bd-news");
     var lb = el("label", "bd-check bd-news-c");
@@ -3159,7 +3162,11 @@
     err.setAttribute("role", "status");
     box.appendChild(err);
     w.appendChild(box);
-    w.appendChild(el("p", "form-hint bd-news-h", t("bd.newsHint", "받는 것: 이메일 주소 · 쓰는 곳: 인순이 공연·방송 소식 메일 · 보관: 그만 받을 때까지(탈퇴하면 바로 지웁니다). 체크하지 않아도 가입됩니다. 내 정보에서 언제든 끊을 수 있습니다.")));
+    /* 동의 안내(받는 것·쓰는 곳·보관·보내는 곳·거부해도 된다)를 체크 칸에 묶는다 — 화면낭독기가 체크 칸과 함께 읽는다 */
+    var hint = el("p", "form-hint bd-news-h", t("bd.newsHint", "받는 것: 이메일 주소 · 쓰는 곳: 인순이 공연·방송 소식 메일 · 보내는 곳: 인순이 공식 팬사이트(소속사 소솝) · 보관: 그만 받을 때까지(탈퇴하면 바로 지웁니다). 체크하지 않아도 가입됩니다. 내 정보에서 언제든 끊을 수 있습니다."));
+    hint.id = "bd-jnews-h";
+    c.setAttribute("aria-describedby", hint.id);
+    w.appendChild(hint);
     var inp = $("input", fe);
     var pre = tokenEmail();
     if (pre) inp.value = pre;
@@ -3176,7 +3183,7 @@
       value: function () {
         if (!c.checked) return "";
         var v = inp.value.trim();
-        if (v && v.length <= 254 && EMAIL_RE.test(v)) return v;
+        if (emailOk(v)) return v;
         err.textContent = v ? t("bd.newsBad", "이메일 주소를 다시 확인해 주세요. 소식을 받지 않으려면 위 칸의 체크를 풀어 주세요.")
                             : t("bd.newsEmpty", "소식 받을 이메일을 적어 주세요. 받지 않으려면 위 칸의 체크를 풀어 주세요.");
         inp.setAttribute("aria-invalid", "true");
@@ -3187,12 +3194,11 @@
       }
     };
   }
-  /* 소식 메일 저장 — 015(회원별 member_news_set)가 없으면 001 의 구독 명단으로. 실패해도 가입은 그대로다 */
+  /* 소식 메일 저장 — 015(회원별 member_news_set)에만. 실패해도 가입은 그대로다.
+     001 의 구독 명단(subscribe)으로 돌리지 않는다 — 회원과 묶이지 않아 '내 정보에서 끊기·탈퇴하면 지움'을 지킬 수 없다
+     (2026-10-03 사전 검토). 015 전이면 config.news 를 꺼 둔다 */
   function saveNews(email, src) {
     return rpc("member_news_set", { p_on: true, p_email: email, p_source: src || null }, true).then(function (r) {
-      if (r && r.reason === "not_ready") {
-        return rpc("subscribe", { p_email: email }, true).then(function (r2) { return { ok: !!(r2 && r2.ok), legacy: true }; });
-      }
       return r || { ok: false };
     });
   }
@@ -3553,6 +3559,11 @@
       var m = msgNode();
       foot.appendChild(m);
       f.appendChild(foot);
+      /* 주소를 고치거나 체크를 풀면 단추 띠의 주소 오류도 걷는다 */
+      if (newsQ) ["#bd-jne", "#bd-jnews"].forEach(function (q) {
+        var x = $(q, f);
+        if (x) x.addEventListener(q === "#bd-jne" ? "input" : "change", function () { if (m.classList.contains("is-bad")) say(m, ""); });
+      });
       var need = (S.me && S.me.need_posts) || 3, needc = (S.me && S.me.need_comments) || 5;
       f.appendChild(el("p", "form-hint bd-lvinfo", instantOn()
         ? fmt(t("bd.lvInfoInstF", "새싹으로 시작합니다. 글 {p}개와 댓글 {c}개가 모이면 정회원이 됩니다. 글은 쓰자마자 모두에게 보입니다."), { p: need, c: needc })
@@ -3595,11 +3606,12 @@
         }
         /* 소식을 받겠다고 체크했는데 주소가 틀리면 가입 전에 멈춘다 — 가입한 뒤에 '저장 못 함'으로 버리지 않게 */
         var news = newsQ ? newsQ.value() : "";
-        if (news === null) return;
+        /* 칸 아래 안내는 자판이 올라오면 단추 띠 뒤로 숨는다 — 별명 오류처럼 단추 바로 아래(m)에도 쓴다 */
+        if (news === null) { say(m, ($("#bd-jne-err", f) || {}).textContent || why("bad_email"), "bad"); return; }
         go2.disabled = true;
         rpc("member_join", { p_nickname: $("#bd-jn", f).value, p_agree: true, p_age14: true }, true).then(function (r) {
           /* 가입이 된 뒤에만 — 소식 저장이 실패해도 가입은 그대로다(인사 끝에 한 줄, 내 정보에서 다시) */
-          if (!(r && r.ok && news)) return r;
+          if (!(r && (r.ok || r.reason === "already") && news)) return r;
           return saveNews(news, newsSrc(gig)).then(function (nr) {
             S.newsNote = nr && nr.ok ? fmt(t("bd.newsDoneF", "소식 메일은 {e} 로 보내 드립니다."), { e: news })
                                      : t("bd.newsLater", "소식 메일 신청은 저장하지 못했습니다. 내 정보에서 다시 신청할 수 있습니다.");

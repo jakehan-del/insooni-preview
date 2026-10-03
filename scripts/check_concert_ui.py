@@ -1632,6 +1632,7 @@ def group_l(br, gig_src=None, only=None):
     if want("L24"):
         # 2026-10-03 공연 담당 피드백 — QR 로 들어온 관객에게 가입 창을 한 번 먼저 · 가입 때 소식 메일(선택)
         print("── L24 가입 창 자동 팝업 · 소식 메일 동의")
+        NEWS_ON = "{board: true, kakao: true, live: true, news: true}"   # 소식 메일 스위치는 015 를 운영에 실행한 뒤 켠다(config 기본 false)
         SHEET = """() => { const s = document.getElementById('bd-sheet'); const open = !!s && !s.hidden;
           return {open, h: open ? (s.querySelector('.bd-sheet-h') || {}).textContent : '', txt: open ? s.innerText : '',
                   perks: open ? [...s.querySelectorAll('.bd-perks li')].map(x => x.textContent) : [],
@@ -1641,7 +1642,7 @@ def group_l(br, gig_src=None, only=None):
                   pop: sessionStorage.getItem('insooni_gig_pop'), over: document.documentElement.scrollWidth - document.documentElement.clientWidth}; }"""
         # a — 도장 받는 중 · 로그아웃: 0.7초 뒤 한 번 뜬다 · 제목 · '회원이 되면' 세 줄 · 카카오 단추 · 닫으면 다시 안 뜬다
         f, uid, url, conf, hold = setup("L5")
-        c = ctx_of(br, f, conf=conf, gig_src=gig_src, pop=True); pg = c.new_page()
+        c = ctx_of(br, f, conf=NEWS_ON, gig_src=gig_src, pop=True); pg = c.new_page()
         pg.goto("about:blank"); pg.goto(B + url, wait_until="load"); pg.wait_for_timeout(300)
         early = pg.evaluate(SHEET)["open"]
         pg.wait_for_timeout(1800)
@@ -1660,7 +1661,7 @@ def group_l(br, gig_src=None, only=None):
         for key, st, who, frag in (("joined", "L7", "mem", ""), ("L9", "L9", None, ""), ("hash", "L5", None, "#gig-vote"), ("L4", "L4", None, "")):
             f, uid, url, conf, hold = setup(st)
             w2 = {"mem": uid}
-            c = ctx_of(br, f, conf=conf, session=sess(f, uid) if who else None, gig_src=gig_src, pop=True); pg = c.new_page()
+            c = ctx_of(br, f, conf=NEWS_ON, session=sess(f, uid) if who else None, gig_src=gig_src, pop=True); pg = c.new_page()
             pg.goto("about:blank"); pg.goto(B + url + frag, wait_until="load"); pg.wait_for_timeout(2300)
             res[key] = pg.evaluate(SHEET)
             c.close()
@@ -1672,7 +1673,7 @@ def group_l(br, gig_src=None, only=None):
         def join_case(news=None, email=None, no015=False, nick="객석의팬", prefill=None):
             f = GigFake(); w = seed(f)
             f.no015 = no015
-            c = ctx_of(br, f, session=sess(f, w["kakao"]), gig_src=gig_src, pop=True); pg = c.new_page()
+            c = ctx_of(br, f, conf=NEWS_ON, session=sess(f, w["kakao"]), gig_src=gig_src, pop=True); pg = c.new_page()
             pg.goto("about:blank"); pg.goto(B + "live?e=K7Q2M", wait_until="load"); pg.wait_for_timeout(2300)
             d0 = pg.evaluate(SHEET)
             if news:
@@ -1705,11 +1706,24 @@ def group_l(br, gig_src=None, only=None):
         t("L24h 체크했는데 주소가 틀리면 → 가입 전에 멈춤(가입 0) · 칸 아래 안내 · aria-invalid",
           not j3["joined"] and j3["set"] == 0 and "이메일 주소를 다시 확인해 주세요" in j3["err"] and j3["inv"] == "true", j3)
         j4 = join_case(news=True, email="old@example.com", no015=True)
-        t("L24i 015 전(소식 함수 404) → 001 구독 명단(subscribe)으로 · 가입은 그대로", j4["joined"] and j4["subs"] == ["old@example.com"] and j4["sub"] == 1, j4)
+        # 015 전(소식 함수 404) — 001 구독 명단(subscribe)으로 돌리지 않는다(회원과 묶이지 않아 끊기·탈퇴 삭제 약속을 못 지킨다)
+        t("L24i 015 전(소식 함수 404) → 구독 명단으로 돌리지 않음(subscribe 0) · 가입은 그대로 · '저장하지 못했습니다'를 말함",
+          j4["joined"] and j4["subs"] == [] and j4["sub"] == 0 and "소식 메일 신청은 저장하지 못했습니다" in j4["msg"], {k: v for k, v in j4.items() if k not in ("d0", "d1")})
+        # 스위치 꺼짐(기본) — 회원 창에 소식 줄도, 가입 창에 소식 칸도 없다
+        f = GigFake(); w = seed(f)
+        c = ctx_of(br, f, session=sess(f, w["kakao"]), gig_src=gig_src, pop=True); pg = c.new_page()
+        pg.goto("about:blank"); pg.goto(B + "live?e=K7Q2M", wait_until="load"); pg.wait_for_timeout(2300)
+        off1 = pg.evaluate(SHEET); c.close()
+        f, uid, url, conf, hold = setup("L5")
+        c = ctx_of(br, f, conf=conf, gig_src=gig_src, pop=True); pg = c.new_page()
+        pg.goto("about:blank"); pg.goto(B + url, wait_until="load"); pg.wait_for_timeout(2300)
+        off2 = pg.evaluate(SHEET); c.close()
+        t("L24k 소식 스위치 꺼짐(기본·015 전) → 가입 창에 소식 칸 없음 · '회원이 되면' 2줄(이메일 줄 없음)",
+          off1["open"] and not off1["news"] and off2["open"] and len(off2["perks"]) == 2 and not any("이메일" in x for x in off2["perks"]), (off1["news"], off2["perks"]))
         # j — 내 정보의 소식 메일: 받는 중 → 그만 받기 → 다시 받기(꼬리표 me) · 015 전이면 칸이 없다
         f = GigFake(); w = seed(f)
         f.news[w["mem"]] = {"email": "home@example.com", "source": "gig:K7Q2M"}
-        c = ctx_of(br, f, session=sess(f, w["mem"])); pg = c.new_page(); fresh(pg, "community.html#me", 2200)
+        c = ctx_of(br, f, conf=NEWS_ON, session=sess(f, w["mem"])); pg = c.new_page(); fresh(pg, "community.html#me", 2200)
         m1 = pg.evaluate("(() => { const s = document.querySelector('#cafe-me .me-news'); return s && !s.hidden ? s.innerText : null; })()")
         lv1 = pg.evaluate("(document.querySelector('#cafe-me .bd-leave-note') || {}).textContent || ''")
         pg.click("#cafe-me .me-news-b"); pg.wait_for_timeout(700)
@@ -1719,7 +1733,7 @@ def group_l(br, gig_src=None, only=None):
         m3 = pg.evaluate("document.querySelector('#cafe-me .me-news').innerText")
         c.close()
         f2 = GigFake(); w2 = seed(f2); f2.no015 = True
-        c = ctx_of(br, f2, session=sess(f2, w2["mem"])); pg = c.new_page(); fresh(pg, "community.html#me", 2200)
+        c = ctx_of(br, f2, conf=NEWS_ON, session=sess(f2, w2["mem"])); pg = c.new_page(); fresh(pg, "community.html#me", 2200)
         m4 = pg.evaluate("(() => { const s = document.querySelector('#cafe-me .me-news'); return s ? !s.hidden : false; })()")
         c.close()
         t("L24j 내 정보 '소식 메일' — 받는 중 · home@example.com → 그만 받기(주소 지움 · 초점 '소식 받기') → 다시 받기(again@example.com · 꼬리표 me) · 015 전이면 칸 없음 · 받는 중이면 탈퇴 경고에 '소식 메일 주소도 함께 지웁니다.'",
