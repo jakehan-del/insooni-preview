@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-03 13:53",
- "count": 78,
+ "updated": "2026-10-03 20:27",
+ "count": 79,
  "items": [
   {
    "date": "2026-10-02",
@@ -539,6 +539,19 @@
    "type": "방송",
    "auto": true,
    "rawSource": "v.daum.net"
+  },
+  {
+   "date": "2026-07-27",
+   "title": "\"인순이 공연에 감동\"…마샬이 다문화 학교에 스피커 보낸 사연",
+   "source": "네이트",
+   "sourceSite": "https://m.news.nate.com",
+   "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTFBIdHBBRC1fNlZUV0RrMzQ1OTY2d19OLVNZd0dWRE1hUXQtRDN0eVJyNEpRQWNWc18zOHNPMExQM2Z0MXF5dGhla2JmT1NybXJVTnNIb2F2UWZoTkY3REtiMXhscU9OMWRVaHRZd2dOT3hPZUF4Mi1PaQ?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "\"인순이 공연에 감동\"…마샬이 다문화 학교에 스피커 보낸 사연 - 네이트",
+   "tags": [
+    "네이트"
+   ]
   },
   {
    "date": "2026-07-27",
