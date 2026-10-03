@@ -14,6 +14,10 @@ B = "http://127.0.0.1:8908/"
 SUPA = "vxrazyiqvdwgvgpkkitm.supabase.co"
 BOARD_SRC = (ROOT / "assets/js/board.js").read_text(encoding="utf-8")
 RESERVED = ("인순이", "인순", "김인순", "insooni", "운영자", "관리자", "공식", "admin", "official")
+# 013 의 정본 103곡(member_song_choices) — 서버는 songs.json 을 그대로 옮겼다(md5 지문 대조). 가짜 서버도 같은 파일에서
+SONGS = [{"k": x["k"], "title": x["t"], "year": int(x["y"]) if str(x.get("y", "")).isdigit() else None, "sort": i}
+         for i, x in enumerate(json.loads((ROOT / "assets/data/songs.json").read_text(encoding="utf-8"))["songs"])]
+F013 = ("member_set_song", "member_page", "member_my_posts", "member_my_comments", "admin_member_songs")
 
 
 def norm(s):
@@ -41,6 +45,8 @@ class Fake:
         self.unhandled = []
         self.hashes = {}      # token_hash -> (uid, type)
         self.edits = 0
+        self.songs = {}       # uid -> {"k", "at"}  (013 member_songs)
+        self.no013 = False    # 013 이 서버에 없다 — 013 함수만 404(010·011 은 그대로)
 
     # ── 도구 ──
     def nid(self):
@@ -214,6 +220,8 @@ class Fake:
             board_fns = ("member_", "board_", "comment_")
             if self.not_ready and name.startswith(board_fns):
                 return J({"code": "PGRST202", "message": "Could not find the function"}, 404)
+            if self.no013 and name in F013:
+                return J({"code": "PGRST202", "message": "Could not find the function"}, 404)
             fn = getattr(self, "rpc_" + name, None)
             if fn:
                 return J(fn(uid, body))
@@ -278,7 +286,109 @@ class Fake:
         self.comments = [c for c in self.comments if c["uid"] != uid]
         self.members.pop(uid, None)
         self.users.pop(uid, None)
+        self.songs.pop(uid, None)     # 013: member_songs 는 members 에 cascade
         return {"ok": True}
+
+    # ── 013 마이페이지 · 내 노래(규칙은 supabase/013 과 같게) ──
+    def _song_of(self, uid):
+        s = self.songs.get(uid)
+        c = s and next((x for x in SONGS if x["k"] == s["k"]), None)
+        return c and {"k": c["k"], "title": c["title"], "year": c["year"], "at": s["at"]}
+
+    def rpc_member_set_song(self, uid, b):
+        if not uid:
+            return {"ok": False, "reason": "not_logged_in"}
+        m = self.members.get(uid)
+        if not m:
+            return {"ok": False, "reason": "not_member"}
+        if m["level"] == "blocked":
+            return {"ok": False, "reason": "blocked"}
+        v = re.sub(r"\s+", " ", (b.get("p_song") or "")).strip()
+        if not v:
+            self.songs.pop(uid, None)
+            return {"ok": True, "song": None}
+        c = next((x for x in SONGS if x["title"] == v), None) or next((x for x in SONGS if x["k"] == v), None)
+        if not c:
+            return {"ok": False, "reason": "bad_song"}
+        self.songs[uid] = {"k": c["k"], "at": "2026-10-03T08:00:00Z"}
+        return {"ok": True, "song": {"k": c["k"], "title": c["title"], "year": c["year"]}}
+
+    def _lim(self, b):
+        return max(1, min(50, b.get("p_limit") if b.get("p_limit") is not None else 20))
+
+    def _gig_of_post(self, p):
+        return None   # GigFake 가 공연 방명록 글을 알려 준다
+
+    def rpc_member_my_posts(self, uid, b):
+        if not uid:
+            return {"ok": False, "reason": "not_logged_in"}
+        if uid not in self.members:
+            return {"ok": False, "reason": "not_member"}
+        mine = [p for p in sorted(self.posts, key=lambda p: -p["id"]) if p["uid"] == uid
+                and (b.get("p_before") is None or p["id"] < b["p_before"])]
+        lim = self._lim(b)
+        rows = [{"id": p["id"], "board": p.get("board", "free"), "title": p["title"], "status": p["status"],
+                 "created_at": p["created_at"], "edited_at": p.get("edited_at"),
+                 "comments": sum(1 for c in self.comments if c["post"] == p["id"] and c["status"] == "approved"),
+                 "gig": self._gig_of_post(p)} for p in mine[:lim]]
+        return {"ok": True, "rows": rows, "more": len(mine) > lim}
+
+    def rpc_member_my_comments(self, uid, b):
+        if not uid:
+            return {"ok": False, "reason": "not_logged_in"}
+        if uid not in self.members:
+            return {"ok": False, "reason": "not_member"}
+        mine = [c for c in sorted(self.comments, key=lambda c: -c["id"]) if c["uid"] == uid
+                and (b.get("p_before") is None or c["id"] < b["p_before"])]
+        lim = self._lim(b)
+        rows = []
+        for c in mine[:lim]:
+            p = next((p for p in self.posts if p["id"] == c["post"]), None)
+            if not p:
+                continue
+            vis = p["status"] == "approved" or p["uid"] == uid
+            rows.append({"id": c["id"], "body": c["body"], "status": c["status"], "created_at": c["created_at"],
+                         "post_id": p["id"], "post_visible": vis, "post_title": p["title"] if vis else None,
+                         "post_board": p.get("board", "free") if vis else None, "post_mine": p["uid"] == uid})
+        return {"ok": True, "rows": rows, "more": len(mine) > lim}
+
+    def rpc_member_page(self, uid, b):
+        if not uid:
+            return {"ok": False, "reason": "not_logged_in"}
+        m = self.members.get(uid)
+        if not m:
+            return {"ok": False, "reason": "not_member"}
+        up = False
+        np, nc = self.counts(uid)
+        if m["level"] == "sprout" and m["level_by"] == "auto" and np >= 3 and nc >= 5:   # 010 member_recheck
+            m["level"], up = "member", True
+        me = self.rpc_member_me(uid, {})
+        cnt = {k: {"total": sum(1 for x in pool if x["uid"] == uid),
+                   **{s: sum(1 for x in pool if x["uid"] == uid and x["status"] == s) for s in ("pending", "approved", "rejected")}}
+               for k, pool in (("posts", self.posts), ("comments", self.comments))}
+        st = self.rpc_gig_my_stamps(uid, {}) if hasattr(self, "rpc_gig_my_stamps") else None
+        out = {k: me[k] for k in ("ok", "joined", "nickname", "level", "admin", "auto_up", "provider", "joined_at",
+                                  "posts_ok", "comments_ok", "posts_pending", "need_posts", "need_comments")}
+        out.update({"levelup": up, "song": self._song_of(uid), "counts": cnt,
+                    "posts": self.rpc_member_my_posts(uid, {}), "comments": self.rpc_member_my_comments(uid, {}),
+                    "gigs": st is not None, "stamps": st})
+        return out
+
+    def rpc_admin_member_songs(self, uid, b):
+        if uid not in self.admins:
+            return {"ok": False, "reason": "forbidden"}
+        rows = []
+        for k, s in self.songs.items():
+            m, c = self.members.get(k), self._song_of(k)
+            if m and c:
+                rows.append({"user_id": k, "nickname": m["nickname"], "level": m["level"], "k": c["k"], "title": c["title"],
+                             "year": c["year"], "at": c["at"]})
+        tally = {}
+        for r in rows:
+            tally.setdefault(r["k"], {"k": r["k"], "title": r["title"], "n": 0})["n"] += 1
+        order = {x["k"]: x["sort"] for x in SONGS}
+        return {"ok": True, "rows": rows, "tally": sorted(tally.values(), key=lambda x: (-x["n"], order[x["k"]])),
+                "counts": {"members": len(self.members), "with_song": len(rows)}}
 
     # ── 게시판 ──
     def rpc_board_list(self, uid, b):
@@ -510,6 +620,9 @@ def suite(br, board_src=None, quick_errs=None, R=None):
     def sheet():
         return txt("#bd-sheet") if pg.is_visible("#bd-sheet") else ""
 
+    def me():        # 내 정보(마이페이지, community.html#me) — 2026-10-03 부터 예전 '내 정보' 창을 대신한다
+        return txt("#cafe-me") if pg.is_visible("#cafe-me") else ""
+
     def h():
         return pg.evaluate("location.hash")
 
@@ -610,7 +723,8 @@ def suite(br, board_src=None, quick_errs=None, R=None):
     pg.fill("#bd-jn", "홍천팬")
     pg.click("#bd-sheet button[type=submit]")
     pg.wait_for_timeout(300)
-    t("C9 약관 동의 없이는 못 마침", "동의해 주세요" in sheet())
+    # 문구는 한 번에 끝나는 행동으로(검토 4바퀴 21번) — '모두 동의합니다'를 누르라고 말한다
+    t("C9 약관 동의 없이는 못 마침 · \"위의 '모두 동의합니다'를 눌러 주세요.\"", "위의 '모두 동의합니다'를 눌러 주세요." in sheet(), sheet()[-120:])
     pg.check("#bd-ja")
     pg.click("#bd-sheet button[type=submit]")
     pg.wait_for_timeout(1300)
@@ -659,6 +773,13 @@ def suite(br, board_src=None, quick_errs=None, R=None):
     t("F2 제목 속 태그는 글자로만(요소·실행 없음)", pg.locator("#bd-list img, #bd-list b, #bd-list script").count() == 0
       and not pg.evaluate("window.__xss") and "<img" in pg.inner_text("#bd-list"), pg.inner_text("#bd-list")[:80])
     t("F2b 카페 숫자 갱신(회원 1 · 글 2)", "회원 1명 · 글 2개" in txt("#cafe-stat"), txt("#cafe-stat"))
+    # 그 글을 열어도 — 제목·본문의 태그는 글자로만(목록 줄은 글자 노드로 그리지만 글 보기·내 정보는 el() 을 거친다)
+    xid = max(p["id"] for p in fake.posts)
+    go("community.html#p%d" % xid)
+    t("F2c 태그가 든 글을 열어도 요소·실행 없음 · 제목에 '<img' 글자 그대로", pg.locator("#cafe-post img, #cafe-post b, #cafe-post script").count() == 0
+      and not pg.evaluate("window.__xss") and "<img" in txt("#cafe-post .cafe-post-title") and "<b>굵게</b>" in txt("#cafe-post .bd-body"),
+      (txt("#cafe-post .cafe-post-title")[:60], pg.evaluate("window.__xss")))
+    go("community.html#b=all")
     pg.click("#bd-list .cafe-row >> nth=1 >> a")
     pg.wait_for_timeout(900)
     pid1 = int(re.sub(r"\D", "", h()) or 0)
@@ -736,27 +857,31 @@ def suite(br, board_src=None, quick_errs=None, R=None):
     t("G7 '지우기'(확인창 수락) → 서버에서 사라지고 목록으로", len(fake.posts) == n0 - 1 and "지웠습니다" in txt("#bd-msg")
       and pg.is_visible("#cafe-list"), (txt("#bd-msg"), h()))
 
-    # ── H. 내 정보 · 별명 · 로그아웃(초안 치우기) ───────────────
+    # ── H. 내 정보(#me) · 별명 · 로그아웃(초안 치우기) ───────────────
+    # 2026-10-03: 헤더의 '내 정보'는 창이 아니라 내 정보 화면(community.html#me)으로 간다 — 별명·로그아웃·탈퇴가 거기 한곳에
     pg.click("#hm")
-    pg.wait_for_timeout(400)
-    t("H1 내 정보 창", "내 정보" in sheet() and "정회원" in sheet(), sheet()[:60])
+    pg.wait_for_timeout(1000)
+    t("H1 헤더 '내 정보' → 내 정보 화면(#me · 창 아님) · 별명·정회원", h() == "#me" and not pg.is_visible("#bd-sheet")
+      and "내 정보" in me() and "정회원" in me() and "홍천팬" in txt("#cafe-me .me-h"), (h(), me()[:60]))
     pg.fill("#bd-mn", "운영자님")
-    pg.click("#bd-sheet form button[type=submit]")
+    pg.click("#cafe-me .me-nickf button[type=submit]")
     pg.wait_for_timeout(500)
-    t("H2 '운영자' 들어간 별명은 막힘", "쓸 수 없습니다" in sheet(), sheet()[-80:])
+    t("H2 '운영자' 들어간 별명은 막힘", "쓸 수 없습니다" in me(), me()[-80:])
     pg.fill("#bd-mn", "홍천팬2")
-    pg.click("#bd-sheet form button[type=submit]")
+    pg.click("#cafe-me .me-nickf button[type=submit]")
     pg.wait_for_timeout(900)
-    t("H3 별명 바꾸기", "바꿨습니다" in sheet() and fake.members[fake.uid_by_email(FAN)]["nickname"] == "홍천팬2")
-    pg.keyboard.press("Escape")
+    t("H3 별명 바꾸기 → 서버 · 내 정보 제목 · 헤더 이름표가 함께 바뀜", "바꿨습니다" in me() and fake.members[fake.uid_by_email(FAN)]["nickname"] == "홍천팬2"
+      and "홍천팬2" in txt("#cafe-me .me-h") and "홍천팬2" in hm_aria(), (txt("#cafe-me .me-h"), hm_aria()))
+    pg.click("#cafe-me .cafe-back"); pg.wait_for_timeout(600)
     pg.click("#bd-write-btn"); pg.wait_for_timeout(400)
     pg.fill("#bd-title", "공용 기기 초안"); pg.fill("#bd-body", "다음 사람에게 보이면 안 됨"); pg.wait_for_timeout(700)
-    pg.click("#hm"); pg.wait_for_timeout(300)
-    pg.click("#bd-sheet .bd-me-acts >> text=로그아웃")
+    pg.click("#hm"); pg.wait_for_timeout(900)
+    pg.click("#cafe-me .bd-me-acts >> text=로그아웃")
     pg.wait_for_timeout(800)
     # 폰 헤더의 짧은 라벨은 '로그인·가입'(검토 39번 — 폰에도 '가입'이 보이게). 375×17 은 상표와 넉넉해 내려가지 않는다
-    t("H4 로그아웃 → 세션 지움 · 헤더 '로그인·가입'", pg.evaluate("localStorage.getItem('insooni_member_session')") is None
-      and txt("#hm") == "로그인·가입" and hm_aria() == "로그인 또는 회원가입" and any(c[0] == "auth:logout" for c in fake.calls), txt("#hm"))
+    t("H4 로그아웃 → 세션 지움 · 헤더 '로그인·가입' · 사랑방 목록에 '로그아웃했습니다.'", pg.evaluate("localStorage.getItem('insooni_member_session')") is None
+      and txt("#hm") == "로그인·가입" and hm_aria() == "로그인 또는 회원가입" and any(c[0] == "auth:logout" for c in fake.calls)
+      and h().startswith("#b=") and pg.is_visible("#cafe-list") and "로그아웃했습니다" in txt("#bd-msg"), (txt("#hm"), h(), txt("#bd-msg")))
     t("H5 로그아웃하면 이 기기의 쓰던 글을 치움(공용 기기)", pg.evaluate("localStorage.getItem('insooni_board_draft')") is None
       and pg.input_value("#bd-title") == "" and pg.input_value("#bd-body") == "" and not pg.is_visible("#bd-form"))
 
@@ -775,11 +900,13 @@ def suite(br, board_src=None, quick_errs=None, R=None):
     pg.wait_for_timeout(1200)
     t("I3 카카오 회원 가입 → 환영 인사", "카카오별명" in hm_aria() and "어서 오세요" in txt("#bd-msg"), txt("#bd-msg"))
     pg.click("#hm")
-    pg.wait_for_timeout(300)
-    pg.click("#bd-sheet .bd-leave")
+    pg.wait_for_timeout(1000)
+    d0 = len(dialogs)
+    pg.click("#cafe-me .bd-leave")
     pg.wait_for_timeout(1200)
-    t("I4 탈퇴(확인 두 번) → 서버에서 지워지고 로그아웃", not any(u["provider"] == "kakao" for u in fake.users.values())
-      and "탈퇴했습니다" in txt("#bd-msg") and pg.evaluate("localStorage.getItem('insooni_member_session')") is None, txt("#bd-msg"))
+    t("I4 내 정보에서 탈퇴(확인 두 번) → 서버에서 지워지고 로그아웃 · 사랑방 목록에 '탈퇴했습니다'", not any(u["provider"] == "kakao" for u in fake.users.values())
+      and len(dialogs) - d0 == 2 and "탈퇴했습니다" in txt("#bd-msg") and pg.evaluate("localStorage.getItem('insooni_member_session')") is None
+      and pg.is_visible("#cafe-list"), (txt("#bd-msg"), len(dialogs) - d0))
 
     # ── J. 비밀번호 · 다른 브라우저 · 만료 링크 · token_hash ───
     pg.click("#hm")
@@ -1013,7 +1140,7 @@ if __name__ == "__main__":
                 ("닫힌 카페가 서버에 물음", "  function live() { return S.open && S.ready; }", "  function live() { return true; }"),
                 ("공지를 맨 위에 안 그림", "    (notices || []).slice(0, narrow() ? 1 : 3).forEach(function (n) { pins.appendChild(row(n, true)); });\n", ""),
                 ("뒤로 가기가 카페 안에서 안 통함", '      window.addEventListener("hashchange", function () { if (sec && document.body.contains(sec)) route(); });\n', ""),
-                ("로그인 뒤 하던 일을 잊음", "  function continueNext() {\n", "  function continueNext() { return;\n"),
+                ("로그인 뒤 하던 일을 잊음", "  function continueNext(how) {\n", "  function continueNext(how) { return;\n"),
                 ("실패해도 쓴 글을 비움", "      if (!res || !res.ok) { handleWriteFail(res, msg); return; }   /* 실패하면 쓴 글을 그대로 둔다 */",
                  "      if (!res || !res.ok) { ti.value = \"\"; bo.value = \"\"; handleWriteFail(res, msg); return; }"),
                 ("Esc 로 안 닫힘", '      if (e.key === "Escape" && sheet && !sheet.hidden) closeSheet();', '      if (false) closeSheet();'),

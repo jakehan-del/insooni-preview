@@ -40,6 +40,7 @@
   var KAKAO_BACK_TTL = 10 * 60e3;
   var KFKEY = "insooni_kakao_fail_at";   /* 카카오 로그인이 방금(10분 안) 끝나지 못했다(sessionStorage) */
   var SEEN = "insooni_member_seen";      /* 이 기기로 한 번이라도 로그인한 적이 있다 — 회원 창의 첫 탭을 고른다 */
+  var MEFROM = "insooni_me_from";        /* 공연 화면에서 '내 정보'로 왔다 — 내 정보 맨 위에 '← 공연 화면으로'(sessionStorage) */
 
   /* ---------- 작은 도구 ---------- */
   function $(s, r) { return (r || document).querySelector(s); }
@@ -85,7 +86,184 @@
   function boardOn() { return !!cfg() && conf().board === true; }
   function kakaoOn() { return conf().kakao === true; }
   function liveOn() { return boardOn() && conf().live === true; }
+  /* 마이페이지의 013 칸(내 댓글·내 노래·가입 질문) — 스위치가 켜졌고, 서버가 아직 '없다'(404)고 하지 않았다 */
+  function mypageOn() { return boardOn() && conf().mypage === true && S.mp !== false; }
   function onLivePage() { return document.body && document.body.getAttribute("data-page") === "live"; }
+  /* 공연 화면(gig.js)의 지금 단계 — 'open'(도장 받는 중) · 'before' · 'after' · 'closed' · ''(아직 모름·코드 입력) */
+  function gigPhase() {
+    try { var g = window.INSOONI_GIG && window.INSOONI_GIG.state(); return (g && g.L && /^L(4|5|6|7|8|9|10|11|12)$/.test(g.L) && g.phase) || ""; } catch (e) { return ""; }
+  }
+  function gigOpen() { return gigPhase() === "open"; }
+  /* 공연 화면 회원 창의 제목·첫 문장·가입 단추 — 창을 연 목적(wy)과 지금 단계(ph)에 맞춘다(검토 4바퀴 12·18번).
+     단계를 아직 모르면('') 도장 받는 중으로 본다 — 공연 화면은 대부분 그때 열리고, 단계가 정해지면 syncGigSheet 가 고친다 */
+  function gigStartH(wy, ph) {
+    return wy === "cheer" ? t("bd.sheetHGigCheer", "응원을 보내려면 회원으로 들어와 주세요")
+      : wy === "vote" ? t("bd.sheetHGigVote", "투표하려면 회원으로 들어와 주세요")
+      : wy === "gb" ? t("bd.sheetHGigGb", "방명록을 남기려면 회원으로 들어와 주세요")
+      : ph && ph !== "open" ? t("bd.sheetH", "로그인 · 회원가입")
+      : t("bd.sheetHGig", "도장을 남기려면 회원으로 들어와 주세요");
+  }
+  function gigStartLede(wy, ph, kakaoTop) {
+    var what = wy === "cheer" ? t("bd.sheetWhyCheer", "가입을 마치면 누르신 응원이 바로 더해지고, 오늘 공연 도장도 함께 찍힙니다.")
+      : wy === "vote" ? t("bd.sheetWhyVote", "가입을 마치면 고르신 노래에 한 표가 바로 더해지고, 오늘 공연 도장도 함께 찍힙니다.")
+      : wy === "gb" ? t("bd.sheetWhyGb", "가입을 마치면 이 화면에서 바로 한 줄 남길 수 있습니다.")
+      : ph === "before" ? t("bd.sheetWhyGigBefore", "미리 가입해 두시면 도장이 열릴 때 이 화면에서 바로 찍을 수 있습니다.")
+      : ph === "after" ? t("bd.sheetWhyGigAfter", "가입하면 이 공연 방명록에 한 줄 남길 수 있습니다.")
+      : ph && ph !== "open" ? t("bd.sheetWhyGigOff", "가입하면 사랑방에 글과 댓글을 남길 수 있습니다. 읽기는 누구나 됩니다.")
+      : "";
+    if (what) return what + " " + (kakaoTop ? t("bd.sheetFast", "카카오로 시작하면 가장 빠릅니다.") : t("bd.sheetMailOr", "이메일로 가입하거나, 이미 회원이면 로그인해 주세요."));
+    return kakaoTop ? t("bd.sheetLedeGig", "도장을 찍으면 오늘 다녀온 공연이 내 정보에 남습니다. 카카오로 시작하면 가장 빠릅니다.")
+                    : t("bd.sheetLedeGigMail", "도장을 찍으면 오늘 다녀온 공연이 내 정보에 남습니다. 이메일로 가입하거나, 이미 회원이면 로그인해 주세요.");
+  }
+  function joinGoText(gig, wy, ph) {
+    if (gig && wy === "gb") return t("bd.doJoinGb", "가입 마치고 방명록 남기기");
+    if (gig && (!ph || ph === "open")) return t("bd.doJoinGig", "가입 마치고 도장 찍기");
+    return t("bd.doJoin", "가입 마치기");
+  }
+  /* 공연 화면이 단계를 새로 알았을 때(gig.js render) — 열려 있는 공연 문맥 회원 창의 글만 그 자리에서 고친다 */
+  function syncGigSheet() {
+    if (!sheet || sheet.hidden || !sheet.__gs) return;
+    var g = sheet.__gs, ph = gigPhase();
+    if (ph === g.ph) return;
+    g.ph = ph;
+    if (g.view === "start") {
+      var h = sheet.querySelector(".bd-sheet-h");
+      if (h) h.textContent = gigStartH(g.wy, ph);
+      var l = byId("bd-sheet-lede");
+      if (l && !g.note) l.textContent = gigStartLede(g.wy, ph, g.kt);
+    } else if (g.view === "join" && g.btn && !g.btn.disabled) {
+      g.btn.textContent = joinGoText(true, g.wy, ph);
+    }
+  }
+
+  /* ---------- 자판 맞춤(공용) — 검토 4바퀴 2·10·11·14번 ----------
+     폰에서 글칸을 누르면 자판이 올라와 보이는 화면(visualViewport)이 줄어든다. 그때 그 칸의 단추(올리기·댓글 올리기·
+     별명 저장·방명록 남기기·공연 코드 열기)가 자판 뒤로 가면, 어르신은 '자판을 내려야 단추가 보인다'는 것을 모르고
+     거기서 멈춘다. 예전 맞춤(goFit·gbFit)은 칸마다 따로였고 세 군데에서 무너졌다:
+       ① 자판이 없어도 굴렸다 — '고치기'로 들어오면(초점만 있고 자판 없음) 화면을 단추 쪽으로 끌어내려 제목·닫기가 머리 밑에 숨었다.
+       ② 단추만 봤다 — 작은 폰·큰 글자(360×640·21px)에서는 단추를 맞추느라 내가 치는 첫 줄이 머리 밑으로 갔다.
+       ③ 초점·크기 변화 때만 돌았다 — 한 글자를 치면 크로뮴이 커서를 6rem(scroll-padding-top) 아래로 끌어와
+          화면을 다시 위로 굴렸고 단추는 도로 자판 뒤로 갔다.
+     그래서 칸에 초점이 있는 동안, 보이는 화면이 바뀔 때와 글을 칠 때마다 '칸 윗변 ≥ 머리 아래 + 8' 과
+     '단추 아랫변 ≤ 보이는 화면 아래 − 8' 을 함께 맞춘다. 둘이 한 화면에 안 들어가면 그동안만 글칸 높이를 들어가는 만큼
+     줄인다(한 줄 아래로는 줄이지 않고, 그래도 안 되면 내가 치는 칸이 먼저다). 문서 끝이라 더 굴릴 자리가 없으면 몸 끝에
+     빈 자리를 잠시 만든다(자판에 가려지는 자리라 보이지 않는다). 칸에서 나가면 높이·빈 자리를 되돌린다.
+     '자판이 있다' = 보이는 높이가 이 폭에서 본 가장 큰 창 높이의 85% 미만(손가락 확대는 빼고). iOS·안드로이드 크롬은
+     자판이 떠도 창 높이가 그대로이고, 카카오톡 인앱(안드로이드)은 창 자체가 줄어든다 — 둘 다 잡는다. */
+  var KB = { f: null, b: null, w: 0, h: 0, vv: null, raf: 0, sp: null, spH: 0 };
+  function kbBase() {
+    var w = window.innerWidth, h = window.innerHeight;
+    if (w !== KB.w) { KB.w = w; KB.h = h; } else if (h > KB.h) KB.h = h;
+    return KB.h;
+  }
+  function kbUp() {
+    var vv = window.visualViewport;
+    var vh = vv && vv.height ? Math.min(vv.height, window.innerHeight) : window.innerHeight;
+    if (vv && (vv.scale || 1) > 1.05) return false;
+    return vh < kbBase() * 0.85;
+  }
+  function kbHead() {
+    var hd = $(".site-header") || $(".gig-head");
+    if (!hd || !hd.getClientRects().length) return 0;
+    var b = hd.getBoundingClientRect().bottom;
+    return b > 0 ? b : 0;
+  }
+  /* 줄여 둔 글칸 높이를 되돌린다 */
+  function kbSize(f) {
+    if (!f || !f.__kbNat) return;
+    f.style.height = f.__kbSt[0];
+    f.style.minHeight = f.__kbSt[1];
+    f.__kbNat = 0;
+  }
+  /* bottomY(문서 좌표)까지 화면을 내릴 수 있게 몸 끝에 빈 자리를 둔다. 0 이면 걷는다.
+     짧은 문서(공연 코드 화면)는 몸이 min-height 로 화면 높이를 채워 '남은 스크롤'이 0 이라, 빈 자리를 '모자란 만큼'만
+     더하면 그 높이가 min-height 안에 묻혀 한 px 도 늘지 않았다(360×640 실측) — 빈 자리의 시작 위치에서 직접 잰다 */
+  function kbRoom(bottomY) {
+    if (!bottomY) {
+      if (KB.sp && KB.sp.parentNode) KB.sp.parentNode.removeChild(KB.sp);
+      KB.spH = 0;
+      return;
+    }
+    if (!KB.sp) {
+      KB.sp = el("div", "kb-room");
+      KB.sp.setAttribute("aria-hidden", "true");
+    }
+    if (KB.sp.parentNode !== document.body) { KB.sp.style.height = "0px"; document.body.appendChild(KB.sp); }
+    var top = KB.sp.getBoundingClientRect().top + window.scrollY;
+    var pad = parseFloat(getComputedStyle(document.body).paddingBottom) || 0;
+    var h = Math.max(KB.spH, Math.ceil(bottomY - top - pad + 8));
+    KB.spH = h;
+    KB.sp.style.height = h + "px";
+  }
+  function kbFit() {
+    KB.raf = 0;
+    var f = KB.f, b = KB.b ? KB.b() : null;
+    if (!f || document.activeElement !== f) return;
+    if (!kbUp()) { kbSize(f); return; }
+    if (!b || !b.getClientRects().length) return;
+    var vv = window.visualViewport, vt = vv && vv.height ? (vv.offsetTop || 0) : 0;
+    var vh = vv && vv.height ? Math.min(vv.height, window.innerHeight) : window.innerHeight;
+    var top = Math.max(kbHead(), vt) + 8, bot = vt + vh - 8;
+    var fr = f.getBoundingClientRect(), br = b.getBoundingClientRect();
+    if (f.tagName === "TEXTAREA") {
+      /* 원래 높이일 때의 '칸 위 ~ 단추 아래'가 보이는 자리보다 크면 그 차이만큼 칸을 줄인다 */
+      var nat = f.__kbNat || fr.height, span = br.bottom - fr.top + (nat - fr.height), room = bot - top;
+      if (span > room) {
+        var cs = getComputedStyle(f), lh = parseFloat(cs.lineHeight) || parseFloat(cs.fontSize) * 1.6;
+        var pad = (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0) + (parseFloat(cs.borderTopWidth) || 0) + (parseFloat(cs.borderBottomWidth) || 0);
+        /* 들어가는 만큼만 줄인다 — 대부분의 폰에서는 3줄 넘게 남는다. 320×568·21px·자판 260 처럼 아주 좁으면
+           한 줄까지 내려간다(커서 줄은 늘 보이고 칸 안에서 굴러간다). 단추가 자판 뒤로 가는 것보다 낫다 */
+        var h = Math.max(Math.ceil(lh + pad), Math.floor(nat - (span - room)));
+        if (h < nat - 1) {
+          if (!f.__kbNat) { f.__kbSt = [f.style.height, f.style.minHeight]; f.__kbNat = nat; }
+          f.style.minHeight = "0px";
+          f.style.height = h + "px";
+        } else kbSize(f);
+      } else kbSize(f);
+      fr = f.getBoundingClientRect(); br = b.getBoundingClientRect();
+    }
+    var lo = br.bottom - bot, hi = fr.top - top;
+    /* 둘이 몇 px 차이로 안 들어가면(줄일 수 없는 한 줄 칸 + 두세 줄 안내 — 360×640·21px 의 별명 칸) 칸 위 여백을 8 → 2px 까지 양보한다.
+       그래도 모자라면 내가 치는 칸이 먼저다 */
+    if (lo > hi) hi = Math.min(lo, fr.top - (top - 6));
+    var dy = lo > 0 ? Math.min(lo, hi) : (hi < 0 ? hi : 0);
+    if (dy > 0) {
+      var left = document.documentElement.scrollHeight - window.innerHeight - window.scrollY;
+      if (dy > left) kbRoom(window.scrollY + window.innerHeight + dy);
+    }
+    /* 반올림하면 단추가 보이는 화면 아래로 0.5px 남을 수 있다 — 내릴 때는 올림, 올릴 때는 내림 */
+    if (Math.abs(dy) >= 0.5) window.scrollBy(0, dy > 0 ? Math.ceil(dy) : Math.floor(dy));
+  }
+  function kbQueue() { if (!KB.raf) KB.raf = (window.requestAnimationFrame || setTimeout)(kbFit); }
+  /* f = 글칸, btnOf = 그 칸의 단추를 돌려주는 함수(다시 그려도 지금 단추를 찾게) */
+  function kbBind(f, btnOf) {
+    if (!f || f.__kb) return;
+    f.__kb = true;
+    kbBase();
+    if (!kbBind.on) {
+      kbBind.on = true;
+      window.addEventListener("resize", function () { kbBase(); kbQueue(); });
+    }
+    f.addEventListener("focus", function () {
+      kbBase();
+      KB.f = f;
+      KB.b = btnOf;
+      var vv = window.visualViewport;
+      if (vv && vv.addEventListener && KB.vv !== vv) { vv.addEventListener("resize", kbQueue); KB.vv = vv; }
+      setTimeout(kbQueue, 60);
+    });
+    /* 글을 칠 때마다 — 크로뮴의 커서 따라가기가 화면을 굴린 뒤(다음 프레임)에 다시 맞춘다 */
+    f.addEventListener("input", kbQueue);
+    /* 되돌리기는 300ms 뒤 — 단추를 누르는 순간 글칸이 먼저 초점을 잃는다. 그때 바로 높이를 되돌리면 단추가
+       그만큼 아래로 밀려, 손가락을 떼는 순간의 '누름'이 단추가 아니라 글칸에 떨어질 수 있다 */
+    f.addEventListener("blur", function () {
+      if (KB.f === f) KB.f = null;
+      setTimeout(function () {
+        if (KB.f !== f) kbSize(f);
+        if (!KB.f) kbRoom(0);
+      }, 300);
+    });
+  }
 
   /* 응답이 없으면 버튼이 잠긴 채 멈춘다 — 시간 제한을 둔다 */
   function timed(p) {
@@ -160,6 +338,8 @@
         body: JSON.stringify(body || {})
       }).then(function (r) {
         if (r.status === 401 && at) { clearS(); return { ok: false, reason: "expired" }; }
+        /* 글·댓글을 쓰고 고치고 지웠으면 내 정보에 받아 둔 목록은 낡았다 — 다음에 열 때 다시 받는다 */
+        if (/^(comment_(write|delete)|board_(write|edit|delete))$/.test(name)) ME.data = null;
         if (r.status === 404) return { ok: false, reason: "not_ready" };
         if (!r.ok) return { ok: false, reason: "server", status: r.status };
         return r.json().then(function (j) {
@@ -390,7 +570,10 @@
      어느 길이든 이 문서가 열릴 때 카카오 검증값이 10분 안에 저장돼 있고 주소에 코드·오류가 없으면
      왕복이 끝나지 못한 것이다(끝났다면 callback 이 검증값을 지웠다). 그때 회원 창을 다시 열고 무슨 일이
      있었는지 말한다. 예전에는 '뒤로 가기'만 봤다 — QR 을 다시 찍은 사람에게는 아무 안내가 없었다(검토 32번).
-     검증값은 지운다(한 번만 말한다). */
+     검증값은 지운다(한 번만 말한다).
+     '10분 동안 카카오를 내린다'(markKakaoFail)는 걸지 않는다 — KOE 가 고쳐진 지금(10/02 밤) 이 길로 돌아오는 사람은
+     대부분 동의 화면에서 망설이다 뒤로 간 사람이다. 그 사람에게 '저희 설정 문제'라고 단정하고 노란 단추를 내리면
+     공연장에서 사실상 막힌 이메일 길로 보내게 된다(검토 3바퀴 35번). 내림은 카카오가 오류(error)를 돌려보낸 때만 */
   function kakaoCameBack() {
     var p = lsGet(PKEY);
     if (!p || p.p !== "kakao" || Date.now() - (p.at || 0) > KAKAO_BACK_TTL) return false;
@@ -400,7 +583,6 @@
     } catch (e) { return false; }
     if (/(^#|&)(access_token|error)=/.test(location.hash)) return false;
     lsDel(PKEY);
-    markKakaoFail();
     return true;
   }
   /* 10분 동안은 카카오를 맨 위 노란 단추로 다시 권하지 않는다 — 설정 문제(KOE205)라면 누를 때마다
@@ -425,7 +607,8 @@
       case "bad_nick_char": return t("bd.e.nickChar", "별명에는 한글·영문·숫자와 띄어쓰기, _ . - 만 쓸 수 있습니다.");
       case "reserved_nick": return t("bd.e.nickRes", "이 별명은 쓸 수 없습니다. '인순이'·'운영자'처럼 오해를 부르는 이름은 막혀 있습니다.");
       case "nick_taken": return t("bd.e.nickTaken", "이미 쓰고 있는 별명입니다. 다른 별명을 골라 주세요.");
-      case "need_agree": return t("bd.e.agree", "이용약관과 개인정보처리방침에 동의해 주세요.");
+      /* 한 번에 끝나는 행동으로 — 어느 칸이 빠졌는지 찾게 하지 않는다(검토 4바퀴 21번) */
+      case "need_agree": return t("bd.e.agree", "위의 '모두 동의합니다'를 눌러 주세요.");
       case "need_age": return t("bd.e.age", "만 14세 이상만 가입할 수 있습니다.");
       case "admin_cannot_leave": return t("bd.e.adminLeave", "운영자 계정은 여기서 탈퇴할 수 없습니다.");
       case "not_ready": return t("bd.e.ready", "회원 기능을 준비하고 있습니다. 조금만 기다려 주세요.");
@@ -442,7 +625,9 @@
       case "pw_mismatch": return t("bd.e.pwMatch", "두 비밀번호가 서로 다릅니다.");
       case "link_expired": return t("bd.e.linkOld", "링크가 만료됐거나 이미 쓰였습니다. 다시 받아 주세요.");
       case "kakao_cancel": return t("bd.kakaoCancel", "카카오 로그인을 취소하셨습니다. 다시 하시거나 이메일로 시작해 주세요.");
-      case "kakao_fail": case "kakao_back": return t("bd.kakaoBack", "카카오 로그인이 지금 되지 않습니다(저희 설정 문제입니다). 아래 이메일로 가입하거나 로그인해 주세요.");
+      case "kakao_fail": return t("bd.kakaoFail", "카카오 로그인이 지금 되지 않습니다(저희 설정 문제입니다). 아래 이메일로 가입하거나 로그인해 주세요.");
+      /* 코드 없이 돌아왔다 — 원인을 단정하지 않는다(망설이다 뒤로 간 사람이 대부분이다) */
+      case "kakao_back": return t("bd.kakaoBack", "카카오 로그인이 끝나지 않았습니다. 카카오 화면에 KOE로 시작하는 오류가 보였다면 저희 설정 문제입니다. 다시 해 보시거나 이메일로 시작해 주세요.");
       default: return t("bd.e.fail", "지금 처리하지 못했습니다. 잠시 뒤 다시 시도해 주세요.");
     }
   }
@@ -508,7 +693,10 @@
   /* ---------- 상태 ---------- */
   var S = { me: null, settings: null, settingsP: null, ready: true, open: false, loading: false, net: false,
             board: "all", rows: [], rowsBoard: null, more: false, editing: null, cdraft: {}, letters: null, view: "list",
-            trail: null, flash: "", flashKind: "" };
+            trail: null, flash: "", flashKind: "",
+            mp: null,          /* 013 이 서버에 있는가 — null 모름 · true 있음 · false 없음(404) */
+            songsP: null,      /* songs.json(103곡) — 처음 고를 때 한 번 받는다 */
+            songNote: "" };    /* 가입은 됐는데 고른 노래를 저장하지 못했다 — 인사 끝에 한 줄 붙인다 */
   var sec = null;     /* 지금 화면의 #board (라우터가 <main> 을 갈아끼우면 바뀐다) */
   var memberReady = false;
   var listeners = [];
@@ -522,8 +710,8 @@
   /* 회원 게시판을 쓸 수 있는가 — config.js 스위치가 켜졌고 서버에 010 이 있다 */
   function live() { return S.open && S.ready; }
 
-  function emit(type, data) {
-    listeners.slice().forEach(function (fn) { try { fn(type, data, S.me); } catch (e) {} });
+  function emit(type, data, extra) {
+    listeners.slice().forEach(function (fn) { try { fn(type, data, S.me, extra); } catch (e) {} });
   }
 
   function loadMe() {
@@ -607,7 +795,8 @@
          main.js 가 .lang-toggle 를 문서 단위로 받으므로 클래스만 같으면 같은 단추다 */
       var lg = el("button", "nav-lang lang-toggle", isEN() ? "한국어" : "English");
       lg.type = "button";
-      lg.setAttribute("aria-label", isEN() ? "Switch to Korean" : "Switch to English");
+      lg.setAttribute("lang", isEN() ? "ko" : "en");
+      lg.setAttribute("aria-label", isEN() ? "한국어로 보기" : "View in English");
       nav.appendChild(lg);
     }
     var tg2 = $(".site-header .nav-toggle");
@@ -626,9 +815,11 @@
     if (window.ResizeObserver) {
       /* 헤더 폭이 바뀌거나(창 크기) 가운데 내비 폭이 바뀌면(글자 크기·서체 도착) 다시 잰다 */
       var ro = new ResizeObserver(function () { fitHM(); });
-      var hi = $(".site-header .header-inner"), nu = $(".site-header .main-nav ul");
+      var hi = $(".site-header .header-inner"), nu = $(".site-header .main-nav ul"), bd = $(".site-header .brand");
       if (hi) ro.observe(hi);
       if (nu) ro.observe(nu);
+      /* 홈 도입부 동안 상표가 크다(320×21 에서 141px) — 도입부가 끝나 상표가 줄면 다시 잰다(EN 을 괜히 숨겨 두지 않게) */
+      if (bd) ro.observe(bd);
     } else {
       window.addEventListener("resize", fitHM);
     }
@@ -643,10 +834,29 @@
     var st = hmState();
     if (st === "H1") {
       /* 열쇠는 있는데 아직 '누구인지' 답을 기다린다 — 답이 오면 그 상태로 연다 */
-      readyP.then(function () { openSheet(hmView(hmState()), from); });
+      readyP.then(function () { if (hmState() !== "H1") openFromHM(from); });
       return;
     }
+    /* 회원(H4·H5)과 연결이 끊긴 회원(H6)은 창이 아니라 내 정보 화면으로 — 별명·등급·내가 쓴 글·댓글·도장·노래·
+       별명 바꾸기·로그아웃·탈퇴가 한곳에 있다. 예전 '내 정보' 창은 이 화면으로 대체했다(같은 일을 두 곳에 두지 않는다) */
+    if (st === "H4" || st === "H5" || st === "H6") { goMe(); return; }
     openSheet(hmView(st), from);
+  }
+  /* 내 정보(community.html#me)로 — 사랑방이면 '#' 만 바꾸고, 다른 페이지면 라우터로(<main> 만 갈아끼움),
+     공연 화면(따로 사는 문서)이면 새로 연다. 공연 화면에서 왔으면 내 정보 맨 위에 '← 공연 화면으로'를 둔다 */
+  function goMe() {
+    closeSheet();
+    if (sec && document.body.contains(sec)) {
+      if (location.hash === "#me") route(); else location.hash = "#me";
+      return;
+    }
+    var href = "community.html#me";
+    if (onLivePage()) {
+      ssSet(MEFROM, { url: location.pathname + location.search, at: Date.now() });
+      location.href = href;
+      return;
+    }
+    if (!(window.INSOONI_ROUTER && window.INSOONI_ROUTER.go && window.INSOONI_ROUTER.go(href))) location.href = href;
   }
 
   function renderHM() {
@@ -677,8 +887,10 @@
       n2 = t("hm.nm2Finish", "별명만 정하면 됩니다");
     } else if (st === "H4" || st === "H5") {
       if (long) {
-        long.appendChild(el("span", "hm-nick", me.nickname || ""));
-        if (st === "H4") long.appendChild(el("span", "hm-lv", levelName(me.level, me.admin)));
+        /* 한 줄 밑줄이 끊기지 않게 — 별명은 글자 흐름 그대로(말줄임은 여기서), 등급 앞은 공백 글자(검토 4바퀴 9번) */
+        var nk = me.nickname || "";
+        long.appendChild(el("span", "hm-nick", nk.length > 8 ? nk.slice(0, 7) + "…" : nk));
+        if (st === "H4") { long.appendChild(document.createTextNode(" ")); long.appendChild(el("span", "hm-lv", levelName(me.level, me.admin))); }
         long.appendChild(document.createTextNode(" · " + meT));
       }
       if (short) short.textContent = meT;
@@ -694,6 +906,12 @@
     }
     if (tiny && st !== "H2") tiny.textContent = short ? short.textContent : meT;
     if (b) b.setAttribute("aria-label", aria);
+    /* 회원은 창이 아니라 내 정보 화면으로 간다 — '대화상자를 엽니다'라고 읽히면 거짓 안내다 */
+    var pop = st === "H2" || st === "H3";
+    [b, nm && $(".nav-member-b", nm)].forEach(function (x) {
+      if (!x) return;
+      if (pop) x.setAttribute("aria-haspopup", "dialog"); else x.removeAttribute("aria-haspopup");
+    });
     if (nm) {
       nm.classList.toggle("is-me", st === "H4" || st === "H5");
       $(".nm-1", nm).textContent = n1;
@@ -712,10 +930,16 @@
     if (!b || b.hidden) return;
     b.classList.remove("is-short");
     b.classList.remove("is-tiny");
+    document.documentElement.classList.remove("hdr-tight");
     if (window.innerWidth < 1081) {
       var br = $(".site-header .brand") || $(".gig-head .gig-brand");
       if (!br || !br.getClientRects().length) return;
       if (b.getBoundingClientRect().left - br.getBoundingClientRect().right < 8) b.classList.add("is-tiny");
+      /* 상표와는 떨어져 있어도 오른쪽 끝(☰)이 화면 밖일 수 있다 — 360×21px 에서 ☰ right 382.5(22.5px 밖),
+         문서 가로 넘침은 0 이라 스크롤로도 닿지 않아 다른 페이지로 갈 수 없었다(검토 3바퀴 27번).
+         ① '로그인'으로 줄이고 ② 그래도 넘치면 EN 을 메뉴 패널 맨 아래로 옮긴다(.hdr-tight) */
+      if (toolsOver()) b.classList.add("is-tiny");
+      if (toolsOver()) document.documentElement.classList.add("hdr-tight");
       return;
     }
     var ul = $(".site-header .main-nav ul");
@@ -724,6 +948,17 @@
     /* 긴 라벨 → 짧은 라벨('로그인·가입') → '로그인' 순으로 줄인다(1081×21 에서 '로그인·가입'도 10px 로 붙었다) */
     if (gap() < 16) b.classList.add("is-short");
     if (gap() < 16) { b.classList.remove("is-short"); b.classList.add("is-tiny"); }
+  }
+  /* 헤더 오른쪽 도구 중 가장 오른쪽 것(☰ 또는 공연 머리의 EN)이 화면 오른쪽 8px 안쪽에 들어오는가 */
+  function toolsOver() {
+    var tools = $(".site-header .header-tools") || $(".gig-head .header-tools");
+    if (!tools) return false;
+    var right = 0;
+    Array.prototype.forEach.call(tools.children, function (n) {
+      if (n.getClientRects().length) right = Math.max(right, n.getBoundingClientRect().right);
+    });
+    var hi = $(".site-header .header-inner") || $(".gig-head");
+    return right > window.innerWidth - 8 || (!!hi && hi.scrollWidth > hi.clientWidth + 1);
   }
 
   var toastT = null;
@@ -737,11 +972,16 @@
 
   /* 로그인·가입을 마친 사람에게 — 사랑방이면 카페 안내 줄에, 다른 페이지면 헤더 아래 알림으로.
      공연 화면은 제 자리의 안내(gig.js)를 쓴다 */
-  function welcome(note) {
-    var text = note || fmt(t("bd.welcomeF", "{n} 님, 어서 오세요."), { n: (S.me && S.me.nickname) || "" });
+  /* 가입은 됐는데 고른 노래를 저장하지 못했으면 인사 끝에 한 줄 — 조용히 버리지 않는다(가입은 그대로 유지된다) */
+  function withSongNote(text) {
+    return S.songNote ? text + " " + S.songNote : text;
+  }
+  /* how = "join" 이면 방금 가입을 마쳤다 — 공연 화면이 '가입을 마쳤습니다'와 '로그인'을 가려 말한다 */
+  function welcome(note, how) {
+    var text = withSongNote(note || fmt(t("bd.welcomeF", "{n} 님, 어서 오세요."), { n: (S.me && S.me.nickname) || "" }));
     if (sec && document.body.contains(sec)) say(sq("#bd-msg"), text, "ok");
     else if (!onLivePage()) toast(text);
-    emit("welcome", text);
+    emit("welcome", text, how || "");
   }
 
   /* 로그인 뒤 이어서 할 일 — 글쓰기를 누르고 로그인하러 갔던 사람을 다시 글쓰기로.
@@ -751,16 +991,35 @@
     o.at = Date.now();
     lsSet(NKEY, o);
   }
-  function continueNext() {
+  function continueNext(how) {
     var n = lsGet(NKEY);
     if (!n) return;
     if (!S.me) return;
     if ((n.path && !samePath(n.path, location.pathname)) || Date.now() - (n.at || 0) > NEXT_TTL) { lsDel(NKEY); return; }
     if (!S.me.joined) { openSheet("join", byId("hm")); return; }
+    /* 내 정보를 열려다 로그인·가입하러 갔던 사람 — 내 정보로 */
+    if (n.what === "me") {
+      if (!sec) return;
+      lsDel(NKEY);
+      closeSheet();
+      S.flash = withSongNote(how === "join"
+        ? fmt(t("bd.joinedMeF", "{n} 님, 가입을 마쳤습니다."), { n: (S.me && S.me.nickname) || "" })
+        : fmt(t("bd.welcomeF", "{n} 님, 어서 오세요."), { n: (S.me && S.me.nickname) || "" }));
+      S.flashKind = "ok";
+      go("#me");
+      return;
+    }
     if (n.what === "write" || n.what === "open") {
       if (!sec) return;
       lsDel(NKEY);
       closeSheet();
+      /* welcome() 가 #bd-msg 에 쓴 인사는 곧이어 화면을 바꾸는 route() 가 지웠다 — 가입을 마치고도 아무 말 없이
+         글쓰기 칸만 열렸다(검토 3바퀴 16번). 바뀐 화면이 그리도록 S.flash 로 넘긴다 */
+      var nk = { n: (S.me && S.me.nickname) || "" };
+      S.flash = withSongNote(how === "join"
+        ? fmt(n.what === "write" ? t("bd.joinedF", "{n} 님, 가입을 마쳤습니다. 이어서 글을 써 주세요.") : t("bd.joinedOpenF", "{n} 님, 가입을 마쳤습니다. 이어서 댓글을 남겨 주세요."), nk)
+        : fmt(n.what === "write" ? t("bd.backWriteF", "{n} 님, 어서 오세요. 이어서 글을 써 주세요.") : t("bd.backOpenF", "{n} 님, 어서 오세요. 이어서 댓글을 남겨 주세요."), nk));
+      S.flashKind = "ok";
       if (n.what === "write") go("#write" + (n.board ? "=" + n.board : ""));
       if (n.what === "open" && n.id) go("#p" + n.id);
       return;
@@ -769,7 +1028,8 @@
     emit("next", n);
   }
 
-  function afterLogin(note) {
+  /* how = "join" — 방금 가입을 마쳤다(이어서 할 일 안내가 '가입을 마쳤습니다'로 시작한다) */
+  function afterLogin(note, how) {
     return loadMe().then(function () {
       renderHM();
       emit("state");
@@ -778,14 +1038,23 @@
       lsSet(SEEN, 1);
       if (!S.me.joined) { openSheet("join", byId("hm"), note); return; }
       closeSheet();
-      welcome(note);
-      continueNext();
+      welcome(note, how);
+      continueNext(how);
+      S.songNote = "";
     });
   }
 
   function handleCallback(cb) {
     if (!cb || !live()) return;
     var hm = byId("hm");
+    /* 카카오로 다녀왔는데 마지막 열쇠 교환(token)이 실패했다 — 공연장 와이파이처럼 여러 사람이 IP 하나를 쓰면 429 가 날 수 있다.
+       예전에는 이메일 사람의 말('메일을 보낼 수 없습니다'·'링크가 만료됐습니다 … 처음 가입을 같은 이메일로')이 떠서
+       카카오로 들어온 관객이 메일 이야기를 들었다(검토 4바퀴 26번). 카카오 사람의 말로, 카카오 단추를 맨 위에 둔다.
+       다른 브라우저로 돌아온 경우(검증값 없음 — 카카오톡이 바깥 브라우저로 넘긴 때)도 '메일 확인이 끝났습니다'가 아니다 */
+    if (cb.purpose === "kakao" && ((cb.kind === "error" && /^(link_expired|mail_limit|auth_fail)$/.test(cb.reason || "")) || cb.kind === "noverifier")) {
+      openSheet("start", hm, null, { alert: t("bd.kakaoTokenFail", "카카오 로그인을 마치지 못했습니다. 잠시 뒤 카카오로 다시 시작해 주세요."), kakaoFail: false });
+      return;
+    }
     if (cb.kind === "error" && cb.reason === "link_expired") {
       if (cb.purpose === "recover") openSheet("recover", hm, t("bd.linkOldRe", "링크가 만료됐거나 이미 쓰였습니다. 비밀번호 메일을 다시 받아 주세요."));
       else openSheet("start", hm, t("bd.linkOldUp", "링크가 만료됐거나 이미 쓰였습니다. 가입 확인 전이라면 '처음 가입'을 같은 이메일로 다시 누르면 확인 메일이 다시 갑니다."));
@@ -837,7 +1106,7 @@
         if (cb) lsDel(RKEY);
         readyResolve(cb);
         emit("state");
-        if (came && !cb) openSheet("start", byId("hm"), null, { alert: why("kakao_back"), kakaoFail: true });
+        if (came && !cb) openKakaoBack(byId("hm"));
         handleCallback(cb);
       });
     });
@@ -848,8 +1117,17 @@
   window.addEventListener("pageshow", function (e) {
     if (!e.persisted) return;
     if (sheet) Array.prototype.forEach.call(sheet.querySelectorAll(".bd-kakao"), function (b) { b.disabled = false; });
-    if (boardOn() && kakaoCameBack()) openSheet("start", byId("hm") || opener, null, { alert: why("kakao_back"), kakaoFail: true });
+    if (boardOn() && kakaoCameBack()) openKakaoBack(byId("hm") || opener);
   });
+  /* 카카오에서 코드 없이 돌아온 사람에게 — 어디서든 노란 '카카오로 시작하기'를 맨 위 주 단추로 그대로 둔다.
+     이 길로 돌아오는 사람은 대부분 동의 화면에서 망설이다 뒤로 간 사람이고, 실제로 되는 길은 카카오다.
+     예전에는 사랑방이면 카카오를 이메일 양식 아래 '다시 해 보기'로 내렸다 — 375×812 에서 그 단추가 top 927(화면 밖)이었고,
+     커스텀 SMTP 가 없는 지금 이메일은 시간당 몇 통뿐이라 사실상 막힌 길이었다(검토 4바퀴 5번).
+     혹시 KOE 였을 때를 위해 이메일 '처음 가입'도 연다(공연장은 접힌 칸 안에). 카카오를 아래로 내리는 것은
+     카카오가 오류(error)를 돌려준 때(handleCallback 의 kakao_fail)에만 남긴다 */
+  function openKakaoBack(from) {
+    openSheet("start", from, null, { alert: why("kakao_back"), kakaoFail: false, kakaoBack: true });
+  }
 
   /* ================================================================
      2. 사랑방 카페 — #board 가 있는 문서에서만
@@ -910,13 +1188,6 @@
     }
     n.hidden = false;
   }
-  /* 시트(내 정보)에 쓰는 긴 문장 */
-  function progressText(me) {
-    if (me.auto_up === false) return t("bd.lvByStaff", "등급은 운영자가 정했습니다.");
-    var np = Math.max(0, (me.need_posts || 0) - (me.posts_ok || 0));
-    var nc = Math.max(0, (me.need_comments || 0) - (me.comments_ok || 0));
-    return t("bd.prog1", "정회원까지 글 ") + np + t("bd.prog2", "개 · 댓글 ") + nc + t("bd.prog3", "개 남았습니다.");
-  }
 
   /* ---------- 공연 당일 줄 (config.live) ----------
      서버가 '지금 열린 공연'을 알려 줄 때만 머리 아래 한 줄. 숫자는 서버가 센 그대로(0 이면 빼고) */
@@ -937,14 +1208,25 @@
       var k = kst(ev.starts_at), n = +(r.checkins != null ? r.checkins : (ev.checkins || 0));
       var d = k ? (isEN() ? ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][+k.m - 1] + " " + (+k.d) : k.m + "." + k.d) : "";
       a.textContent = "";
-      a.href = "/live?e=" + encodeURIComponent(code);
+      /* 도장 받는 중이면 도장이 아니라 응원·방명록으로 데려간다(검토 4바퀴 19번) — 공개 사랑방이 공연 코드를 건네며
+         도장을 권하면 오지 않은 사람에게도 '다녀옴' 기록이 생기고 '도장 N명'에 집에서 찍은 사람이 섞인다.
+         도장 입구는 공연장 QR 이다. 숫자는 '도장 N명' 그대로(출석을 단정하는 '다녀온 분 N명'은 쓰지 않는다) */
+      a.href = "/live?e=" + encodeURIComponent(code) + (phase === "open" ? "#gig-cheers" : "");
       a.appendChild(el("span", "ct-1", n > 0
         ? fmt(t("bd.todayF", "오늘 공연 · {d} {v} · 도장 {n}명"), { d: d, v: venue || ttl, n: n })
         : fmt(t("bd.todayF0", "오늘 공연 · {d} {v}"), { d: d, v: venue || ttl })));
       a.appendChild(el("span", "ct-2", phase === "open"
-        ? t("bd.todayOpen", "공연장에 계신가요? 도장 찍으러 가기 →")
+        ? t("bd.todayOpenSee", "오늘 공연 응원·방명록 보기 →")
         : t("bd.todayAfter", "공연 방명록 보러 가기 →")));
+      /* 글 보기·글쓰기·내 정보는 머리 아래로 맞춰 둔 화면이다 — 그 위에 이 줄이 늦게 생기면 보던 것이 줄 높이만큼
+         밀려 내려간다(내 정보 375×812 실측 +86px). 화면 위로 지나간 자리에 생긴 줄이면 그만큼 따라 내린다 */
+      var ref = sec && document.body.contains(sec) && S.view !== "list" && window.scrollY > 0 ? sec : null;
+      var before = ref ? ref.getBoundingClientRect().top : 0;
       a.hidden = false;
+      if (ref) {
+        var dy = ref.getBoundingClientRect().top - before;
+        if (dy) window.scrollBy(0, dy);
+      }
       var sla = byId("sl-live-a");
       if (sl && sla && phase === "open") { sla.href = "/live?e=" + encodeURIComponent(code) + "#gig-vote"; sl.hidden = false; }
     });
@@ -961,6 +1243,7 @@
     if ((m = /^edit=(\d+)$/.exec(h))) return { view: "write", edit: +m[1] };
     if ((m = /^write(?:=(\w+))?$/.exec(h))) return { view: "write", board: m[1] || null };
     if ((m = /^b=(\w+)$/.exec(h))) return { view: "list", board: m[1] };
+    if (h === "me") return { view: "me" };
     return { view: "list", board: null };
   }
   function go(hash) {
@@ -971,8 +1254,11 @@
     sq("#cafe-list").hidden = view !== "list";
     sq("#cafe-post").hidden = view !== "post";
     sq("#bd-form").hidden = view !== "write";
+    var mb = meBox();
+    if (mb) mb.hidden = view !== "me";
     sec.classList.toggle("is-writing", view === "write");
     sec.classList.toggle("is-post", view === "post");
+    sec.classList.toggle("is-me", view === "me");
     renderNote();
   }
   /* 글·편지를 열면 탭 줄 윗변을 헤더 바로 아래(＋8px)에 맞춘다 — 어느 게시판의 글인지가 늘 보이게.
@@ -988,13 +1274,24 @@
   }
   function toMenu() {
     var m = sq(".cafe-menu"), hd = $(".site-header");
+    /* 글쓰기 화면 — 안내(#bd-msg: '가입을 마쳤습니다'·'쓰시던 글을 불러왔습니다')가 있으면 그 줄부터. 없으면 '← 쓰기 그만두기' */
+    var wm = sq("#bd-msg");
     var target = m && m.getClientRects().length && !sec.classList.contains("is-closed") && !sec.classList.contains("is-writing")
-      ? m : (sec.classList.contains("is-writing") ? (sq("#bd-form-back") || sq("#bd-form")) : sec);
+      ? m : (sec.classList.contains("is-writing") ? ((wm && wm.textContent ? wm : null) || sq("#bd-form-back") || sq("#bd-form"))
+      /* 내 정보 — 안내(가입을 마쳤습니다 등)가 있으면 그 줄부터, 없으면 '← 사랑방 목록으로' */
+      : sec.classList.contains("is-me") ? ((wm && wm.textContent ? wm : null) || meBox() || sec) : sec);
     if (!target) return;
     var hb = hd ? hd.getBoundingClientRect().bottom : 0;
-    var top = target.getBoundingClientRect().top;
+    /* 자리는 transform 을 뺀 배치 위치로 잰다 — 섹션 등장 모션(main.js .rise: translateY 12px → 0, .7초)이 도는 중에
+       재면 모션이 끝난 뒤 12px 위로 올라가 '← 쓰기 그만두기'가 헤더 밑으로 숨었다(V10 간헐 실패 d=4·5 의 원인, 검토 3바퀴 12번) */
+    var top = layoutY(target) - window.scrollY;
     if (top >= hb && top <= hb + 16) return;
     window.scrollTo(0, Math.max(0, window.scrollY + top - hb - 8));
+  }
+  function layoutY(n) {
+    var y = 0;
+    for (var e = n; e; e = e.offsetParent) y += e.offsetTop;
+    return y;
   }
 
   function route() {
@@ -1004,6 +1301,13 @@
     S.flash = "";
     sec.classList.toggle("is-closed", !live());
     renderLede();
+    /* 내 정보에서 연 글을 보고 돌아오는 길이 아니면 내 정보의 '돌아올 자리'는 버린다 */
+    if (r.view !== "me" && r.view !== "post") ME.back = null;
+    if (r.view === "me") {
+      if (!live()) { go("#b=all"); return; }
+      openMe();
+      return;
+    }
     if (r.view === "letter") { openLetter(r.id); return; }
     if (r.view === "post") {
       if (!live()) { go("#b=" + S.board); return; }
@@ -1193,7 +1497,7 @@
   }
   function statusBadge(st) {
     return el("span", "bd-badge bd-badge--" + st,
-      st === "pending" ? t("bd.st.pending", "확인 중") : t("bd.st.rejected", "내려감"));
+      st === "pending" ? t("bd.st.pending", "확인 중") : t("bd.st.rejected", "내려짐"));
   }
   /* 공연 방명록 글에 붙는 공연 이름(011 post_gigs) — '10.18 부산 KBS홀 공연' */
   function gigLabel(g) {
@@ -1320,8 +1624,17 @@
       var meta = el("p", "cafe-post-meta");
       meta.appendChild(artist());
       var years = new Date().getFullYear() - parseInt(String(l.posted).slice(0, 4), 10);
-      meta.appendChild(el("span", "cafe-letter-when", fmt(t("bd.letterWhenF", "{d} · {y}년 전 · 당시 조회 {h} · 당시 댓글 {c}"),
-        { d: letterDate(l), y: years, h: (+l.hit || 0).toLocaleString("en-US"), c: l.comments })));
+      /* 항목마다 한 덩어리(줄바꿈 금지) — '당시 / 댓글 18' 처럼 항목 가운데서 줄이 나뉘지 않게. 가운뎃점은 앞 항목에 붙여
+         줄 맨 앞에 '·'가 오지 않게 한다(검토 3바퀴 38번) */
+      var lw = el("span", "cafe-letter-when");
+      var items = fmt(t("bd.letterWhenF", "{d} · {y}년 전 · 당시 조회 {h} · 당시 댓글 {c}"),
+        { d: letterDate(l), y: years, h: (+l.hit || 0).toLocaleString("en-US"), c: l.comments }).split(" · ");
+      items.forEach(function (x, i) {
+        /* 긴 항목(영어 등)은 묶지 않는다 — 320px·21px 에서 한 덩어리가 화면 폭을 넘지 않게 */
+        lw.appendChild(el("span", x.length <= 18 ? "cafe-lw-i" : null, x + (i < items.length - 1 ? "\u00a0·" : "")));
+        if (i < items.length - 1) lw.appendChild(document.createTextNode(" "));
+      });
+      meta.appendChild(lw);
       box.appendChild(meta);
       /* 원문 존중: textContent 로만, 번역하지 않는다. 손글씨 체 그대로 */
       var body = el("div", "letter-body cafe-letter-body", l.body);
@@ -1343,9 +1656,11 @@
   /* '← 목록으로' — 목록에서 들어온 글이면 진짜 뒤로 가기(기록이 쌓이지 않고 보던 줄로 돌아간다).
      링크로 바로 들어왔으면 그 게시판 목록으로 바꿔 놓는다(뒤로 가기 한 번에 카페 밖으로 나가지 않게) */
   function backLink(board, bottom) {
+    /* 내 정보에서 연 글이면 '← 내 정보로'(진짜 뒤로 가기 — 보던 자리로) */
+    var fromMe = !!(S.trail && S.trail.from === "#me" && S.trail.to === location.hash);
     var a = el("a", bottom ? "cafe-back cafe-back--bottom" : "cafe-back",
-      t("bd.back2", "← 목록으로"));
-    a.href = "#b=" + (board || S.board);
+      fromMe ? t("bd.backMe", "← 내 정보로") : t("bd.back2", "← 목록으로"));
+    a.href = fromMe ? "#me" : "#b=" + (board || S.board);
     a.addEventListener("click", function (e) {
       e.preventDefault();
       if (S.trail && S.trail.to === location.hash) { S.trail = null; history.back(); return; }
@@ -1417,9 +1732,11 @@
     box.appendChild(el("div", "bd-body", p.body));
     if (p.mine) {
       var acts = el("div", "bd-acts");
-      var ed = el("a", "btn btn--ghost btn--sm", t("bd.edit", "고치기"));
+      /* 둘 다 글자 단추 — 같은 테두리 단추 둘이 나란히 있으면 되돌릴 수 없는 '지우기'가 구분되지 않았다.
+         테두리 단추는 '댓글 올리기' 하나만 남긴다. '지우기'는 한 단계 낮은 색 + 확인 창(검토 3바퀴 33번) */
+      var ed = el("a", "btn btn--text bd-edit-a", t("bd.edit", "고치기"));
       ed.href = "#edit=" + p.id;
-      var del = el("button", "btn btn--ghost btn--sm", t("bd.del", "지우기"));
+      var del = el("button", "btn btn--text bd-del-a", t("bd.del", "지우기"));
       del.type = "button";
       del.addEventListener("click", function () {
         if (!window.confirm(t("bd.delQ", "이 글을 지울까요? 달린 댓글도 함께 지워지고 되돌릴 수 없습니다."))) return;
@@ -1466,18 +1783,27 @@
       var send = el("button", "btn btn--ghost", t("bd.cmtSend", "댓글 올리기"));
       send.type = "submit";
       f.appendChild(lab); f.appendChild(ta); f.appendChild(send);
+      /* 자판이 올라와도 '댓글 올리기'가 보이게 — 글쓰기와 같은 공용 맞춤(검토 4바퀴 10번). 글칸이라 엔터는 줄바꿈이고
+         올리는 길은 이 단추 하나뿐이다 */
+      kbBind(ta, function () { return send; });
       f.addEventListener("submit", function (e) {
         e.preventDefault();
+        if (f.__busy) return;
         var v = ta.value.trim();
         if (!v) { say(cmsg, why("empty"), "bad"); ta.focus(); return; }
-        send.disabled = true;
+        /* 보내는 동안 disabled 대신 aria-disabled — 초점을 가진 단추가 disabled 가 되면 브라우저가 초점을 문서(body)로
+           떨어뜨려 키보드·화면낭독기 사용자가 자리를 잃었다(검토 4바퀴 13번). 두 번 누름은 __busy 가 막는다 */
+        f.__busy = true;
+        send.setAttribute("aria-disabled", "true");
         rpc("comment_write", { p_post_id: p.id, p_body: v }, true).then(function (res) {
-          send.disabled = false;
+          f.__busy = false;
+          send.removeAttribute("aria-disabled");
           if (res && res.ok) {
             ta.value = "";
             delete S.cdraft[p.id];
             refreshPost(p.id, res.status === "approved" ? t("bd.cmtOk", "댓글을 올렸습니다.")
-                                                        : t("bd.cmtWaitOk", "댓글을 받았습니다. 운영자가 확인한 뒤 모두에게 보입니다."));
+                                                        : t("bd.cmtWaitOk", "댓글을 받았습니다. 운영자가 확인한 뒤 모두에게 보입니다."),
+                        document.activeElement === send);
           } else handleWriteFail(res, cmsg);
         });
       });
@@ -1546,7 +1872,8 @@
     return it;
   }
 
-  function refreshPost(id, note) {
+  /* keep — '댓글 올리기'를 누른 초점을 다시 그린 뒤의 같은 단추로 돌려준다(다시 그리면 옛 단추가 사라져 초점이 문서로 떨어졌다) */
+  function refreshPost(id, note, keep) {
     rpc("board_read", { p_id: id }).then(function (r) {
       if (S.view !== "post") return;
       var box = sq("#cafe-post");
@@ -1554,6 +1881,8 @@
       if (!r || !r.ok) { box.appendChild(backLink()); box.appendChild(el("p", "sb-msg is-bad", why(r && r.reason))); return; }
       renderPost(box, r);
       if (note) say(box.querySelector(".bd-cmsg"), note, "ok");
+      var nb = keep ? box.querySelector(".bd-cform button[type=submit]") : null;
+      if (nb) { try { nb.focus({ preventScroll: true }); } catch (e) {} }
     });
     loadMe().then(function () { renderHM(); emit("state"); });
   }
@@ -1631,6 +1960,7 @@
     if (!f) return;
     var ti = sq("#bd-title"), bo = sq("#bd-body"), hint = sq("#bd-form-hint"), gob = sq("#bd-go");
     S.editing = edit || null;
+    fieldErr(ti, ""); fieldErr(bo, "");
     show("write");
     if (edit) {
       ti.value = edit.title;
@@ -1650,7 +1980,8 @@
       if (d && (d.title || d.body) && !ti.value && !bo.value) {
         ti.value = d.title || "";
         bo.value = d.body || "";
-        say(sq("#bd-msg"), t("bd.draftBack", "쓰시던 글을 불러왔습니다."), "ok");
+        var had = sq("#bd-msg").textContent;
+        say(sq("#bd-msg"), (had ? had + " " : "") + t("bd.draftBack", "쓰시던 글을 불러왔습니다."), "ok");
       }
     }
     markTab(boardVal());
@@ -1665,7 +1996,9 @@
     counter();
     toMenu();
     alignAfterFonts();
-    setTimeout(function () { var x = ti.value ? bo : ti; try { x.focus({ preventScroll: true }); } catch (e) { x.focus(); } }, 250);
+    /* 고치기는 제목 칸에서 시작한다(새 글과 같이) — 내용 칸에 두면 폰에서 화면이 내용 칸 한가운데로 내려가
+       '글 고치기' 제목과 '← 고치지 않고 닫기'가 머리 밑에 숨었다(검토 4바퀴 2번). 이어 쓰던 새 글만 내용 칸에서 */
+    setTimeout(function () { var x = ti.value && !edit ? bo : ti; try { x.focus({ preventScroll: true }); } catch (e) { x.focus(); } }, 250);
   }
   function closeForm() {
     if (S.editing && sec) { sq("#bd-title").value = ""; sq("#bd-body").value = ""; }
@@ -1684,6 +2017,20 @@
     go("#write" + (S.board !== "all" && S.board !== "letters" ? "=" + S.board : ""));
   }
 
+  /* 칸 하나의 오류 — 칸 아래 .bd-ferr 에 쓰고 aria-invalid·describedby 를 건다. 빈 글이면 걷는다 */
+  function fieldErr(f, text) {
+    if (!f) return;
+    var e = byId(f.id + "-err");
+    if (!e) return;
+    if (e.textContent !== (text || "")) e.textContent = text || "";
+    if (text) {
+      f.setAttribute("aria-invalid", "true");
+      f.setAttribute("aria-describedby", e.id);
+    } else {
+      f.removeAttribute("aria-invalid");
+      if (f.getAttribute("aria-describedby") === e.id) f.removeAttribute("aria-describedby");
+    }
+  }
   function handleWriteFail(res, node) {
     var r = res && res.reason;
     say(node, why(r), "bad");
@@ -1695,8 +2042,12 @@
     e.preventDefault();
     var ti = sq("#bd-title"), bo = sq("#bd-body"), gob = sq("#bd-go"), msg = sq("#bd-msg");
     var title = ti.value.trim(), body = bo.value.trim(), board = boardVal();
-    if (title.length < 2) { say(msg, why("title_empty"), "bad"); ti.focus(); return; }
-    if (body.length < 2) { say(msg, why("empty"), "bad"); bo.focus(); return; }
+    /* 칸 오류는 그 칸 바로 아래에 — 위쪽 안내 줄(#bd-msg)은 이 화면에서 헤더 위(360×640 에서 top -35~-222)에
+       숨어 있어 초점만 칸으로 가고 이유는 보이지 않았다(검토 3바퀴 18번) */
+    fieldErr(ti, title.length < 2 ? why("title_empty") : "");
+    fieldErr(bo, title.length >= 2 && body.length < 2 ? why("empty") : "");
+    if (title.length < 2) { ti.focus(); return; }
+    if (body.length < 2) { bo.focus(); return; }
     gob.disabled = true;
     var editing = S.editing;
     var call = editing
@@ -1765,6 +2116,563 @@
     renderMenu(); renderNote();
     if (S.view === "list") loadList(false);
     loadMine();
+  }
+
+  /* ================================================================
+     2-1. 내 정보(마이페이지) — community.html#me
+     형님(10/02): "내가 남긴 글들도 볼 수 있는 마이페이지라든지 여러 가지가 있으면 좋지 않을까?"
+     모든 페이지 헤더의 '내 정보'가 여기로 온다. 예전 '내 정보' 창(시트)에 있던 별명 바꾸기·로그아웃·탈퇴·
+     다녀온 공연도 이리로 옮겼다 — 같은 일을 하는 곳이 두 군데면 어르신은 어디서 했는지 잊는다.
+     서버 두 갈래:
+       · config.mypage 켜짐 + 013 있음 → member_page() 한 번(객석의 느린 LTE 에서 왕복 한 번) — 글·댓글·노래·도장·건수
+       · 꺼짐 또는 013 없음(404) → 010 의 member_me + board_mine, 공연 모드가 켜졌으면 011 의 gig_my_stamps.
+         013 에만 있는 칸(내 댓글·내 노래)은 '준비하고 있습니다' 한 줄로 비운다 — 지어내지 않는다.
+     숫자는 전부 서버가 센 그대로다(등업 기준도 board_settings 값). 0 이면 0 이라고 쓴다.
+     ================================================================ */
+  var ME = { data: null, at: 0, back: null, seq: 0, from: null };
+
+  function meBox() {
+    if (!sec) return null;
+    var b = sq("#cafe-me");
+    if (!b) {
+      /* 예전 HTML(캐시)에 자리가 없으면 글 보기 바로 뒤에 만든다 — 화면이 비지 않게 */
+      var post = sq("#cafe-post");
+      if (!post || !post.parentNode) return null;
+      b = el("div", "cafe-me");
+      b.id = "cafe-me";
+      b.hidden = true;
+      post.parentNode.insertBefore(b, post.nextSibling);
+    }
+    return b;
+  }
+  function meSec(cls, title, n) {
+    var s = el("section", "me-sec " + cls);
+    var h = el("h4", "me-sec-h", title);
+    if (typeof n === "number") { h.appendChild(document.createTextNode(" ")); h.appendChild(el("span", "me-n", String(n))); }
+    s.appendChild(h);
+    return s;
+  }
+  /* 맨 위 — 돌아갈 길 하나 + 제목. 공연 화면에서 왔으면 공연 화면으로(객석에서 길을 잃지 않게).
+     회원이면 제목이 그 사람의 별명이다('내 정보'는 그 위 작은 머리말) — 화면의 주인이 누구인지가 먼저 보이게 */
+  function meHead(box, nick) {
+    box.textContent = "";
+    var a;
+    if (ME.from) {
+      a = el("a", "cafe-back", t("bd.me.backLive", "← 공연 화면으로"));
+      a.href = ME.from;
+      a.setAttribute("data-router", "off");
+    } else {
+      a = el("a", "cafe-back", t("bd.me.backList", "← 사랑방 목록으로"));
+      a.href = "#b=" + (S.board || "all");
+    }
+    box.appendChild(a);
+    var h = el("h3", "me-h");
+    if (nick) {
+      h.appendChild(el("span", "me-kick", t("bd.me.h", "내 정보")));
+      h.appendChild(el("span", "me-nick-t", nick));
+    } else {
+      h.textContent = t("bd.me.h", "내 정보");
+    }
+    h.id = "me-h";
+    h.setAttribute("tabindex", "-1");
+    box.appendChild(h);
+    return h;
+  }
+  function settleMe(h) {
+    toMenu();
+    alignAfterFonts();
+    if (h) { try { h.focus({ preventScroll: true }); } catch (e) {} }
+  }
+
+  function openMe() {
+    show("me");
+    markTab(null);
+    var box = meBox();
+    if (!box) return;
+    var fr = ssGet(MEFROM);
+    if (fr) {
+      ssDel(MEFROM);
+      if (Date.now() - (fr.at || 0) < 30 * 60e3 && /^\/live(\.html)?(\?|$)/.test(fr.url || "")) ME.from = fr.url;
+    }
+    if (!S.me) { meGate(box, S.net ? "net" : "out"); return; }
+    if (!S.me.joined) { meGate(box, "join"); return; }
+    /* 내 정보에서 연 글을 보고 돌아왔다 — 아까 그린 것을 그대로, 보던 자리로(다시 받으며 맨 위로 튀지 않게) */
+    if (ME.back && ME.data && Date.now() - ME.at < 10 * 60e3) {
+      var y = ME.back.y;
+      ME.back = null;
+      paintMe(box, ME.data);
+      window.scrollTo(0, y);
+      var lh = box.querySelector(".me-h");
+      if (lh) { try { lh.focus({ preventScroll: true }); } catch (e) {} }
+      return;
+    }
+    /* 받아 둔 것이 낡았으면(그 글에서 댓글을 쓰거나 지웠다) 다시 받되, 돌아올 자리는 지킨다 */
+    var backY = ME.back ? ME.back.y : null;
+    ME.back = null;
+    var h = meHead(box);
+    box.appendChild(el("p", "bd-loading", t("bd.loading", "불러오는 중…")));
+    settleMe(h);
+    var y0 = window.scrollY;
+    var seq = ++ME.seq;
+    fetchMe().then(function (res) {
+      if (seq !== ME.seq || S.view !== "me" || !sec || !document.body.contains(sec)) return;
+      /* 다른 페이지에서 라우터로 왔으면 라우터가 훅(이 함수) 뒤에 맨 위로 올리고 h1 에 초점을 준다 — 받은 뒤 다시 맞춘다.
+         그사이 사람이 스크롤했으면 건드리지 않는다 */
+      var ae = document.activeElement;
+      var hadFocus = ae === h || ae === document.body || !!(ae && ae.matches && ae.matches("#main h1"));
+      var still = window.scrollY === 0 || Math.abs(window.scrollY - y0) < 2;
+      if (res.fail) {
+        var r0 = res.fail.reason;
+        if (r0 === "not_logged_in" || r0 === "expired") { S.me = null; renderHM(); emit("state"); meGate(box, "out"); return; }
+        if (r0 === "not_member") { if (S.me) S.me.joined = false; renderHM(); emit("state"); meGate(box, "join"); return; }
+        meGate(box, "net", r0);
+        return;
+      }
+      ME.data = res;
+      ME.at = Date.now();
+      paintMe(box, res);
+      if (backY !== null) window.scrollTo(0, backY);
+      else if (still) toMenu();
+      var nh = box.querySelector(".me-h");
+      if (hadFocus && nh) { try { nh.focus({ preventScroll: true }); } catch (e) {} }
+    });
+  }
+
+  /* 로그인 전 · 가입 전 · 연결 끊김 — 할 수 있는 일 하나만 */
+  function meGate(box, kind, reason) {
+    var h = meHead(box);
+    var p = el("p", "me-gate-t");
+    var b;
+    if (kind === "out") {
+      p.textContent = t("bd.me.out", "내 정보는 회원으로 들어오면 보입니다. 내가 쓴 글과 댓글, 다녀온 공연을 한곳에서 볼 수 있습니다.");
+      b = btn("btn btn--solid me-gate-b", t("hm.in", "로그인 · 회원가입"));
+      b.addEventListener("click", function () { setNext({ what: "me" }); openSheet("start", b); });
+    } else if (kind === "join") {
+      p.textContent = t("bd.me.join", "가입을 마치면 내 정보가 열립니다. 별명만 정하면 됩니다.");
+      b = btn("btn btn--solid me-gate-b", t("bd.doJoin", "가입 마치기"));
+      b.addEventListener("click", function () { setNext({ what: "me" }); openSheet("join", b); });
+    } else {
+      p.textContent = why(reason || "network");
+      b = btn("btn btn--ghost me-gate-b", t("bd.retry", "다시 시도"));
+      b.addEventListener("click", function () {
+        b.disabled = true;
+        loadMe().then(function () { renderHM(); emit("state"); route(); });
+      });
+    }
+    box.appendChild(p);
+    box.appendChild(b);
+    settleMe(h);
+  }
+
+  /* member_me 와 같은 칸을 S.me 에 옮긴다 — 헤더의 별명·등급, 사랑방의 새싹 안내가 같은 값을 쓴다 */
+  function syncMe(r) {
+    if (!S.me) S.me = { ok: true };
+    ["joined", "nickname", "level", "admin", "auto_up", "provider", "joined_at", "posts_ok", "comments_ok", "posts_pending",
+     "need_posts", "need_comments"].forEach(function (k) { if (r.hasOwnProperty(k)) S.me[k] = r[k]; });
+    renderHM();
+    emit("state");
+  }
+  function fetchMe() {
+    if (mypageOn()) {
+      return rpc("member_page", {}, true).then(function (r) {
+        /* 스위치는 켜졌는데 서버에 013 이 없다 — 010 갈래로(이 문서에서는 다시 묻지 않는다) */
+        if (r && r.reason === "not_ready") { S.mp = false; return fetchMe(); }
+        if (!r || !r.ok) return { fail: r || { reason: "network" } };
+        S.mp = true;
+        syncMe(r);
+        return { full: true, p: r };
+      });
+    }
+    return Promise.all([
+      loadMe(),
+      rpc("board_mine", {}, true),
+      liveOn() ? rpc("gig_my_stamps", {}, true) : Promise.resolve(null)
+    ]).then(function (a) {
+      var me = S.me;
+      if (!me) return { fail: { reason: S.net ? "network" : "not_logged_in" } };
+      if (!me.joined) return { fail: { reason: "not_member" } };
+      renderHM();
+      emit("state");
+      var mine = a[1] || {};
+      var p = {};
+      ["nickname", "level", "admin", "auto_up", "provider", "joined_at", "posts_ok", "comments_ok", "posts_pending",
+       "need_posts", "need_comments"].forEach(function (k) { p[k] = me[k]; });
+      var rows = mine.ok ? (mine.rows || []) : [];
+      p.posts = { ok: !!mine.ok, reason: mine.reason, more: false, rows: rows };
+      p.counts = { posts: { total: rows.length } };
+      p.stamps = a[2];
+      return { full: false, p: p };
+    });
+  }
+
+  function paintMe(box, res) {
+    var p = res.p;
+    meHead(box, p.nickname || "");
+    /* 등급 · 가입 경로 · 가입한 날 — 한 줄 */
+    var who = el("p", "me-since");
+    who.appendChild(badge(p.level, p.admin));
+    var since = [];
+    if (p.provider === "kakao") since.push(t("bd.me.kakao", "카카오 계정"));
+    else if (p.provider === "email") since.push(t("bd.me.email", "이메일 계정"));
+    var k = kst(p.joined_at);
+    if (k) since.push(fmt(t("bd.me.sinceF", "{d} 가입"), { d: k.y + "." + k.m + "." + k.d }));
+    if (since.length) who.appendChild(el("span", "me-via", since.join(" · ")));
+    box.appendChild(who);
+    var msg = el("p", "sb-msg me-msg");
+    msg.id = "me-msg";
+    msg.setAttribute("role", "status");
+    msg.setAttribute("aria-live", "polite");
+    box.appendChild(msg);
+    if (p.levelup) say(msg, t("bd.me.levelup", "축하합니다. 방금 정회원이 되었습니다. 이제 글과 댓글이 바로 올라갑니다."), "ok");
+    box.appendChild(meLevel(p));
+    var st = meStamps(p);
+    if (st) box.appendChild(st);
+    if (res.full) box.appendChild(meSong(p));
+    box.appendChild(mePosts(p, res.full));
+    if (res.full) box.appendChild(meCmts(p));
+    else box.appendChild(el("p", "form-hint me-soon", t("bd.me.soon", "내 댓글 모아 보기와 '내 노래' 고르기는 준비하고 있습니다.")));
+    box.appendChild(meNick(p));
+    box.appendChild(meAcct(p, res.full));
+  }
+
+  /* 등급 — 새싹(자동 등업)만 숫자를 보인다. 운영자가 정한 새싹에게 '몇 개 더'는 거짓 약속이다(자동 등업이 없다) */
+  function meLevel(p) {
+    var s = meSec("me-lv", t("bd.me.lvH", "등급"));
+    var line = el("p", "me-line");
+    s.appendChild(line);
+    if (p.admin) {
+      line.textContent = t("bd.noteStaff", "운영자로 들어와 있습니다. 글과 댓글이 바로 올라갑니다.");
+      var adm = el("a", "me-go", t("bd.toAdmin", "운영 화면 열기"));
+      adm.href = "admin.html";
+      adm.setAttribute("data-router", "off");
+      s.appendChild(adm);
+      return s;
+    }
+    if (p.level === "member") { line.textContent = t("bd.me.member", "정회원입니다. 글과 댓글이 바로 올라갑니다."); return s; }
+    if (p.level === "blocked") { line.textContent = why("blocked"); return s; }
+    if (p.auto_up === false) { line.textContent = t("bd.me.byStaff", "새싹 회원입니다. 등급은 운영자가 정합니다."); return s; }
+    var NP = p.need_posts || 0, NC = p.need_comments || 0;
+    line.textContent = fmt(t("bd.me.sproutF", "새싹 회원입니다. 운영자 확인을 거쳐 공개된 글 {p}개와 댓글 {c}개가 모이면 정회원이 되어, 글과 댓글이 바로 올라갑니다."), { p: NP, c: NC });
+    var ul = el("ul", "me-prog");
+    [[t("bd.me.pOk", "공개된 글"), p.posts_ok || 0, NP], [t("bd.me.cOk", "공개된 댓글"), p.comments_ok || 0, NC]].forEach(function (x) {
+      var li = el("li", "me-prog-i");
+      li.appendChild(el("span", "me-prog-l", x[0]));
+      li.appendChild(el("span", "me-prog-n", x[1] >= x[2] ? fmt(t("bd.me.doneF", "{n}개 · 채웠습니다"), { n: x[1] }) : x[1] + " / " + x[2]));
+      var bar = el("span", "me-bar");
+      bar.setAttribute("aria-hidden", "true");
+      var fill = el("i");
+      fill.style.width = Math.round(Math.min(1, x[2] ? x[1] / x[2] : 1) * 100) + "%";
+      bar.appendChild(fill);
+      li.appendChild(bar);
+      ul.appendChild(li);
+    });
+    s.appendChild(ul);
+    if (p.posts_pending) s.appendChild(el("p", "form-hint", fmt(t("bd.me.pendF", "확인을 기다리는 글 {n}개는 공개되면 셉니다."), { n: p.posts_pending })));
+    return s;
+  }
+
+  /* 다녀온 공연 — 도장은 나에게만 보인다. 공연 모드 전(011 없음)이면 칸 자체가 없다 */
+  function meStamps(p) {
+    var st = p.stamps;
+    if (!st || !st.ok) return null;
+    var rows = st.rows || [];
+    if (!rows.length && !liveOn()) return null;
+    var s = meSec("me-stamps bd-stamps", t("bd.stampsH", "다녀온 공연"), rows.length);
+    if (!rows.length) {
+      s.appendChild(el("p", "me-empty", t("bd.me.noStamp", "아직 찍은 도장이 없습니다. 공연장에서 QR로 들어와 도장을 찍으면 여기에 남습니다.")));
+      return s;
+    }
+    var ul = el("ul", "bd-stamps-l");
+    rows.forEach(function (x) {
+      var k = kst(x.starts_at || x.at);
+      var li = el("li", "bd-stamp-mini");
+      li.appendChild(el("span", "bd-stamp-d", k ? k.y + "." + k.m + "." + k.d : ""));
+      li.appendChild(el("span", "bd-stamp-v", (isEN() && x.venue_en) || x.venue_ko || x.venue || x.title_ko || x.title || ""));
+      ul.appendChild(li);
+    });
+    s.appendChild(ul);
+    return s;
+  }
+
+  /* 내 노래 — 가입 질문의 답. 고르기·바꾸기·지우기(답은 선택). 다른 회원에게는 보이지 않는다(운영 화면만) */
+  function meSong(p) {
+    var s = meSec("me-song", t("bd.me.songH", "내 노래"));
+    s.appendChild(el("p", "form-hint me-song-d", t("bd.me.songD", "좋아하는 인순이 노래 한 곡입니다. 다른 회원에게는 보이지 않습니다.")));
+    var cur = el("p", "me-song-cur");
+    var acts = el("div", "me-song-acts");
+    var pick = el("div", "me-song-pick");
+    pick.id = "me-song-pick";
+    pick.hidden = true;
+    var msg = msgNode();
+    s.appendChild(cur);
+    s.appendChild(acts);
+    s.appendChild(pick);
+    s.appendChild(msg);
+    var song = p.song || null;
+    var pickB;
+    function paint() {
+      cur.textContent = "";
+      if (song) {
+        cur.appendChild(el("span", "me-song-t", "「" + song.title + "」"));
+        if (song.year) cur.appendChild(el("span", "me-song-y", String(song.year)));
+      } else {
+        cur.appendChild(el("span", "me-song-none", t("bd.me.noSong", "아직 고르지 않았습니다.")));
+      }
+      acts.textContent = "";
+      pickB = btn("btn btn--ghost btn--sm me-song-b", song ? t("bd.me.songChange", "다른 노래로 바꾸기") : t("bd.me.songPick", "노래 고르기"));
+      pickB.setAttribute("aria-controls", pick.id);
+      pickB.setAttribute("aria-expanded", "false");
+      pickB.addEventListener("click", function () {
+        pick.hidden = false;
+        pickB.setAttribute("aria-expanded", "true");
+        say(msg, "");
+        try { picker.input.focus(); } catch (e) {}
+      });
+      acts.appendChild(pickB);
+      if (song) {
+        var clr = btn("bd-link me-song-clr", t("bd.me.songClear", "지우기"));
+        clr.addEventListener("click", function () { save(null); });
+        acts.appendChild(clr);
+      }
+    }
+    function close() {
+      pick.hidden = true;
+      picker.reset();
+      if (pickB) pickB.setAttribute("aria-expanded", "false");
+    }
+    var picker = songPicker({ id: "me-song-q", label: t("bd.me.songFind", "노래 제목으로 찾기"), onPick: function (x) { save(x); } });
+    pick.appendChild(picker.node);
+    var cancel = btn("bd-link", t("bd.me.songCancel", "그만두기"));
+    cancel.addEventListener("click", function () { close(); try { pickB.focus(); } catch (e) {} });
+    pick.appendChild(cancel);
+    function save(x) {
+      say(msg, t("bd.me.saving", "저장하는 중…"));
+      rpc("member_set_song", { p_song: x ? x.t : "" }, true).then(function (r) {
+        if (r && r.ok) {
+          song = r.song ? { k: r.song.k, title: r.song.title, year: r.song.year } : null;
+          if (ME.data && ME.data.p) ME.data.p.song = song;
+          close();
+          paint();
+          say(msg, song ? fmt(t("bd.me.songOkF", "내 노래: 「{t}」 — 저장했습니다."), { t: song.title }) : t("bd.me.songCleared", "내 노래를 지웠습니다."), "ok");
+          try { pickB.focus(); } catch (e) {}
+          return;
+        }
+        if (r && r.reason === "not_ready") S.mp = false;
+        say(msg, r && r.reason === "bad_song" ? t("bd.e.badSong", "목록에 있는 노래만 고를 수 있습니다.") : why(r && r.reason), "bad");
+      });
+    }
+    paint();
+    return s;
+  }
+
+  function stLabel(st) {
+    return st === "pending" ? t("bd.st.pending", "확인 중") : st === "rejected" ? t("bd.st.rejected", "내려짐") : t("bd.st.approved", "공개");
+  }
+  function stBadge(st) { return el("span", "bd-badge me-st me-st--" + (st === "pending" || st === "rejected" ? st : "approved"), stLabel(st)); }
+  /* 내가 쓴 글 한 줄 — 제목 · 날짜 / 상태 · 게시판 · 댓글 수(남들이 보는 숫자) · 공연 방명록이면 공연 이름. 누르면 그 글 */
+  function meRow(x) {
+    var li = el("li", "cafe-row me-row");
+    li.setAttribute("data-id", x.id);
+    var a = el("a", "cafe-link");
+    a.href = "#p" + x.id;
+    a.appendChild(el("span", "cafe-title", x.title));
+    a.appendChild(timeEl(x.created_at, when(x.created_at)));
+    var by = el("span", "cafe-by");
+    by.appendChild(stBadge(x.status));
+    by.appendChild(dot());
+    by.appendChild(el("span", "cafe-tag", boardName(x.board)));
+    if (x.comments) { by.appendChild(dot()); by.appendChild(el("span", "cafe-cn", fmt(t("bd.cmtN", "댓글 {n}"), { n: x.comments }))); }
+    if (x.gig && (x.gig.title_ko || x.gig.code)) {
+      by.appendChild(dot());
+      by.appendChild(el("span", "cafe-gig", (isEN() && x.gig.title_en) || x.gig.title_ko || x.gig.code));
+    }
+    a.appendChild(by);
+    li.appendChild(a);
+    return li;
+  }
+  /* 내 댓글 한 줄 — 본문 · 날짜 / 상태 · 어느 글. 그 글을 지금 볼 수 없으면(남의 글이 내려졌거나 다시 확인 중) 링크하지 않는다 */
+  function meCRow(x) {
+    var li = el("li", "cafe-row me-row me-crow");
+    li.setAttribute("data-c", x.id);
+    var a = el(x.post_visible ? "a" : "div", x.post_visible ? "cafe-link" : "cafe-link me-gone");
+    if (x.post_visible) a.href = "#p" + x.post_id;
+    a.appendChild(el("span", "cafe-title me-cbody", x.body));
+    a.appendChild(timeEl(x.created_at, when(x.created_at)));
+    var by = el("span", "cafe-by");
+    by.appendChild(stBadge(x.status));
+    by.appendChild(dot());
+    by.appendChild(el("span", "me-on", x.post_visible
+      ? fmt(t("bd.me.onF", "‘{t}’에 단 댓글"), { t: x.post_title || "" })
+      : t("bd.me.onGone", "지금은 볼 수 없는 글에 단 댓글")));
+    a.appendChild(by);
+    li.appendChild(a);
+    return li;
+  }
+  /* 목록 칸 하나(글·댓글 공용) — 첫 쪽은 받은 것, '더 보기'는 서버에 다음 쪽(013) 또는 받아 둔 것에서 20개씩(010 board_mine 은 최근 100개) */
+  function meList(o) {
+    var s = meSec(o.cls, o.title, o.ok ? o.total : undefined);
+    var m = el("p", "sb-msg me-lmsg");
+    m.setAttribute("role", "status");
+    if (!o.ok) { s.appendChild(m); say(m, why(o.reason), "bad"); return s; }
+    var ol = el("ol", "cafe-rows me-rows");
+    s.appendChild(ol);
+    var more = btn("btn btn--ghost me-more", t("sb.more", "더 보기"));
+    var shown = 0;
+    function add(rows) {
+      var first = null;
+      rows.forEach(function (x) { var li = o.row(x); if (!first) first = li; ol.appendChild(li); });
+      return first;
+    }
+    function focusNew(li) { var a = li && li.querySelector("a, .cafe-link"); if (a && a.focus) { if (!a.hasAttribute("href")) a.setAttribute("tabindex", "-1"); try { a.focus({ preventScroll: true }); } catch (e) {} } }
+    if (o.page) {
+      add(o.rows);
+      more.hidden = !o.more;
+      more.addEventListener("click", function () {
+        var last = o.rows.length ? o.rows[o.rows.length - 1].id : null;
+        more.disabled = true;
+        say(m, "");
+        rpc(o.page, { p_before: last, p_limit: 20 }, true).then(function (r) {
+          more.disabled = false;
+          if (!r || !r.ok) { say(m, why(r && r.reason), "bad"); return; }
+          var rows = r.rows || [];
+          Array.prototype.push.apply(o.rows, rows);    /* 받아 둔 것(ME.data)에도 더한다 — 글을 보고 돌아와도 그대로 */
+          o.setMore(!!r.more);
+          more.hidden = !r.more;
+          focusNew(add(rows));
+        });
+      });
+    } else {
+      var step = function () { var li = add(o.rows.slice(shown, shown + 20)); shown = Math.min(o.rows.length, shown + 20); more.hidden = shown >= o.rows.length; return li; };
+      step();
+      more.addEventListener("click", function () { focusNew(step()); });
+    }
+    if (!o.rows.length) {
+      var e = el("p", "me-empty", o.empty);
+      s.appendChild(e);
+      if (o.emptyGo) s.appendChild(o.emptyGo);
+    }
+    s.appendChild(more);
+    s.appendChild(m);
+    return s;
+  }
+  function mePosts(p, full) {
+    var posts = p.posts || { ok: false };
+    var go2 = null;
+    if (canWrite()) {
+      go2 = el("a", "me-go", t("bd.me.firstPost", "첫 글 쓰기 →"));
+      go2.href = "#write";
+    }
+    return meList({
+      cls: "me-posts", title: t("bd.me.postsH", "내가 쓴 글"), ok: !!posts.ok, reason: posts.reason,
+      total: full && p.counts && p.counts.posts ? p.counts.posts.total : (posts.rows || []).length,
+      rows: posts.rows || [], more: !!posts.more, page: full ? "member_my_posts" : null,
+      setMore: function (v) { posts.more = v; }, row: meRow,
+      empty: t("bd.me.noPost", "아직 쓴 글이 없습니다."), emptyGo: go2
+    });
+  }
+  function meCmts(p) {
+    var c = p.comments || { ok: false };
+    return meList({
+      cls: "me-cmts", title: t("bd.me.cmtsH", "내 댓글"), ok: !!c.ok, reason: c.reason,
+      total: p.counts && p.counts.comments ? p.counts.comments.total : (c.rows || []).length,
+      rows: c.rows || [], more: !!c.more, page: "member_my_comments",
+      setMore: function (v) { c.more = v; }, row: meCRow,
+      empty: t("bd.me.noCmt", "아직 남긴 댓글이 없습니다.")
+    });
+  }
+
+  /* 별명 바꾸기 — 테두리 단추는 '별명 저장' 하나, 별명을 고쳤을 때만 눌린다(검토 8번) */
+  function meNick(p) {
+    var s = meSec("me-nickx", t("bd.rename", "별명 바꾸기"));
+    var f = el("form", "bd-aform me-nickf");
+    /* enterkeyhint — 자판의 엔터 자리에 '완료'가 보여 그것으로도 저장된다는 것을 알 수 있게(검토 4바퀴 14번) */
+    f.appendChild(field("bd-mn", t("bd.me.newNick", "새 별명"), "text", { maxlength: "12", required: "", autocomplete: "nickname", enterkeyhint: "done" }));
+    f.appendChild(el("p", "form-hint", t("bd.nickHint", "2~12자 · 한글·영문·숫자. '인순이'·'운영자'처럼 오해를 부르는 이름은 쓸 수 없습니다.")));
+    var go2 = btn("btn btn--ghost btn--sm", t("bd.saveNick", "별명 저장"), "submit");
+    f.appendChild(go2);
+    var m = msgNode();
+    f.appendChild(m);
+    var inp = $("#bd-mn", f);
+    inp.value = p.nickname || "";
+    function dirty() { go2.disabled = inp.value.trim() === (p.nickname || ""); }
+    inp.addEventListener("input", dirty);
+    /* 자판이 올라와도 칸과 '별명 저장'이 함께 보이게(공용 맞춤, 검토 4바퀴 14번) */
+    kbBind(inp, function () { return go2; });
+    dirty();
+    f.addEventListener("submit", function (e) {
+      e.preventDefault();
+      go2.disabled = true;
+      rpc("member_rename", { p_nickname: inp.value }, true).then(function (r) {
+        go2.disabled = false;
+        if (r && r.ok) {
+          p.nickname = r.nickname || inp.value.trim().replace(/\s+/g, " ");
+          inp.value = p.nickname;
+          if (S.me) S.me.nickname = p.nickname;
+          var nt = sec && sq("#cafe-me .me-nick-t");
+          if (nt) nt.textContent = p.nickname;
+          say(m, t("bd.nickOk", "별명을 바꿨습니다."), "ok");
+          dirty();
+          S.rowsBoard = null;    /* 목록의 내 글 줄에 새 별명이 보이게 — 목록으로 돌아가면 다시 받는다 */
+          loadMe().then(function () { renderHM(); emit("state"); });
+        } else {
+          say(m, why(r && r.reason), "bad");
+          dirty();
+        }
+      });
+    });
+    s.appendChild(f);
+    return s;
+  }
+
+  /* 로그아웃 · 탈퇴(확인 두 번) — 글자 링크. 끝나면 사랑방 목록으로, 무슨 일이 있었는지 한 줄 */
+  function meAcct(p, full) {
+    var row2 = el("div", "bd-me-acts me-acts");
+    var m = msgNode();
+    function leaveTo(text) {
+      S.me = null; ME.data = null; S.rowsBoard = null;
+      renderHM(); emit("state");
+      S.flash = text; S.flashKind = "ok";
+      go("#b=" + (S.board || "all"));
+    }
+    if (!p.admin) {
+      row2.appendChild(el("p", "form-hint bd-leave-note", liveOn()
+        ? (full ? t("bd.leaveNoteLiveSong", "탈퇴하면 글·댓글·도장·응원·투표 기록과 내 노래가 함께 지워집니다.")
+                : t("bd.leaveNoteLive", "탈퇴하면 글·댓글·도장·응원·투표 기록이 함께 지워집니다."))
+        : (full ? t("bd.leaveNoteSong", "탈퇴하면 글·댓글과 내 노래가 함께 지워집니다.")
+                : t("bd.leaveNote", "탈퇴하면 글·댓글이 함께 지워집니다."))));
+    }
+    var out = btn("bd-link", t("bd.logout", "로그아웃"));
+    out.addEventListener("click", function () {
+      out.disabled = true;
+      Auth.signOut().then(function () {
+        forgetDevice();
+        leaveTo(t("bd.loggedOut", "로그아웃했습니다."));
+      });
+    });
+    row2.appendChild(out);
+    if (!p.admin) {
+      var sp = el("span", "bd-dot", "·");
+      sp.setAttribute("aria-hidden", "true");
+      row2.appendChild(sp);
+      var leave = btn("bd-link bd-leave", t("bd.leave", "탈퇴하기"));
+      leave.addEventListener("click", function () {
+        if (!window.confirm(t("bd.leaveQ1", "탈퇴하면 쓰신 글과 댓글이 모두 지워지고 되돌릴 수 없습니다. 탈퇴할까요?"))) return;
+        if (!window.confirm(t("bd.leaveQ2", "정말 탈퇴할까요? 이 확인이 마지막입니다."))) return;
+        leave.disabled = true;
+        rpc("member_leave", {}, true).then(function (r) {
+          leave.disabled = false;
+          if (r && r.ok) {
+            clearS(); forgetDevice();
+            leaveTo(r.partial
+              ? t("bd.leftPartial", "글·댓글·회원 정보를 지웠습니다. 로그인 계정 삭제는 운영자에게 요청해 주세요.")
+              : t("bd.left", "탈퇴했습니다. 쓰신 글과 댓글도 모두 지웠습니다."));
+          } else say(m, why(r && r.reason), "bad");
+        });
+      });
+      row2.appendChild(leave);
+    }
+    row2.appendChild(m);
+    return row2;
   }
 
   /* ================================================================
@@ -1845,13 +2753,26 @@
     var vv = window.visualViewport;
     var squeezed = vv && vv.height && vv.height < window.innerHeight * 0.75;
     var wrap = f.closest(".form-field") || f;
+    /* 가입 마치기 — 주 단추가 창 아래에 붙어 있다(.bd-jfoot sticky). 칸이 그 띠 위로 보이게만 맞춘다.
+       노래 찾기 칸은 결과가 아래로 펼쳐지므로 창 위쪽에 붙여 결과 자리를 넓힌다 */
+    var jf = f.closest("form") && f.closest("form").querySelector(".bd-jfoot");
+    if (jf && box.scrollHeight > box.clientHeight + 1 && getComputedStyle(jf).position === "sticky") {
+      var bt0 = box.getBoundingClientRect().top, fr = f.getBoundingClientRect(), ft = jf.getBoundingClientRect().top;
+      if (f.closest(".bd-songp")) { box.scrollTop += f.closest(".bd-songp").getBoundingClientRect().top - bt0 - 12; return; }
+      if (fr.bottom > ft - 8) box.scrollTop += fr.bottom - (ft - 8);
+      else if (fr.top < bt0 + 8) box.scrollTop -= bt0 + 8 - fr.top;
+      return;
+    }
     if (squeezed && box.scrollHeight > box.clientHeight + 1) {
       var bt = box.getBoundingClientRect().top;
-      var top = wrap.getBoundingClientRect().top - bt;
+      /* 기준은 칸의 라벨(wrap)이 아니라 칸 자신 — 라벨까지 함께 넣으려다 320×568·21px(자판 260)에서 '가입 마치기'가
+         자판 뒤(302)로 갔고, 이메일 칸에서는 '로그인하기'가 340 이었다(검토 3바퀴 26번). 칸과 단추가 함께 들어가면
+         단추 아랫변을 창 아래 8px 에, 안 들어가면 칸을 창 위쪽에 붙인다 */
+      var top = f.getBoundingClientRect().top - bt;
       var form = f.closest("form");
       var go = form ? form.querySelector(".btn--solid, button[type=submit]") : null;
       var bottom = go ? go.getBoundingClientRect().bottom - bt : 0;
-      if (go && bottom > top && bottom - top <= box.clientHeight - 16) box.scrollTop += bottom - (box.clientHeight - 8);
+      if (go && bottom > top && bottom - top <= box.clientHeight - 8) box.scrollTop += bottom - (box.clientHeight - 8);
       else box.scrollTop += top - 8;
     } else if (wrap.scrollIntoView) {
       wrap.scrollIntoView({ block: "nearest" });
@@ -1914,6 +2835,8 @@
   function openSheet(view, from, note, opts) {
     view = view || "start";
     if (!boardOn()) return;
+    /* '내 정보'는 창이 아니라 화면이다(community.html#me) — 옛 부름이 남아 있어도 그리로 */
+    if (view === "me") { goMe(); return; }
     /* 공연 화면에서 열리는 창은 어디서 불렀든(헤더 입구·로그인 왕복 뒤의 가입 마치기·카카오 실패 안내)
        공연 문맥이다 — 경고와 함께 열 때 공연 제목이 빠지던 것(검토 32번) */
     opts = opts || {};
@@ -1927,6 +2850,7 @@
     sheetOpts = opts;
     var h = sheet.querySelector(".bd-sheet-h"), body = sheet.querySelector(".bd-sheet-body");
     body.textContent = "";
+    sheet.__gs = null;
     var builder = VIEWS[view] || VIEWS.start;
     builder(h, body, note, opts);
     if (byId("bd-sheet-lede") && sheet.contains(byId("bd-sheet-lede"))) sheet.setAttribute("aria-describedby", "bd-sheet-lede");
@@ -1976,13 +2900,141 @@
     return a;
   }
 
+  /* ---------- 노래 고르기(가입 질문 · 내 정보 공용) ----------
+     자유 입력을 받지 않는다 — songs.json 의 103곡(서버 013 의 member_song_choices 와 같은 목록)에서만.
+     찾기 칸 + 결과 단추 다섯 개. 자판의 '이동'(Enter)은 첫 결과를 고르고 가입 폼을 보내지 않는다. */
+  function loadSongs() {
+    if (S.songsP) return S.songsP;
+    S.songsP = fetch("assets/data/songs.json").then(function (r) { return r.json(); }).then(function (d) {
+      return ((d && d.songs) || []).map(function (x) { return { k: x.k, t: x.t, y: x.y }; }).filter(function (x) { return x.t; });
+    })["catch"](function () { S.songsP = null; return []; });
+    return S.songsP;
+  }
+  /* 띄어쓰기·문장부호를 빼고 견준다 — '거위의꿈'·'거위의 꿈'·'거위 의꿈' 이 같은 노래 */
+  function songKey(s) { return String(s || "").toLowerCase().replace(/[\s'"’‘“”.,!?·~()\[\]「」『』\-]/g, ""); }
+  function songMatch(list, q) {
+    var k = songKey(q);
+    if (!k) return [];
+    var head = [], mid = [];
+    list.forEach(function (x) {
+      var a = songKey(x.t), b = songKey(x.k);
+      if (a.indexOf(k) === 0 || b.indexOf(k) === 0) head.push(x);
+      else if (a.indexOf(k) > 0 || b.indexOf(k) > 0) mid.push(x);
+    });
+    return head.concat(mid);
+  }
+  var SONG_MAX = 5;
+  function songPicker(o) {
+    var w = el("div", "bd-songp");
+    var lab = el("label", "bd-songp-l" + (o.srLabel ? " sr-only" : ""), o.label);
+    lab.setAttribute("for", o.id);
+    var inp = el("input");
+    inp.id = o.id;
+    inp.type = "search";
+    inp.setAttribute("autocomplete", "off");
+    inp.setAttribute("enterkeyhint", "search");
+    inp.setAttribute("placeholder", t("bd.songPh", "제목 한두 글자로 찾기"));
+    var ul = el("ul", "bd-songp-r");
+    ul.id = o.id + "-r";
+    var st = el("p", "form-hint bd-songp-s");
+    st.id = o.id + "-s";
+    st.setAttribute("role", "status");
+    st.setAttribute("aria-live", "polite");
+    var idle = o.hint || t("bd.songHint", "제목 한두 글자만 적어도 찾아 드립니다.");
+    st.textContent = idle;
+    inp.setAttribute("aria-describedby", st.id);
+    inp.setAttribute("aria-controls", ul.id);
+    var seq = 0;
+    function paint() {
+      var my = ++seq, q = inp.value;
+      loadSongs().then(function (L) {
+        if (my !== seq) return;
+        ul.textContent = "";
+        if (!songKey(q)) { st.textContent = idle; return; }
+        if (!L.length) { st.textContent = t("bd.songNoList", "노래 목록을 불러오지 못했습니다. 잠시 뒤 다시 찾아 주세요."); return; }
+        var hit = songMatch(L, q);
+        hit.slice(0, SONG_MAX).forEach(function (x) {
+          var li = el("li");
+          var b = btn("bd-songp-o");
+          b.appendChild(el("span", "bd-songp-t", x.t));
+          if (x.y) b.appendChild(el("span", "bd-songp-y", String(x.y)));
+          b.addEventListener("click", function () {
+            inp.value = "";
+            ul.textContent = "";
+            st.textContent = idle;
+            o.onPick(x);
+          });
+          li.appendChild(b);
+          ul.appendChild(li);
+        });
+        st.textContent = !hit.length ? t("bd.songNone", "목록에 없는 제목입니다. 다른 글자로 찾아 주세요.")
+          : hit.length > SONG_MAX ? fmt(t("bd.songManyF", "{n}곡 중 {m}곡을 보여 드립니다. 글자를 더 적으면 좁혀집니다."), { n: hit.length, m: SONG_MAX })
+          : fmt(t("bd.songFoundF", "{n}곡을 찾았습니다."), { n: hit.length });
+      });
+    }
+    inp.addEventListener("input", paint);
+    inp.addEventListener("focus", function () { loadSongs(); });
+    inp.addEventListener("keydown", function (e) {
+      if (e.key !== "Enter") return;
+      e.preventDefault();                 /* 가입 폼을 보내지 않는다 */
+      var b = ul.querySelector("button");
+      if (b) b.click();
+    });
+    w.appendChild(lab);
+    w.appendChild(inp);
+    w.appendChild(ul);
+    w.appendChild(st);
+    return {
+      node: w, input: inp,
+      reset: function () { inp.value = ""; ul.textContent = ""; st.textContent = idle; seq++; }
+    };
+  }
+  /* 가입 질문 '좋아하는 인순이 노래 (선택)' — 형님 결정: 질문 1개, 답은 선택.
+     공연장(/live)에서는 접어 둔다 — 객석에서 가입은 30초 안에 끝나야 한다(펼치면 그때 고른다).
+     고르면 칸 대신 '고른 노래 「…」 · 다시 고르기'. 가입이 된 뒤에 저장한다(member_set_song) */
+  function songQuestion(fold) {
+    var chosen = null;
+    var w = el(fold ? "details" : "div", "bd-songq");
+    var q = t("bd.songQ", "좋아하는 인순이 노래 (선택)");
+    if (fold) w.appendChild(el("summary", "bd-songq-h", t("bd.songQFold", "좋아하는 인순이 노래도 알려 주실래요? (선택)")));
+    var body = el("div", "bd-songq-b");
+    var pk = songPicker({ id: "bd-js", label: q, srLabel: fold,
+      hint: t("bd.songQHint", "건너뛰어도 가입이 됩니다. 고르시면 내 정보에 '내 노래'로 남습니다."),
+      onPick: function (x) { chosen = x; paint(); } });
+    var pickedP = el("p", "bd-songq-c");
+    pickedP.hidden = true;
+    body.appendChild(pk.node);
+    body.appendChild(pickedP);
+    w.appendChild(body);
+    function paint() {
+      pickedP.textContent = "";
+      pk.node.hidden = !!chosen;
+      pickedP.hidden = !chosen;
+      if (!chosen) return;
+      pickedP.appendChild(el("span", "bd-songq-cl", t("bd.songPicked", "고른 노래")));
+      pickedP.appendChild(el("span", "bd-songq-ct", "「" + chosen.t + "」"));
+      if (chosen.y) pickedP.appendChild(el("span", "bd-songp-y", String(chosen.y)));
+      var again = btn("bd-link", t("bd.songAgain", "다시 고르기"));
+      again.addEventListener("click", function () { chosen = null; paint(); try { pk.input.focus(); } catch (e) {} });
+      pickedP.appendChild(again);
+      try { again.focus({ preventScroll: true }); } catch (e) {}
+    }
+    return { node: w, value: function () { return chosen; } };
+  }
+
   var VIEWS = {
     start: function (h, body, note, opts) {
       var gig = opts.ctx === "gig";
       /* 카카오가 방금(10분 안) 끝나지 못했다 — 같은 실패 경로를 맨 위 노란 단추로 다시 권하지 않는다(검토 29·32번) */
       var kFail = !!opts.kakaoFail || kakaoFailRecent();
       sheet.__note = note;
-      h.textContent = gig ? t("bd.sheetHGig", "도장을 남기려면 회원으로 들어와 주세요") : t("bd.sheetH", "로그인 · 회원가입");
+      /* 공연 화면에서 무엇을 누르고 왔는지(gig.js needMember 의 why) — 응원·투표를 누른 사람에게 '도장을 남기려면'이라고
+         하지 않는다. 가입을 마치면 누른 것과 도장이 함께 된다(gig.js runNext)는 사실 그대로(검토 3바퀴 15번) */
+      var wy = gig ? opts.why : "";
+      /* 창 제목·첫 문장은 창을 연 목적과 지금 단계에 맞춘다(WCAG 2.4.6) — 방명록을 남기려는 사람에게, 또 도장이 닫힌 뒤
+         (집에서 방명록·끝난 공연)나 열리기 전에 '도장을 남기려면'이라고 하면 사실과 다른 안내다(검토 4바퀴 12번) */
+      var ph = gig ? gigPhase() : "";
+      h.textContent = !gig ? t("bd.sheetH", "로그인 · 회원가입") : gigStartH(wy, ph);
       if (opts.alert) {
         var al = alertNode(opts.alert);
         al.tabIndex = -1;      /* 첫 초점을 여기 — 무슨 일이 있었는지 먼저 읽고 Tab 으로 이메일 쪽으로 간다 */
@@ -1994,10 +3046,12 @@
       var kakaoTop = kakao && !kFail;
       /* 공연 문맥: 도장이 무엇을 남기는지 먼저(혜택은 지어내지 않는다, 검토 43번). 카카오가 없으면
          없는 카카오를 권하지 않는다(검토 26·33·49번) */
-      lede(body, note || (gig ? (kakaoTop ? t("bd.sheetLedeGig", "도장을 찍으면 오늘 다녀온 공연이 내 정보에 남습니다. 카카오로 시작하면 가장 빠릅니다.")
-                                          : t("bd.sheetLedeGigMail", "도장을 찍으면 오늘 다녀온 공연이 내 정보에 남습니다. 이메일로 가입하거나, 이미 회원이면 로그인해 주세요."))
+      lede(body, note || (gig ? gigStartLede(wy, ph, kakaoTop)
                               : liveOn() ? t("bd.sheetLedeLive", "글쓰기·댓글·공연 도장은 회원만 할 수 있습니다. 읽기는 누구나 됩니다.")
                                          : t("bd.sheetLede", "글쓰기와 댓글은 회원만 할 수 있습니다. 읽기는 누구나 됩니다.")));
+      /* 공연 단계를 아직 모를 때(공연 화면이 서버 답을 받기 전 — 카카오 왕복 직후 등) 연 창은 단계가 정해지면 제목·첫 문장을
+         그 자리에서 고친다(syncGigSheet). 창을 새로 그리지 않는다 — 초점·입력이 그대로 남게 */
+      sheet.__gs = gig ? { view: "start", wy: wy, ph: ph, kt: kakaoTop, note: !!note } : null;
       if (!st) {
         /* 설정을 받는 중 — 창은 바로 띄우고(누른 반응이 늦으면 다시 누른다) 도착하면 채운다 */
         body.appendChild(el("p", "form-hint bd-wait", t("bd.wait", "잠시만요…")));
@@ -2048,7 +3102,7 @@
       var foldMail = gig && kakaoTop;
       /* 공연 문맥의 이메일 '처음 가입'은 카카오가 실제로 있을 때만 숨긴다 — 카카오가 꺼졌거나 방금 실패했으면
          처음 온 관객이 가입할 길이 하나도 없었다(검토 26·33·49번) */
-      var canUp = st.signup && !(gig && conf().liveEmail !== true && kakaoTop);
+      var canUp = st.signup && !(gig && conf().liveEmail !== true && kakaoTop && !opts.kakaoBack);
 
       if (kakaoTop && !foldMail) {
         body.appendChild(kakaoBlock(false));
@@ -2145,7 +3199,7 @@
             $("#bd-up", f).value = ""; $("#bd-up2", f).value = "";
             if (!r.ok) { say(m, why(r.reason), "bad"); return; }
             if (r.session) { afterLogin(); return; }
-            openSheet("sent", null, t("bd.sentUp2", "확인 메일을 보냈습니다. 메일함(스팸함도)을 열어 링크를 눌러 주세요. 이미 가입하신 주소라면 메일이 가지 않으니, 로그인하시거나 비밀번호 찾기를 눌러 주세요."));
+            openSheet("sent", null, t("bd.sentUp3", "메일함(스팸함도)을 열어 메일 안의 링크를 눌러 주세요. 이미 가입하신 주소라면 메일이 가지 않으니, 로그인하시거나 비밀번호 찾기를 눌러 주세요."), { email: em, kind: "signup" });
           });
         });
         pane.appendChild(f);
@@ -2183,20 +3237,36 @@
       body.appendChild(f);
     },
 
-    sent: function (h, body, note) {
+    sent: function (h, body, note, opts) {
       h.textContent = t("bd.sentH", "메일을 확인해 주세요");
+      /* 어디로 · 어떤 메일이 갔는지 — 입력한 주소를 다시 보여 주지 않았고, 커스텀 SMTP 가 없는 지금 메일은
+         Supabase 기본 영어 양식이라 한국어 메일을 찾는 분은 지나쳤다(검토 3바퀴 13번). 양식이 한국어로 바뀌면
+         config.mailKo = true 로 영어 안내를 끈다 */
+      if (opts && opts.email) {
+        var to = el("p", "bd-sent-to");
+        var parts = fmt(t("bd.mailSentTo", "{email} 로 보냈습니다"), { email: "\u0000" }).split("\u0000");
+        to.appendChild(document.createTextNode(parts[0] || ""));
+        to.appendChild(el("strong", null, opts.email));
+        to.appendChild(document.createTextNode(parts[1] || ""));
+        body.appendChild(to);
+      }
       lede(body, note || "");
-      /* 메일이 오지 않을 때 갈 길 — 이미 가입한 주소, 스팸함, 다른 방법 */
-      var row2 = el("div", "bd-me-acts");
-      var li = btn("btn btn--ghost btn--sm", t("bd.toLogin", "로그인하기"));
+      if (opts && opts.kind === "signup") {
+        if (conf().mailKo !== true) body.appendChild(el("p", "form-hint bd-sent-what", t("bd.mailSentWhat", "제목이 영어 「Confirm Your Signup」, 보낸 사람 「Supabase Auth」인 메일입니다. 안의 「Confirm your mail」을 눌러 주세요.")));
+        body.appendChild(el("p", "form-hint bd-sent-same", t("bd.mailSentSame", "가입한 이 기기·이 브라우저에서 열어야 바로 이어집니다.")));
+      }
+      /* 주 단추는 '닫기' 하나 — 메일을 기다리는 사람에게 첫 단추가 '로그인하기'면 잘못 온 줄 알았다.
+         메일이 오지 않을 때 갈 길(이미 가입한 주소·비밀번호)은 글자 단추로 그 아래에 */
+      var ok = btn("btn btn--solid bd-wide", t("bd.close", "닫기"));
+      ok.addEventListener("click", closeSheet);
+      body.appendChild(ok);
+      var row2 = el("div", "bd-me-acts bd-sent-acts");
+      var li = btn("btn btn--text", t("bd.toLogin", "로그인하기"));
       li.addEventListener("click", function () { openSheet("start", null); });
-      var fg = btn("btn btn--ghost btn--sm", t("bd.forgotShort", "비밀번호 찾기"));
+      var fg = btn("btn btn--text", t("bd.forgotShort", "비밀번호 찾기"));
       fg.addEventListener("click", function () { openSheet("recover", null); });
       row2.appendChild(li); row2.appendChild(fg);
       body.appendChild(row2);
-      var ok = btn("bd-link", t("bd.close", "닫기"));
-      ok.addEventListener("click", closeSheet);
-      body.appendChild(ok);
     },
 
     newpw: function (h, body) {
@@ -2259,21 +3329,45 @@
       a2.appendChild(c2);
       a2.appendChild(el("span", null, t("bd.age", "만 14세 이상입니다")));
       f.appendChild(a2);
-      cAll.addEventListener("change", function () { c1.checked = c2.checked = cAll.checked; });
-      function syncAll() { cAll.checked = c1.checked && c2.checked; }
+      /* 동의 오류는 동의 칸 바로 아래 — 주 단추 아래(m)에 쓰면 360×640·21px 에서 화면 밖(788–853)이었고 초점만 위로
+         튀었다. 공연 가입이 '눌러도 화면만 튀는' 상태였다(검토 3바퀴 18번) */
+      var agErr = el("p", "bd-ferr");
+      agErr.id = "bd-jerr";
+      agErr.setAttribute("role", "status");
+      f.appendChild(agErr);
+      function agClear() {
+        [c1, c2].forEach(function (c) { if (c.checked) { c.removeAttribute("aria-invalid"); c.removeAttribute("aria-describedby"); } });
+        if (c1.checked && c2.checked) agErr.textContent = "";
+      }
+      cAll.addEventListener("change", function () { c1.checked = c2.checked = cAll.checked; agClear(); });
+      function syncAll() { cAll.checked = c1.checked && c2.checked; agClear(); }
       c1.addEventListener("change", syncAll);
       c2.addEventListener("change", syncAll);
       var nf = field("bd-jn", t("bd.nick", "별명"), "text", { maxlength: "12", required: "", autocomplete: "nickname" });
       nf.classList.add("bd-nickf");
       f.appendChild(nf);
+      /* 50~60대는 카카오 이름이 실명인 경우가 많다 — 객석에서 서둘러 가입하면 실명이 공개 방명록·사랑방에 그대로 오른다.
+         그 사실을 칸 바로 아래에서 말한다. 칸을 비워 두지는 않는다(가입이 한 단계 더 어려워진다, 검토 4바퀴 20번) */
       f.appendChild(el("p", "form-hint", suggest
-        ? t("bd.nickSuggest", "카카오 별명을 그대로 쓸까요? 고쳐도 됩니다.")
+        ? t("bd.nickSuggest", "카카오 이름이 그대로 들어왔습니다. 방명록·사랑방에 이 이름으로 보이니, 실명이면 다른 별명을 권합니다.")
         : t("bd.nickHint", "2~12자 · 한글·영문·숫자. '인순이'·'운영자'처럼 오해를 부르는 이름은 쓸 수 없습니다.")));
-      /* 주 단추는 마지막 입력칸 바로 아래 — 자판이 올라와도 칸과 단추가 함께 보이게 */
-      var go2 = btn("btn btn--solid bd-wide", gig ? t("bd.doJoinGig", "가입 마치고 도장 찍기") : t("bd.doJoin", "가입 마치기"), "submit");
-      f.appendChild(go2);
+      /* 가입 질문 하나 — 좋아하는 인순이 노래(선택). 013 이 켜졌을 때만(없는 함수에 답을 맡기지 않는다) */
+      var songQ = mypageOn() ? songQuestion(gig) : null;
+      if (songQ) f.appendChild(songQ.node);
+      /* 주 단추는 창 아래에 붙는다(.bd-jfoot, position: sticky) — 별명·노래 어느 칸에서 자판이 올라와도
+         '가입 마치기'가 보이는 창 맨 아래에 남는다. 별명 오류(m)도 단추 바로 아래 같은 띠 안에 */
+      var foot = el("div", "bd-jfoot");
+      /* 단추는 실제로 이어질 일을 말한다 — 도장이 열려 있지 않은데(시작 전·방명록만·끝남) '가입 마치고 도장 찍기'라고 하면
+         가입해도 도장이 없어 '뭐가 잘못됐나' 한다(검토 4바퀴 18번). 방명록 단추로 왔으면 방명록을 말한다.
+         무엇을 하러 왔는지는 창을 연 쪽(why)이, 카카오 왕복 뒤라면 적어 둔 '이어서 할 일'이 안다 */
+      var nx = lsGet(NKEY);
+      var wyj = (gig && (opts.why || (nx && samePath(nx.path, location.pathname) && Date.now() - (nx.at || 0) < NEXT_TTL && nx.what))) || "";
+      var go2 = btn("btn btn--solid bd-wide", joinGoText(gig, wyj, gigPhase()), "submit");
+      sheet.__gs = gig ? { view: "join", wy: wyj, ph: gigPhase(), btn: go2 } : null;
+      foot.appendChild(go2);
       var m = msgNode();
-      f.appendChild(m);
+      foot.appendChild(m);
+      f.appendChild(foot);
       var need = (S.me && S.me.need_posts) || 3, needc = (S.me && S.me.need_comments) || 5;
       f.appendChild(el("p", "form-hint bd-lvinfo",
         t("bd.lvInfo1", "새싹으로 시작합니다. 운영자 확인을 거쳐 올라간 글 ") + need + t("bd.lvInfo2", "개와 댓글 ") + needc +
@@ -2301,135 +3395,35 @@
       if (suggest) $("#bd-jn", f).value = S.me.suggest;
       f.addEventListener("submit", function (e) {
         e.preventDefault();
-        if (!c1.checked) { say(m, why("need_agree"), "bad"); c1.focus(); return; }
-        if (!c2.checked) { say(m, why("need_age"), "bad"); c2.focus(); return; }
+        if (!c1.checked || !c2.checked) {
+          agErr.textContent = why(!c1.checked ? "need_agree" : "need_age");
+          [c1, c2].forEach(function (c) {
+            if (!c.checked) { c.setAttribute("aria-invalid", "true"); c.setAttribute("aria-describedby", agErr.id); }
+          });
+          var fc = !c1.checked ? c1 : c2;
+          try { fc.focus({ preventScroll: true }); } catch (e2) { fc.focus(); }
+          /* 칸과 문구가 함께 보이게 — 창(.bd-sheet-box) 안에서 필요한 만큼만 */
+          if (agErr.scrollIntoView) agErr.scrollIntoView({ block: "nearest" });
+          if (fc.closest("label").scrollIntoView) fc.closest("label").scrollIntoView({ block: "nearest" });
+          return;
+        }
         go2.disabled = true;
         rpc("member_join", { p_nickname: $("#bd-jn", f).value, p_agree: true, p_age14: true }, true).then(function (r) {
+          /* 가입이 된 뒤에만, 고른 노래가 있을 때만 — 노래 저장이 실패해도 가입은 그대로다(내 정보에서 다시 고른다) */
+          var pick = songQ && songQ.value();
+          if (!(r && r.ok && pick)) return r;
+          return rpc("member_set_song", { p_song: pick.t }, true).then(function (sr) {
+            if (sr && sr.reason === "not_ready") S.mp = false;
+            if (!(sr && sr.ok)) S.songNote = t("bd.songLater", "좋아하는 노래는 저장하지 못했습니다. 내 정보에서 다시 고를 수 있습니다.");
+            return r;
+          });
+        }).then(function (r) {
           go2.disabled = false;
-          if (r && (r.ok || r.reason === "already")) { afterLogin(); return; }
+          if (r && (r.ok || r.reason === "already")) { afterLogin(null, r.ok ? "join" : null); return; }
           if (r && (r.reason === "not_logged_in" || r.reason === "expired")) { S.me = null; renderHM(); openSheet("start", null, why(r.reason)); return; }
           say(m, why(r && r.reason), "bad");
         });
       });
-    },
-
-    me: function (h, body) {
-      var me = S.me || {};
-      h.textContent = t("bd.meH", "내 정보");
-      if (!S.me && S.net) {
-        /* H6 — 열쇠는 있는데 서버에 닿지 못했다. '로그아웃됐다'고 하지 않는다 */
-        lede(body, why("network"));
-        var again = btn("btn btn--ghost bd-wide", t("bd.retry", "다시 시도"));
-        again.addEventListener("click", function () {
-          again.disabled = true;
-          loadMe().then(function () {
-            renderHM(); emit("state");
-            var st = hmState();
-            openSheet(st === "H6" ? "me" : hmView(st), null);
-          });
-        });
-        body.appendChild(again);
-        return;
-      }
-      var top = el("p", "bd-me-top");
-      top.appendChild(author(me.nickname, me.level, me.admin));
-      body.appendChild(top);
-      lede(body,
-        me.admin ? t("bd.noteStaff", "운영자로 들어와 있습니다. 글과 댓글이 바로 올라갑니다.")
-        : me.level === "member" ? t("bd.noteMember", "정회원입니다. 글과 댓글이 바로 올라갑니다.")
-        : me.level === "blocked" ? why("blocked")
-        : t("bd.meSprout", "새싹 회원입니다. ") + progressText(me));
-      if (me.admin) {
-        var adm = el("a", "btn btn--ghost btn--sm bd-wide", t("bd.toAdmin", "운영 화면 열기"));
-        adm.href = "admin.html";
-        body.appendChild(adm);
-      }
-      /* 다녀온 공연(공연 모드가 켜진 뒤에만) — 도장은 나에게만 보인다 */
-      if (liveOn()) {
-        var stamps = el("div", "bd-stamps");
-        stamps.hidden = true;
-        body.appendChild(stamps);
-        rpc("gig_my_stamps", {}, true).then(function (r) {
-          var rows = r && r.ok ? (r.rows || []) : [];
-          if (!rows.length) return;
-          stamps.appendChild(el("h3", "bd-stamps-h", t("bd.stampsH", "다녀온 공연")));
-          var ul = el("ul", "bd-stamps-l");
-          rows.forEach(function (x) {
-            var k = kst(x.starts_at || x.at);
-            var li = el("li", "bd-stamp-mini");
-            li.appendChild(el("span", "bd-stamp-d", k ? k.y + "." + k.m + "." + k.d : ""));
-            li.appendChild(el("span", "bd-stamp-v", (isEN() && x.venue_en) || x.venue_ko || x.venue || x.title || ""));
-            ul.appendChild(li);
-          });
-          stamps.appendChild(ul);
-          stamps.hidden = false;
-        });
-      }
-      var f = el("form", "bd-aform");
-      f.appendChild(field("bd-mn", t("bd.rename", "별명 바꾸기"), "text", { maxlength: "12", required: "" }));
-      var go2 = btn("btn btn--ghost btn--sm", t("bd.saveNick", "별명 저장"), "submit");
-      f.appendChild(go2);
-      var m = msgNode();
-      f.appendChild(m);
-      $("#bd-mn", f).value = me.nickname || "";
-      /* 같은 모양 테두리 단추 둘(별명 저장·로그아웃)이 위아래로 서서 무엇이 주 행동인지 몰랐다(검토 8번) —
-         '별명 저장'은 별명을 고쳤을 때만 눌린다 */
-      function dirty() { go2.disabled = $("#bd-mn", f).value.trim() === (me.nickname || ""); }
-      $("#bd-mn", f).addEventListener("input", dirty);
-      dirty();
-      f.addEventListener("submit", function (e) {
-        e.preventDefault();
-        go2.disabled = true;
-        rpc("member_rename", { p_nickname: $("#bd-mn", f).value }, true).then(function (r) {
-          go2.disabled = false;
-          if (r && r.ok) {
-            say(m, t("bd.nickOk", "별명을 바꿨습니다."), "ok");
-            me.nickname = $("#bd-mn", f).value.trim();
-            dirty();
-            loadMe().then(function () { renderHM(); emit("state"); refreshCafe(); });
-          }
-          else say(m, why(r && r.reason), "bad");
-        });
-      });
-      body.appendChild(f);
-      var row2 = el("div", "bd-me-acts");
-      var out = btn("bd-link", t("bd.logout", "로그아웃"));
-      out.addEventListener("click", function () {
-        Auth.signOut().then(function () {
-          forgetDevice();
-          S.me = null; renderHM(); emit("state"); closeSheet(); refreshCafe();
-          welcome(t("bd.loggedOut", "로그아웃했습니다."));
-        });
-      });
-      if (!me.admin) {
-        row2.appendChild(el("p", "form-hint bd-leave-note", liveOn()
-          ? t("bd.leaveNoteLive", "탈퇴하면 글·댓글·도장·응원·투표 기록이 함께 지워집니다.")
-          : t("bd.leaveNote", "탈퇴하면 글·댓글이 함께 지워집니다.")));
-      }
-      row2.appendChild(out);
-      if (!me.admin) {
-        var sep = el("span", "bd-dot", "·");
-        sep.setAttribute("aria-hidden", "true");
-        row2.appendChild(sep);
-        var leave = btn("bd-link bd-leave", t("bd.leave", "탈퇴하기"));
-        leave.addEventListener("click", function () {
-          if (!window.confirm(t("bd.leaveQ1", "탈퇴하면 쓰신 글과 댓글이 모두 지워지고 되돌릴 수 없습니다. 탈퇴할까요?"))) return;
-          if (!window.confirm(t("bd.leaveQ2", "정말 탈퇴할까요? 이 확인이 마지막입니다."))) return;
-          leave.disabled = true;
-          rpc("member_leave", {}, true).then(function (r) {
-            leave.disabled = false;
-            if (r && r.ok) {
-              clearS(); forgetDevice(); S.me = null;
-              renderHM(); emit("state"); closeSheet(); refreshCafe();
-              welcome(r.partial
-                ? t("bd.leftPartial", "글·댓글·회원 정보를 지웠습니다. 로그인 계정 삭제는 운영자에게 요청해 주세요.")
-                : t("bd.left", "탈퇴했습니다. 쓰신 글과 댓글도 모두 지웠습니다."));
-            } else say(m, why(r && r.reason), "bad");
-          });
-        });
-        row2.appendChild(leave);
-      }
-      body.appendChild(row2);
     }
   };
 
@@ -2489,10 +3483,14 @@
     ["#bd-title", "#bd-body"].forEach(function (q) {
       sq(q).addEventListener("input", function () {
         counter();
+        if (sq(q).getAttribute("aria-invalid")) fieldErr(sq(q), "");
         clearTimeout(dt);
         dt = setTimeout(draftSave, 400);
       });
     });
+    /* 폰에서 내용 칸을 누르면 자판이 올라온다 — 칸과 '올리기'를 머리 아래 ~ 자판 위에 함께(공용 kbBind, 검토 4바퀴 2·11번).
+       예전 맞춤은 자판이 없어도 굴려서 '고치기'로 들어오면 제목·닫기가 머리 밑에 숨었다 */
+    kbBind(sq("#bd-body"), function () { return sq("#bd-go"); });
     sq("#bd-pick").addEventListener("change", function () { markPick(); markTab(boardVal()); draftSave(); });
     /* 목록의 글·편지를 누르는 순간 — 돌아올 자리(게시판·줄·스크롤)를 적어 둔다 */
     sec.addEventListener("click", function (e) {
@@ -2500,6 +3498,12 @@
       if (!a || !sec.contains(a)) return;
       var href = a.getAttribute("href") || "";
       if (!/^#[pl]\d+$/.test(href)) return;
+      /* 내 정보의 내가 쓴 글·내 댓글 — '← 내 정보로' 돌아올 길과 스크롤만 적는다(목록의 돌아올 줄은 건드리지 않는다) */
+      if (a.closest("#cafe-me")) {
+        S.trail = { from: "#me", to: href };
+        ME.back = { y: Math.round(window.scrollY) };
+        return;
+      }
       var li = a.closest("[data-id]");
       ssSet(BKEY, { board: S.board, id: li ? li.getAttribute("data-id") : null, y: Math.round(window.scrollY) });
       S.trail = { from: location.hash, to: href };
@@ -2549,7 +3553,16 @@
     /* 로그인 창이 바로 뜨도록 — 단추에 손가락이 닿는 순간 회원 설정을 미리 받는다 */
     prefetch: function () { if (S.open) prefetchSettings(); },
     /* 카카오 단추를 권할 수 있는가(스위치 켜짐 · 방금 실패하지 않음) — 공연 화면의 안내 문구가 쓴다 */
-    kakao: function () { return kakaoOn() && !kakaoFailRecent(); }
+    kakao: function () { return kakaoOn() && !kakaoFailRecent(); },
+    /* 이어서 할 일이 남아 있는가(지우지 않고 보기만) — 공연 화면이 인사를 그 결과와 한 문장으로 묶을 때 */
+    hasNext: function (whats) {
+      var n = lsGet(NKEY);
+      return !!n && (!n.path || samePath(n.path, location.pathname)) && Date.now() - (n.at || 0) <= NEXT_TTL && (!whats || whats.indexOf(n.what) >= 0);
+    },
+    /* 자판 맞춤(공용) — 공연 화면의 방명록 글칸·공연 코드 칸 */
+    kbFit: function (f, btnOf) { kbBind(f, btnOf); },
+    /* 공연 화면이 단계를 새로 알았다 — 열린 회원 창의 제목·첫 문장·가입 단추를 그 단계에 맞춘다 */
+    gigChanged: function () { syncGigSheet(); }
   };
 
   window.INSOONI_PAGE_INIT = window.INSOONI_PAGE_INIT || [];

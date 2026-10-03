@@ -281,7 +281,9 @@ body:not(.home) .site-header { background: var(--scrim); -webkit-backdrop-filter
 @media (max-width: 480px) {
   .header-inner { gap: .6rem; padding: 0 14px; min-height: 64px; }
   .brand .brand-en { font-size: 16px; }
-  .lang-toggle { min-height: 44px; padding: 6px 6px; font-size: 12.5px; }
+  /* 12.5px 고정이면 [가] 로 글자를 키워도 EN 만 그대로였다(검토 3바퀴 25번) — rem 으로. 넘치면 board.js fitHM 이
+     EN 을 메뉴 패널로 옮긴다(.hdr-tight) */
+  .lang-toggle { min-height: 44px; padding: 6px; font-size: .74rem; }
   .nav-toggle { width: 44px; height: 44px; }
   .main-nav { inset: 64px 0 auto 0; }
 }
@@ -1328,9 +1330,12 @@ button.strip-item:focus-visible { outline: 2px solid var(--focus); outline-offse
 /* 메뉴 오버레이: 비욘세 실측 보정 (순흑, 하단 메타) */
 @media (max-width: 1080px) {
   .main-nav { background: #000; }
+  /* ©는 목록 아래 흐름 안에 — position:absolute; bottom:26px 이면 낮은 화면(375×667)에서 해밀학교와 사랑방
+     사이에 떠 목록의 끝처럼 보였고 '사랑방'은 화면 밖이었다. 9px 은 12px 미만 금지에도 어긋났다(검토 3바퀴 28번) */
   .main-nav.open::after {
-    content: "\00a9 2026 INSOONI"; position: absolute; left: 0; right: 0; bottom: 26px;
-    text-align: center; font-family: var(--font-mono); font-size: 9px;
+    content: "\00a9 2026 INSOONI"; position: static; display: block; flex: none;
+    margin: 1.4rem 0 calc(26px + env(safe-area-inset-bottom));
+    text-align: center; font-family: var(--font-mono); font-size: .76rem;
     letter-spacing: var(--track-label); color: var(--faint);
   }
   .main-nav a:hover, .main-nav a[aria-current="page"] { color: #fff; text-decoration: underline; text-underline-offset: 6px; }
@@ -2483,7 +2488,7 @@ button.sr-row .sr-play { color: var(--gold); }
   transition: opacity .45s ease;
 }
 @media (hover: none), (pointer: coarse) { .strip-hint { display: inline-flex; } }
-.strip.is-touched .strip-hint { opacity: 0; }
+.strip.is-touched .strip-hint, body.strip-touched .strip-hint { opacity: 0; }
 .sh-arrow { display: inline-block; animation: sh-nudge 1.6s ease-in-out 3; }
 @keyframes sh-in { from { opacity: 0; transform: translateX(-50%) translateY(6px); } }
 @keyframes sh-nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(7px); } }
@@ -3036,7 +3041,7 @@ body.home .section::before, body.home .section--band::before { display: none; }
 }
 .fs-toggle:hover { color: var(--ivory); }
 .fs-toggle .fs-a { font-size: 1rem; }
-.fs-toggle .fs-b { font-size: .78rem; opacity: .55; margin-left: .12em; }
+.fs-toggle .fs-b { font-size: .78rem; opacity: .8; margin-left: .12em; }   /* .55 는 #080808 위 3.26:1(검토 3바퀴 24번) */
 html[data-fs="2"] .fs-toggle .fs-b, html[data-fs="3"] .fs-toggle .fs-b { opacity: 1; }
 .header-tools { display: flex; align-items: center; gap: .5rem; }
 
@@ -3857,12 +3862,12 @@ html.bd-lock, html.bd-lock body { overflow: hidden; }
 .bd-kakao:hover { filter: brightness(.97); }
 .bd-kakao:disabled { opacity: .6; cursor: wait; }
 .bd-kakao-mark { width: 20px; height: 20px; fill: #000; flex: none; }
-.bd-or { display: flex; align-items: center; gap: .8rem; margin: 1.2rem 0 1rem; color: var(--faint); font-size: .88rem; }
+.bd-or { display: flex; align-items: center; gap: .8rem; margin: 1.2rem 0 1rem; color: var(--muted); font-size: .88rem; }
 .bd-or::before, .bd-or::after { content: ""; flex: 1; border-top: 1px solid var(--line); }
 .bd-tabs { display: flex; border-bottom: 1px solid var(--line-strong); margin-bottom: 1rem; }
 .bd-tab {
   flex: 1; min-height: 48px; background: none; border: 0; border-bottom: 2px solid transparent;
-  color: var(--faint); font: inherit; font-size: 1rem; cursor: pointer;
+  color: var(--muted); font: inherit; font-size: 1rem; cursor: pointer;
 }
 .bd-tab[aria-pressed="true"] { color: var(--ivory); border-bottom-color: var(--ivory); font-weight: 700; }
 .bd-aform .btn { margin-top: .3rem; }
@@ -3954,15 +3959,13 @@ body.home .site-header:not(.scrolled) .header-tools button { color: var(--ivory)
   text-underline-offset: .28em; text-shadow: 0 1px 12px rgba(8, 8, 8, .65);
 }
 .hm:hover { color: var(--ivory); text-decoration-color: var(--ivory); }
-.hm-nick {
-  display: inline-block; max-width: 7em; overflow: hidden; text-overflow: ellipsis; vertical-align: bottom;
-  /* inline-block 에는 부모(.hm)의 밑줄이 전파되지 않는다 — 'inherit' 은 .hm-long 의 none 을 물려받아
-     별명에서 밑줄이 끊겼다(검토 6번). 같은 밑줄을 직접 긋는다 */
-  text-decoration-line: underline; text-decoration-thickness: 1px; text-decoration-color: rgba(243, 239, 231, .5); text-underline-offset: .28em;
-}
-.hm:hover .hm-nick { text-decoration-color: var(--ivory); }
+/* 별명·등급·'내 정보'는 한 입구다 — 밑줄은 단추(.hm) 하나에서 이어져 내려온다(검토 4바퀴 9번).
+   예전에는 별명을 inline-block(말줄임)으로 두고 따로 밑줄을 그어, 별명과 '새싹 · 내 정보'가 두 토막(링크 둘)으로 읽혔다.
+   별명은 글자 흐름(inline) 그대로 두고, 긴 별명은 board.js 가 8자에서 '…'로 줄인다(전체 별명은 aria-label 에).
+   등급 앞 간격도 margin 이 아니라 공백 글자 — margin 은 밑줄을 끊는다 */
+.hm-nick { display: inline; }
 /* 등급은 굵기로만 물러난다 — 홈 첫 화면의 밝은 화보 위에서 --faint 는 2.62:1 이었다(H8 실측, 글자만 투명으로) */
-.hm-lv { color: inherit; font-weight: 400; margin-left: .3em; }
+.hm-lv { color: inherit; font-weight: 400; }
 .hm .hm-short, .hm .hm-tiny { display: none; }
 .hm.is-short .hm-long { display: none; }
 .hm.is-short .hm-short { display: inline; }
@@ -4002,6 +4005,32 @@ body.home .site-header:not(.scrolled) .header-tools button { color: var(--ivory)
     border: 0; border-top: 1px solid var(--line); background: none; color: var(--ivory); text-shadow: none;
     font: 600 1rem/1.3 var(--font-body); letter-spacing: 0; text-transform: none;
   }
+}
+/* 360~414px × 큰 글자에서도 헤더 오른쪽(☰)이 화면 밖으로 밀리면 — board.js fitHM 이 '로그인'으로 줄이고도 넘칠 때
+   html.hdr-tight 를 건다. EN 을 메뉴 패널 맨 아래 줄로(≤359px 와 같은 자리), 공연 머리는 꼬리 줄로(검토 3바퀴 27번) */
+@media (max-width: 1080px) {
+  .hdr-tight .site-header .header-tools .lang-toggle { display: none; }
+  /* 그래도 빠듯하면(영어 'My page' × 320px × 21px — ☰ right 317) 도구 사이 간격을 줄인다. 누르는 칸 크기는 그대로 */
+  .hdr-tight .site-header .header-tools { gap: .25rem; }
+  .hdr-tight .site-header .header-inner { gap: .4rem; }
+  .hdr-tight .main-nav .nav-lang {
+    display: flex; align-items: center; justify-content: center; flex: none; width: 100%; min-height: 56px; padding: 0;
+    border: 0; border-top: 1px solid var(--line); background: none; color: var(--ivory); text-shadow: none;
+    font: 600 1rem/1.3 var(--font-body); letter-spacing: 0; text-transform: none;
+  }
+  .hdr-tight .gig-head .header-tools .lang-toggle { display: none; }
+  .hdr-tight body[data-page="live"] .gig-tail .gig-tail-lang { display: inline-flex; }
+}
+/* 낮은 폰(아이폰 SE 375×667 등) — 메뉴 패널 안 '사랑방'(마지막 줄)이 화면 밖(634–703)이었다. 공연을 마치고 사랑방으로
+   가려는 사람에게 가장 필요한 줄이다(검토 3바퀴 28번). 줄 높이를 48px(누르는 칸 기준 이상)로, 회원 입구를 56px 로 */
+@media (max-width: 1080px) and (max-height: 760px) {
+  .nav-member { padding: .3rem 2.4rem; }
+  .nav-member-b { min-height: 56px; }
+  .main-nav a { min-height: 48px; padding-block: .55rem; }
+  .main-nav ul { gap: 0; }
+}
+@media (max-width: 1080px) {
+  .main-nav > ul > li:last-child { padding-bottom: .4rem; }
 }
 
 /* 로그인하고 돌아왔을 때 — 헤더 아래 한 줄. 모션 없이 5초 뒤 비워진다(비면 크기 0) */
@@ -4137,16 +4166,17 @@ body[data-page="community"] #board { padding-top: 0; }
   }
 }
 /* 폰(≤560px): 여섯 칸이 전부 보이는 격자(3×2 · 큰 글자에서는 2×3). 옆으로 밀어야 보이는 탭은
-   어르신에게 '없는 게시판'이다. 칸 사이 1px 은 바탕(--line)이 비쳐 만든다 — 테두리 상자를 그리지 않는다.
+   어르신에게 '없는 게시판'이다. 칸 사이 1px 격자선은 사방이 막힌 상자 표로 보였다(검토 3바퀴 31번) —
+   선은 아래 한 줄(탭 줄의 끝)만, 지금 칸은 아래 3px 막대.
    42조합(폭 320~540 × 글자 17·19·21 × ko·en) 실측 통과 — 외톨이 칸 0, 단어 중간 줄바꿈 0 */
 @media (max-width: 560px) {
   .cafe-menu {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(max(5.6em, calc((100% - 2px) / 3)), 1fr));
-    gap: 1px; background: var(--line); border: 1px solid var(--line); overflow: visible;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(max(5.6em, calc(100% / 3)), 1fr));
+    gap: 0; background: none; border: 0; border-bottom: 1px solid var(--line-strong); overflow: visible;
   }
   .cafe-menu a {
     display: flex; align-items: center; justify-content: center; text-align: center; min-height: 52px; padding: .45rem .35rem;
-    background: var(--void); color: var(--muted); font: 600 .95rem/1.3 var(--font-body); letter-spacing: 0;
+    background: none; color: var(--muted); font: 600 .95rem/1.3 var(--font-body); letter-spacing: 0;
     word-break: keep-all; overflow-wrap: anywhere; white-space: normal; text-decoration: none;
   }
   .cafe-menu a[aria-current] { color: var(--ivory); font-weight: 700; box-shadow: inset 0 -3px 0 var(--ivory); }
@@ -4164,8 +4194,11 @@ body[data-page="community"] .cafe-menu a:focus-visible { outline-offset: -3px; }
 /* 폰에서는 숨은 단추의 자리가 설명을 4줄로 접었다(편지 게시판 실측) — 자리를 비우고 설명이 한 폭을 쓴다.
    줄 높이는 min-height 가 지킨다 */
 @media (max-width: 560px) {
-  .cafe-tools:has(.bd-write.is-off) { grid-template-columns: 1fr; }
-  .cafe-tools .bd-write.is-off { display: none; }
+  /* 쓸 수 없는 게시판(공지·편지)에서도 단추 자리는 남긴다 — 단추가 빠지면 도구줄이 게시판마다 72~133px 로 달라
+     첫 글의 줄이 탭을 누를 때마다 최대 61px 출렁였다(검토 3바퀴 32번). 설명도 두 줄 자리를 잡는다(말줄임 없이 —
+     편지 게시판의 '손대지 않았습니다'는 잘라서는 안 되는 문장이다) */
+  .cafe-tools .bd-write.is-off { display: inline-flex; visibility: hidden; }
+  .cafe-tools .cafe-board-d { min-height: 3.1em; }
   /* 21px 폰에서 단추 옆에 남은 149px(320폭은 94px)에 설명이 6~9줄로 쪼개지고 단어 가운데서 끊겼다(검토 3번) —
      설명이 한 폭을 다 쓰고, 글쓰기는 그 아래 오른쪽(엄지 쪽) */
   .cafe-tools { grid-template-columns: 1fr; }
@@ -4291,6 +4324,15 @@ body[data-page="community"] .cafe-post-title:focus, body[data-page="community"] 
 .cafe-post-meta .bd-when { font: 400 .86rem/1.45 var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: 0; }
 .cafe-post-meta .bd-nick { color: var(--ivory); }
 .cafe-meta-t { white-space: nowrap; }
+/* 큰 글자에서 '· 2026.09.17 16:10' 덩어리가 다음 줄로 넘어가면 줄이 가운뎃점으로 시작했다 — 구분은 간격으로만(검토 3바퀴 38번) */
+.cafe-post-meta { column-gap: .9rem; }
+.cafe-post-meta .bd-dot { display: none; }
+.cafe-lw-i { white-space: nowrap; }
+/* 내 글의 '고치기'·'지우기' — 글자 단추. '지우기'는 한 단계 낮은 색(확인 창은 그대로) */
+.bd-acts { gap: 1.2rem; }
+.bd-acts .btn--text { min-width: 48px; min-height: 48px; padding: 0 .4rem; }
+.bd-acts .bd-del-a { color: var(--muted); }
+.bd-acts .bd-del-a:hover { color: var(--ivory); }
 .cafe-post .bd-body { font-size: 1.06rem; line-height: 1.85; max-width: 40em; margin: 0 0 1.4rem; }
 .cafe-post .bd-cmts { margin-top: 2.4rem; }
 .bd-cmts-h { margin: 0 0 .5rem; font: 700 1rem/1.4 var(--font-body); letter-spacing: 0; }
@@ -4330,7 +4372,8 @@ body[data-page="community"] .cafe-post-title:focus, body[data-page="community"] 
 }
 .bd-form .form-field input[type="text"] { min-height: 48px; font-size: 1.06rem; }
 .bd-form textarea { min-height: 9em; font-size: 1.06rem; line-height: 1.7; }
-@media (max-width: 560px) { .bd-form textarea { min-height: 7.5em; } }
+/* 폰: rows 가 높이를 정해 375×812 에서 '올리기'가 화면 밖(923)이었다(검토 3바퀴 12번) — 높이를 직접. 늘리기는 손으로 */
+@media (max-width: 560px) { .bd-form textarea, body[data-page="community"] #bd-body { height: 7.5em; min-height: 7.5em; resize: vertical; } }
 .bd-form-hint { margin: 0 0 1rem; }
 .bd-count { max-width: none; text-align: right; font-variant-numeric: tabular-nums; }
 .bd-form-acts { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; margin-top: .6rem; }
@@ -4344,6 +4387,17 @@ body[data-page="community"] .sec-h {
 body[data-page="community"] .section-head { margin-bottom: 0; }
 #setlist .lede { font-size: 1rem; line-height: 1.7; color: var(--muted); max-width: 34em; }
 .sl-input { min-height: 48px; font-size: 1.06rem; }
+/* 찾기 칸 — 아래 1px(.12 ≈ 1.3:1)만 있어 칸의 경계가 보이지 않았고 라벨은 화면낭독기 전용이었다(검토 3바퀴 29번) */
+body[data-page="community"] .sl-input { border: 1px solid rgba(243, 239, 231, .42); padding: 0 1rem; width: 100%; max-width: none; }
+body[data-page="community"] .sl-input:focus { border-color: var(--ivory); }
+.sl-input::placeholder, .bd-cform textarea::placeholder { color: var(--faint); opacity: 1; }
+.sl-label { display: block; margin: 0 0 .45rem; font-size: .95rem; line-height: 1.5; color: var(--muted); }
+#sl-tally { width: 100%; max-width: none; }
+/* 폰 — 짧은 게시판(편지 2편) 뒤 신청곡·나가는 길까지 140~180px 씩 비던 여백(검토 3바퀴 36번) */
+@media (max-width: 720px) {
+  body[data-page="community"] #board { padding-bottom: 2.4rem; }
+  body[data-page="community"] #setlist, body[data-page="community"] #sb-doors { padding-top: clamp(2.6rem, 9vw, 3.6rem); padding-bottom: 2.4rem; }
+}
 .sl-live { margin: 1rem 0 0; }
 .sl-live a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ivory); text-underline-offset: .22em; }
 .sb-door-list { border-top: 1px solid var(--line); }
@@ -4414,6 +4468,7 @@ body[data-page="live"] { background: var(--void); }
 .gig-phase { margin: .9rem 0 0; font-size: .95rem; line-height: 1.6; color: var(--ivory); max-width: 34em; }
 .gig-mailnote { margin: .4rem 0 0; font-size: .86rem; line-height: 1.55; color: var(--muted); max-width: 34em; }
 .gig-slow { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; margin: 1rem 0 0; color: var(--muted); font-size: .95rem; }
+#gig-slow-t:empty { display: none; }   /* 문장은 상태 줄(#gig-phase)이 말한다 — 빈 칸이 단추를 1rem 밀지 않게 */
 .gig-retry { min-height: 48px; }
 .gig-off-go { margin: 1rem 0 0; }
 .gig-off-go a, .gig-gb-more a {
@@ -4444,7 +4499,7 @@ body[data-page="live"] { background: var(--void); }
 }
 .gig-count-c { font-size: 1rem; line-height: 1.5; color: var(--ivory); }
 .gig-zero { margin: 0; font-size: 1.06rem; line-height: 1.6; color: var(--ivory); max-width: 30em; }
-.gig-count-note { margin: .7rem 0 0; font-size: .86rem; line-height: 1.55; color: var(--faint); max-width: 34em; }
+.gig-count-note { margin: .7rem 0 0; font-size: .95rem; line-height: 1.55; color: var(--muted); max-width: 34em; }
 
 /* 3. 도장 — 상자 하나, 기울기 -3도. 거위는 사이트의 같은 두 패스(날개 먼저) */
 .gig-stamp {
@@ -4488,7 +4543,8 @@ body[data-page="live"] { background: var(--void); }
   .gig-bar {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 90; margin: 0;
     padding: .75rem max(16px, env(safe-area-inset-right)) calc(.75rem + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
-    background: rgba(8, 8, 8, .96); border-top: 1px solid var(--line);
+    /* 불투명 — 바 안에 실패 문구가 설 때 뒤로 지나가는 글자가 비치지 않게(머리와 같은 이유, 검토 15번) */
+    background: #080808; border-top: 1px solid var(--line);
   }
   #gig-go { width: 100%; min-width: 0; }
   /* 바 높이(56 + 위아래 .75rem + 1px)만큼 몸 아래를 비워 마지막 줄이 바 뒤에 숨지 않게 */
@@ -4502,9 +4558,14 @@ body[data-page="live"] { background: var(--void); }
   body.is-typing .gig-bar, body.gb-in-view .gig-bar { visibility: hidden; }
 }
 
-/* 내 행동의 결과(도장·응원·투표·방명록) — 비면 자리도 없다 */
+/* 내 행동의 결과 — 비면 자리도 없다. 성공 낭독은 #gig-msg, 실패·안내는 누른 자리 곁(검토 3바퀴 10·17번):
+   도장 → 바 안 '도장 찍기' 바로 위(.gig-bar-msg) · 응원·투표 → 그 섹션 끝 · 방명록 → '남기기' 바로 위(.gig-act-msg) */
 .gig-msg { margin: 0; font-size: .95rem; line-height: 1.6; color: var(--ivory); max-width: 34em; }
 .gig-msg:not(:empty) { margin: 0 0 1.2rem; padding: .15rem 0 .15rem 1rem; border-left: 2px solid var(--ivory); }
+.gig-bar-msg { margin: 0; font-size: .95rem; line-height: 1.5; color: var(--ivory); }
+.gig-bar-msg:not(:empty) { margin: 0 0 .5rem; padding-left: 1rem; border-left: 2px solid var(--ivory); }
+.gig-act-msg { margin: 0; font-size: .95rem; line-height: 1.6; color: var(--ivory); max-width: 34em; }
+.gig-act-msg:not(:empty) { margin: .8rem 0 0; padding: .15rem 0 .15rem 1rem; border-left: 2px solid var(--ivory); }
 
 /* 4~6 섹션 — 1px 줄로만 나눈다 */
 .gig-act { padding: 2rem 0; border-top: 1px solid var(--line); }
@@ -4512,7 +4573,8 @@ body[data-page="live"] .gig-act h2 {
   margin: 0 0 .4rem; font: 700 1.25rem/1.35 var(--font-body); letter-spacing: 0; text-transform: none; color: var(--ivory);
 }
 .gig-act-d { margin: 0 0 1rem; font-size: .95rem; line-height: 1.6; color: var(--muted); max-width: 34em; }
-.gig-act-n { margin: -.5rem 0 1rem; font-size: .86rem; line-height: 1.55; color: var(--faint); max-width: 34em; }
+/* 정직성 문구('앵콜곡은 무대에서 정합니다…')는 안내문 — .95rem · muted. 어두운 객석·낮춘 밝기에서 가장 먼저 흐려졌다(검토 3바퀴 22번) */
+.gig-act-n { margin: -.5rem 0 1rem; font-size: .95rem; line-height: 1.55; color: var(--muted); max-width: 34em; }
 
 /* 4. 응원 한마디 — 두 칸 격자, 누른 칸은 테두리만 굵게(채우지 않는다) */
 .gig-chips { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -4535,10 +4597,11 @@ body[data-page="live"] .gig-chip:focus-visible, body[data-page="live"] .gig-song
 .gig-songs { border-top: 1px solid var(--line); }
 .gig-song {
   display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 1rem; row-gap: .55rem;
-  width: 100%; min-height: 60px; padding: .7rem 0 0; border: 0; border-radius: 0;
-  /* 2px 막대는 1px 줄 테두리 13px 위에서 '굵은 구분선'으로 읽혔다(검토 10·41번) — 줄 테두리를 걷고
-     막대 뒤에 전체 폭 트랙(4px · .10)을 깐다. 트랙이 줄을 나누고, 막대는 그 위에서 길이로 읽힌다 */
-  background: linear-gradient(rgba(243, 239, 231, .10), rgba(243, 239, 231, .10)) 0 100% / 100% 4px no-repeat;
+  width: 100%; min-height: 60px; padding: .7rem 0 1.1rem; border: 0; border-radius: 0;
+  /* 줄 테두리는 걷고(검토 10·41번) 막대 뒤에 전체 폭 트랙(2px · .10)을 깐다. 막대(4px·.85)가 줄 바닥에 붙어
+     다음 줄과의 경계선으로 읽혔다(검토 3바퀴 30번) — 2px·.55 로 낮추고 줄 바닥에서 1.1rem 띄운다.
+     트랙의 위치(아래에서 1.1rem)는 줄의 아래 안쪽 여백과 같아야 막대와 겹친다 */
+  background: linear-gradient(rgba(243, 239, 231, .10), rgba(243, 239, 231, .10)) 0 calc(100% - 1.1rem) / 100% 2px no-repeat;
   color: var(--ivory); text-align: left; cursor: pointer; font: inherit; letter-spacing: 0;
   -webkit-tap-highlight-color: transparent;
 }
@@ -4550,7 +4613,7 @@ body[data-page="live"] .gig-chip:focus-visible, body[data-page="live"] .gig-song
 .gig-song-n { font: 400 .95rem/1.4 var(--font-mono); font-variant-numeric: tabular-nums; color: var(--muted); text-align: right; }
 .gig-song-mine { grid-column: 1 / -1; font: 600 .76rem/1.2 var(--font-body); letter-spacing: 0; color: var(--ivory); }
 .gig-song-mine:empty { display: none; }
-.gig-bar-f { grid-column: 1 / -1; justify-self: start; align-self: end; display: block; height: 4px; width: 0; background: rgba(243, 239, 231, .85); box-shadow: none; }
+.gig-bar-f { grid-column: 1 / -1; justify-self: start; align-self: end; display: block; height: 2px; width: 0; background: rgba(243, 239, 231, .55); box-shadow: none; }
 /* 투표와 방명록 사이에 선이 두 번 그어지지 않게 — 마지막 트랙이 경계를 맡는다 */
 #gig-vote:not([hidden]) + #gig-gb { border-top: 0; }
 
@@ -4559,7 +4622,7 @@ body[data-page="live"] .gig-chip:focus-visible, body[data-page="live"] .gig-song
 .gig-gb-list:empty { border-top: 0; margin: 0; }
 .gig-gb-item { padding: .9rem 0; border-bottom: 1px solid var(--line); }
 .gig-gb-body { margin: 0; font-size: 1rem; line-height: 1.65; color: var(--ivory); white-space: pre-line; overflow-wrap: anywhere; }
-.gig-gb-meta { margin: .3rem 0 0; font-size: .86rem; line-height: 1.5; color: var(--faint); }
+.gig-gb-meta { margin: .3rem 0 0; font-size: .86rem; line-height: 1.5; color: var(--muted); }
 .gig-gb-nick { color: var(--muted); font-weight: 600; }
 .gig-gb-t { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 .gig-gb-empty, .gig-gb-note { margin: 0 0 1rem; font-size: .95rem; line-height: 1.6; color: var(--muted); }
@@ -4567,25 +4630,27 @@ body[data-page="live"] .gig-chip:focus-visible, body[data-page="live"] .gig-song
 .gig-gb-join .btn { min-height: 52px; }
 .gig-gb-form { margin: 1.6rem 0 0; }
 .gig-gb-form label { display: block; margin: 0 0 .3rem; font: 700 1rem/1.4 var(--font-body); letter-spacing: 0; }
-.gig-starts { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 .6rem; }
+/* 시작 문장은 한 폭의 세로 목록 — 글자 길이대로 157/166/185px 로 들쭉날쭉하던 상자(검토 3바퀴 34번).
+   밑줄 글자로 바꾸지 않는다: 어르신에게 '다른 화면으로 가는 링크'로 읽혔다(검토 42번) */
+.gig-starts { display: flex; flex-direction: column; gap: 8px; margin: 0 0 .9rem; }
 .gig-starts-h { margin: 0 0 .5rem; }
 /* 밑줄 글자는 어르신에게 '다른 화면으로 가는 링크'로 읽혔다(검토 42번) — 응원 칸과 같은 테두리 칸, 앞에 '+ '.
    채우지 않는다(채운 단추는 '남기기' 하나) */
 body[data-page="live"] .gig-start {
-  display: inline-flex; align-items: center; min-height: 48px; padding: 0 .9rem;
+  display: flex; align-items: center; width: 100%; min-height: 48px; padding: 0 .9rem; text-align: left;
   border: 1px solid var(--line-strong); background: none; color: var(--ivory);
   font: 600 .95rem/1.3 var(--font-body); text-decoration: none;
 }
 body[data-page="live"] .gig-start:hover { border-color: var(--ivory); text-decoration: none; }
 #gig-gb-ta {
-  display: block; width: 100%; min-height: 6.5em; padding: .8em 1em; resize: vertical;
+  display: block; width: 100%; min-height: 5em; padding: .8em 1em; resize: vertical;
   font: inherit; font-size: 1.06rem; line-height: 1.6; color: var(--ivory);
   background: var(--void); border: 1px solid var(--line-strong); border-radius: 0;
 }
 #gig-gb-ta:focus { border-color: var(--ivory); }
 .gig-gb-count { margin: .3rem 0 0; text-align: right; font: 400 .86rem/1.4 var(--font-mono); font-variant-numeric: tabular-nums; color: var(--faint); max-width: none; }
-.gig-gb-hint { margin: .4rem 0 .8rem; }
-.gig-gb-go { min-height: 52px; min-width: 9rem; }
+.gig-gb-hint { margin: 0 0 .8rem; }
+.gig-gb-go { min-height: 52px; min-width: 9rem; margin-top: .8rem; }
 @media (max-width: 560px) { .gig-gb-go { width: 100%; } }
 .gig-gb-more { margin: 1.2rem 0 0; }
 .gig-gb-done { margin: 1.6rem 0 0; padding: .15rem 0 .15rem 1rem; border-left: 2px solid var(--ivory); font-size: 1rem; line-height: 1.6; color: var(--ivory); }
@@ -4607,12 +4672,254 @@ body[data-page="live"] .gig-off-go a, body[data-page="live"] .gig-gb-more a, .bd
 @media (max-width: 359px) { body[data-page="live"] .gig-tail .gig-tail-lang { display: inline-flex; } }
 
 
+/* ── 칸 오류(사랑방 글쓰기 · 회원 창 가입 동의) — 그 칸 바로 아래. 비면 자리도 없다(검토 3바퀴 18번) ── */
+.bd-ferr { margin: .45rem 0 0; padding: .1rem 0 .1rem 1rem; border-left: 2px solid var(--ivory); color: var(--ivory); font-size: .95rem; line-height: 1.55; }
+.bd-ferr:empty { margin: 0; padding: 0; border: 0; }
+.bd-check + .bd-ferr:not(:empty) { margin: -.1rem 0 .6rem; }
+/* 메일 보낸 화면 — 받는 주소 한 줄 · 어떤 메일인지 · 주 단추 '닫기' · 글자 단추 둘(검토 3바퀴 13번) */
+.bd-sent-to { margin: 0 0 .6rem; font-size: 1rem; line-height: 1.55; color: var(--ivory); overflow-wrap: anywhere; }
+.bd-sent-to strong { font-weight: 700; }
+.bd-sent-what, .bd-sent-same { margin: .6rem 0 0; }
+.bd-sheet .bd-sent-what + .bd-sent-same { margin-top: .4rem; }
+.bd-sheet-body > .btn--solid.bd-wide { margin-top: 1.2rem; }
+.bd-sent-acts { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; margin-top: .6rem; }
+.bd-sent-acts .btn--text { min-height: 48px; min-width: 48px; }
+
+/* ══ 내 정보(마이페이지 community.html#me) · 가입 질문 '좋아하는 인순이 노래' — 2026-10-03 ══════════
+   형님: "내가 남긴 글들도 볼 수 있는 마이페이지". 사랑방 v4 문법 그대로 — 상자 없이 1px 줄로만 나누고,
+   숫자(날짜·건수·연도)만 모노, 한글은 본문 서체·자간 0. 화면의 주인(별명)이 제목이다.
+   채운 단추는 없다(로그인 전 안내의 '로그인 · 회원가입' 하나뿐). 글자는 .86 / .95 / 1.06rem, 누르는 칸 48px. */
+#board.is-me .cafe-menu, #board.is-me .cafe-tools, #board.is-me #bd-pins,
+#board.is-me #bd-mine, #board.is-me #cafe-list { display: none; }
+.cafe-me[hidden] { display: none; }
+.cafe-me { padding: .4rem 0 1rem; max-width: 46rem; }
+.me-h {
+  margin: .4rem 0 .5rem; font: 700 clamp(1.5rem, 1.2rem + 1.2vw, 2rem)/1.3 var(--font-body);
+  letter-spacing: 0; color: var(--ivory); word-break: keep-all; overflow-wrap: anywhere;
+}
+.me-kick { display: block; margin: 0 0 .25rem; font: 600 .86rem/1.4 var(--font-body); letter-spacing: 0; color: var(--muted); }
+.me-nick-t { display: block; }
+/* 제목은 화면낭독기가 거기서부터 읽게 초점만 옮겨 둔 것(tabindex=-1) — 손가락으로 연 사람에게 파란 테두리는 고장처럼 보인다 */
+body[data-page="community"] .me-h:focus, body[data-page="community"] .me-h:focus-visible { outline: none; }
+.me-since { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .7rem; margin: 0 0 1.2rem; font-size: .86rem; line-height: 1.5; color: var(--faint); }
+.me-since .bd-badge { font-size: .86rem; padding: .25em .5em; }
+.me-msg { margin: 0 0 1rem; }
+.me-msg:empty { margin: 0; min-height: 0; }
+
+.me-sec { padding: 1.3rem 0 1.5rem; border-top: 1px solid var(--line-strong); }
+.me-sec-h { margin: 0 0 .7rem; font: 700 1.06rem/1.4 var(--font-body); letter-spacing: 0; color: var(--ivory); }
+.me-n { margin-left: .2em; font: 400 .95rem/1 var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: 0; color: var(--faint); }
+.me-line { margin: 0; max-width: 40em; font-size: 1rem; line-height: 1.65; color: var(--muted); }
+.cafe-me .form-hint { font-size: .95rem; line-height: 1.6; max-width: 40em; }
+.me-empty { margin: 0; font-size: 1rem; color: var(--muted); }
+.me-soon { margin: 0; padding: 1.3rem 0 1.5rem; border-top: 1px solid var(--line-strong); }
+.me-go {
+  display: inline-flex; align-items: center; min-height: 48px; margin-top: .3rem;
+  font: 600 .95rem/1.3 var(--font-body); letter-spacing: 0; color: var(--ivory);
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .25em;
+}
+.me-go:hover { text-decoration-thickness: 2px; }
+
+/* 등업 진행 — 숫자는 서버가 센 공개된 글·댓글 그대로. 막대는 장식(글자가 뜻을 다 말한다) */
+.me-prog { list-style: none; margin: 1.1rem 0 0; padding: 0; display: grid; gap: 1rem; max-width: 28rem; }
+.me-prog-i { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; row-gap: .5rem; column-gap: 1rem; }
+.me-prog-l { font-size: 1rem; color: var(--ivory); }
+.me-prog-n { font: 700 1rem/1.3 var(--font-body); font-variant-numeric: tabular-nums; letter-spacing: 0; color: var(--ivory); white-space: nowrap; }
+.me-bar { grid-column: 1 / -1; display: block; height: 2px; background: var(--line-strong); }
+.me-bar i { display: block; height: 100%; background: var(--ivory); }
+.me-lv .form-hint { margin-top: 1rem; }
+
+/* 다녀온 공연 — 공연 화면의 도장과 같은 모양(작은 네모) */
+.cafe-me .me-stamps { margin: 0; }
+
+/* 내 노래 */
+.me-song-d { margin: 0 0 .9rem; }
+.me-song-cur { margin: 0 0 .8rem; font-size: 1.06rem; line-height: 1.5; }
+.me-song-t { font-weight: 700; color: var(--ivory); }
+.me-song-y, .bd-songp-y { margin-left: .5em; font: 400 .86rem/1.4 var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: 0; color: var(--faint); }
+.me-song-none { color: var(--muted); }
+.me-song-acts { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1.4rem; }
+.me-song-pick { margin-top: 1.1rem; max-width: 30rem; }
+.me-song-pick[hidden] { display: none; }
+
+/* 내가 쓴 글 · 내 댓글 — 목록 줄은 사랑방 목록과 같은 줄. 상태는 줄 아래 첫머리에 */
+.me-rows { border-top: 1px solid var(--line); }
+#cafe-me .cafe-by .me-st {
+  display: inline-block; padding: .22em .45em; border: 1px solid var(--line-strong); background: none;
+  font: 600 .76rem/1 var(--font-body); letter-spacing: 0; color: var(--muted); vertical-align: .08em;
+}
+/* 상자는 '확인 중' 하나만(아직 아무도 못 보는 글) — 줄마다 상자를 박으면 옛 게시판 인상이 돌아온다.
+   '공개'는 옅은 글자, '내려짐'은 굵은 글자(쓴 사람이 알아야 한다) */
+#cafe-me .cafe-by .me-st--pending { border-color: var(--ivory); color: var(--ivory); }
+#cafe-me .cafe-by .me-st--approved { border: 0; padding: 0; font-size: .86rem; line-height: inherit; vertical-align: baseline; font-weight: 400; color: var(--muted); }
+#cafe-me .cafe-by .me-st--rejected { border: 0; padding: 0; font-size: .86rem; line-height: inherit; vertical-align: baseline; font-weight: 700; color: var(--ivory); }
+.me-cbody { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-weight: 400; white-space: pre-line; }
+.me-gone { cursor: default; }
+.me-gone .cafe-title { color: var(--muted); }
+.me-on { color: var(--faint); overflow-wrap: anywhere; }
+.me-more { margin-top: 1rem; min-height: 48px; }
+.me-more[hidden] { display: none; }
+@media (max-width: 560px) { .me-more { width: 100%; } }
+.me-lmsg:empty { margin: 0; min-height: 0; }
+
+/* 별명 바꾸기 */
+#cafe-me .me-nickf { max-width: 26rem; }
+#cafe-me .form-field { margin-bottom: .5rem; }
+#cafe-me .form-field label { font-size: .95rem; letter-spacing: 0; }
+#cafe-me .form-field input[type="text"] { min-height: 48px; border-radius: 0; border-color: rgba(243, 239, 231, .42); }
+#cafe-me .form-field input[type="text"]:focus { border-color: var(--ivory); outline: 3px solid var(--focus); outline-offset: 2px; }
+#cafe-me .me-nickf .btn { margin-top: .6rem; }
+
+/* 로그아웃 · 탈퇴 — 글자 링크 */
+#cafe-me .me-acts { margin-top: 0; padding-top: 1.2rem; border-top: 1px solid var(--line-strong); }
+#cafe-me .bd-link { min-height: 48px; min-width: 48px; font-size: .95rem; }
+#cafe-me .bd-leave-note { font-size: .95rem; }
+
+/* 로그인 전 · 가입 전 · 연결 끊김 */
+.me-gate-t { margin: .6rem 0 1.2rem; max-width: 36em; font-size: 1rem; line-height: 1.65; color: var(--muted); }
+.me-gate-b { min-width: 12rem; }
+@media (max-width: 560px) { .me-gate-b { width: 100%; } }
+
+/* ── 노래 고르기(가입 질문 · 내 정보 공용) — 찾기 칸 + 결과 단추 다섯 ── */
+.bd-songp[hidden] { display: none; }
+.bd-songp-l { display: block; margin: 0 0 .5em; font-weight: 700; font-size: 1rem; letter-spacing: 0; color: var(--ivory); }
+.bd-songp input[type="search"] {
+  width: 100%; min-height: 48px; padding: .7em 1em; margin: 0;
+  font: inherit; font-size: 1rem; line-height: 1.3; color: var(--ivory); background: var(--void);
+  border: 1px solid rgba(243, 239, 231, .42); border-radius: 0; -webkit-appearance: none; appearance: none;
+}
+.bd-songp input[type="search"]:focus { border-color: var(--ivory); outline: 3px solid var(--focus); outline-offset: 2px; }
+.bd-songp input[type="search"]::placeholder { color: var(--faint); opacity: 1; }
+/* 브라우저가 그리는 파란 지우기(×)는 사이트의 단색 크롬과 어긋난다 — 고른 뒤에는 칸이 저절로 비워진다 */
+.bd-songp input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; display: none; }
+.bd-songp-r { list-style: none; margin: 0; padding: 0; }
+.bd-songp-r li { margin: 0; }
+.bd-songp-o {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; width: 100%; min-height: 48px;
+  padding: .5rem .1rem; background: none; border: 0; border-bottom: 1px solid var(--line); cursor: pointer;
+  font: 600 1rem/1.45 var(--font-body); letter-spacing: 0; color: var(--ivory); text-align: left;
+}
+.bd-songp-t { word-break: keep-all; overflow-wrap: anywhere; }
+.bd-songp-o:hover .bd-songp-t { text-decoration: underline; text-underline-offset: .22em; }
+.bd-songp-o .bd-songp-y { flex: none; }
+.bd-songp-s { margin: .55rem 0 0; font-size: .95rem; line-height: 1.55; max-width: none; }
+
+/* 가입 질문 — 회원 창 안. 공연장에서는 접혀 있다(<details>) */
+.bd-songq { margin: .2rem 0 1rem; }
+details.bd-songq { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+summary.bd-songq-h {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 52px; padding: .5rem 0;
+  list-style: none; cursor: pointer; font: 600 1rem/1.45 var(--font-body); letter-spacing: 0; color: var(--ivory);
+}
+summary.bd-songq-h::-webkit-details-marker { display: none; }
+summary.bd-songq-h::after { content: "열기 ▾"; flex: none; font-weight: 400; font-size: .86rem; color: var(--muted); white-space: nowrap; }
+details.bd-songq[open] > summary.bd-songq-h::after { content: "접기 ▴"; }
+html[lang="en"] summary.bd-songq-h::after { content: "Open ▾"; }
+html[lang="en"] details.bd-songq[open] > summary.bd-songq-h::after { content: "Close ▴"; }
+details.bd-songq[open] > .bd-songq-b { padding: .2rem 0 1rem; }
+.bd-songq-c { display: flex; flex-wrap: wrap; align-items: center; gap: .2rem .7rem; margin: 0; font-size: 1rem; }
+.bd-songq-c[hidden] { display: none; }
+.bd-songq-cl { font-size: .86rem; color: var(--muted); }
+.bd-songq-ct { font-weight: 700; color: var(--ivory); }
+.bd-songq-c .bd-songp-y { margin-left: 0; }
+
+/* 가입 마치기의 주 단추 — 창 아래에 붙는다. 별명·노래 어느 칸에서 자판이 올라와도 단추가 보이는 창 맨 아래에 남는다.
+   단추 아래 별명 오류도 같은 띠 안에(가려지지 않게). 띠는 창과 같은 바탕 + 위 1px 줄 하나 */
+.bd-sheet .bd-jfoot {
+  position: sticky; bottom: 0; z-index: 1; margin: 0 -1.4rem; padding: .4rem 1.4rem .5rem;
+  background: var(--surface-2); box-shadow: 0 -1px 0 var(--line);
+}
+.bd-sheet .bd-jfoot .btn--solid { margin-top: 0; }
+.bd-sheet .bd-jfoot .bd-smsg:not(:empty) { margin: .55rem 0 0; }
+/* 크롬은 붙는 자리(sticky)를 창의 안쪽 여백 위로 잡는다 — 창 아래 여백(1.4rem)만큼 띠 아래로 글이 비쳐 보였다(360×640 자판 실측).
+   이 창만 아래 여백을 0 으로 하고 같은 높이를 맨 끝에 빈 칸으로 둔다 */
+.bd-sheet-box:has(.bd-jfoot) { padding-bottom: 0; scroll-padding-bottom: 6rem; }
+.bd-sheet-box:has(.bd-jfoot) .bd-sheet-body::after { content: ""; display: block; height: calc(1.4rem + 4px + env(safe-area-inset-bottom)); }
+.bd-sheet .bd-jfoot { padding-bottom: calc(.5rem + env(safe-area-inset-bottom)); }
+
 /* ── 입력칸 테두리(WCAG 1.4.11) — 파일 맨 끝에 둔다(각 칸의 원래 규칙보다 뒤에 와야 이긴다) ──
    검정 바탕 위 rgba(.26) 1px 은 2.06:1 이라 낮은 밝기에서 칸의 경계가 사라졌다(공연 코드·방명록·로그인 칸).
    공용 --line-strong 은 그대로 두고 이 범위의 입력칸만 .42(#080808·#101010 위 약 3.5:1)로 올린다(검토 25번) */
 .bd-sheet .form-field input[type="text"], .bd-sheet .form-field input[type="email"], .bd-sheet .form-field input[type="password"],
 body[data-page="community"] .bd-form input[type="text"], body[data-page="community"] .bd-form textarea,
 .bd-ctext, #gig-gb-ta, #gig-code-in { border-color: rgba(243, 239, 231, .42); }
+/* 누르는 칸의 경계도 같은 .42 — 같은 화면 안에서 입력칸(.42)과 응원 칸(.26 ≈ 2:1)이 둘로 갈렸다(검토 3바퀴 23번).
+   눌린 응원 칸(ivory)·닫힌 칸(--line)은 그대로 */
+.gig-chip:not([aria-pressed="true"]):not([aria-disabled="true"]), body[data-page="live"] .gig-start, .bd-pick label { border-color: rgba(243, 239, 231, .42); }
+/* (:has 를 모르는 브라우저가 위 규칙 전체를 버리지 않게 따로) 고른 게시판 칸은 ivory 그대로 */
+.bd-pick label:has(input:checked) { border-color: var(--ivory); }
 .bd-sheet .form-field input[type="text"]:focus, .bd-sheet .form-field input[type="email"]:focus, .bd-sheet .form-field input[type="password"]:focus,
 body[data-page="community"] .bd-form input[type="text"]:focus, body[data-page="community"] .bd-form textarea:focus,
 .bd-ctext:focus, #gig-gb-ta:focus, #gig-code-in:focus { border-color: var(--ivory); }
+
+/* ══ 검토 4바퀴(2026-10-03 새벽) — 공연 당일 마감 ══════════════════════════════
+   파일 맨 끝에 둔다(각 원래 규칙보다 뒤에 와야 이긴다). 숫자는 모두 실측에서 왔다. */
+
+/* 4 — 네이티브 컨트롤을 어두운 테마로(체크박스·스크롤바·글칸 크기 손잡이·select). 공연 화면(live.html)에만
+   <meta name="color-scheme" content="dark"> 가 있어, 같은 가입 창이 사랑방에서는 새하얀 둥근 상자였다 */
+:root { color-scheme: dark; }
+/* 가입 창 동의 칸 — 직접 그린 직각 상자(모서리 0). 비어 있으면 테두리만(아이보리 .7 ≈ 9:1), 체크하면 아이보리로 채우고 ✓ */
+.bd-check input[type="checkbox"] {
+  -webkit-appearance: none; appearance: none; position: relative; display: inline-block;
+  width: 22px; height: 22px; margin: .1rem 0 0; flex: none; cursor: pointer;
+  border: 1.5px solid rgba(243, 239, 231, .7); border-radius: 0; background: transparent; color: var(--void);
+}
+.bd-check input[type="checkbox"]:checked { background: var(--ivory); border-color: var(--ivory); }
+.bd-check input[type="checkbox"]::before {
+  content: ""; position: absolute; left: 6.5px; top: 2px; width: 6px; height: 12px;
+  border: solid var(--void); border-width: 0 2.5px 2.5px 0; transform: rotate(45deg); opacity: 0;
+}
+.bd-check input[type="checkbox"]:checked::before { opacity: 1; }
+/* 21 — 동의가 빠진 칸을 칸 자체에서 보이게(터치 뒤 프로그램 초점이라 초점 링이 안 보였다). 파랑(초점)과 겹치지 않게 아이보리 두 겹 */
+.bd-check input[type="checkbox"][aria-invalid="true"] { border-width: 2px; border-color: var(--ivory); }
+.bd-check input[type="checkbox"][aria-invalid="true"]:not(:focus-visible) { outline: 2px solid var(--ivory); outline-offset: 3px; }   /* 키보드 초점이면 파란 초점 링이 이긴다 */
+.bd-check input[aria-invalid="true"] + span { font-weight: 700; }
+
+/* 1 · 17 — 공연장 보조 단추·꼬리 줄. 로그아웃 관객의 방명록 입구와 느린 회선의 유일한 출구가 사이트에서 가장 작은
+   글자(13.6px)였다. 사람이 읽는 단추는 1rem, 꼬리 줄 .9rem · 누르는 칸 48×48(영어 'TERMS' 47.5px) */
+body[data-page="live"] #gig-gb-login, body[data-page="live"] #gig-retry { font-size: 1rem; letter-spacing: 0; }
+body[data-page="live"] .gig-tail a, body[data-page="live"] .gig-tail .lang-toggle { font-size: .9rem; min-width: 48px; justify-content: center; text-align: center; }
+
+/* 13 — 보내는 동안의 단추(disabled 대신 aria-disabled — 초점을 지킨다). 다시 누름은 JS 가 막고, 손가락 누름은 여기서 */
+#gig-go[aria-disabled="true"], #gig-gb-go[aria-disabled="true"], .bd-cform button[aria-disabled="true"] { opacity: .55; pointer-events: none; }
+
+/* 11 — 글을 치는 동안의 커서 따라가기 여백. 전역 6rem(닻 이동용)이 그대로면 한 글자 칠 때마다 크로뮴이 커서를
+   머리 아래 6rem 으로 끌어와 화면을 위로 굴렸고 '올리기'가 도로 자판 뒤로 갔다(360×640·21px 실측). 칸에 초점이 있을 때만 */
+html:has(#bd-body:focus, .bd-cform textarea:focus, #bd-mn:focus) { scroll-padding-top: calc(65px + .5rem); }
+html:has(#gig-gb-ta:focus, #gig-code-in:focus) { scroll-padding-top: calc(57px + .5rem); }
+.kb-room { display: block; width: 1px; pointer-events: none; }
+
+/* 23 — 도장: 공연장 이름과 '다녀옴'은 한 덩어리. 정사각 도장에서는 세로로, 낮은 폰의 가로 '표'에서는 한 줄로 */
+.gig-stamp-vw { display: flex; flex-direction: column; align-items: center; gap: .3rem; max-width: 100%; }
+@media (max-width: 960px) and (max-height: 760px) {
+  body[data-gig="L8"] .gig-stamp-vw { flex-direction: row; align-items: baseline; gap: .4rem; min-width: 0; }
+  body[data-gig="L8"] .gig-stamp-v { min-width: 0; }
+  body[data-gig="L8"] .gig-stamp-w { flex: none; white-space: nowrap; }
+}
+
+/* 16 — 영어 화면의 한국어 앨범 제목도 자간 0 — 목록(#discography)은 영어 화면에서 lang=ko 로 표시된다(main.js koIds).
+   한국어 화면과 같은 모양이 된다(html[lang=ko] 블록이 영어 문서에는 닿지 않아 .06em 이 벌어졌다) */
+[lang="ko"] .album-row .a-title { letter-spacing: 0; }
+/* 16 — 언어 단추의 한글('한국어')은 본문 서체 · 자간 0(영어 문서에서는 html[lang=ko] 블록이 닿지 않는다) */
+.lang-toggle[lang="ko"], .header-tools .lang-toggle[lang="ko"], body[data-page="live"] .gig-tail .lang-toggle[lang="ko"] {
+  font-family: var(--font-body); letter-spacing: 0; text-transform: none;
+}
+/* 공연장 머리의 언어 단추 — 낮은 화면 밝기에서 --faint 가 가장 먼저 사라졌다 */
+.gig-head .lang-toggle { color: var(--muted); }
+
+/* 8 — 홈 폰 '옆으로 넘겨 보세요 →': 사진 밝은 부분(흰 소매) 위에서 최저 2.45:1 이었다. 본문 서체(모노 폭이 낱말 사이를 벌렸다) ·
+   글자 알파 .72 → 1 · 그림자 두 겹(넓은 그늘 + 글자 바로 아래 짙은 테) */
+.strip-hint {
+  font-family: var(--font-body); font-size: .95rem; font-weight: 600; letter-spacing: 0; text-transform: none;
+  color: var(--ivory); text-shadow: 0 0 2px rgba(8, 8, 8, .95), 0 1px 3px rgba(8, 8, 8, .9), 0 1px 14px rgba(8, 8, 8, .85);
+}
+.strip-hint .sh-arrow { font-family: var(--font-mono); }
+
+/* 6 — 음악 앨범 줄(≤640px): 'Studio album no.13'(모노·한 줄)이 오른쪽 칸을 차지해 제목 칸이 70px 로 쪼그라들고
+   320~375 × 21px 영어에서 가로로 넘쳤다(scrollWidth 332~391). 종류는 제목 아래 줄로, 제목 칸은 남은 폭 전부 */
+@media (max-width: 640px) {
+  .album-row { grid-template-columns: 56px minmax(0, 1fr); gap: .35rem 1.1rem; }
+  .album-row .a-art, .album-row .a-art--empty { grid-row: 1 / span 2; align-self: start; }
+  .album-row > div { min-width: 0; }
+  .album-row .a-kind { grid-column: 2; white-space: normal; overflow-wrap: anywhere; }
+}

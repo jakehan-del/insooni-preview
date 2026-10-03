@@ -21,9 +21,9 @@
 <link rel="preconnect" href="https://vxrazyiqvdwgvgpkkitm.supabase.co" crossorigin>
 <!-- 글자 크기·언어는 그리기 전에 — 다 그린 뒤 바꾸면 화면이 한 번 튄다(main.js 와 같은 키·같은 값) -->
 <script>try{var f=parseInt(localStorage.getItem("insooni_fs"),10);if(f>=0&&f<3){document.documentElement.style.fontSize=[17,19,21][f]+"px";document.documentElement.setAttribute("data-fs",String(f+1))}if(JSON.parse(localStorage.getItem("insooni_lang")||"null")==="en")document.documentElement.setAttribute("lang","en")}catch(e){}</script>
-<link rel="stylesheet" href="assets/fonts/body.css?v5d3e2782">
-<link rel="stylesheet" href="assets/fonts/mono.css?v5d3e2782">
-<link rel="stylesheet" href="assets/css/style.min.css?v5d3e2782">
+<link rel="stylesheet" href="assets/fonts/body.css?vf8d41eb5">
+<link rel="stylesheet" href="assets/fonts/mono.css?vf8d41eb5">
+<link rel="stylesheet" href="assets/css/style.min.css?vf8d41eb5">
 </head>
 <body data-page="live">
 <a class="skip-link" href="#main">본문 바로가기</a>
@@ -32,7 +32,7 @@
   <a class="gig-brand" href="/" aria-label="인순이 공식 사이트 홈">INSOONI</a>
   <div class="header-tools">
     <button class="fs-toggle" type="button" aria-label="글자 크기 바꾸기 — 지금 보통"><span class="fs-a">가</span><span class="fs-b">가</span></button>
-    <button class="lang-toggle" type="button" aria-label="Switch to English">EN</button>
+    <button class="lang-toggle" type="button" lang="en" aria-label="View in English">EN</button>
   </div>
 </header>
 
@@ -49,7 +49,7 @@
     <!-- 로그아웃 + 카카오 없음(스위치 꺼짐·방금 실패) — 가입이 이메일 왕복이라는 사실을 미리 한 줄로 -->
     <p class="gig-mailnote" id="gig-mailnote" hidden></p>
     <p class="gig-slow" id="gig-slow" hidden>
-      <span id="gig-slow-t">연결이 느립니다.</span>
+      <span id="gig-slow-t"></span>
       <button type="button" class="btn btn--ghost gig-retry" id="gig-retry">다시 불러오기</button>
     </p>
     <p class="gig-off-go" id="gig-off-go" hidden><a href="community.html" id="gig-off-a">사랑방으로</a></p>
@@ -58,7 +58,7 @@
   <!-- 코드 입력 — 주소에 코드가 없고 지금 열린 공연도 없을 때, 또는 코드를 찾지 못했을 때 -->
   <form class="gig-code" id="gig-code" hidden novalidate>
     <label for="gig-code-in" id="gig-code-l">공연 코드</label>
-    <input id="gig-code-in" type="text" inputmode="text" maxlength="5" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" aria-describedby="gig-code-h">
+    <input id="gig-code-in" type="text" inputmode="text" enterkeyhint="go" maxlength="5" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" aria-describedby="gig-code-h">
     <p class="form-hint" id="gig-code-h">QR 아래에 적힌 다섯 글자입니다.</p>
     <button type="submit" class="btn btn--solid gig-code-go" id="gig-code-go">열기</button>
     <p class="gig-code-msg" id="gig-code-msg" role="status"></p>
@@ -75,16 +75,19 @@
   <figure class="gig-stamp" id="gig-stamp" role="img" hidden>
     <svg class="gig-stamp-mark" viewBox="3 7.8 96.6 72.8" aria-hidden="true" focusable="false"><path fill="currentColor" d="M65.5 54 C58.5 40 46 29 27 25 C32.5 39.5 38.5 50 45.5 56.5 C52.5 63 61.5 61.5 65.5 54 Z"/><path fill="currentColor" d="M3 74 C3 63 16 55 35 54.4 C47 54 56 55.6 61 57.8 C59 50 59 40 62 31 C66 19.4 73 11.6 81 8.6 C85.2 7.4 88.8 8.4 90.6 11.4 L99.6 13.6 L90.4 16.2 C88.8 19.2 85.6 20.6 80.8 20.2 C76.6 19.6 72.8 24 69.8 33 C67.6 42 67.6 52 69.8 61 C70.8 64.5 70.4 68 66.5 71 C58.5 75 43 77.5 25.5 77.6 C15.5 77.6 8 76.6 3 74 Z M3 74 C10 69 20 61.5 33 56.8 C22 64.5 11 70.5 3 74 Z"/></svg>
     <span class="gig-stamp-d" id="gig-stamp-d"></span>
-    <span class="gig-stamp-v" id="gig-stamp-v"></span>
-    <span class="gig-stamp-w" id="gig-stamp-w">다녀옴</span>
+    <!-- 공연장 이름과 '다녀옴'은 한 덩어리 — 큰 글자에서 '다녀옴'만 따로 떨어지지 않게(검토 4바퀴 23번) -->
+    <span class="gig-stamp-vw"><span class="gig-stamp-v" id="gig-stamp-v"></span> <span class="gig-stamp-w" id="gig-stamp-w">다녀옴</span></span>
   </figure>
 
   <!-- 하단 바 — 이 화면의 유일한 채운 단추. 폰에서는 엄지가 닿는 아래에 고정, PC 에서는 도장 바로 아래 -->
   <div class="gig-bar" id="gig-bar" hidden>
+    <!-- 도장이 실패하면 그 단추 바로 위에 — 바 뒤에 숨는 자리에 쓰면 객석에서는 '아무 일도 없다'(검토 3바퀴 10번) -->
+    <p class="gig-bar-msg" id="gig-bar-msg" role="status"></p>
     <button type="button" class="btn btn--solid" id="gig-go"></button>
   </div>
 
-  <!-- 본인 행동의 결과만(도장·응원·투표·방명록) -->
+  <!-- 성공의 낭독(가입 뒤 '도장을 찍고 … 보냈습니다' · 방명록 '받았습니다'). 실패·안내는 누른 자리 곁의
+       .gig-act-msg · #gig-bar-msg 에 쓴다 — 한 번에 한 자리(gig.js msg) -->
   <p class="gig-msg" id="gig-msg" role="status" aria-live="polite"></p>
 
   <!-- 4. 응원 한마디 -->
@@ -92,6 +95,7 @@
     <h2 id="gig-cheers-h">응원 한마디</h2>
     <p class="gig-act-d" id="gig-cheers-d"></p>
     <div class="gig-chips" id="gig-chips"></div>
+    <p class="gig-act-msg" id="gig-cheer-msg" role="status"></p>
   </section>
 
   <!-- 5. 앵콜 투표 — 후보가 없으면 섹션째 숨긴다 -->
@@ -100,6 +104,7 @@
     <p class="gig-act-d" id="gig-vote-d"></p>
     <p class="gig-act-n" id="gig-vote-n">앵콜곡은 무대에서 정합니다. 이 숫자는 여기 모인 마음입니다.</p>
     <div class="gig-songs" id="gig-songs" lang="ko"></div>
+    <p class="gig-act-msg" id="gig-vote-msg" role="status"></p>
   </section>
 
   <!-- 6. 오늘 공연 방명록 — 사랑방 '공연·방송 후기' 게시판 글이 된다 -->
@@ -111,11 +116,13 @@
     <p class="gig-gb-note" id="gig-gb-note" hidden></p>
     <form class="gig-gb-form" id="gig-gb-form" hidden novalidate>
       <label for="gig-gb-ta" id="gig-gb-l">한 줄이면 충분합니다</label>
+      <!-- 등급 문장은 글칸 위 — '남기기'가 글자 수 바로 아래에 와야 자판이 올라와도 칸과 단추가 함께 보인다(검토 3바퀴 11번) -->
+      <p class="form-hint gig-gb-hint" id="gig-gb-hint"></p>
       <p class="form-hint gig-starts-h" id="gig-starts-h">누르면 글칸에 이어 붙습니다</p>
       <div class="gig-starts" id="gig-starts"></div>
-      <textarea id="gig-gb-ta" rows="3" maxlength="500"></textarea>
+      <textarea id="gig-gb-ta" rows="2" maxlength="500" aria-describedby="gig-gb-hint"></textarea>
       <p class="gig-gb-count" id="gig-gb-count" aria-live="off">0 / 500</p>
-      <p class="form-hint gig-gb-hint" id="gig-gb-hint"></p>
+      <p class="gig-act-msg" id="gig-gb-err" role="status"></p>
       <button type="submit" class="btn btn--solid gig-gb-go" id="gig-gb-go">남기기</button>
     </form>
     <!-- 올린 뒤 — 폼 자리에 결과 한 줄 + '한 줄 더'. 결과 낭독은 #gig-msg 가 맡는다(두 번 읽지 않게) -->
@@ -129,12 +136,12 @@
     <a href="community.html" id="gig-t1">사랑방으로</a>
     <a href="privacy.html" id="gig-t2">개인정보처리방침</a>
     <a href="terms.html" id="gig-t3">이용약관</a>
-    <button type="button" class="lang-toggle gig-tail-lang">English</button>
+    <button type="button" class="lang-toggle gig-tail-lang" lang="en">English</button>
   </nav>
 </main>
 
-<script src="assets/js/config.js?v5d3e2782" defer></script>
-<script src="assets/js/board.min.js?v5d3e2782" defer></script>
-<script src="assets/js/gig.min.js?v5d3e2782" defer></script>
+<script src="assets/js/config.js?vf8d41eb5" defer></script>
+<script src="assets/js/board.min.js?vf8d41eb5" defer></script>
+<script src="assets/js/gig.min.js?vf8d41eb5" defer></script>
 </body>
 </html>

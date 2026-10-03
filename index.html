@@ -7,11 +7,11 @@
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
 <!-- 본문 글꼴은 먼저 확실히 깐다(미뤄 봤지만 첫 화면이 빨라지지 않았다).
      제목용 서체는 화면이 뜬 뒤 들어온다 — font-display:swap이라 늦어도 글자는 보인다. -->
-<link rel="stylesheet" href="assets/fonts/body.css?v5d3e2782">
-<link rel="stylesheet" href="assets/fonts/mono.css?v5d3e2782">
-<link rel="stylesheet" href="assets/fonts/display.css?v5d3e2782" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/fonts/display.css?v5d3e2782"></noscript>
-<link rel="stylesheet" href="assets/css/style.min.css?v5d3e2782">
+<link rel="stylesheet" href="assets/fonts/body.css?vf8d41eb5">
+<link rel="stylesheet" href="assets/fonts/mono.css?vf8d41eb5">
+<link rel="stylesheet" href="assets/fonts/display.css?vf8d41eb5" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?vf8d41eb5"></noscript>
+<link rel="stylesheet" href="assets/css/style.min.css?vf8d41eb5">
 <!-- 도입부 몽타주 — 첫 두 장만 프리로드한다. 다섯 장을 한꺼번에 high 로 올리면
      1.2Mbps 실측에서 스타일시트가 사진 뒤로 밀려 첫 화면이 9초 늦었다(2026-09-14).
      3~5번째 장은 main.js 가 앞 장이 도착한 뒤 순서대로 받는다(회선이 몽타주 박자를 따라온다). -->
@@ -75,7 +75,7 @@
     </nav>
     <div class="header-tools">
       <button class="fs-toggle" type="button" aria-label="글자 크기 바꾸기 — 지금 보통" data-i18n-aria="aria.fontSize"><span class="fs-a">가</span><span class="fs-b">가</span></button>
-      <button class="lang-toggle" type="button" aria-label="Switch to English">EN</button>
+      <button class="lang-toggle" type="button" lang="en" aria-label="View in English">EN</button>
       <button class="nav-toggle" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="메뉴 열기" data-i18n-aria="aria.menuOpen"><span class="bars"></span></button>
     </div>
   </div>
@@ -120,11 +120,13 @@
       <a class="strip-item strip-item--wide" href="archive.html"><img data-src="assets/img/photos/dsc9427.webp" alt="색색의 의상을 입은 무용수들과 함께 선 무대" data-i18n-alt="alt.43" width="1600" height="1063"></a>
       <a class="strip-item strip-item--tall" href="archive.html"><img data-src="assets/img/photos/insooni007.webp" alt="황금빛 조명 기둥 아래에서 노래하는 인순이" data-i18n-alt="alt.20" style="object-position:center 30%" width="1064" height="1600"></a>
 </div>
-    <p class="strip-hint" aria-hidden="true"><span data-i18n="strip.swipe">옆으로 넘겨 보세요</span> <span class="sh-arrow">→</span></p>
   </section>
 </main>
 
 <footer class="footer-min">
+  <!-- 폰 '옆으로 넘겨 보세요' — 꼬리말 안에 둔다. <main> 안에 있으면 꼬리말 그늘(z 6)이 그 위를 덮어 글자가 회색으로
+       눌렸고 흰 소매 위에서 읽히지 않았다(검토 4바퀴 8번). 꼬리말(고정·화면 아래)을 기준으로 같은 자리(아래 84px)에 선다 -->
+  <p class="strip-hint" aria-hidden="true"><span data-i18n="strip.swipe">옆으로 넘겨 보세요</span> <span class="sh-arrow">→</span></p>
   <nav aria-label="푸터 메뉴" data-i18n-aria="aria.footerNav">
     <button type="button" class="strip-pause" aria-pressed="false" aria-label="배경 영상 일시정지" data-i18n-aria="aria.pauseVideo"><span data-i18n="strip.pause">일시정지</span></button>
     <a href="https://www.youtube.com/@insooni8081" target="_blank" rel="noopener">YOUTUBE</a>
@@ -136,18 +138,18 @@
   </nav>
 </footer>
 
-<script src="assets/js/config.js?v5d3e2782" defer></script>
-<script src="assets/js/backend.js?v5d3e2782" defer></script>
-<script src="assets/js/i18n.min.js?v5d3e2782" defer></script>
-<script src="assets/js/data.min.js?v5d3e2782" defer></script>
-<script src="assets/js/tracklinks.min.js?v5d3e2782" defer></script>
-<script src="assets/js/albums-full.min.js?v5d3e2782" defer></script>
-<script src="assets/js/albums-en.min.js?v5d3e2782" defer></script>
-<script src="assets/js/song-moods.min.js?v5d3e2782" defer></script>
-<script src="assets/js/main.min.js?v5d3e2782" defer></script>
-<script src="assets/js/board.min.js?v5d3e2782" defer></script>
-<script src="assets/js/motion.min.js?v5d3e2782" defer></script>
-<script src="assets/js/router.min.js?v5d3e2782" defer></script>
-<script src="assets/js/deck.min.js?v5d3e2782" defer></script>
+<script src="assets/js/config.js?vf8d41eb5" defer></script>
+<script src="assets/js/backend.js?vf8d41eb5" defer></script>
+<script src="assets/js/i18n.min.js?vf8d41eb5" defer></script>
+<script src="assets/js/data.min.js?vf8d41eb5" defer></script>
+<script src="assets/js/tracklinks.min.js?vf8d41eb5" defer></script>
+<script src="assets/js/albums-full.min.js?vf8d41eb5" defer></script>
+<script src="assets/js/albums-en.min.js?vf8d41eb5" defer></script>
+<script src="assets/js/song-moods.min.js?vf8d41eb5" defer></script>
+<script src="assets/js/main.min.js?vf8d41eb5" defer></script>
+<script src="assets/js/board.min.js?vf8d41eb5" defer></script>
+<script src="assets/js/motion.min.js?vf8d41eb5" defer></script>
+<script src="assets/js/router.min.js?vf8d41eb5" defer></script>
+<script src="assets/js/deck.min.js?vf8d41eb5" defer></script>
 </body>
 </html>

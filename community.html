@@ -17,11 +17,11 @@
 <meta name="description" content="인순이가 직접 남긴 편지를 읽고, 팬들과 이야기를 나누는 공식 사랑방.">
 <!-- 본문 글꼴은 먼저 확실히 깐다(미뤄 봤지만 첫 화면이 빨라지지 않았다).
      제목용 서체는 화면이 뜬 뒤 들어온다 — font-display:swap이라 늦어도 글자는 보인다. -->
-<link rel="stylesheet" href="assets/fonts/body.css?v5d3e2782">
-<link rel="stylesheet" href="assets/fonts/mono.css?v5d3e2782">
-<link rel="stylesheet" href="assets/fonts/display.css?v5d3e2782" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/fonts/display.css?v5d3e2782"></noscript>
-<link rel="stylesheet" href="assets/css/style.min.css?v5d3e2782">
+<link rel="stylesheet" href="assets/fonts/body.css?vf8d41eb5">
+<link rel="stylesheet" href="assets/fonts/mono.css?vf8d41eb5">
+<link rel="stylesheet" href="assets/fonts/display.css?vf8d41eb5" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/fonts/display.css?vf8d41eb5"></noscript>
+<link rel="stylesheet" href="assets/css/style.min.css?vf8d41eb5">
 <link rel="canonical" href="https://insooni.com/community">
 <meta property="og:url" content="https://insooni.com/community">
 <meta property="og:type" content="website">
@@ -59,7 +59,7 @@
     </nav>
     <div class="header-tools">
       <button class="fs-toggle" type="button" aria-label="글자 크기 바꾸기 — 지금 보통" data-i18n-aria="aria.fontSize"><span class="fs-a">가</span><span class="fs-b">가</span></button>
-      <button class="lang-toggle" type="button" aria-label="Switch to English">EN</button>
+      <button class="lang-toggle" type="button" lang="en" aria-label="View in English">EN</button>
       <button class="nav-toggle" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="메뉴 열기" data-i18n-aria="aria.menuOpen"><span class="bars"></span></button>
     </div>
   </div>
@@ -138,6 +138,11 @@
       <!-- 글 보기 -->
       <article class="cafe-post" id="cafe-post" hidden></article>
 
+      <!-- 내 정보(마이페이지, #me) — 형님: "내가 남긴 글들도 볼 수 있는 마이페이지". 모든 페이지 헤더의 '내 정보'가 여기로 온다.
+           별명·등급·등업 진행 · 다녀온 공연 · 내 노래 · 내가 쓴 글 · 내 댓글 · 별명 바꾸기 · 로그아웃 · 탈퇴가 한곳에 모인다(board.js renderMe).
+           탭·도구줄·목록은 숨고 이 칸만 남는다(#board.is-me) -->
+      <div class="cafe-me" id="cafe-me" hidden></div>
+
       <!-- 글쓰기 · 고치기 — 탭·도구줄·목록은 숨고 이 칸만 남는다(#board.is-writing) -->
       <form class="bd-form" id="bd-form" hidden>
         <a class="cafe-back" id="bd-form-back" href="#b=all" data-i18n="bd.stopWriting">← 쓰기 그만두기</a>
@@ -149,13 +154,17 @@
         <div class="form-field">
           <label for="bd-title" data-i18n="bd.titleL">제목</label>
           <input id="bd-title" type="text" maxlength="60" autocomplete="off" placeholder="예) 홍천에서 인사드립니다" data-i18n-ph="bd.titlePh">
+          <!-- 칸 오류는 그 칸 바로 아래 — 위쪽 안내 줄(#bd-msg)은 글쓰기 화면에서 헤더 위로 숨어 있었다(검토 3바퀴 18번) -->
+          <p class="bd-ferr" id="bd-title-err" role="status"></p>
         </div>
+        <!-- 등급 안내는 내용 칸 위 — '올리기'가 글자 수 바로 아래에 와야 자판이 올라와도 함께 보인다(검토 3바퀴 12번) -->
+        <p class="form-hint bd-form-hint" id="bd-form-hint"></p>
         <div class="form-field">
           <label for="bd-body" data-i18n="bd.bodyL">내용</label>
-          <textarea id="bd-body" maxlength="4000" rows="8" placeholder="하고 싶은 이야기를 편하게 적어 주세요. 쓰는 동안 이 기기에 저절로 저장됩니다." data-i18n-ph="bd.bodyPh"></textarea>
+          <textarea id="bd-body" maxlength="4000" rows="5" placeholder="하고 싶은 이야기를 편하게 적어 주세요. 쓰는 동안 이 기기에 저절로 저장됩니다." data-i18n-ph="bd.bodyPh"></textarea>
           <p class="form-hint bd-count" id="bd-count" aria-live="off">0 / 4,000</p>
+          <p class="bd-ferr" id="bd-body-err" role="status"></p>
         </div>
-        <p class="form-hint bd-form-hint" id="bd-form-hint"></p>
         <div class="bd-form-acts">
           <button type="submit" class="btn btn--solid" id="bd-go" data-i18n="bd.post">올리기</button>
           <button type="button" class="btn btn--text" id="bd-cancel" data-i18n="bd.cancelWrite">쓰기 그만두기</button>
@@ -179,7 +188,7 @@
       <p class="lede" data-i18n="sl.lede">고른 노래는 곡마다 모여 아래에 숫자로 보입니다.</p>
 
       <div class="sl-pick">
-        <label class="sr-only" for="sl-q" data-i18n="sl.search">노래 찾기</label>
+        <label class="sl-label" for="sl-q" data-i18n="sl.search">노래 찾기</label>
         <input id="sl-q" type="search" autocomplete="off" class="sl-input"
                placeholder="노래 제목으로 찾기" data-i18n-ph="sl.ph">
         <ul class="sl-opts" id="sl-opts" role="listbox" aria-label="노래 후보"></ul>
@@ -231,18 +240,18 @@
 </footer>
 
 <button class="back-to-top" aria-label="맨 위로 이동" data-i18n-aria="aria.toTop">TOP</button>
-<script src="assets/js/config.js?v5d3e2782" defer></script>
-<script src="assets/js/backend.js?v5d3e2782" defer></script>
-<script src="assets/js/i18n.min.js?v5d3e2782" defer></script>
-<script src="assets/js/data.min.js?v5d3e2782" defer></script>
-<script src="assets/js/tracklinks.min.js?v5d3e2782" defer></script>
-<script src="assets/js/albums-full.min.js?v5d3e2782" defer></script>
-<script src="assets/js/albums-en.min.js?v5d3e2782" defer></script>
-<script src="assets/js/song-moods.min.js?v5d3e2782" defer></script>
-<script src="assets/js/main.min.js?v5d3e2782" defer></script>
-<script src="assets/js/board.min.js?v5d3e2782" defer></script>
-<script src="assets/js/motion.min.js?v5d3e2782" defer></script>
-<script src="assets/js/router.min.js?v5d3e2782" defer></script>
-<script src="assets/js/deck.min.js?v5d3e2782" defer></script>
+<script src="assets/js/config.js?vf8d41eb5" defer></script>
+<script src="assets/js/backend.js?vf8d41eb5" defer></script>
+<script src="assets/js/i18n.min.js?vf8d41eb5" defer></script>
+<script src="assets/js/data.min.js?vf8d41eb5" defer></script>
+<script src="assets/js/tracklinks.min.js?vf8d41eb5" defer></script>
+<script src="assets/js/albums-full.min.js?vf8d41eb5" defer></script>
+<script src="assets/js/albums-en.min.js?vf8d41eb5" defer></script>
+<script src="assets/js/song-moods.min.js?vf8d41eb5" defer></script>
+<script src="assets/js/main.min.js?vf8d41eb5" defer></script>
+<script src="assets/js/board.min.js?vf8d41eb5" defer></script>
+<script src="assets/js/motion.min.js?vf8d41eb5" defer></script>
+<script src="assets/js/router.min.js?vf8d41eb5" defer></script>
+<script src="assets/js/deck.min.js?vf8d41eb5" defer></script>
 </body>
 </html>

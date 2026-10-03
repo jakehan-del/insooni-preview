@@ -131,7 +131,17 @@
   /* 회원 왕복(카카오·메일 링크)에서 돌아온 뒤 board.js 가 주소창의 ?code·?bd 를 지우면(replaceState)
      여기 기억해 둔 주소와 어긋난다. 그대로 두면 카페 안의 '#' 이동(뒤로 가기)이 '다른 페이지'로 읽혀
      <main> 을 통째로 다시 받아 버린다. 주소를 손댄 쪽이 알려 준다. */
-  window.INSOONI_ROUTER = { sync: function () { here = new URL(location.href); } };
+  window.INSOONI_ROUTER = {
+    sync: function () { here = new URL(location.href); },
+    /* 헤더의 '내 정보'처럼 링크가 아닌 단추가 다른 페이지로 옮겨 갈 때(board.js) — 링크를 누른 것과 같은 길 */
+    go: function (href) {
+      var url;
+      try { url = new URL(href, location.href); } catch (err) { return false; }
+      if (!internal(url) || samePage(url, location)) { location.href = url.href; return true; }
+      go(url, true);
+      return true;
+    }
+  };
 
   /* 마우스를 올린 링크를 미리 받아 두면 전환이 즉시 일어난다 */
   document.addEventListener("pointerover", function (e) {

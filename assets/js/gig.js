@@ -25,7 +25,7 @@
   var SLOW_MS = 8000;
   var MAX_GAP = 120000;
   var ALPH = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";   /* 0·O·1·I·L 은 객석 조명 아래에서 서로 헷갈린다 */
-  var NEXTS = ["checkin", "cheer", "vote"];
+  var NEXTS = ["checkin", "cheer", "vote", "gb"];   /* gb — '로그인하고 방명록 남기기'를 누르고 들어온 사람(검토 4바퀴 12번) */
 
   /* ---------- 작은 도구 ---------- */
   function byId(id) { return document.getElementById(id); }
@@ -166,10 +166,13 @@
     btns.forEach(function (b) { b.addEventListener("click", function () { cur = apply(cur + 1, true); }); });
   }
   function initLang() {
+    /* 단추의 글자는 '건너갈 언어'로 쓴다 — 그 글자의 언어를 lang 으로 밝혀 화면낭독기가 그 언어 음성으로 읽게(WCAG 3.1.2).
+       예전에는 한국어 음성이 'Switch to English'를, 영어 음성이 '한국어'를 읽었다(검토 4바퀴 16번) */
     Array.prototype.forEach.call(document.querySelectorAll(".lang-toggle"), function (b) {
       var wide = b.classList.contains("gig-tail-lang");
       b.textContent = isEN() ? "한국어" : (wide ? "English" : "EN");
-      b.setAttribute("aria-label", isEN() ? "Switch to Korean" : "Switch to English");
+      b.setAttribute("lang", isEN() ? "ko" : "en");
+      b.setAttribute("aria-label", isEN() ? "한국어로 보기" : "View in English");
     });
     document.addEventListener("click", function (e) {
       var b = e.target.closest ? e.target.closest(".lang-toggle") : null;
@@ -233,7 +236,9 @@
       });
     }
   }
-  function txt(id, s) { var n = byId(id); if (n) n.textContent = s; }
+  /* 같은 글이면 손대지 않는다 — #gig-phase(role=status)는 숫자를 새로 셀 때마다(poll_s) 다시 그려지는데,
+     같은 문장을 다시 넣어도 화면낭독기는 '바뀌었다'로 받아 같은 말을 되풀이했다(검토 3바퀴 19번) */
+  function txt(id, s) { var n = byId(id); if (n && n.textContent !== s) n.textContent = s; }
 
   /* ================================================================
      불러오기
@@ -262,7 +267,11 @@
       clearTimeout(slowT);
       slowT = setTimeout(function () {
         if (g !== S.gen || S.loaded) return;
-        txt("gig-slow-t", t("gig.slow", "연결이 느립니다."));
+        /* '바쁨'을 풀고 상태 줄(role=status)에 알린다 — 예전에는 aria-busy 가 그대로 남고 '다시 불러오기'는
+           낭독 영역 밖에 떠서, 화면낭독기에는 '불러오는 중'이 끝없이 이어졌다(검토 3바퀴 21번) */
+        document.getElementById("main").removeAttribute("aria-busy");
+        setPhase(t("gig.slowPhase", "연결이 느립니다. 아래 '다시 불러오기'를 눌러 주세요."));
+        txt("gig-slow-t", "");     /* 같은 말을 두 줄에 쓰지 않는다 — 문장은 상태 줄, 이 줄은 단추 */
         show(byId("gig-slow"), true);
       }, SLOW_MS);
     }
@@ -279,7 +288,8 @@
           return notFound();
         }
         if (S.loaded) { S.gen++; return; }   /* 이미 그린 화면은 그대로 둔다 — 다음 숫자 갱신이 다시 묻는다 */
-        txt("gig-slow-t", r && r.reason === "not_ready" ? why("not_ready") : t("gig.slow", "연결이 느립니다."));
+        setPhase(r && r.reason === "not_ready" ? why("not_ready") : t("gig.slowPhase", "연결이 느립니다. 아래 '다시 불러오기'를 눌러 주세요."));
+        txt("gig-slow-t", "");
         show(byId("gig-slow"), true);
         return;
       }
@@ -419,9 +429,12 @@
       txt("gig-zero", t("gig.zero", "아직 도장을 찍은 분이 없습니다. 첫 도장을 찍어 주세요."));
       paintN();
       txt("gig-count-c", S.phase === "open" ? t("gig.countC", "명이 오늘 도장을 찍었습니다") : t("gig.countCAfter", "명이 이 공연에 도장을 찍었습니다"));
-      var polling = S.phase === "before" || S.phase === "open" || S.phase === "after";
-      txt("gig-count-note", polling
+      /* '몇 초마다 새로 셉니다'는 숫자가 아직 바뀔 수 있을 때만(시작 전·도장 받는 중). 도장 찍기가 끝난 뒤(방명록만)에는
+         더 바뀔 수 없는 숫자를 실시간처럼 말하지 않는다(검토 4바퀴 7·22번). 숫자 새로 세기 자체는 그대로 둔다 —
+         운영자가 도장을 다시 열면 알아채야 한다 */
+      txt("gig-count-note", S.phase === "open" || S.phase === "before"
         ? fmt(t("gig.countNote", "숫자는 {s}초마다 새로 셉니다. 도장은 회원 한 분께 한 번만 찍힙니다."), { s: S.pollS })
+        : S.phase === "after" ? t("gig.countAfter", "도장 찍기가 끝난 뒤의 숫자입니다.")
         : t("gig.countFinal", "공연이 끝난 뒤의 최종 숫자입니다."));
     }
 
@@ -435,6 +448,8 @@
     paintCheers(L);
     paintVotes(L);
     paintGuestbook();
+    /* 단계를 모를 때 연 회원 창(카카오 왕복 직후 등)의 제목·첫 문장·가입 단추를 지금 단계에 맞춘다(검토 4바퀴 12·18번) */
+    if (M && M.gigChanged) M.gigChanged();
   }
 
   function phaseText(L) {
@@ -499,12 +514,15 @@
     var bar = byId("gig-bar"), a = barAction(L);
     show(bar, !!a);
     document.body.classList.toggle("has-actbar", !!a);
+    /* 바의 일이 바뀌었으면(도장 → 응원 → 방명록) 지난 일의 실패 문구는 내린다 */
+    var bm = byId("gig-bar-msg");
+    if (bm && bm.textContent && (!a || go.getAttribute("data-act") !== a[0])) { bm.textContent = ""; bm.classList.remove("is-ok", "is-bad"); }
+    if (a) {
+      if (!S.busy.checkin) go.textContent = a[1];
+      go.setAttribute("data-act", a[0]);
+    }
     /* Tab 으로 옮긴 초점이 바 뒤로 숨지 않게 — CSS(:has)를 모르는 인앱 브라우저용으로 바 높이를 직접(검토 21번) */
-    var fixed = !!a && window.getComputedStyle && getComputedStyle(bar).position === "fixed";
-    document.documentElement.style.scrollPaddingBottom = fixed ? (bar.offsetHeight + 12) + "px" : "";
-    if (!a) return;
-    if (!S.busy.checkin) go.textContent = a[1];
-    go.setAttribute("data-act", a[0]);
+    syncBarPad();
   }
 
   function paintCheers(L) {
@@ -664,6 +682,7 @@
     /* 못 찾은 코드는 칸에 그대로 둔다 — 한 글자만 고치면 되게(객석에서 다섯 글자를 다시 치지 않게) */
     var inp = byId("gig-code-in");
     if (missing && S.tried) inp.value = S.tried;
+    if (M && M.gigChanged) M.gigChanged();
   }
 
   /* L1 — 스위치가 꺼져 있다. 서버에 한 번도 묻지 않는다 */
@@ -673,33 +692,107 @@
     txt("gig-title", t("gig.titleGeneric", "공연 도장"));
     setPhase(t("gig.off", "공연 화면은 곧 열립니다."));
     show(byId("gig-off-go"), true);
+    /* 꼬리의 '사랑방으로'는 숨긴다 — 바로 위 '사랑방으로'와 같은 이름·같은 곳이라 연달아 두 번 보이고 두 번 읽혔다(검토 4바퀴 24·27번) */
+    show(byId("gig-t1"), false);
   }
 
   /* ================================================================
      누르기
      ================================================================ */
-  function msg(s, kind) {
-    var m = byId("gig-msg");
-    m.textContent = s || "";
-    m.classList.remove("is-ok", "is-bad");
-    if (kind) m.classList.add(kind === "ok" ? "is-ok" : "is-bad");
+  /* 결과 문구는 누른 자리 곁에(검토 3바퀴 10·17번).
+     예전에는 모든 결과가 #gig-msg(하단 바 바로 뒤·응원 섹션 위) 한 곳에만 써졌다 — 투표 줄을 누르고 실패하면
+     문구가 화면 위 500px 밖에, 도장이 실패하면 고정 하단 바 뒤(375×560 카카오톡 인앱에서 보이는 픽셀 0)에 떴다.
+     붐비는 LTE 에서 실패하면 어르신 눈에는 '아무 일도 없는' 화면이었다.
+       near = "bar"   → 하단 바 안 '도장 찍기' 바로 위(#gig-bar-msg) — 도장은 바에서 누른다
+       near = 요소    → 그 요소가 든 섹션(.gig-act)의 .gig-act-msg — 응원 칸 아래 · 투표 줄 아래 · '남기기' 바로 위
+       near 없음      → #gig-msg (성공 낭독 — 가입 뒤 '도장을 찍고 … 보냈습니다' · 방명록 '받았습니다')
+     한 번에 한 자리에만 쓰고 나머지는 비운다 — 같은 글을 두 곳에서 낭독하지 않게 */
+  function msgSpots() {
+    return [byId("gig-msg"), byId("gig-bar-msg")].concat(Array.prototype.slice.call(document.querySelectorAll(".gig-act-msg")));
+  }
+  function shown(n) { return !!n && n.getClientRects().length > 0; }
+  function msgSpot(near) {
+    var to = null;
+    if (near === "bar") to = byId("gig-bar-msg");
+    else if (near && near.closest) {
+      var sec = near.closest(".gig-act");
+      to = sec ? sec.querySelector(".gig-act-msg") : null;
+    }
+    /* 그 자리가 지금 그려지지 않으면(바가 내려간 사이 등) 위쪽 안내 줄로 */
+    if (to && to.parentNode && shown(to.parentNode)) return to;
+    return byId("gig-msg");
+  }
+  function msg(s, kind, near) {
+    var to = s ? msgSpot(near) : null;
+    msgSpots().forEach(function (m) {
+      if (!m) return;
+      var text = m === to ? s : "";
+      if (m.textContent !== text) m.textContent = text;
+      m.classList.remove("is-ok", "is-bad");
+      if (m === to && kind) m.classList.add(kind === "ok" ? "is-ok" : "is-bad");
+    });
+    syncBarPad();
+    if (to && to !== byId("gig-msg")) reveal(to);
+  }
+  /* 문구가 화면 안(머리 아래 ~ 하단 바 위, 자판이 떠 있으면 보이는 화면 안)에 들도록 필요한 만큼만 굴린다 */
+  function viewBox() {
+    var hd = document.querySelector(".gig-head"), vv = window.visualViewport;
+    var top = (hd ? hd.getBoundingClientRect().bottom : 0) + 8;
+    var vt = vv && vv.height ? (vv.offsetTop || 0) : 0;
+    var vh = vv && vv.height ? Math.min(window.innerHeight, vv.height) : window.innerHeight;
+    return { top: Math.max(top, vt + 8), bottom: vt + vh - 8 };
+  }
+  function reveal(n) {
+    if (!shown(n)) return;
+    var bar = byId("gig-bar");
+    var box = viewBox(), r = n.getBoundingClientRect();
+    if (bar && !bar.contains(n) && shown(bar) && getComputedStyle(bar).position === "fixed") box.bottom = Math.min(box.bottom, bar.getBoundingClientRect().top - 8);
+    var dy = 0;
+    if (r.bottom > box.bottom) dy = r.bottom - box.bottom;
+    if (r.top - dy < box.top) dy = r.top - box.top;
+    if (Math.abs(dy) >= 1) window.scrollBy(0, Math.round(dy));
+  }
+  /* 하단 바가 고정(폰)일 때 몸 아래 여백과 초점 여백을 바의 실제 높이에 맞춘다 — 바 안에 실패 문구가 서면
+     바가 두세 줄 높아진다. 바가 잠시 내려가 있으면(글을 치는 중) 지난 값을 그대로 둔다 */
+  function syncBarPad() {
+    var bar = byId("gig-bar");
+    if (!bar) return;
+    var on = !bar.hidden && document.body.classList.contains("has-actbar");
+    var fixed = on && getComputedStyle(bar).position === "fixed";
+    if (!fixed) {
+      document.documentElement.style.scrollPaddingBottom = "";
+      document.body.style.paddingBottom = "";
+      return;
+    }
+    var h = bar.offsetHeight;
+    if (!h) return;
+    document.documentElement.style.scrollPaddingBottom = (h + 12) + "px";
+    document.body.style.paddingBottom = "calc(1rem + " + h + "px)";
   }
   /* 로그인·가입이 먼저 필요하면 — 무엇을 하려 했는지 적어 두고 회원 창을 연다(가입을 마치면 이어서 한다) */
   function needMember(next, from) {
     var me = S.me;
     if (me && me.joined) return false;
     if (next) { next.code = S.code; M.setNext(next); }
-    M.openSheet(me ? "join" : "start", from || go, null, { ctx: "gig" });
+    /* why — 응원·투표를 누른 사람에게 '도장을 남기려면'이라고 하지 않는다(검토 3바퀴 15번).
+       from — 창을 닫으면 초점이 누른 칸으로 돌아온다(아래 '도장 찍기'로 튀지 않게, 검토 3바퀴 20번) */
+    M.openSheet(me ? "join" : "start", from || go, null, { ctx: "gig", why: next && next.what });
     return true;
   }
-  function blockedOrClosed(kind) {
-    if (S.me && S.me.level === "blocked") { msg(why("blocked"), "bad"); return true; }
+  function blockedOrClosed(kind, near) {
+    if (S.me && S.me.level === "blocked") { msg(why("blocked"), "bad", near); return true; }
     if (S.phase !== "open") {
-      msg(S.phase === "before" ? t("gig.notYet", "아직 열리지 않았습니다. 도장이 열리면 누를 수 있습니다.") : why(kind === "vote" ? "vote_closed" : "not_open"), "bad");
+      msg(S.phase === "before" ? t("gig.notYet", "아직 열리지 않았습니다. 도장이 열리면 누를 수 있습니다.") : why(kind === "vote" ? "vote_closed" : "not_open"), "bad", near);
       return true;
     }
-    if (kind === "vote" && !S.voteOpen) { msg(why("vote_closed"), "bad"); return true; }
+    if (kind === "vote" && !S.voteOpen) { msg(why("vote_closed"), "bad", near); return true; }
     return false;
+  }
+  function chipOf(k) { return byId("gig-chips").querySelector('[data-k="' + k + '"]'); }
+  function songOf(song) {
+    var kids = byId("gig-songs").children;
+    for (var i = 0; i < kids.length; i++) if (kids[i].getAttribute("data-song") === song) return kids[i];
+    return null;
   }
 
   function onGo() {
@@ -723,20 +816,25 @@
     }
   }
 
-  /* ① 도장 */
-  function checkin(then) {
+  /* ① 도장
+     then — 찍힌 뒤 이어서 할 일(응원·투표). lead — 앞에 붙일 인사('{별명} 님, 어서 오세요.').
+     said — 도장 대신 상태 줄에 쓸 문장('도장을 찍고 「…」 응원을 보냈습니다.') — 한 자리에 한 번만 쓰기 위해(검토 4바퀴 15번) */
+  function checkin(then, lead, said) {
     if (S.busy.checkin) return;
     if (needMember({ what: "checkin" }, go)) return;
-    if (blockedOrClosed("checkin")) return;
+    if (blockedOrClosed("checkin", "bar")) return;
+    msg("");
     S.busy.checkin = true;
     go.textContent = t("gig.stamping", "찍는 중…");
     go.setAttribute("aria-busy", "true");
-    go.disabled = true;
+    /* disabled 가 아니라 aria-disabled — 초점을 가진 단추가 disabled 가 되면 크로뮴이 초점을 문서(body)로 떨어뜨려
+       키보드·화면낭독기 사용자가 자리를 잃었다(검토 4바퀴 13번). 두 번 누름은 S.busy.checkin 이 막는다 */
+    go.setAttribute("aria-disabled", "true");
     var before = nOf("checkins");
     M.rpc("gig_checkin", { p_code: S.code }, true).then(function (r) {
       S.busy.checkin = false;
       go.removeAttribute("aria-busy");
-      go.disabled = false;
+      go.removeAttribute("aria-disabled");
       if (!r || !r.ok) {
         var why2 = r && r.reason;
         if (why2 === "not_logged_in" || why2 === "expired" || why2 === "not_member") {
@@ -747,15 +845,15 @@
           return;
         }
         render();
-        msg(why(why2), "bad");
+        msg(why(why2), "bad", "bar");
         if (why2 === "not_open") refetch();
         return;
       }
       S.me.checked = true;
       S.me.checked_at = r.at;
       setN("checkins", null, r.checkins, r.already ? null : r.at, true);
-      S.stampMsg = r.already ? fmt(t("gig.alreadyF", "이미 도장을 찍으셨습니다 ({t})."), { t: hhmm(r.at) })
-                             : t("gig.stamped", "도장을 찍었습니다. 내 정보에 남았습니다.");
+      S.stampMsg = (lead || "") + (r.already ? fmt(t("gig.alreadyF", "이미 도장을 찍으셨습니다 ({t})."), { t: hhmm(r.at) })
+                             : (said || t("gig.stamped", "도장을 찍었습니다. 내 정보에 남았습니다.")));
       render();
       if (!r.already) {
         stampMoment();
@@ -795,8 +893,8 @@
 
   /* ② 응원 — 누르면 바로(낙관적). 같은 칸을 빠르게 여러 번 눌러도 마지막 뜻 하나만 서버에 남는다 */
   function onCheer(k, keepMsg) {
-    if (blockedOrClosed("cheer")) return;
-    if (needMember({ what: "cheer", k: k })) return;
+    if (blockedOrClosed("cheer", chipOf(k))) return;
+    if (needMember({ what: "cheer", k: k }, chipOf(k))) return;
     var mine = S.me.cheers || [];
     var cur = S.want.cheer[k] !== undefined ? S.want.cheer[k] : mine.indexOf(k) >= 0;
     S.want.cheer[k] = !cur;
@@ -818,7 +916,7 @@
         delete S.want.cheer[k];
         paintCheers(lstate());
         paintBar(lstate());
-        failed(r);
+        failed(r, chipOf(k));
         return;
       }
       var list = S.me.cheers || (S.me.cheers = []);
@@ -838,10 +936,10 @@
 
   /* ③ 앵콜 투표 — 한 사람 한 곡. 다른 곡을 누르면 옮긴다 */
   function onVote(song, keepMsg) {
-    if (blockedOrClosed("vote")) return;
-    if (needMember({ what: "vote", song: song })) return;
+    if (blockedOrClosed("vote", songOf(song))) return;
+    if (needMember({ what: "vote", song: song }, songOf(song))) return;
     var cur = S.want.vote !== undefined ? S.want.vote : S.me.vote || null;
-    if (cur === song) { msg(t("gig.votedSame", "이미 고르셨습니다. 다른 곡을 누르면 바뀝니다.")); return; }
+    if (cur === song) { msg(t("gig.votedSame", "이미 고르셨습니다. 다른 곡을 누르면 바뀝니다."), null, songOf(song)); return; }
     if (cur) bump("votes", cur, -1);
     bump("votes", song, 1);
     S.want.vote = song;
@@ -862,7 +960,7 @@
         S.want.vote = undefined;
         paintVotes(lstate());
         paintBar(lstate());
-        failed(r);
+        failed(r, songOf(song) || byId("gig-songs"));
         if (r && r.reason === "vote_closed") { S.voteOpen = false; paintVotes(lstate()); }
         return;
       }
@@ -879,11 +977,11 @@
     });
   }
 
-  function failed(r) {
+  function failed(r, near) {
     var w = r && r.reason;
-    if (w === "not_logged_in" || w === "expired") { S.me = null; render(); M.openSheet("start", go, null, { ctx: "gig" }); return; }
-    if (w === "not_member") { if (S.me) S.me.joined = false; render(); M.openSheet("join", go, null, { ctx: "gig" }); return; }
-    msg(why(w), "bad");
+    if (w === "not_logged_in" || w === "expired") { S.me = null; render(); M.openSheet("start", near && near.focus ? near : go, null, { ctx: "gig" }); return; }
+    if (w === "not_member") { if (S.me) S.me.joined = false; render(); M.openSheet("join", near && near.focus ? near : go, null, { ctx: "gig" }); return; }
+    msg(why(w), "bad", near);
     if (w === "not_open" || w === "blocked") refetch();
   }
 
@@ -892,13 +990,20 @@
     e.preventDefault();
     var ta = byId("gig-gb-ta"), b = byId("gig-gb-go");
     var body = (ta.value || "").replace(/^\s+|\s+$/g, "");
-    if (body.length < 2) { msg(why("empty"), "bad"); ta.focus(); return; }
-    if (body.length > 500) { msg(why("too_long"), "bad"); return; }
-    if (needMember(null, b)) return;
-    b.disabled = true;
+    /* 칸 오류는 칸 바로 아래·'남기기' 바로 위에(#gig-gb-err) — 화면 위 1000px 밖에 뜨던 것(검토 3바퀴 17번) */
+    if (body.length < 2) { gbInvalid(true); msg(why("empty"), "bad", b); ta.focus(); return; }
+    if (body.length > 500) { gbInvalid(true); msg(why("too_long"), "bad", b); return; }
+    gbInvalid(false);
+    if (needMember({ what: "gb" }, b)) return;
+    if (S.busy.gb) return;
+    /* 보내는 동안 aria-disabled(초점을 지킨다, 검토 4바퀴 13번) — 두 번 올림은 S.busy.gb 가 막는다 */
+    S.busy.gb = true;
+    b.setAttribute("aria-disabled", "true");
+    msg("");
     M.rpc("gig_guestbook_write", { p_code: S.code, p_body: body }, true).then(function (r) {
-      b.disabled = false;
-      if (!r || !r.ok) { failed(r); return; }
+      S.busy.gb = false;
+      b.removeAttribute("aria-disabled");
+      if (!r || !r.ok) { failed(r, b); return; }
       ta.value = "";
       gbCount();
       S.me.posted = (S.me.posted || 0) + 1;
@@ -909,11 +1014,27 @@
       msg(done, "ok");
       loadGuestbook();
       render();
+      /* 폼이 접히면 누른 '남기기'가 사라져 초점이 문서로 떨어졌다 — 그 자리에 선 '한 줄 더 남기기'로(검토 4바퀴 13번) */
+      var ag = byId("gig-gb-again-b");
+      if (ag && shown(ag)) { try { ag.focus({ preventScroll: true }); } catch (e) {} }
     });
   }
   function gbCount() {
     var ta = byId("gig-gb-ta");
     txt("gig-gb-count", (ta.value || "").length + " / 500");
+  }
+  function gbInvalid(on) {
+    var ta = byId("gig-gb-ta");
+    if (on) { ta.setAttribute("aria-invalid", "true"); ta.setAttribute("aria-describedby", "gig-gb-err gig-gb-hint"); }
+    else { ta.removeAttribute("aria-invalid"); ta.setAttribute("aria-describedby", "gig-gb-hint"); }
+  }
+  /* 자판이 올라오면 '남기기'·'열기'까지 보이게 — 사랑방과 같은 공용 맞춤(board.js kbBind, 검토 4바퀴 11·14번).
+     예전 gbFit 은 단추만 보고 초점·크기 변화 때만 돌아, 작은 폰·큰 글자에서 글칸 첫 줄이 머리 밑에 숨거나 한 글자를
+     치면 단추가 도로 자판 뒤로 갔다 */
+  function kbFitAll() {
+    if (!M || !M.kbFit) return;
+    M.kbFit(byId("gig-gb-ta"), function () { return byId("gig-gb-go"); });
+    M.kbFit(byId("gig-code-in"), function () { return byId("gig-code-go"); });
   }
 
   /* 채운 단추는 화면에 늘 하나 — 방명록 쓰기 칸이 보이거나 글을 치는 동안에는 하단 바를 내린다
@@ -1002,34 +1123,60 @@
      로그인 뒤 이어서 할 일 — 도장·응원·투표를 누르고 회원으로 들어온 사람
      ================================================================ */
   function sig(me) { return me ? (me.joined ? "J" : "U") : "A"; }
+  /* 가입·로그인을 마친 인사(board.js welcome)를 이어서 할 일(도장·응원·투표·방명록)의 결과와 한 문장으로 —
+     예전에는 인사를 #gig-msg 에 쓰고 13ms 뒤 도장이 지웠고, 상태 줄(#gig-phase)의 '도장을 찍었습니다'와 #gig-msg 의
+     '도장을 찍고 … 보냈습니다'가 이어서 낭독돼 같은 말이 겹쳤다(검토 4바퀴 15번). 한 자리(#gig-phase)에 한 번만 쓴다 */
   function runNext() {
     if (!S.me || !S.me.joined || !M.takeNext) return;
+    var hello = S.welcome || "";
+    S.welcome = "";
     var n = M.takeNext(NEXTS);
-    if (!n) return;
-    if (n.code && n.code !== S.code) return;
-    if (n.what === "checkin") { if (!S.me.checked) checkin(); return; }
+    if (n && n.code && n.code !== S.code) n = null;
+    var lead = hello ? hello + " " : "";
+    if (!n) { if (hello) msg(hello, "ok"); return; }
+    if (n.what === "gb") {
+      /* 방명록으로 가려던 사람 — 글칸으로 데려간다(쓸 수 있을 때만). 인사는 위쪽 안내 줄에 */
+      if (hello) msg(hello, "ok");
+      var ta = byId("gig-gb-ta");
+      if (ta && shown(ta)) {
+        var sec = byId("gig-gb");
+        if (sec.scrollIntoView) sec.scrollIntoView({ block: "start", behavior: reduced() ? "auto" : "smooth" });
+        setTimeout(function () { try { ta.focus({ preventScroll: true }); } catch (e) { ta.focus(); } }, reduced() ? 0 : 350);
+      }
+      return;
+    }
+    if (n.what === "checkin") {
+      if (S.me.checked) { if (hello) msg(hello, "ok"); return; }
+      checkin(null, lead);
+      return;
+    }
     /* 응원·투표를 누르고 들어온 사람 — 회원 창은 '가입 마치고 도장 찍기'를 약속했다. 도장이 모든 행동의
        바탕이므로 도장을 먼저 찍고, 이어서 누른 것을 보낸다. 그리고 실제로 한 일을 모두 말한다(검토 35번) */
     var stampFirst = S.phase === "open" && !S.me.checked;
     if (n.what === "cheer" && n.k != null) {
       var k = +n.k;
-      var doCheer = function () {
-        if ((S.me.cheers || []).indexOf(k) >= 0) return;
-        onCheer(k, true);
-        if (stampFirst) msg(fmt(t("gig.stampCheerF", "도장을 찍고 「{p}」 응원을 보냈습니다."), { p: phraseOf(k) }), "ok");
-      };
-      if (stampFirst) checkin(function () { doCheer(); }); else doCheer();
+      var already = (S.me.cheers || []).indexOf(k) >= 0;
+      if (stampFirst) {
+        checkin(function () { if (!already) onCheer(k, true); },
+                lead, already ? "" : fmt(t("gig.stampCheerF", "도장을 찍고 「{p}」 응원을 보냈습니다."), { p: phraseOf(k) }));
+      } else {
+        if (!already) onCheer(k, true);
+        if (hello) msg(hello, "ok");
+      }
       return;
     }
     if (n.what === "vote" && n.song) {
-      var song = n.song;
-      var doVote = function () {
-        if (S.me.vote === song) return;
-        onVote(song, true);
-        if (stampFirst) msg(fmt(t("gig.stampVoteF", "도장을 찍고 「{s}」에 한 표를 보냈습니다."), { s: song }), "ok");
-      };
-      if (stampFirst) checkin(function () { doVote(); }); else doVote();
+      var song = n.song, had = S.me.vote === song;
+      if (stampFirst) {
+        checkin(function () { if (!had) onVote(song, true); },
+                lead, had ? "" : fmt(t("gig.stampVoteF", "도장을 찍고 「{s}」에 한 표를 보냈습니다."), { s: song }));
+      } else {
+        if (!had) onVote(song, true);
+        if (hello) msg(hello, "ok");
+      }
+      return;
     }
+    if (hello) msg(hello, "ok");
   }
   function phraseOf(k) {
     for (var i = 0; i < S.phrases.length; i++) if (+S.phrases[i].k === +k) return (isEN() ? S.phrases[i].en : S.phrases[i].ko) || S.phrases[i].ko || "";
@@ -1067,8 +1214,13 @@
       if (c !== inp.value) inp.value = c;
     });
     byId("gig-gb-form").addEventListener("submit", onGbSubmit);
-    byId("gig-gb-ta").addEventListener("input", gbCount);
-    byId("gig-gb-login").addEventListener("click", function () { needMember(null, byId("gig-gb-login")); });
+    byId("gig-gb-ta").addEventListener("input", function () {
+      gbCount();
+      if (byId("gig-gb-ta").getAttribute("aria-invalid")) { gbInvalid(false); msg(""); }
+    });
+    kbFitAll();
+    /* 방명록으로 가려고 누른 단추 — 창 제목·첫 문장이 '방명록'을 말하고, 가입을 마치면 글칸으로 데려간다(검토 4바퀴 12번) */
+    byId("gig-gb-login").addEventListener("click", function () { needMember({ what: "gb" }, byId("gig-gb-login")); });
     byId("gig-gb-again-b").addEventListener("click", function () {
       S.gbDone = "";
       paintGuestbook();
@@ -1101,8 +1253,21 @@
     M.on(function (type) {
       if (!S.loaded) return;
       if (type === "next") { refetch(); return; }
-      /* 로그인·가입을 마친 사람에게 — 공연 화면은 헤더 알림 대신 제 자리의 안내 줄에 */
-      if (type === "welcome") { msg(arguments[1] || "", "ok"); return; }
+      /* 로그인·가입을 마친 사람에게 — 공연 화면은 헤더 알림 대신 제 자리의 안내 줄에.
+         이어서 할 일(도장·응원·투표·방명록)이 남아 있으면 지금 쓰지 않고 그 결과와 한 문장으로(runNext, 검토 4바퀴 15번).
+         도장이 열리기 전에 가입했으면 언제 찍을 수 있는지까지 — 단추가 없어 '도장이 찍혔나?' 했다(검토 4바퀴 18번) */
+      if (type === "welcome") {
+        var hi = arguments[1] || "", how = arguments[3] || "", who = M.me && M.me();
+        if (M.hasNext && M.hasNext(NEXTS)) { S.welcome = hi; return; }
+        if (S.phase === "before" && S.ev) {
+          var lead = how === "join" ? fmt(t("bd.joinedMeF", "{n} 님, 가입을 마쳤습니다."), { n: (who && who.nickname) || "" }) : hi;
+          msg(lead + " " + fmt(t("gig.beforeOpenF", "도장은 {w}부터 찍을 수 있습니다 — 이 화면을 열어 두시면 그때 「도장 찍기」가 나타납니다."),
+                               { w: longWhen(S.ev.opens_at) }), "ok");
+          return;
+        }
+        msg(hi, "ok");
+        return;
+      }
       if (type !== "state") return;
       if (sig(M.me()) !== sig(S.me)) refetch();
     });

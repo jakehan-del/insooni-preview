@@ -131,12 +131,37 @@
     farSentinel.style.cssText = "position:absolute;top:0;left:0;width:1px;height:640px;pointer-events:none;";
     document.body.prepend(topSentinel);
     document.body.prepend(farSentinel);
+    /* 폰(≤720px)에서는 'TOP' 을 문서 끝(꼬리말이 그 자리를 덮을 때)에서만 보인다(검토 4바퀴 3번).
+       상자 없는 글자(v3 규칙)라 스크롤하는 동안 글줄과 줄 끝 ↗ 가 TOP 밑으로 지나가 글자끼리 겹쳤고,
+       줄 오른쪽 끝을 누르면 맨 위로 튈 수 있었다. 꼬리말은 오른쪽에 TOP 자리를 비워 둔다(.footer-min nav padding-right).
+       PC 는 글 폭(1200) 밖이라 겹치지 않으므로 지금처럼 640px 아래로 내려가면 보인다 */
+    var far = false;
+    var phone = window.matchMedia ? window.matchMedia("(max-width: 720px)") : null;
+    var tq = 0;
+    function topShow() {
+      tq = 0;
+      if (!btn) return;
+      var on = far;
+      /* 꼬리말은 라우터가 페이지마다 갈아끼운다 — 그때그때 찾는다 */
+      var foot = $(".footer-min") || $("footer");
+      if (on && phone && phone.matches && foot && !document.body.classList.contains("home")) {
+        var br = btn.getBoundingClientRect();
+        on = foot.getBoundingClientRect().top <= br.top - 8;
+      }
+      btn.classList.toggle("show", on);
+    }
+    function topQueue() { if (!tq) tq = (window.requestAnimationFrame || setTimeout)(topShow); }
+    if (btn && phone) {
+      window.addEventListener("scroll", topQueue, { passive: true });
+      window.addEventListener("resize", topQueue);
+    }
     if ("IntersectionObserver" in window) {
       new IntersectionObserver(function (entries) {
         if (header) header.classList.toggle("scrolled", !entries[0].isIntersecting);
       }).observe(topSentinel);
       new IntersectionObserver(function (entries) {
-        if (btn) btn.classList.toggle("show", !entries[0].isIntersecting);
+        far = !entries[0].isIntersecting;
+        topShow();
       }).observe(farSentinel);
     } else if (header) {
       header.classList.add("scrolled");
@@ -3104,8 +3129,10 @@
       $all(".lang-toggle").forEach(function (btn) {
         var wide = btn.classList.contains("nav-lang");
         btn.textContent = lang === "ko" ? (wide ? "English" : "EN") : "한국어";
-        /* 영어로 보고 있는 사람에게는 설명도 영어여야 한다 */
-        btn.setAttribute("aria-label", lang === "ko" ? "Switch to English" : "Switch to Korean");
+        /* 단추의 글자는 '건너갈 언어'다 — 그 언어를 lang 으로 밝혀 화면낭독기가 맞는 음성으로 읽게(WCAG 3.1.2).
+           이름표도 같은 언어로: 한국어 음성이 'Switch to English'를, 영어 음성이 '한국어'를 읽던 것(검토 4바퀴 16번) */
+        btn.setAttribute("lang", lang === "ko" ? "en" : "ko");
+        btn.setAttribute("aria-label", lang === "ko" ? "View in English" : "한국어로 보기");
       });
       $all("[data-i18n]").forEach(function (n) {
         var key = n.getAttribute("data-i18n");
@@ -3849,6 +3876,7 @@
       dragging = true; moved = 0; lastX = e.clientX; vel = 0;
       strip.classList.add("dragging");
       strip.classList.add("is-touched");   /* 한 번 넘기면 안내 문구를 거둔다 */
+      document.body.classList.add("strip-touched");   /* 안내 문구는 꼬리말 안에 있다(검토 4바퀴 8번) */
     });
     strip.addEventListener("pointermove", function (e) {
       if (!dragging) return;

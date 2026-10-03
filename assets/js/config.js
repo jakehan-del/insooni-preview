@@ -84,6 +84,14 @@ if (typeof window.INSOONI_CONFIG.liveEmail === "undefined") {
   window.INSOONI_CONFIG.liveEmail = false;
 }
 
+/* 마이페이지의 서버 칸(supabase/013) 스위치 — 내 댓글 모아 보기 · 좋아하는 노래(가입 질문 포함) · 운영 화면의 '내 노래'.
+   013 을 운영에 실행하고 ✅ 를 확인한 뒤 true. 꺼져 있어도 마이페이지(community.html#me)는 열린다 —
+   010 에 이미 있는 것(별명·등급·내가 쓴 글·별명 바꾸기·로그아웃·탈퇴)과 011 의 도장만 보이고,
+   013 칸은 '준비하고 있습니다' 한 줄로 정직하게 비운다. 없는 함수를 부르지 않는다(404 가 방문자 콘솔에 남는다). */
+if (typeof window.INSOONI_CONFIG.mypage === "undefined") {
+  window.INSOONI_CONFIG.mypage = false;
+}
+
 /* 이메일 소식지 폼 — 보낼 도구(발송 서비스)가 없는 동안은 숨긴다. 신청만 받고 보내지 못하면 거짓 약속이 된다. */
 if (typeof window.INSOONI_CONFIG.newsletter === "undefined") {
   window.INSOONI_CONFIG.newsletter = false;

@@ -19,7 +19,7 @@ SUPA = M.SUPA
 PAGES = ["index", "about", "music", "schedule", "news", "archive", "haemil", "community", "privacy", "terms"]
 ARGS = [a for a in sys.argv[1:] if not a.startswith("--")]
 FAST = "--fast" in sys.argv
-GROUPS = set(ARGS) or {"P0", "R", "H", "C", "V2"}
+GROUPS = set(ARGS) or {"P0", "R", "H", "C", "V2", "V3", "V4"}
 R = []
 
 
@@ -140,7 +140,9 @@ DASH_JS = """() => { const out = []; for (const e of document.querySelectorAll('
   for (const s of ['Top', 'Right', 'Bottom', 'Left']) if (cs['border' + s + 'Style'] === 'dashed' && parseFloat(cs['border' + s + 'Width']) > 0) { out.push(e.className || e.tagName); break; }
   if (cs.outlineStyle === 'dashed' && parseFloat(cs.outlineWidth) > 0) out.push('outline ' + (e.className || e.tagName)); } return out; }"""
 
-OVER_JS = "document.documentElement.scrollWidth - innerWidth"
+# 넘침은 clientWidth(레이아웃 폭)와 견준다 — 폰 흉내(is_mobile)에서는 내용이 넘치면 크로뮴이 화면을 축소해 innerWidth 가
+# 내용 폭까지 늘어난다(360 → 441 실측). innerWidth 와 견주면 넘쳐도 0 이 나왔다(검토 4바퀴 6번 뮤테이션에서 드러남)
+OVER_JS = "document.documentElement.scrollWidth - document.documentElement.clientWidth"
 
 # 대비 감사(verify_8908 과 같은 방식: 직접 텍스트 노드 · 조상 배경 합성, 배경 그림이면 건너뜀)
 AUDIT_JS = r"""(scope) => {
@@ -188,6 +190,10 @@ def run():
                 group_c(br)
             if "V2" in GROUPS:
                 group_v2(br)
+            if "V3" in GROUPS:
+                group_v3(br)
+            if "V4" in GROUPS:
+                group_v4(br)
         finally:
             br.close()
 
@@ -197,7 +203,8 @@ def group_p0(br):
     print("── P0")
     for w, h in [(375, 812), (1280, 860)]:
         f = M.Fake(); seed(f)          # 가짜 서버 settings 는 kakao: true
-        c = ctx_of(br, f, w, h, conf="{board: true}"); pg = c.new_page()
+        # config.js 의 기본값이 kakao=true 로 바뀌었으므로(2f99dab) 꺼짐을 명시한다 — 검사의 뜻(true 가 아니면 단추 0)은 그대로
+        c = ctx_of(br, f, w, h, conf="{board: true, kakao: false}"); pg = c.new_page()
         fresh(pg, "community.html")
         pg.click("#hm"); pg.wait_for_timeout(900)
         n = pg.locator("#bd-sheet .bd-kakao").count()
@@ -218,17 +225,18 @@ def group_p0(br):
     pg.goto("https://kauth.kakao.com/oauth/authorize?x=1", wait_until="load"); pg.wait_for_timeout(400)
     pg.go_back(wait_until="load"); pg.wait_for_timeout(1800)
     al = pg.evaluate("""() => [...document.querySelectorAll('#bd-sheet [role=alert]')].filter(e => e.checkVisibility()).map(e => e.textContent)""")
-    # 실패를 알린 뒤 같은 실패 경로(노란 카카오)를 첫 초점·맨 위로 다시 권하지 않는다(검토 29·32번):
-    # 첫 초점 = 알림, 카카오는 이메일 아래의 테두리 단추(.bd-kakao--low)로 내려가고, 이메일 '처음 가입'이 열린다
+    # 코드 없이 돌아온 사람은 대부분 동의 화면에서 망설이다 뒤로 간 사람이다 — 원인을 단정하지 않고(첫 초점 = 알림),
+    # 실제로 되는 길(노란 카카오)을 이메일 양식보다 앞에 그대로 둔다. 예전에는 사랑방이면 카카오를 이메일 아래 테두리 단추로
+    # 내려 375×812 에서 화면 밖(top 927)이었다(검토 4바퀴 5번). 혹시 KOE 였을 때를 위해 이메일 '처음 가입'도 열린다
     d = pg.evaluate("""() => { const sh = document.getElementById('bd-sheet'), k = sh.querySelector('.bd-kakao'),
         pane = sh.querySelector('.bd-pane'), up = [...sh.querySelectorAll('.bd-tab')].map(b => b.textContent);
       return {focus: document.activeElement && document.activeElement.className, low: !!(k && k.classList.contains('bd-kakao--low')),
-              below: !!(k && pane && (pane.compareDocumentPosition(k) & Node.DOCUMENT_POSITION_FOLLOWING)),
-              bg: k ? getComputedStyle(k).backgroundColor : '', tabs: up}; }""")
-    t("P0-3 PKCE(kakao) 남긴 채 뒤로 가기 → 시트 start + role=alert 'bd.kakaoBack' 정확히 1개 · 검증값 지움 · 첫 초점 알림 · 카카오는 이메일 아래 테두리 단추",
-      pg.is_visible("#bd-sheet") and len(al) == 1 and "카카오 로그인이 지금 되지 않습니다" in al[0]
+              before: !!(k && pane && (k.compareDocumentPosition(pane) & Node.DOCUMENT_POSITION_FOLLOWING)),
+              bg: k ? getComputedStyle(k).backgroundColor : '', kb: k ? Math.round(k.getBoundingClientRect().bottom) : 9999, ih: innerHeight, tabs: up}; }""")
+    t("P0-3 PKCE(kakao) 남긴 채 뒤로 가기 → 시트 start + role=alert 'bd.kakaoBack'('끝나지 않았습니다 … KOE', 원인 단정 없음) 정확히 1개 · 검증값 지움 · 첫 초점 알림 · 노란 카카오가 이메일보다 앞(화면 안) · '처음 가입' 열림",
+      pg.is_visible("#bd-sheet") and len(al) == 1 and "카카오 로그인이 끝나지 않았습니다" in al[0] and "KOE" in al[0]
       and pg.evaluate("localStorage.getItem('insooni_pkce')") is None
-      and d["focus"] == "bd-alert" and d["low"] and d["below"] and d["bg"] in ("rgba(0, 0, 0, 0)", "transparent") and "처음 가입" in d["tabs"], (al, d))
+      and d["focus"] == "bd-alert" and not d["low"] and d["before"] and d["bg"] == "rgb(254, 229, 0)" and d["kb"] <= d["ih"] and "처음 가입" in d["tabs"], (al, d))
     c.close()
     # 인앱 창을 닫고 QR 을 다시 찍은 경우(뒤로 가기가 아니라 새로 열기)도 같은 안내를 한다(검토 32번 ③)
     c = ctx_of(br, f, 375, 812); pg = c.new_page()
@@ -304,7 +312,7 @@ def group_h(br):
     c.close()
 
     # H2 — 행렬: 페이지 × 폭 × 글자 × 상태
-    widths = [320, 360, 375, 414, 768, 1081, 1280, 1440]
+    widths = [320, 360, 375, 390, 414, 768, 1081, 1280, 1440]
     pages = PAGES if not FAST else ["index", "news", "community", "music"]
     f = M.Fake(); S = seed(f)
     fails, n = [], 0
@@ -314,20 +322,30 @@ def group_h(br):
                 c = ctx_of(br, f, 1440, 900, fs=fs, session=sess(f, S["long"]) if state == "member" else None, mobile=False)
                 pg = c.new_page()
                 pg.goto(B + name + ".html", wait_until="load"); pg.wait_for_timeout(1300)
+                if name == "index":
+                    # 홈 도입부 동안은 헤더가 눌리지 않고(pointer-events:none) 상표가 크다 — 끝난 뒤의 헤더를 잰다(fresh 와 같은 기준)
+                    pg.wait_for_function("!document.documentElement.classList.contains('is-intro')", timeout=20000)
+                    pg.wait_for_timeout(300)
                 for w in widths:
                     pg.set_viewport_size({"width": w, "height": 860}); pg.wait_for_timeout(180)
                     d = pg.evaluate("""() => { const hm = document.getElementById('hm'), b = document.querySelector('.site-header .brand');
                       const ul = document.querySelector('.site-header .main-nav ul');
                       if (!hm) return null; const r = hm.getBoundingClientRect();
                       const bs = [...b.querySelectorAll('.brand-en, .brand-mark')].filter(e => e.checkVisibility()).map(e => e.getBoundingClientRect().right);
-                      return {gapB: r.left - Math.max(...bs), gapN: innerWidth >= 1081 ? r.left - ul.getBoundingClientRect().right : 99,
-                              over: document.documentElement.scrollWidth - innerWidth, w: r.width, h: r.height,
+                      const tg = document.querySelector('.site-header .nav-toggle'), tgOn = tg && tg.checkVisibility();
+                      const hl = document.querySelector('.site-header .header-tools .lang-toggle'), nl = document.querySelector('.main-nav .nav-lang');
+                      return {tg: tgOn ? tg.getBoundingClientRect().right : 0,
+                              en: (hl && hl.checkVisibility()) || (!!nl && getComputedStyle(nl).display !== 'none'),
+                              gapB: r.left - Math.max(...bs), gapN: innerWidth >= 1081 ? r.left - ul.getBoundingClientRect().right : 99,
+                              over: document.documentElement.scrollWidth - document.documentElement.clientWidth, w: r.width, h: r.height,
                               txt: hm.innerText, member: /내 정보|My page/.test(hm.innerText)}; }""")
                     n += 1
                     if not d:
                         fails.append((state, fs, name, w, "입구 없음")); continue
                     why = []
                     if w < 1081 and d["gapB"] < 8: why.append("상표와 %.1f" % d["gapB"])
+                    if w < 1081 and d["tg"] > w - 8: why.append("☰ right %.1f" % d["tg"])
+                    if not d["en"]: why.append("EN 없음")
                     if d["gapN"] < 16: why.append("내비와 %.1f" % d["gapN"])
                     if d["over"] > 0: why.append("넘침 %d" % d["over"])
                     if d["w"] < 44 or d["h"] < 44: why.append("크기 %.0fx%.0f" % (d["w"], d["h"]))
@@ -335,7 +353,7 @@ def group_h(br):
                     if why:
                         fails.append((state, fs, name, w, " · ".join(why)))
                 c.close()
-    t("H2 %d조합(페이지 %d × 폭 8 × 글자 2 × 상태 2) 상표 간격 ≥8 · 내비 간격 ≥16 · 넘침 0 · 44×44" % (n, len(pages)), not fails and n > 0, fails[:6])
+    t("H2 %d조합(페이지 %d × 폭 9 × 글자 2 × 상태 2) 상표 간격 ≥8 · 내비 간격 ≥16 · ☰ right ≤ 폭−8 · EN 이 헤더나 메뉴에 · 넘침 0 · 44×44" % (n, len(pages)), not fails and n > 0, fails[:6])
 
     # H3 — 긴/짧은 라벨
     c = ctx_of(br, f, 1440, 900, mobile=False); pg = c.new_page(); fresh(pg, "news.html")
@@ -582,8 +600,12 @@ def group_c(br):
         scene("C15 꺼짐", w, fs, None, conf="{board: false}")
         scene("시트 start", w, fs, "sheet")
         scene("시트 start(카카오 꺼짐)", w, fs, "sheet", conf="{board: true}")
-        scene("시트 me", w, fs, "sheet", session=S["fans"][0])
+        # 2026-10-03: 예전 '시트 me' 는 내 정보 화면(#me)이 대신한다 — 스위치 꺼짐(010 갈래)·켜짐(013)·새싹·로그인 전 모두
+        scene("C16 내 정보·정회원", w, fs, None, url="community.html#me", session=S["fans"][0])
+        scene("C16b 내 정보·새싹(013 켜짐)", w, fs, None, url="community.html#me", session=S["fans"][3], conf="{board: true, kakao: true, mypage: true}")
+        scene("C16c 내 정보·로그인 전", w, fs, None, url="community.html#me")
         scene("시트 join", w, fs, "sheet", session="newkakao")
+        scene("시트 join(노래 질문)", w, fs, "sheet", session="newkakao", conf="{board: true, kakao: true, mypage: true}")
     bad7, bad8, bad11, bad17, seen8 = [], [], [], [], 0
     for name, w, fs, prep, url, who, conf in scenes:
         if who == "newkakao":
@@ -716,8 +738,9 @@ def group_c(br):
         out, counts = [], []
         for name, url, who, prep, need in [("목록", "community.html", None, None, 25), ("글 보기", "community.html#p%d" % S["ids"][4], S["fans"][0], None, 20),
                                            ("글쓰기", "community.html#write", S["fans"][0], None, 8), ("시트", "community.html", None, "sheet", 8),
-                                           ("꺼짐", "community.html", None, "off", 8)]:
-            c = ctx_of(br, f, 375, 812, conf="{board: false}" if prep == "off" else "{board: true, kakao: true}",
+                                           ("꺼짐", "community.html", None, "off", 8), ("내 정보(013)", "community.html#me", S["fans"][3], "me13", 12)]:
+            c = ctx_of(br, f, 375, 812, conf="{board: false}" if prep == "off" else
+                       "{board: true, kakao: true, mypage: true}" if prep == "me13" else "{board: true, kakao: true}",
                        session=sess(f, who) if who else None)
             pg = c.new_page(); fresh(pg, url, 1500)
             if mut:
@@ -733,7 +756,7 @@ def group_c(br):
             c.close()
         return out, counts
     bad, counts = audit(False)
-    t("C18 대비 4.5:1 — 목록·글 보기·글쓰기·시트·꺼짐 (잰 글자 %s)" % counts, not bad, bad[:5])
+    t("C18 대비 4.5:1 — 목록·글 보기·글쓰기·시트·꺼짐·내 정보 (잰 글자 %s)" % counts, not bad, bad[:5])
     bad_m, _ = audit(True)
     t("C18b 뮤테이션 --faint #555 → 대비 검사가 잡는다", len(bad_m) > 0, bad_m[:2])
 
@@ -853,23 +876,26 @@ def group_v2(br):
     t("V5 차단 회원 — 글쓰기 단추 안 보임 · '쓸 수 없습니다' 1회(#write 로 와도 1회)", d["hid"] and d["n"] == 1 and n2 == 1, (d, n2))
     c.close()
 
-    # 6 — 헤더 회원 라벨의 별명에도 밑줄(한 단추가 두 조각처럼 보이지 않게)
+    # 6 — 헤더 회원 라벨의 별명에도 밑줄(한 단추가 두 조각처럼 보이지 않게). 4바퀴 9번: 별명이 따로 그은 밑줄이 두 토막을
+    # 만들었다 — 이제 밑줄은 #hm 하나에서 이어져 내려오고(별명은 inline), 별명 자체의 선은 없다(V4-6 이 구조를 잰다)
     c = ctx_of(br, f, 1440, 900, session=sess(f, S["fans"][0]), mobile=False); pg = c.new_page(); fresh(pg, "news.html")
-    u = pg.evaluate("getComputedStyle(document.querySelector('#hm .hm-nick')).textDecorationLine")
-    t("V6 1440 회원 — 헤더 '.hm-nick' 밑줄 이어짐(text-decoration-line underline)", "underline" in u, u)
+    u = pg.evaluate("[getComputedStyle(document.getElementById('hm')).textDecorationLine, getComputedStyle(document.querySelector('#hm .hm-nick')).display]")
+    t("V6 1440 회원 — 헤더 밑줄은 #hm 에서 별명까지 이어짐(#hm underline · .hm-nick inline)", u == ["underline", "inline"], u)
     c.close()
 
-    # 8 — 내 정보: 테두리 단추는 '별명 저장' 하나(고쳤을 때만 눌림) · 로그아웃·탈퇴는 글자 링크
+    # 8 — 내 정보: 별명·계정 칸의 테두리 단추는 '별명 저장' 하나(고쳤을 때만 눌림) · 로그아웃·탈퇴는 글자 링크
+    # 2026-10-03: 내 정보 창 → 내 정보 화면(#me). 같은 단언을 화면의 별명·계정 칸에 건다(소식 페이지에서 헤더로 들어온다)
     c = ctx_of(br, f, 375, 812, session=sess(f, S["fans"][3])); pg = c.new_page(); fresh(pg, "news.html")
-    pg.click("#hm"); pg.wait_for_timeout(900)
-    d = pg.evaluate("""() => { const s = document.getElementById('bd-sheet'); const vis = e => e.checkVisibility();
-      return {ghost: [...s.querySelectorAll('.btn--ghost')].filter(vis).map(b => b.textContent), out: !!s.querySelector('.bd-me-acts .bd-link'),
-              outTxt: [...s.querySelectorAll('.bd-me-acts .bd-link')].map(b => b.textContent), dis: s.querySelector('.bd-aform button[type=submit]').disabled,
-              h: [...s.querySelectorAll('.bd-me-acts .bd-link')].map(b => Math.round(b.getBoundingClientRect().height))}; }""")
+    pg.click(".nav-toggle"); pg.wait_for_timeout(600); pg.click(".nav-member-b"); pg.wait_for_timeout(1500)
+    d = pg.evaluate("""() => { const s = document.getElementById('cafe-me'); const vis = e => e.checkVisibility();
+      const z = [...s.querySelectorAll('.me-nickx, .me-acts')];
+      return {ghost: z.flatMap(x => [...x.querySelectorAll('.btn--ghost')]).filter(vis).map(b => b.textContent), out: !!s.querySelector('.bd-me-acts .bd-link'),
+              outTxt: [...s.querySelectorAll('.bd-me-acts .bd-link')].map(b => b.textContent), dis: s.querySelector('.me-nickf button[type=submit]').disabled,
+              h: [...s.querySelectorAll('.bd-me-acts .bd-link')].map(b => Math.round(b.getBoundingClientRect().height)), hash: location.hash}; }""")
     pg.fill("#bd-mn", "대전 아줌마2"); pg.wait_for_timeout(100)
-    dis2 = pg.evaluate("document.querySelector('#bd-sheet .bd-aform button[type=submit]').disabled")
-    t("V8 내 정보 — 테두리 단추 1개('별명 저장', 처음엔 잠김 → 고치면 열림) · '로그아웃 · 탈퇴하기' 글자 링크(≥44px)",
-      d["ghost"] == ["별명 저장"] and d["dis"] and not dis2 and d["outTxt"] == ["로그아웃", "탈퇴하기"] and all(x >= 44 for x in d["h"]), (d, dis2))
+    dis2 = pg.evaluate("document.querySelector('#cafe-me .me-nickf button[type=submit]').disabled")
+    t("V8 소식 → 메뉴의 회원 입구 → 내 정보(#me) — 별명·계정 칸 테두리 단추 1개('별명 저장', 처음엔 잠김 → 고치면 열림) · '로그아웃 · 탈퇴하기' 글자 링크(≥44px)",
+      d["hash"] == "#me" and d["ghost"] == ["별명 저장"] and d["dis"] and not dis2 and d["outTxt"] == ["로그아웃", "탈퇴하기"] and all(x >= 44 for x in d["h"]), (d, dis2))
     c.close()
 
     # 9 — 탭이 하나뿐이면 탭 대신 작은 제목(가입을 받지 않는 서버)
@@ -1060,6 +1086,398 @@ def group_v2(br):
     t("V23 라우터로 온 /community.html → 글쓰기 → 카카오 왕복(307 로 /community) → 글쓰기 열림 · 이어서 할 일 소비 · 뮤테이션(normPath 무력화)은 잡힘",
       np_anchor in board_src and p0.endswith("/community.html") and d["p"] == "/community" and d["writing"] and d["next"] is None and not dm["writing"], (p0, d, dm))
     c = None
+
+
+# ═══ V3 — 검토 3바퀴(2026-10-03 새벽) ═══════════════════════════
+def group_v3(br):
+    print("── V3 (3차 검토 반영)")
+    f = M.Fake(); S = seed(f)
+    board_src = (ROOT / "assets/js/board.min.js").read_text(encoding="utf-8")
+
+    # 27 — 큰 글자 × 좁은 폰에서 ☰ 가 화면 밖(360×21 에서 right 382.5) → 메뉴를 열 수 없어 다른 페이지로 못 갔다
+    TG = """() => { const tg = document.querySelector('.site-header .nav-toggle'), r = tg.getBoundingClientRect();
+      const hit = document.elementFromPoint(Math.min(innerWidth - 1, r.left + r.width / 2), r.top + r.height / 2);
+      return {right: r.right, iw: innerWidth, hit: !!hit && (hit === tg || tg.contains(hit)), over: document.documentElement.scrollWidth - document.documentElement.clientWidth}; }"""
+    def toggles(mut):
+        bad, n = [], 0
+        for who, lg in (("out", None), ("member", None), ("out", "en"), ("member", "en")):
+            for fs in (17, 21):
+                c = ctx_of(br, f, 414, 800, fs=fs, lang=lg, session=sess(f, S["long"]) if who == "member" else None)
+                if mut:
+                    c.route(re.compile(r".*/assets/js/board\.min\.js.*"), lambda r: r.fulfill(status=200, content_type="text/javascript",
+                            body=board_src.replace('if (toolsOver()) b.classList.add("is-tiny");\nif (toolsOver()) document.documentElement.classList.add("hdr-tight");', "")))
+                pg = c.new_page(); fresh(pg, "news.html", 1100)
+                for w in (320, 360, 375, 390, 414):
+                    pg.set_viewport_size({"width": w, "height": 800}); pg.wait_for_timeout(200)
+                    d = pg.evaluate(TG); n += 1
+                    if d["right"] > w - 8 or not d["hit"] or d["over"] > 0:
+                        bad.append((who, lg, fs, w, round(d["right"], 1)))
+                c.close()
+        return bad, n
+    bad, n = toggles(False)
+    bad_m, _ = toggles(True)
+    t("V3-1 ☰ 320·360·375·390·414 × 17/21 × 로그아웃·회원 × 한국어·영어 — right ≤ 폭−8 · 눌리는 자리 · 넘침 0 (%d장면) · 뮤테이션(fitHM 판정 삭제) 잡힘 %d" % (n, len(bad_m)),
+      not bad and n == 40 and len(bad_m) > 0, (bad[:4], bad_m[:3]))
+    # 넘친 자리(영어 360×21 — '로그인'으로 줄여도 ☰ 가 밀린다)에서 언어 단추는 메뉴 패널 맨 아래 줄로 — 눌러서 한국어가 된다
+    # (영어는 문맥 초기화 스크립트가 아니라 저장소에 한 번만 넣는다 — 초기화 스크립트는 다시 실을 때마다 'en' 으로 되돌린다)
+    c = ctx_of(br, f, 360, 800, fs=21); pg = c.new_page(); fresh(pg, "news.html", 600)
+    pg.evaluate("localStorage.setItem('insooni_lang', JSON.stringify('en'))")
+    fresh(pg, "news.html", 1100)
+    tight = pg.evaluate("document.documentElement.classList.contains('hdr-tight')")
+    hid = pg.evaluate("getComputedStyle(document.querySelector('.site-header .header-tools .lang-toggle')).display")
+    pg.click(".nav-toggle"); pg.wait_for_timeout(700)
+    nl = pg.locator(".main-nav .nav-lang"); nl.scroll_into_view_if_needed()
+    nh = nl.bounding_box()["height"]
+    nl.click(); pg.wait_for_timeout(1500)
+    t("V3-2 영어 360×21 로그아웃 — hdr-tight · 헤더 언어 단추 숨김 · 메뉴 패널 맨 아래 '한국어'(≥56px) → 한국어",
+      tight and hid == "none" and nh >= 56 and pg.evaluate("document.documentElement.lang") == "ko", (tight, hid, nh))
+    c.close()
+
+    # 28 — 낮은 폰(375×667)에서 메뉴를 열면 마지막 '사랑방'까지 한 화면에 · ©는 목록 아래(12px 이상)
+    MENU = """() => { const nav = document.querySelector('.main-nav'), last = nav.querySelector('ul li:last-child a'), r = last.getBoundingClientRect(), nr = nav.getBoundingClientRect();
+      const af = getComputedStyle(nav, '::after');
+      return {lastB: Math.round(r.bottom), navB: Math.round(nr.bottom), ih: innerHeight, sh: nav.scrollHeight, ch: nav.clientHeight,
+              pos: af.position, fsz: parseFloat(af.fontSize), lastH: Math.round(r.height), txt: last.textContent}; }"""
+    def menu(w, h, fs, mut):
+        c = ctx_of(br, f, w, h, fs=fs); pg = c.new_page(); fresh(pg, "news.html", 900)
+        if mut:
+            pg.add_style_tag(content=".main-nav.open::after{position:absolute!important;bottom:26px!important;font-size:9px!important} .main-nav a{min-height:56px!important;padding-block:19px!important}")
+        pg.click(".nav-toggle"); pg.wait_for_timeout(1000)
+        d = pg.evaluate(MENU); c.close()
+        return d
+    d = menu(375, 667, 17, False)
+    dm = menu(375, 667, 17, True)
+    ok = d["txt"] == "사랑방" and d["lastB"] <= d["navB"] and d["lastB"] <= d["ih"] and d["sh"] <= d["ch"] + 1 and d["pos"] == "static" and d["fsz"] >= 12 and d["lastH"] >= 44
+    okm = dm["lastB"] <= dm["navB"] and dm["sh"] <= dm["ch"] + 1 and dm["pos"] == "static" and dm["fsz"] >= 12
+    t("V3-3 375×667/17 메뉴 — '사랑방'(≥44px)이 패널·화면 안 · 패널 넘침 0(©가 목록 아래 흐름) · © ≥12px · 뮤테이션(옛 absolute·9px·56px 줄) 잡힘",
+      ok and not okm, (d, dm))
+
+    # 13 — 메일 보낸 화면: 받는 주소 · 어떤 메일인지 · 주 단추 '닫기'
+    def sent(conf):
+        f2 = M.Fake(); seed(f2)
+        c = ctx_of(br, f2, 375, 812, fs=21, conf=conf); pg = c.new_page(); fresh(pg, "news.html")
+        pg.click("#hm"); pg.wait_for_timeout(900)
+        tabs = pg.locator("#bd-sheet .bd-tab >> text=처음 가입")
+        if tabs.count():
+            tabs.click(); pg.wait_for_timeout(200)
+        pg.fill("#bd-ue", "newfan@test.local"); pg.fill("#bd-up", "goodpass123"); pg.fill("#bd-up2", "goodpass123")
+        pg.click("#bd-sheet button[type=submit]"); pg.wait_for_timeout(900)
+        d = pg.evaluate("""() => { const s = document.getElementById('bd-sheet'), vis = e => e.checkVisibility();
+          const solid = [...s.querySelectorAll('.btn--solid')].filter(vis), to = s.querySelector('.bd-sent-to');
+          const li = [...s.querySelectorAll('button')].find(b => b.textContent === '로그인하기');
+          return {h: s.querySelector('.bd-sheet-h').textContent, to: to ? to.textContent : '', strong: to && to.querySelector('strong') ? to.querySelector('strong').textContent : '',
+                  what: (s.querySelector('.bd-sent-what') || {}).textContent || '', same: (s.querySelector('.bd-sent-same') || {}).textContent || '',
+                  solid: solid.map(b => b.textContent), li: li ? li.className : '', liH: li ? Math.round(li.getBoundingClientRect().height) : 0,
+                  order: solid.length && li ? !!(solid[0].compareDocumentPosition(li) & Node.DOCUMENT_POSITION_FOLLOWING) : false}; }""")
+        c.close()
+        return d
+    d = sent("{board: true, kakao: true}")
+    d2 = sent("{board: true, kakao: true, mailKo: true}")
+    t("V3-4 메일 보낸 화면(375×21) — '{주소} 로 보냈습니다'(주소 굵게) · 영어 제목 「Confirm Your Signup」·「Supabase Auth」 안내 · 같은 기기 안내 · 채운 단추는 '닫기' 하나 · '로그인하기'는 그 아래 글자 단추(≥48px) · mailKo 이면 영어 안내 없음",
+      d["h"] == "메일을 확인해 주세요" and d["strong"] == "newfan@test.local" and d["to"] == "newfan@test.local 로 보냈습니다"
+      and "Confirm Your Signup" in d["what"] and "Supabase Auth" in d["what"] and "Confirm your mail" in d["what"] and "이 기기" in d["same"]
+      and d["solid"] == ["닫기"] and "btn--text" in d["li"] and d["liH"] >= 48 and d["order"] and d2["what"] == "" and d2["strong"] == "newfan@test.local", (d, d2))
+
+    # 18 — 사랑방 글쓰기: 칸 오류는 칸 바로 아래(화면 안) · aria-invalid
+    bad = []
+    for fs in (17, 21):
+        c = ctx_of(br, f, 360, 640, fs=fs, session=sess(f, S["fans"][0])); pg = c.new_page(); fresh(pg, "community.html#write", 1500)
+        pg.click("#bd-go"); pg.wait_for_timeout(400)
+        a = pg.evaluate("""() => { const e = document.getElementById('bd-title-err'), r = e.getBoundingClientRect(), f = document.getElementById('bd-title');
+          const hb = document.querySelector('.site-header').getBoundingClientRect().bottom;
+          return {txt: e.textContent, top: Math.round(r.top), bottom: Math.round(r.bottom), hb: Math.round(hb), ih: innerHeight, inv: f.getAttribute('aria-invalid'),
+                  db: f.getAttribute('aria-describedby'), foc: document.activeElement && document.activeElement.id}; }""")
+        pg.fill("#bd-title", "제목입니다")
+        pg.click("#bd-go"); pg.wait_for_timeout(400)
+        b = pg.evaluate("""() => { const e = document.getElementById('bd-body-err'), r = e.getBoundingClientRect(), f = document.getElementById('bd-body');
+          const hb = document.querySelector('.site-header').getBoundingClientRect().bottom;
+          return {txt: e.textContent, top: Math.round(r.top), bottom: Math.round(r.bottom), hb: Math.round(hb), ih: innerHeight, inv: f.getAttribute('aria-invalid'),
+                  db: f.getAttribute('aria-describedby'), foc: document.activeElement && document.activeElement.id,
+                  tErr: document.getElementById('bd-title-err').textContent, tInv: document.getElementById('bd-title').getAttribute('aria-invalid')}; }""")
+        okA = a["txt"] == "제목을 두 글자 이상 적어 주세요." and a["top"] >= a["hb"] and a["bottom"] <= a["ih"] and a["inv"] == "true" and a["db"] == "bd-title-err" and a["foc"] == "bd-title"
+        okB = b["txt"] == "내용을 적어 주세요." and b["top"] >= b["hb"] and b["bottom"] <= b["ih"] and b["inv"] == "true" and b["db"] == "bd-body-err" and b["foc"] == "bd-body" and b["tErr"] == "" and b["tInv"] is None
+        if not (okA and okB):
+            bad.append((fs, a, b))
+        c.close()
+    t("V3-5 사랑방 글쓰기 360×640 × 17/21 — 빈 제목·빈 내용 오류가 그 칸 바로 아래(화면 안) · aria-invalid · describedby · 고치면 걷힘", not bad, bad)
+
+    # 12 — 글쓰기 내용 칸: 폰에서 높이 7.5em · 자판(보이는 높이 420)이 있으면 내용 칸에 초점 → '올리기'가 보인다.
+    # 자판이 없으면(초점만) 화면을 굴리지 않는다 — '← 쓰기 그만두기'가 머리 아래 그대로(검토 4바퀴 2번: 자판 없이 굴려
+    # '고치기' 화면의 제목·닫기가 머리 밑에 숨었다)
+    bad = []
+    for (fs, vvh) in ((17, None), (21, None), (17, 420), (21, 420)):
+        c = ctx_of(br, f, 375, 812, fs=fs, session=sess(f, S["fans"][0]))
+        if vvh:
+            c.add_init_script("Object.defineProperty(window, 'visualViewport', {configurable: true, get: () => ({height: %d, offsetTop: 0, width: 375})});" % vvh)
+        pg = c.new_page(); fresh(pg, "community.html#write", 1500)
+        y0 = pg.evaluate("scrollY")
+        if vvh:
+            pg.focus("#bd-body")
+        else:
+            # 브라우저의 초점 스크롤은 빼고(preventScroll) 우리 코드가 굴리는지만 본다
+            pg.evaluate("document.getElementById('bd-body').focus({preventScroll: true})")
+        pg.wait_for_timeout(500)
+        d = pg.evaluate("""() => { const g = document.getElementById('bd-go').getBoundingClientRect(), b = document.getElementById('bd-body').getBoundingClientRect(),
+          hint = document.getElementById('bd-form-hint').getBoundingClientRect(), hb = document.querySelector('.site-header').getBoundingClientRect().bottom;
+          return {go: Math.round(g.bottom), bodyH: Math.round(b.height), bodyB: Math.round(b.bottom), bodyT: Math.round(b.top), hintAbove: hint.bottom <= b.top, root: parseFloat(getComputedStyle(document.documentElement).fontSize),
+                  back: Math.round(document.getElementById('bd-form-back').getBoundingClientRect().top), hb: Math.round(hb), y: scrollY}; }""")
+        if vvh:
+            ok = d["go"] <= vvh - 7 and d["bodyT"] >= d["hb"] and d["hintAbove"]
+        else:
+            ok = d["y"] == y0 and d["back"] >= d["hb"] and d["hintAbove"] and d["bodyH"] <= 7.6 * 1.06 * d["root"] + 2
+        if not ok:
+            bad.append((fs, vvh, d))
+        c.close()
+    t("V3-6 375×812 × 17/21 — 자판 없음: 내용 칸 초점에도 스크롤 그대로 · '← 쓰기 그만두기' 머리 아래 · 내용 칸 높이 7.5em / 보이는 높이 420: '올리기' bottom ≤ 412 · 내용 칸 top ≥ 머리 · 등급 안내는 내용 칸 위", not bad, bad)
+
+    # 26 — 회원 창: 가장 작은 폰 × 가장 큰 글자에서 자판(260)이 올라와도 칸과 주 단추가 함께
+    bad = []
+    for (w, h, vvh) in ((320, 568, 260), (360, 640, 330)):
+        for kind in ("join", "login"):
+            c = ctx_of(br, f, w, h, fs=21)
+            c.add_init_script("Object.defineProperty(window, 'visualViewport', {configurable: true, get: () => ({height: %d, offsetTop: 0, width: %d})});" % (vvh, w))
+            if kind == "join":
+                nk = f.add_user(None, None, "kakao", {"nickname": "새카카오"}, True)
+                c.add_init_script("try{localStorage.setItem('insooni_member_session', %s)}catch(e){}" % json.dumps(json.dumps(sess(f, nk))))
+            pg = c.new_page(); fresh(pg, "community.html")
+            pg.click("#hm"); pg.wait_for_timeout(800)
+            if kind == "login":
+                tb = pg.locator("#bd-sheet .bd-tab >> text=로그인")
+                if tb.count():
+                    tb.click(); pg.wait_for_timeout(200)
+            MEAS = """(fid) => { const fe = document.querySelector(fid), form = fe.closest('form'), b = form.querySelector('button[type=submit]').getBoundingClientRect(), i = fe.getBoundingClientRect();
+              return {itop: Math.round(i.top), ibot: Math.round(i.bottom), bottom: Math.round(b.bottom), txt: form.querySelector('button[type=submit]').textContent}; }"""
+            fid = "#bd-jn" if kind == "join" else "#bd-ie"
+            pg.focus(fid); pg.wait_for_timeout(400)
+            d = pg.evaluate(MEAS, fid)
+            # 이메일 칸 → 비밀번호 칸 → '로그인하기' 셋이 320×568·21px·자판 260 에는 한꺼번에 들어가지 않는다(277px).
+            # 그 화면에서는 이메일 칸이 온전히 보이고, 비밀번호 칸으로 옮기면 칸과 '로그인하기'가 함께 보이면 된다
+            if kind == "login" and vvh == 260:
+                pg.focus("#bd-ip"); pg.wait_for_timeout(400)
+                d2 = pg.evaluate(MEAS, "#bd-ip")
+                ok = d["itop"] >= 0 and d["ibot"] <= vvh and d2["itop"] >= 0 and d2["bottom"] <= vvh
+                d = (d, d2)
+            else:
+                ok = d["itop"] >= 0 and d["bottom"] <= vvh
+            if not ok:
+                bad.append((w, h, vvh, kind, d))
+            c.close()
+    t("V3-7 320×568·21(자판 260) · 360×640·21(자판 330) — 별명 칸 + '가입 마치기' · 이메일 칸 + '로그인하기'(260 에서는 이메일 칸 온전히 → 비밀번호 칸 + '로그인하기')가 함께 보인다", not bad, bad)
+
+    # 32 — 도구줄 높이: 게시판을 바꿔도 첫 줄이 출렁이지 않는다
+    rows = {}
+    for fs in (17, 21):
+        c = ctx_of(br, f, 375, 812, fs=fs, session=sess(f, S["fans"][0])); pg = c.new_page(); fresh(pg, "community.html", 1400)
+        hs = []
+        for b in ("all", "notice", "letters", "hello", "free", "review"):
+            pg.click(".cafe-menu a[data-b='%s']" % b); pg.wait_for_timeout(700)
+            hs.append(pg.evaluate("Math.round(document.querySelector('.cafe-tools').getBoundingClientRect().height)"))
+        rows[fs] = hs
+        c.close()
+    t("V3-8 375×812 도구줄 높이 — 17px 여섯 게시판 모두 같다 %s · 21px 차이 ≤ 한 줄(32px) %s" % (rows[17], rows[21]),
+      len(set(rows[17])) == 1 and max(rows[21]) - min(rows[21]) <= 32, rows)
+
+    # 38 — 글 보기 메타: 줄이 가운뎃점으로 시작하지 않는다 · 편지 날짜 항목이 쪼개지지 않는다
+    bad = []
+    for w in (320, 375):
+        c = ctx_of(br, f, w, 812, fs=21); pg = c.new_page(); fresh(pg, "community.html#p%d" % S["ids"][7], 1400)
+        d = pg.evaluate("""() => { const m = document.querySelector('#cafe-post .cafe-post-meta');
+          const dots = [...m.querySelectorAll('.bd-dot')].filter(e => e.checkVisibility()).length;
+          return {dots, over: document.documentElement.scrollWidth - document.documentElement.clientWidth}; }""")
+        fresh(pg, "community.html#l0", 1400)
+        e = pg.evaluate("""() => { const items = [...document.querySelectorAll('.cafe-letter-when .cafe-lw-i')];
+          return {n: items.length, split: items.filter(x => x.getClientRects().length > 1).length, over: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+                  txt: (document.querySelector('.cafe-letter-when') || {}).textContent || ''}; }""")
+        if d["dots"] or d["over"] or e["n"] < 3 or e["split"] or e["over"] or "당시 댓글" not in e["txt"]:
+            bad.append((w, d, e))
+        c.close()
+    t("V3-9 320·375 × 21px — 글 보기 메타에 보이는 가운뎃점 0(간격으로 구분) · 편지 날짜 항목 쪼개짐 0 · 넘침 0", not bad, bad)
+
+    # 33 · 31 · 29 — 내 글 '고치기'·'지우기'는 글자 단추 · 탭 격자 상자 없음 · 신청곡 찾기 칸 테두리·라벨
+    c = ctx_of(br, f, 375, 812, session=sess(f, S["fans"][4])); pg = c.new_page(); fresh(pg, "community.html#p%d" % S["ids"][7], 1400)
+    acts = pg.evaluate("""() => [...document.querySelectorAll('#cafe-post .bd-acts > *')].map(b => ({t: b.textContent, cls: b.className,
+        w: Math.round(b.getBoundingClientRect().width), h: Math.round(b.getBoundingClientRect().height), c: getComputedStyle(b).color}))""")
+    fresh(pg, "community.html", 1400)
+    menu_ = pg.evaluate("""() => { const m = getComputedStyle(document.querySelector('.cafe-menu')), a = getComputedStyle(document.querySelector('.cafe-menu a'));
+      return [m.backgroundColor, m.rowGap, m.borderTopWidth, m.borderBottomWidth, a.backgroundColor]; }""")
+    sl = pg.evaluate("""() => { const i = document.getElementById('sl-q'), cs = getComputedStyle(i), l = document.querySelector('label[for=sl-q]');
+      return {bt: cs.borderTopWidth, bc: cs.borderTopColor, lab: l.checkVisibility() && l.getBoundingClientRect().height > 10 && !l.classList.contains('sr-only'),
+              ph: getComputedStyle(i, '::placeholder').color}; }""")
+    c.close()
+    t("V3-10 내 글 '고치기'·'지우기' 글자 단추(테두리 없음 · ≥48×48 · '지우기'는 muted) · 폰 탭 격자 바탕·사방 테두리 없음(아래 1px) · 신청곡 칸 1px .42 · 보이는 라벨 · placeholder --faint",
+      len(acts) == 2 and all("btn--text" in a["cls"] and "btn--ghost" not in a["cls"] and a["w"] >= 48 and a["h"] >= 48 for a in acts)
+      and acts[1]["t"] == "지우기" and acts[1]["c"] == "rgb(179, 169, 156)"
+      and menu_[0] in ("rgba(0, 0, 0, 0)", "transparent") and menu_[1] == "0px" and menu_[2] == "0px" and menu_[3] == "1px" and menu_[4] in ("rgba(0, 0, 0, 0)", "transparent")
+      and sl["bt"] == "1px" and sl["bc"] == "rgba(243, 239, 231, 0.42)" and sl["lab"] and sl["ph"] == "rgb(156, 146, 132)", (acts, menu_, sl))
+
+    # 16 — 글쓰기를 누르고 카카오로 가입을 마치면 '가입을 마쳤습니다. 이어서 글을 써 주세요.'가 글쓰기 화면에 보인다
+    f3 = M.Fake(); seed(f3)
+    kk2 = f3.add_user(None, None, "kakao", {"nickname": "막가입"}, True)     # 명부에 없는 카카오 계정 — 가입 전
+    c = ctx_of(br, f3, 375, 812); pg = c.new_page(); fresh(pg, "community.html", 1300)
+    pg.click("#bd-write-btn"); pg.wait_for_timeout(900)
+    pg.click("#bd-sheet .bd-kakao"); pg.wait_for_timeout(3000)
+    jh = pg.evaluate("(document.querySelector('#bd-sheet .bd-sheet-h') || {}).textContent || ''")
+    pg.fill("#bd-jn", "막가입"); pg.check("#bd-jall")
+    pg.click("#bd-sheet form button[type=submit]"); pg.wait_for_timeout(2500)
+    d = pg.evaluate("""() => { const m = document.getElementById('bd-msg'), r = m.getBoundingClientRect(), hb = document.querySelector('.site-header').getBoundingClientRect().bottom;
+      return {writing: !!document.querySelector('#board.is-writing'), txt: m.textContent, top: Math.round(r.top), bottom: Math.round(r.bottom), hb: Math.round(hb), ih: innerHeight}; }""")
+    t("V3-11 글쓰기 → 카카오 → 가입 마치기 → 글쓰기 화면 · '막가입 님, 가입을 마쳤습니다. 이어서 글을 써 주세요.'(화면 안)",
+      jh == "가입 마치기" and d["writing"] and d["txt"] == "막가입 님, 가입을 마쳤습니다. 이어서 글을 써 주세요." and d["top"] >= d["hb"] and d["bottom"] <= d["ih"], (jh, d))
+    c.close()
+
+
+# ═══ V4 — 검토 4바퀴(2026-10-03 새벽) ════════════════════════════
+# 자판 흉내 — 보이는 화면(visualViewport)을 줄이고 resize 를 쏜다(iOS·안드로이드 크롬처럼 innerHeight 는 그대로)
+VVE = """(() => { const et = new EventTarget(); window.__vvH = null;
+  const o = { get height() { return window.__vvH || window.innerHeight; }, get width() { return window.innerWidth; }, offsetTop: 0, offsetLeft: 0, pageTop: 0, scale: 1,
+    addEventListener: (a, b, c) => et.addEventListener(a, b, c), removeEventListener: (a, b, c) => et.removeEventListener(a, b, c) };
+  Object.defineProperty(window, 'visualViewport', { configurable: true, get: () => o });
+  window.__kb = (h) => { window.__vvH = h; et.dispatchEvent(new Event('resize')); }; })();"""
+KBM = """([fid, bid]) => { const f = document.querySelector(fid), b = document.querySelector(bid), hb = document.querySelector('.site-header').getBoundingClientRect().bottom;
+  return {ft: Math.round(f.getBoundingClientRect().top * 10) / 10, fb: Math.round(f.getBoundingClientRect().bottom), bb: Math.round(b.getBoundingClientRect().bottom * 10) / 10, hb: Math.round(hb * 10) / 10,
+          vv: window.visualViewport.height, foc: document.activeElement === f, ekh: f.getAttribute('enterkeyhint'), sp: getComputedStyle(document.documentElement).scrollPaddingTop}; }"""
+
+
+def group_v4(br):
+    print("── V4 (4차 검토 반영)")
+    f = M.Fake(); S = seed(f)
+
+    # 2 — '고치기'로 들어오면 제목·닫기가 보인다(자판 없이 초점만 줄 때 화면을 단추 쪽으로 끌어내리지 않는다)
+    bad = []
+    for (w, h, fs) in ((375, 667, 21), (375, 812, 17), (360, 640, 21)):
+        c = ctx_of(br, f, w, h, fs=fs, session=sess(f, S["fans"][4])); pg = c.new_page(); fresh(pg, "community.html#p%d" % S["ids"][7], 1500)
+        pg.click("#cafe-post .bd-edit-a"); pg.wait_for_timeout(1200)
+        d = pg.evaluate("""() => { const hb = document.querySelector('.site-header').getBoundingClientRect().bottom, bk = document.getElementById('bd-form-back').getBoundingClientRect(),
+          fh = document.getElementById('bd-form-h').getBoundingClientRect();
+          return {hb: Math.round(hb), back: Math.round(bk.top), head: Math.round(fh.top), ih: innerHeight, foc: document.activeElement && document.activeElement.id,
+                  txt: document.getElementById('bd-form-h').textContent}; }""")
+        if not (d["txt"] == "글 고치기" and d["back"] >= d["hb"] and d["head"] >= d["hb"] and d["head"] < d["ih"] and d["foc"] == "bd-title"):
+            bad.append((w, h, fs, d))
+        c.close()
+    t("V4-1 '고치기' 클릭(375×667·21 · 375×812·17 · 360×640·21) — '← 고치지 않고 닫기'·'글 고치기' top ≥ 머리 아래 · 초점 제목 칸", not bad, bad)
+
+    # 10 · 11 · 14 — 자판: 칸과 그 단추가 머리 아래 ~ 자판 위에 함께 · 한 글자 더 쳐도 그대로
+    cases = []
+    for (w, h, fs, vvh) in ((360, 640, 17, 330), (360, 640, 19, 330), (360, 640, 21, 330), (375, 667, 21, 350), (390, 844, 17, 470), (390, 844, 21, 470)):
+        cases.append(("write", w, h, fs, vvh, "community.html#write", "#bd-body", "#bd-go", S["fans"][0]))
+        cases.append(("comment", w, h, fs, vvh, "community.html#p%d" % S["ids"][4], ".bd-cform textarea", ".bd-cform button[type=submit]", S["fans"][0]))
+        cases.append(("nick", w, h, fs, vvh, "community.html#me", "#bd-mn", ".me-nickf button[type=submit]", S["fans"][3]))
+    kbad, n = [], 0
+    for (kind, w, h, fs, vvh, url, fid, bid, who) in cases:
+        c = ctx_of(br, f, w, h, fs=fs, session=sess(f, who)); c.add_init_script(VVE); pg = c.new_page(); fresh(pg, url, 1600)
+        pg.locator(fid).first.scroll_into_view_if_needed(); pg.wait_for_timeout(120)
+        pg.locator(fid).first.click(); pg.wait_for_timeout(250)
+        pg.keyboard.type("반갑" if kind != "nick" else "새")
+        pg.evaluate("(h) => window.__kb(h)", vvh); pg.wait_for_timeout(600)
+        d1 = pg.evaluate(KBM, [fid, bid])
+        pg.keyboard.type("습니다 또 씁니다" if kind != "nick" else "별"); pg.wait_for_timeout(500)
+        d2 = pg.evaluate(KBM, [fid, bid])
+        n += 1
+        ok = all(d["foc"] and d["ft"] >= d["hb"] and d["bb"] <= d["vv"] - 7.5 for d in (d1, d2))
+        if kind == "nick":
+            ok = ok and d1["ekh"] == "done"
+        else:
+            ok = ok and d1["sp"] == "%gpx" % (65 + fs * .5)
+        if not ok:
+            kbad.append((kind, w, h, fs, vvh, d1, d2))
+        c.close()
+    t("V4-2 자판 흉내 %d장면 — 글쓰기 내용 칸+'올리기' · 댓글 칸+'댓글 올리기' · 내 정보 별명 칸+'별명 저장': 한 글자 더 쳐도 칸 top ≥ 머리 · 단추 bottom ≤ 보이는 높이−8 · 별명 칸 enterkeyhint=done · 글칸 초점 중 scroll-padding-top 65px+.5rem" % n,
+      not kbad and n == 18, kbad[:3])
+
+    # 2 ① — 자판이 없으면(초점만) 화면을 굴리지 않는다 · 자판이 내려가면 줄인 글칸 높이를 되돌린다
+    c = ctx_of(br, f, 360, 640, fs=21, session=sess(f, S["fans"][0])); c.add_init_script(VVE); pg = c.new_page(); fresh(pg, "community.html#write", 1500)
+    y0 = pg.evaluate("scrollY"); h0 = pg.evaluate("document.getElementById('bd-body').getBoundingClientRect().height")
+    # 브라우저의 초점 스크롤은 빼고(preventScroll) 우리 코드가 굴리는지만 본다
+    pg.evaluate("document.getElementById('bd-body').focus({preventScroll: true})"); pg.wait_for_timeout(500)
+    y1 = pg.evaluate("scrollY")
+    pg.evaluate("window.__kb(330)"); pg.wait_for_timeout(500)
+    h1 = pg.evaluate("document.getElementById('bd-body').getBoundingClientRect().height")
+    pg.evaluate("window.__kb(0)"); pg.wait_for_timeout(500)
+    h2 = pg.evaluate("document.getElementById('bd-body').getBoundingClientRect().height")
+    t("V4-3 360×640·21 — 자판 없이 내용 칸 초점 → 스크롤 그대로(%d→%d) · 자판 330 → 글칸 줄임(%.0f→%.0f) · 자판 내림 → 원래 높이(%.0f)" % (y0, y1, h0, h1, h2),
+      y0 == y1 and h1 < h0 - 10 and abs(h2 - h0) < 1, (y0, y1, h0, h1, h2))
+    c.close()
+
+    # 4 · 21 — 체크박스: 어두운 테마 · 직접 그린 직각 상자 · 테두리 대비 ≥ 3:1 · 동의 빠진 칸은 칸 자체에 표시 · 20 — 카카오 이름 안내
+    nk = f.add_user(None, None, "kakao", {"nickname": "김정수"}, True)
+    c = ctx_of(br, f, 375, 812, session=sess(f, nk)); pg = c.new_page(); fresh(pg, "community.html", 1400)
+    pg.click("#hm"); pg.wait_for_timeout(900)
+    cb = pg.evaluate("""() => { const i = document.getElementById('bd-ja'), cs = getComputedStyle(i), box = i.closest('.bd-sheet-box');
+      const nick = document.getElementById('bd-jn'), hint = nick.closest('.form-field').nextElementSibling;
+      return {scheme: getComputedStyle(document.documentElement).colorScheme, app: cs.appearance, rad: cs.borderTopLeftRadius, bw: cs.borderTopWidth, bc: cs.borderTopColor,
+              bg: getComputedStyle(box).backgroundColor, nick: nick.value, hint: hint ? hint.textContent : ''}; }""")
+    pg.click("#bd-sheet form .btn--solid"); pg.wait_for_timeout(500)
+    inv = pg.evaluate("""() => { const i = document.getElementById('bd-ja'), cs = getComputedStyle(i);
+      return {inv: i.getAttribute('aria-invalid'), ol: cs.outlineStyle + ' ' + cs.outlineWidth, oc: cs.outlineColor, err: document.getElementById('bd-jerr').textContent}; }""")
+    pg.check("#bd-jall"); pg.wait_for_timeout(200)
+    chk = pg.evaluate("""() => { const i = document.getElementById('bd-ja'); return [i.checked, getComputedStyle(i).backgroundColor, getComputedStyle(i, '::before').opacity, i.getAttribute('aria-invalid')]; }""")
+    c.close()
+    def lum(c_):
+        v = [float(x) for x in re.findall(r"[\d.]+", c_)[:3]]
+        v = [x / 255 for x in v]
+        v = [x / 12.92 if x <= .03928 else ((x + .055) / 1.055) ** 2.4 for x in v]
+        return .2126 * v[0] + .7152 * v[1] + .0722 * v[2]
+    def over(fg, bg):
+        a = [float(x) for x in re.findall(r"[\d.]+", fg)]
+        b = [float(x) for x in re.findall(r"[\d.]+", bg)][:3]
+        al = a[3] if len(a) > 3 else 1
+        return "rgb(%s)" % ",".join(str(al * a[k] + (1 - al) * b[k]) for k in range(3))
+    bg = cb["bg"] if not cb["bg"].startswith("rgba(0, 0, 0, 0") else "rgb(8,8,8)"
+    l1, l2 = lum(over(cb["bc"], bg)), lum(bg)
+    cr = (max(l1, l2) + .05) / (min(l1, l2) + .05)
+    t("V4-4 가입 창 — :root color-scheme dark · 체크박스 appearance none · 모서리 0 · 테두리 대비 %.1f:1 ≥ 3 · 빠진 칸 aria-invalid + 아이보리 테두리선 · \"위의 '모두 동의합니다'를 눌러 주세요.\" · 체크하면 아이보리+✓ · 카카오 이름 안내" % cr,
+      cb["scheme"] == "dark" and cb["app"] == "none" and cb["rad"] == "0px" and cr >= 3
+      and inv["inv"] == "true" and inv["ol"].startswith("solid") and inv["oc"] == "rgb(243, 239, 231)" and inv["err"] == "위의 '모두 동의합니다'를 눌러 주세요."
+      and chk[0] and chk[1] == "rgb(243, 239, 231)" and chk[2] == "1" and chk[3] is None
+      and cb["nick"] == "김정수" and cb["hint"] == "카카오 이름이 그대로 들어왔습니다. 방명록·사랑방에 이 이름으로 보이니, 실명이면 다른 별명을 권합니다.", (cb, inv, chk, cr))
+
+    # 5 — 사랑방: 카카오에서 코드 없이 돌아오면 노란 '카카오로 시작하기'가 맨 위(화면 안) · 이메일은 '또는 이메일로' 아래
+    c = ctx_of(br, f, 375, 812); pg = c.new_page(); fresh(pg, "community.html")
+    pg.evaluate("localStorage.setItem('insooni_pkce', JSON.stringify({v: 'x', p: 'kakao', at: Date.now()}))")
+    fresh(pg, "community.html", 1600)
+    d = pg.evaluate("""() => { const s = document.getElementById('bd-sheet'), k = s.querySelector('.bd-kakao'), or = s.querySelector('.bd-or'), pane = s.querySelector('.bd-pane');
+      return {low: !!k && k.classList.contains('bd-kakao--low'), yellow: !!k && getComputedStyle(k).backgroundColor === 'rgb(254, 229, 0)', ktop: k ? Math.round(k.getBoundingClientRect().bottom) : 9999,
+              ih: innerHeight, or: or ? or.textContent : '', before: !!(k && pane && (k.compareDocumentPosition(pane) & Node.DOCUMENT_POSITION_FOLLOWING)),
+              al: [...s.querySelectorAll('[role=alert]')].map(a => a.textContent).length, mark: sessionStorage.getItem('insooni_kakao_fail_at')}; }""")
+    t("V4-5 사랑방 카카오 코드 없이 돌아옴 — 노란 '카카오로 시작하기'(내리지 않음)가 이메일보다 앞 · 화면 안(bottom %d ≤ %d) · '또는 이메일로' · 안내 1개 · 10분 내림 없음" % (d["ktop"], d["ih"]),
+      not d["low"] and d["yellow"] and d["before"] and d["ktop"] <= d["ih"] and d["or"] == "또는 이메일로" and d["al"] == 1 and d["mark"] is None, d)
+    c.close()
+
+    # 9 — PC 헤더 회원 입구: 밑줄은 단추 하나에서(별명은 글자 흐름 · 등급 앞은 공백 글자 · 별명 자체의 밑줄·여백 없음)
+    c = ctx_of(br, f, 1440, 900, session=sess(f, S["fans"][3]), mobile=False); pg = c.new_page(); fresh(pg, "news.html")
+    d = pg.evaluate("""() => { const h = document.getElementById('hm'), n = h.querySelector('.hm-nick'), lv = h.querySelector('.hm-lv'), lg = h.querySelector('.hm-long');
+      return {hm: getComputedStyle(h).textDecorationLine, nickDisp: getComputedStyle(n).display, nickDeco: getComputedStyle(n).textDecorationLine,
+              lvMargin: getComputedStyle(lv).marginLeft, gap: lv.previousSibling && lv.previousSibling.nodeType === 3 ? lv.previousSibling.nodeValue : null,
+              txt: lg.textContent, lines: lg.getClientRects().length}; }""")
+    c.close()
+    c = ctx_of(br, f, 1440, 900, session=sess(f, S["long"]), mobile=False); pg = c.new_page(); fresh(pg, "news.html")
+    lng = pg.evaluate("[document.querySelector('#hm .hm-nick').textContent, document.getElementById('hm').getAttribute('aria-label')]")
+    c.close()
+    t("V4-6 1440 회원 입구 — 밑줄은 #hm 하나(underline) · 별명 inline·자체 밑줄 없음 · 등급 앞 공백 글자(margin 0) · '대전 아줌마 새싹 · 내 정보' 한 줄 · 12자 별명은 7자+… (전체는 aria-label)",
+      d["hm"] == "underline" and d["nickDisp"] == "inline" and d["nickDeco"] == "none" and d["lvMargin"] == "0px" and d["gap"] == " "
+      and d["txt"] == "대전 아줌마 새싹 · 내 정보" and d["lines"] == 1 and lng[0] == "가나다라마바사…" and lng[1].startswith("가나다라마바사아자차카타"), (d, lng))
+
+    # 13 — 댓글을 키보드로 올리면(Enter) 초점이 문서로 떨어지지 않는다 — 보내는 동안 aria-disabled · 다시 그린 뒤 같은 단추로
+    c = ctx_of(br, f, 1280, 860, session=sess(f, S["fans"][0]), mobile=False); pg = c.new_page(); fresh(pg, "community.html#p%d" % S["ids"][4], 1500)
+    pg.fill(".bd-cform textarea", "키보드로 남기는 댓글")
+    pg.focus(".bd-cform button[type=submit]")
+    pg.evaluate("""() => { window.__foc = []; const tick = () => { window.__foc.push(document.activeElement === document.body ? 'BODY' : document.activeElement.tagName); if (window.__foc.length < 40) setTimeout(tick, 40); }; tick(); }""")
+    pg.keyboard.press("Enter"); pg.wait_for_timeout(2200)
+    d = pg.evaluate("""() => ({foc: window.__foc, now: document.activeElement && document.activeElement.textContent, msg: (document.querySelector('.bd-cmsg') || {}).textContent || ''})""")
+    c.close()
+    t("V4-8 댓글 '댓글 올리기' Enter → 1.6초 동안 초점이 한 번도 문서(body)로 떨어지지 않음 · 다시 그린 뒤 초점 '댓글 올리기' · '댓글을 올렸습니다.'",
+      "BODY" not in d["foc"] and d["now"] == "댓글 올리기" and d["msg"] == "댓글을 올렸습니다.", d)
+
+    # 16 — 언어 단추(일반 페이지): 보이는 글자의 언어를 lang 으로 · 이름표도 그 언어 · 영어 화면의 '한국어'는 본문 서체·자간 0
+    lg = {}
+    for lang in (None, "en"):
+        c = ctx_of(br, f, 1280, 860, lang=lang, mobile=False); pg = c.new_page(); fresh(pg, "music.html", 1400)
+        lg[lang or "ko"] = pg.evaluate("""() => [...document.querySelectorAll('.lang-toggle')].map(b => [b.textContent, b.getAttribute('lang'), b.getAttribute('aria-label'),
+          getComputedStyle(b).fontFamily.split(',')[0].replace(/["']/g, '').trim(), getComputedStyle(b).letterSpacing])""")
+        c.close()
+    t("V4-7 언어 단추 — 한국어 화면 'EN' lang=en 'View in English' · 영어 화면 '한국어' lang=ko '한국어로 보기' 본문 서체 · 자간 0",
+      lg["ko"] and all(x[1] == "en" and x[2] == "View in English" for x in lg["ko"])
+      and lg["en"] and all(x[0] == "한국어" and x[1] == "ko" and x[2] == "한국어로 보기" and "JetBrains" not in x[3] and x[4] in ("normal", "0px") for x in lg["en"]), lg)
 
 
 if __name__ == "__main__":

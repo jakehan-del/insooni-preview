@@ -41,6 +41,12 @@ def t(name, ok, info=""):
     print(("  ✓ " if ok else "  ✗ ") + name + ("" if ok else "   ← " + str(info)[:260]), flush=True)
 
 
+def _tpos_ok(tpos, pad):
+    """트랙(background-position-y)이 'calc(100% - Npx)' 이고 N 이 줄의 아래 여백과 같은가(±1px) — 막대와 트랙이 겹친다"""
+    m = re.match(r"calc\(100% - ([\d.]+)px\)", tpos or "")
+    return bool(m) and abs(float(m.group(1)) - pad) <= 1
+
+
 def iso(dt):
     return dt.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%S.") + "%03dZ" % (dt.microsecond // 1000)
 
@@ -496,7 +502,7 @@ GIG = """() => { const g = window.INSOONI_GIG && INSOONI_GIG.state(); const bar 
           bar: vis(bar) && vis(go) ? go.textContent : null, stamp: vis(document.getElementById('gig-stamp')),
           code: vis(document.getElementById('gig-code')), preview: vis(document.getElementById('gig-preview')),
           n: (document.getElementById('gig-n') || {}).textContent, msg: (document.getElementById('gig-msg') || {}).textContent || '',
-          over: document.documentElement.scrollWidth - innerWidth, hm: document.querySelectorAll('.gig-head .hm:not([hidden])').length}; }"""
+          over: document.documentElement.scrollWidth - document.documentElement.clientWidth, hm: document.querySelectorAll('.gig-head .hm:not([hidden])').length}; }"""
 
 
 # ═══ 상태표 — 설계서 §6.4 ═══════════════════════════════════════════
@@ -631,13 +637,19 @@ def group_l(br, gig_src=None, only=None):
         t("C7 /live L4~L10 — 화면 안에 보이는 채운 단추(아이보리 바탕) 1개 이하 (스크롤 4곳씩)", not filled_bad, filled_bad[:3])
         t("C8 /live 한글 텍스트에 모노 서체 0 (잰 한글 노드 %d)" % mono_seen, not mono_bad and mono_seen > 300, mono_bad[:3])
 
+    if want("L2") or want("L0"):
         # L0 — 8초 뒤 '연결이 느립니다.' + 다시 불러오기
         f, uid, url, conf, hold = setup("L0")
         c = ctx_of(br, f, hold=hold, gig_src=gig_src); pg = c.new_page(); fresh(pg, url, 600)
         early = pg.is_visible("#gig-slow")
+        busy0 = pg.evaluate("document.getElementById('main').getAttribute('aria-busy')")
         pg.wait_for_timeout(8200)
-        late = pg.evaluate("[document.getElementById('gig-slow').checkVisibility(), document.getElementById('gig-slow-t').textContent, document.getElementById('gig-retry').getBoundingClientRect().height]")
-        t("L0 8초 전엔 글자만 · 8초 뒤 '연결이 느립니다.' + [다시 불러오기](≥48px)", not early and late[0] and late[1] == "연결이 느립니다." and late[2] >= 48, (early, late))
+        late = pg.evaluate("""[document.getElementById('gig-slow').checkVisibility(), document.getElementById('gig-phase').textContent,
+          document.getElementById('gig-retry').getBoundingClientRect().height, document.getElementById('main').getAttribute('aria-busy'),
+          document.getElementById('gig-phase').getAttribute('role')]""")
+        t("L0 8초 전엔 글자만(aria-busy) · 8초 뒤 상태 줄(role=status) '연결이 느립니다. 아래 '다시 불러오기'…' · aria-busy 풀림 · [다시 불러오기](≥48px)",
+          not early and busy0 == "true" and late[0] and late[1] == "연결이 느립니다. 아래 '다시 불러오기'를 눌러 주세요." and late[2] >= 48
+          and late[3] is None and late[4] == "status", (early, busy0, late))
         c.close()
 
     if want("L3"):
@@ -730,8 +742,10 @@ def group_l(br, gig_src=None, only=None):
         f.http_fail["gig_cheer"] = 1
         pg.click('.gig-chip[data-k="2"]'); pg.wait_for_timeout(900)
         d = pg.evaluate("""() => { const b = document.querySelector('.gig-chip[data-k="2"]');
-          return {p: b.getAttribute('aria-pressed'), n: +b.querySelector('.gig-n').textContent, msg: document.getElementById('gig-msg').textContent}; }""")
-        t("L6c 서버 500 → 원래대로(눌리지 않음 · 96) · #gig-msg 실패 문구", d["p"] == "false" and d["n"] == 96 and "저장되지 않았습니다" in d["msg"], d)
+          return {p: b.getAttribute('aria-pressed'), n: +b.querySelector('.gig-n').textContent, msg: document.getElementById('gig-cheer-msg').textContent,
+                  top: document.getElementById('gig-msg').textContent}; }""")
+        t("L6c 서버 500 → 원래대로(눌리지 않음 · 96) · 응원 칸 아래(#gig-cheer-msg) 실패 문구 · 위쪽 #gig-msg 는 비어 있음(한 자리)",
+          d["p"] == "false" and d["n"] == 96 and "저장되지 않았습니다" in d["msg"] and d["top"] == "", d)
         lab = pg.get_attribute('.gig-chip[data-k="2"]', "aria-label")
         t("L6d 응원 칸 이름표 '{문구}, {n}명' · 칸 높이 ≥ 64px", lab == "앵콜!, 96명" and pg.evaluate("document.querySelector('.gig-chip').getBoundingClientRect().height") >= 64, lab)
         c.close()
@@ -741,8 +755,19 @@ def group_l(br, gig_src=None, only=None):
         pg.click('.gig-chip[data-k="3"]'); pg.wait_for_timeout(900)
         nk = pg.evaluate("JSON.parse(localStorage.getItem('insooni_board_next') || 'null')")
         h = pg.evaluate("(document.querySelector('#bd-sheet .bd-sheet-h') || {}).textContent")
-        t("L6e 로그아웃 상태에서 응원 → 회원 창 '도장을 남기려면 회원으로 들어와 주세요' · 이어서 할 일 {cheer,k:3}",
-          pg.is_visible("#bd-sheet") and h == "도장을 남기려면 회원으로 들어와 주세요" and nk and nk.get("what") == "cheer" and nk.get("k") == 3, (h, nk))
+        lede = pg.evaluate("(document.getElementById('bd-sheet-lede') || {}).textContent || ''")
+        t("L6e 로그아웃 상태에서 응원 → 회원 창 '응원을 보내려면 회원으로 들어와 주세요' · 소개 '누르신 응원이 바로 더해지고 … 도장도 함께' · 이어서 할 일 {cheer,k:3}",
+          pg.is_visible("#bd-sheet") and h == "응원을 보내려면 회원으로 들어와 주세요" and lede.startswith("가입을 마치면 누르신 응원이 바로 더해지고, 오늘 공연 도장도 함께 찍힙니다.")
+          and nk and nk.get("what") == "cheer" and nk.get("k") == 3, (h, lede, nk))
+        # Esc 로 닫으면 초점이 누른 응원 칸으로(아래 '도장 찍기'로 튀지 않게, 검토 3바퀴 20번)
+        pg.keyboard.press("Escape"); pg.wait_for_timeout(300)
+        fk = pg.evaluate("(() => { const a = document.activeElement; return a ? (a.getAttribute('data-k') || a.id || a.className) : ''; })()")
+        pg.click('.gig-song[data-song="친구여"]'); pg.wait_for_timeout(900)
+        hv = pg.evaluate("(document.querySelector('#bd-sheet .bd-sheet-h') || {}).textContent")
+        pg.keyboard.press("Escape"); pg.wait_for_timeout(300)
+        fs_ = pg.evaluate("(() => { const a = document.activeElement; return a ? (a.getAttribute('data-song') || a.id || a.className) : ''; })()")
+        t("L6f 시트를 Esc 로 닫으면 초점이 누른 칸으로(응원 '3' · 투표 '친구여') · 투표를 누른 사람에게는 '투표하려면 회원으로 들어와 주세요'",
+          fk == "3" and fs_ == "친구여" and hv == "투표하려면 회원으로 들어와 주세요", (fk, fs_, hv))
         c.close()
 
     if want("L7"):
@@ -760,15 +785,22 @@ def group_l(br, gig_src=None, only=None):
           a[1][1] == 6 and a[1][2] == "true" and b[1][1] == 5 and b[2][1] == 1 and b[2][2] == "true" and b[1][2] == "false" and order_ok, (a, b))
         pg.click('.gig-song[data-song="친구여"]'); pg.wait_for_timeout(400)
         b2 = pg.evaluate(rd)
-        t("L7b 내 선택을 다시 누르면 그대로(취소되지 않음) · 안내", b2 == b and "이미 고르셨습니다" in pg.evaluate("document.getElementById('gig-msg').textContent"), b2)
-        bar = pg.evaluate("() => { const b = document.querySelector('.gig-song[data-song=\"밤이면 밤마다\"] .gig-bar-f'); return [b.style.width, getComputedStyle(b).height]; }")
+        t("L7b 내 선택을 다시 누르면 그대로(취소되지 않음) · 안내는 투표 줄 아래(#gig-vote-msg)", b2 == b and "이미 고르셨습니다" in pg.evaluate("document.getElementById('gig-vote-msg').textContent"), b2)
+        bar = pg.evaluate("() => { const b = document.querySelector('.gig-song[data-song=\"밤이면 밤마다\"] .gig-bar-f'); return [b.style.width, getComputedStyle(b).height, getComputedStyle(b).backgroundColor]; }")
         # 막대 4px + 전체 폭 트랙(줄 테두리 대신) · 내 선택 줄도 막대 시작이 같은 x(검토 10·41번)
         tr = pg.evaluate("""() => { const rows = [...document.querySelectorAll('.gig-song')];
+          const pb = b => parseFloat(getComputedStyle(b).paddingBottom);
           return {bg: rows.map(b => getComputedStyle(b).backgroundImage.indexOf('gradient') >= 0), bb: rows.map(b => getComputedStyle(b).borderBottomWidth),
                   x: [...new Set(rows.map(b => Math.round(b.querySelector('.gig-bar-f').getBoundingClientRect().left)))],
-                  pressed: rows.filter(b => b.getAttribute('aria-pressed') === 'true').length}; }""")
-        t("L7c 막대 4px · 가장 많은 곡 100% · 줄마다 트랙(테두리 0) · 막대 시작 x 하나(내 선택 줄 포함)",
-          float(bar[0].rstrip("%")) == 100 and bar[1] == "4px" and all(tr["bg"]) and set(tr["bb"]) == {"0px"} and len(tr["x"]) == 1 and tr["pressed"] == 1, (bar, tr))
+                  pressed: rows.filter(b => b.getAttribute('aria-pressed') === 'true').length,
+                  /* 막대 아랫변 = 줄 아랫변 − 아래 여백(트랙 자리) · 그 여백 ≥ 12px(다음 줄과 경계선으로 읽히지 않게) */
+                  gap: rows.map(b => Math.round(b.getBoundingClientRect().bottom - b.querySelector('.gig-bar-f').getBoundingClientRect().bottom)),
+                  pad: rows.map(b => Math.round(pb(b))),
+                  tpos: getComputedStyle(rows[0]).backgroundPositionY}; }""")
+        t("L7c 막대 2px · .55 · 가장 많은 곡 100% · 줄마다 트랙(테두리 0) · 막대 아랫변이 줄 바닥에서 ≥12px 띄워져 트랙과 같은 높이 · 막대 시작 x 하나",
+          float(bar[0].rstrip("%")) == 100 and bar[1] == "2px" and bar[2] == "rgba(243, 239, 231, 0.55)" and all(tr["bg"]) and set(tr["bb"]) == {"0px"}
+          and len(tr["x"]) == 1 and tr["pressed"] == 1 and all(g >= 12 and abs(g - p) <= 1 for g, p in zip(tr["gap"], tr["pad"]))
+          and _tpos_ok(tr["tpos"], tr["pad"][0]), (bar, tr))
         f.events[0]["vote_open"] = False
         fresh(pg, "live?e=K7Q2M")
         pg.click('.gig-song[data-song="거위의 꿈"]', force=True); pg.wait_for_timeout(500)
@@ -913,15 +945,16 @@ def group_l(br, gig_src=None, only=None):
 
     if want("L14"):
         print("── L14 카카오 꺼짐·실패 + 공연 켜짐 — 처음 온 관객이 가입할 길")
-        # {board, live} 만 켠 배포(카카오 기본 false) — 이메일 '처음 가입'이 열리고 없는 카카오를 권하지 않는다(검토 26·33·49번)
+        # 카카오를 끈 배포(KOE 가 다시 나 kakao=false 로 되돌린 경우) — 이메일 '처음 가입'이 열리고 없는 카카오를 권하지 않는다(검토 26·33·49번).
+        # config.js 의 기본값이 kakao=true 로 바뀌었으므로(2f99dab) 끔을 명시한다
         f = GigFake(); w = seed(f)
-        c = ctx_of(br, f, 375, 812, conf="{board: true, live: true}", gig_src=gig_src); pg = c.new_page(); fresh(pg, "live?e=K7Q2M")
+        c = ctx_of(br, f, 375, 812, conf="{board: true, live: true, kakao: false}", gig_src=gig_src); pg = c.new_page(); fresh(pg, "live?e=K7Q2M")
         note = pg.evaluate("(() => { const n = document.getElementById('gig-mailnote'); return n.checkVisibility() ? n.textContent : ''; })()")
         pg.click("#gig-go"); pg.wait_for_timeout(1100)
         d = pg.evaluate("""() => { const s = document.getElementById('bd-sheet');
           return {tabs: [...s.querySelectorAll('.bd-tab')].map(b => b.textContent), kakao: s.querySelectorAll('.bd-kakao').length,
                   txt: s.innerText, pressed: (s.querySelector('.bd-tab[aria-pressed=true]') || {}).textContent || ''}; }""")
-        t("L14a conf {board, live} — L5 아래 '가입은 이메일로' 한 줄 · 회원 창에 '처음 가입' 탭(먼저 열림) · 카카오 단추 0 · '카카오' 문구 0",
+        t("L14a conf {board, live, kakao:false} — L5 아래 '가입은 이메일로' 한 줄 · 회원 창에 '처음 가입' 탭(먼저 열림) · 카카오 단추 0 · '카카오' 문구 0",
           "이메일" in note and "처음 가입" in d["tabs"] and d["pressed"] == "처음 가입" and d["kakao"] == 0 and "카카오" not in d["txt"], (note, d))
         c.close()
         # 카카오가 방금(10분 안) 실패 — 노란 단추를 다시 권하지 않고 이메일 가입을 연다
@@ -947,19 +980,24 @@ def group_l(br, gig_src=None, only=None):
                 bad.append((wd, ht, fs, d))
             c.close()
         t("L14c 공연 문맥 + 카카오 — 이메일 접힘 · 노란 단추 top ≥ 0.55×화면 높이 · 첫 초점 카카오 (375×812·17/21, 320×568·21)", not bad, bad)
-        # 카카오(KOE205)에서 막혀 인앱 창을 닫고 QR 을 다시 찍었다 — 공연 문맥 그대로 안내, 첫 초점은 안내문,
-        # 노란 단추 대신 이메일 '처음 가입'(검토 29·32번)
+        # 카카오 화면에서 코드 없이 돌아왔다(동의 화면에서 뒤로 · 인앱 창 닫고 QR 다시) — 원인을 단정하지 않는다.
+        # KOE 가 고쳐진 오늘은 망설이다 뒤로 간 사람이 대부분이다: 공연 화면에서는 노란 '카카오로 시작하기'가 그대로 맨 위,
+        # 혹시 KOE 였을 때를 위해 접힌 이메일 칸에 '처음 가입'도 연다. 10분 내림(insooni_kakao_fail_at)은 걸지 않는다(검토 3바퀴 35번)
         f = GigFake(); w = seed(f)
         c = ctx_of(br, f, 375, 812, gig_src=gig_src); pg = c.new_page(); fresh(pg, "live?e=K7Q2M")
         pg.evaluate("localStorage.setItem('insooni_pkce', JSON.stringify({v: 'x', p: 'kakao', at: Date.now()}))")
         fresh(pg, "live?e=K7Q2M", 1800)
         d = pg.evaluate("""() => { const s = document.getElementById('bd-sheet'); if (!s || s.hidden) return null; const k = s.querySelector('.bd-kakao');
+          const det = s.querySelector('details.bd-mail'); if (det) det.open = true;
           return {h: s.querySelector('.bd-sheet-h').textContent, al: [...s.querySelectorAll('[role=alert]')].map(a => a.textContent),
                   foc: document.activeElement && document.activeElement.className, low: !!k && k.classList.contains('bd-kakao--low'),
-                  tabs: [...s.querySelectorAll('.bd-tab')].map(b => b.textContent)}; }""")
-        t("L14d /live 에서 카카오 막힘 → 다시 열기 — 공연 제목 · 안내 1개('지금 되지 않습니다') · 첫 초점 안내 · 카카오 테두리 단추 · '처음 가입'",
-          d is not None and d["h"] == "도장을 남기려면 회원으로 들어와 주세요" and len(d["al"]) == 1 and "지금 되지 않습니다" in d["al"][0]
-          and d["foc"] == "bd-alert" and d["low"] and "처음 가입" in d["tabs"], d)
+                  yellow: !!k && getComputedStyle(k).backgroundColor === 'rgb(254, 229, 0)', ktxt: k ? k.textContent : '',
+                  tabs: [...s.querySelectorAll('.bd-tab')].map(b => b.textContent), mark: sessionStorage.getItem('insooni_kakao_fail_at'),
+                  pk: localStorage.getItem('insooni_pkce')}; }""")
+        t("L14d /live 카카오에서 코드 없이 돌아옴 — 공연 제목 · 안내 1개('끝나지 않았습니다 … KOE') · 첫 초점 안내 · 노란 '카카오로 시작하기' 그대로 · 접힌 이메일에 '처음 가입' · 10분 내림 없음 · 검증값 지움",
+          d is not None and d["h"] == "도장을 남기려면 회원으로 들어와 주세요" and len(d["al"]) == 1 and "끝나지 않았습니다" in d["al"][0] and "KOE" in d["al"][0]
+          and d["foc"] == "bd-alert" and not d["low"] and d["yellow"] and d["ktxt"] == "카카오로 시작하기" and "처음 가입" in d["tabs"]
+          and d["mark"] is None and d["pk"] is None, d)
         c.close()
 
     if want("L15"):
@@ -980,8 +1018,25 @@ def group_l(br, gig_src=None, only=None):
         chk = bool(uid) and (ev, uid[0]) in f.checkins
         ch = bool(uid) and (ev, uid[0], 1) in f.cheers
         msg = pg.evaluate("document.getElementById('gig-msg').textContent")
-        t("L15 응원 '사랑해요' → 가입 마치고 도장 찍기 → 도장 1 · 응원 1 · '도장을 찍고 「사랑해요」 응원을 보냈습니다.'",
-          jb == "가입 마치고 도장 찍기" and chk and ch and msg == "도장을 찍고 「사랑해요」 응원을 보냈습니다.", (jb, chk, ch, msg))
+        ph = pg.evaluate("document.getElementById('gig-phase').textContent")
+        # 인사와 한 일은 한 자리(#gig-phase)에 한 문장 — #gig-msg 의 인사를 도장이 13ms 만에 지우고 같은 말이 두 영역에서
+        # 이어서 낭독되던 것(검토 4바퀴 15번). #gig-msg 는 비어 있어야 한다
+        t("L15 응원 '사랑해요' → 가입 마치고 도장 찍기 → 도장 1 · 응원 1 · #gig-phase '응원먼저 님, 어서 오세요. 도장을 찍고 「사랑해요」 응원을 보냈습니다.' · #gig-msg 비어 있음",
+          jb == "가입 마치고 도장 찍기" and chk and ch and ph == "응원먼저 님, 어서 오세요. 도장을 찍고 「사랑해요」 응원을 보냈습니다." and msg == "", (jb, chk, ch, ph, msg))
+        c.close()
+        # 낭독 기록 — 가입을 마친 뒤 두 polite 영역(#gig-phase · #gig-msg)에 쓰인 글을 시간 순서로. 같은 말('도장을 찍')이 두 번 나오면 안 된다
+        f = GigFake(); w = seed(f); fill_counts(f, w["ev"], 312, {1: 128})
+        c = ctx_of(br, f, session=sess(f, w["kakao"]), gig_src=gig_src); pg = c.new_page(); fresh(pg, "live?e=K7Q2M")
+        pg.evaluate("""() => { window.__said = []; const rec = (id) => new MutationObserver(() => { const tx = document.getElementById(id).textContent; if (tx) window.__said.push(id + ':' + tx); })
+          .observe(document.getElementById(id), {childList: true, characterData: true, subtree: true}); rec('gig-phase'); rec('gig-msg'); }""")
+        pg.click('.gig-chip[data-k="1"]'); pg.wait_for_timeout(900)
+        pg.fill("#bd-jn", "가입관객"); pg.check("#bd-jall")
+        pg.click("#bd-sheet form .btn--solid"); pg.wait_for_timeout(2600)
+        said = pg.evaluate("window.__said")
+        stamped = [x for x in said if "도장을 찍" in x]
+        hello = [x for x in said if "어서 오세요" in x]
+        t("L15b 가입 전 카카오 회원 응원 → 가입 — 낭독 영역에 '도장을 찍…' 한 번 · 인사 한 번(같은 문장 안) · #gig-msg 에는 아무것도 쓰지 않음 %s" % said,
+          len(stamped) == 1 and len(hello) == 1 and stamped[0] == hello[0] and stamped[0].startswith("gig-phase:") and not [x for x in said if x.startswith("gig-msg:")], said)
         c.close()
 
     if want("L16"):
@@ -1040,12 +1095,422 @@ def group_l(br, gig_src=None, only=None):
         t("L16b 360×640 × 17/21 Tab 초점이 하단 바 뒤에 숨은 횟수 0 (잰 초점 %d·%d)" % (n17, n21), not h17 and not h21 and n17 > 10 and n21 > 10, (h17, h21))
         t("L16c 뮤테이션(scroll-padding-bottom 0) → 위 검사가 잡는다", len(hm_) > 0, hm_[:3])
 
+    if want("L17"):
+        print("── L17 실패 문구는 누른 자리 곁에 — 낮은 폰 · 인앱 크기에서도 보인다(검토 3바퀴 10·17번)")
+        # 붐비는 LTE 에서 도장·투표·응원이 실패했을 때, 문구가 화면 밖(위 500px)이나 고정 하단 바 뒤(보이는 픽셀 0)에
+        # 뜨면 어르신 눈에는 아무 일도 없다. 문구의 '보이는 높이'가 문구 높이와 같아야 한다(머리 아래 ~ 바 위, 바 안이면 화면 안)
+        MV = """(want) => { const spots = [...document.querySelectorAll('#gig-msg, #gig-bar-msg, .gig-act-msg')].filter(n => n.textContent.indexOf(want) >= 0);
+          if (spots.length !== 1) return {n: spots.length};
+          const m = spots[0], r = m.getBoundingClientRect(), bar = document.getElementById('gig-bar');
+          const hb = document.querySelector('.gig-head').getBoundingClientRect().bottom, inBar = bar.contains(m);
+          const barOn = bar.checkVisibility() && getComputedStyle(bar).position === 'fixed';
+          const lim = inBar || !barOn ? innerHeight : bar.getBoundingClientRect().top;
+          const vis = Math.max(0, Math.min(r.bottom, lim) - Math.max(r.top, hb));
+          const hit = document.elementFromPoint(r.left + Math.min(24, r.width / 2), r.top + r.height / 2);
+          return {n: 1, id: m.id, h: Math.round(r.height), vis: Math.round(vis), hit: !!hit && (hit === m || m.contains(hit)), top: Math.round(r.top)}; }"""
+        bad, seen = [], 0
+        for (wd, ht, fs) in ((375, 560, 17), (360, 600, 17), (390, 664, 17), (375, 667, 21), (360, 640, 21)):
+            for act in ("checkin", "vote", "cheer"):
+                f = GigFake(); w = seed(f); fill_counts(f, w["ev"], 312, {1: 128, 2: 96}, {"거위의 꿈": 58})
+                if act != "checkin":
+                    f.checkins[(w["ev"]["id"], w["mem"])] = iso(f.now)
+                c = ctx_of(br, f, wd, ht, fs=fs, session=sess(f, w["mem"]), gig_src=gig_src); pg = c.new_page(); fresh(pg, "live?e=K7Q2M")
+                f.http_fail["gig_" + act] = 1
+                if act == "checkin":
+                    pg.click("#gig-go")
+                elif act == "vote":
+                    pg.click('.gig-song[data-song="친구여"]')
+                else:
+                    pg.click('.gig-chip[data-k="2"]')
+                pg.wait_for_timeout(1300)
+                d = pg.evaluate(MV, "저장되지 않았습니다")
+                seen += 1
+                if not (d.get("n") == 1 and d["h"] > 0 and d["vis"] >= d["h"] - 1 and d["hit"]):
+                    bad.append((wd, ht, fs, act, d))
+                c.close()
+        t("L17 5화면(375×560·360×600·390×664 /17 · 375×667·360×640 /21) × 도장·투표·응원 500 — 실패 문구가 한 자리에 · 보이는 높이 = 문구 높이 · 가려지지 않음 (%d장면)" % seen,
+          not bad and seen == 15, bad[:4])
+
+    if want("L18"):
+        print("── L18 방명록 — 빈 칸 오류는 '남기기' 바로 위 · 자판이 올라와도 '남기기'가 보인다(검토 3바퀴 11·17번)")
+        bad = []
+        for (wd, ht, fs) in ((390, 664, 17), (375, 667, 21), (360, 640, 21)):
+            f = GigFake(); w = seed(f); f.checkins[(w["ev"]["id"], w["mem"])] = iso(f.now)
+            c = ctx_of(br, f, wd, ht, fs=fs, session=sess(f, w["mem"]), gig_src=gig_src); pg = c.new_page(); fresh(pg, "live?e=K7Q2M")
+            pg.evaluate("document.getElementById('gig-gb-go').scrollIntoView({block: 'center'})"); pg.wait_for_timeout(200)
+            pg.click("#gig-gb-go"); pg.wait_for_timeout(600)
+            d = pg.evaluate("""() => { const e = document.getElementById('gig-gb-err'), r = e.getBoundingClientRect(), ta = document.getElementById('gig-gb-ta');
+              const hb = document.querySelector('.gig-head').getBoundingClientRect().bottom;
+              const hit = document.elementFromPoint(r.left + 24, r.top + r.height / 2);
+              return {txt: e.textContent, top: Math.round(r.top), bottom: Math.round(r.bottom), hb: Math.round(hb), ih: innerHeight,
+                      hit: !!hit && (hit === e || e.contains(hit)), inv: ta.getAttribute('aria-invalid'), db: ta.getAttribute('aria-describedby') || '',
+                      foc: document.activeElement && document.activeElement.id, top2: document.getElementById('gig-msg').textContent}; }""")
+            pg.type("#gig-gb-ta", "좋")
+            d2 = pg.evaluate("[document.getElementById('gig-gb-ta').getAttribute('aria-invalid'), document.getElementById('gig-gb-err').textContent]")
+            if not (d["txt"] == "두 글자 이상 적어 주세요." and d["top"] >= d["hb"] and d["bottom"] <= d["ih"] and d["hit"] and d["inv"] == "true"
+                    and "gig-gb-err" in d["db"] and "gig-gb-hint" in d["db"] and d["foc"] == "gig-gb-ta" and d["top2"] == "" and d2 == [None, ""]):
+                bad.append((wd, ht, fs, d, d2))
+            c.close()
+        t("L18a 390×664/17 · 375×667/21 · 360×640/21 빈 칸 '남기기' → '두 글자 이상…'이 #gig-gb-err(화면 안·가려지지 않음) · aria-invalid · describedby(err+hint) · 초점 글칸 · 치면 풀림",
+          not bad, bad[:3])
+        def kb(wd, ht, fs, vvh):
+            f = GigFake(); w = seed(f); f.checkins[(w["ev"]["id"], w["mem"])] = iso(f.now)
+            c = ctx_of(br, f, wd, ht, fs=fs, session=sess(f, w["mem"]), gig_src=gig_src,
+                       init_extra="Object.defineProperty(window, 'visualViewport', {configurable: true, get: () => ({height: %d, offsetTop: 0, width: %d})});" % (vvh, wd))
+            pg = c.new_page(); fresh(pg, "live?e=K7Q2M")
+            pg.evaluate("document.getElementById('gig-gb-ta').scrollIntoView({block: 'start'})"); pg.wait_for_timeout(150)
+            pg.focus("#gig-gb-ta"); pg.wait_for_timeout(500)
+            d = pg.evaluate("""() => { const g = document.getElementById('gig-gb-go').getBoundingClientRect(), ta = document.getElementById('gig-gb-ta').getBoundingClientRect(),
+              hint = document.getElementById('gig-gb-hint').getBoundingClientRect();
+              return {go: Math.round(g.bottom), taB: Math.round(ta.bottom), taT: Math.round(ta.top), hintAbove: hint.bottom <= ta.top,
+                      gap: Math.round(g.bottom - ta.bottom)}; }""")
+            c.close()
+            return d
+        badk = []
+        for (wd, ht, fs) in ((390, 664, 17), (375, 667, 21)):
+            d = kb(wd, ht, fs, 330)
+            if not (d["go"] <= 330 and d["taB"] > 56 and d["hintAbove"]):
+                badk.append((wd, ht, fs, d))
+        t("L18b 390×664/17 · 375×667/21 · 자판(보이는 높이 330) + 글칸 초점 → '남기기' bottom ≤ 330 · 글칸이 머리 아래에 보임 · 등급 문장은 글칸 위", not badk, badk)
+
+    if want("L19"):
+        print("── L19 상태 줄(role=status)은 같은 글이면 다시 쓰지 않는다(검토 3바퀴 19번)")
+        f = GigFake(); w = seed(f); f.poll_s = 5
+        c = ctx_of(br, f, session=sess(f, w["mem"]), gig_src=gig_src); pg = c.new_page(); fresh(pg, "live?e=K7Q2M", 900)
+        pg.evaluate("""() => { window.__ph = 0; new MutationObserver(m => { window.__ph += m.length; })
+          .observe(document.getElementById('gig-phase'), {childList: true, characterData: true, subtree: true}); }""")
+        k0 = len(rpc_calls(c, "gig_pulse"))
+        pg.wait_for_timeout((f.poll_s * 2 + 4) * 1000)
+        k1 = len(rpc_calls(c, "gig_pulse")) - k0
+        n = pg.evaluate("window.__ph")
+        t("L19 L7 poll_s 5 × 2회 이상(gig_pulse %d회) 동안 #gig-phase 변이 %d — 0이어야 한다" % (k1, n), k1 >= 2 and n == 0, (k1, n))
+        c.close()
+
+    if want("L20"):
+        print("── L20 공연 가입 시트 — 동의 없이 '가입 마치고 도장 찍기' → 동의 칸 바로 아래 문구(검토 3바퀴 18번)")
+        bad = []
+        for (wd, ht, fs) in ((360, 640, 21), (375, 667, 21), (320, 568, 21)):
+            f = GigFake(); w = seed(f)
+            c = ctx_of(br, f, wd, ht, fs=fs, session=sess(f, w["kakao"]), gig_src=gig_src); pg = c.new_page(); fresh(pg, "live?e=K7Q2M")
+            pg.click("#gig-go"); pg.wait_for_timeout(900)
+            pg.click("#bd-sheet form .btn--solid"); pg.wait_for_timeout(600)
+            d = pg.evaluate("""() => { const e = document.getElementById('bd-jerr'); if (!e) return null; const r = e.getBoundingClientRect();
+              const c1 = document.getElementById('bd-ja'), hit = document.elementFromPoint(r.left + 24, r.top + r.height / 2);
+              const vv = window.visualViewport ? visualViewport.height : innerHeight;
+              return {txt: e.textContent, top: Math.round(r.top), bottom: Math.round(r.bottom), vh: Math.round(vv), hit: !!hit && (hit === e || e.contains(hit)),
+                      inv: c1.getAttribute('aria-invalid'), db: c1.getAttribute('aria-describedby'), foc: document.activeElement && document.activeElement.id,
+                      c1top: Math.round(c1.getBoundingClientRect().top)}; }""")
+            if not (d and d["txt"] == "위의 '모두 동의합니다'를 눌러 주세요." and d["top"] >= 0 and d["bottom"] <= d["vh"] and d["hit"]
+                    and d["inv"] == "true" and d["db"] == "bd-jerr" and d["foc"] == "bd-ja" and 0 <= d["c1top"] <= d["vh"]):
+                bad.append((wd, ht, fs, d))
+            c.close()
+        t("L20 /live 가입 시트 360×640·375×667·320×568 × 21px — 동의 없이 주 단추 → \"위의 '모두 동의합니다'를 눌러 주세요.\"가 화면 안(가려지지 않음) · 초점 동의 칸(화면 안) · aria-invalid · describedby", not bad, bad)
+
+    if want("L21"):
+        print("── L21 공연 머리 · 누르는 칸 테두리 · 정직성 문구 크기")
+        bad = []
+        for wd in (320, 360, 375, 390):
+            for fs in (17, 21):
+                for who, lg in (("out", None), ("mem", None), ("out", "en"), ("mem", "en")):
+                    f = GigFake(); w = seed(f)
+                    c = ctx_of(br, f, wd, 700, fs=fs, lang=lg, session=sess(f, w["mem"]) if who == "mem" else None, gig_src=gig_src); pg = c.new_page(); fresh(pg, "live?e=K7Q2M", 1500 if lg else 1300)
+                    d = pg.evaluate("""() => { const tools = [...document.querySelectorAll('.gig-head .header-tools > *')].filter(e => e.checkVisibility());
+                      const lt = document.querySelector('.gig-head .lang-toggle'), ltOn = lt && lt.checkVisibility();
+                      return {right: Math.max(...tools.map(e => e.getBoundingClientRect().right)), iw: innerWidth,
+                              lang: ltOn ? parseFloat(getComputedStyle(lt).fontSize) : 0, root: parseFloat(getComputedStyle(document.documentElement).fontSize),
+                              tail: document.querySelector('.gig-tail-lang').checkVisibility(), brandGap: Math.round(Math.min(...tools.map(e => e.getBoundingClientRect().left)) - document.querySelector('.gig-brand').getBoundingClientRect().right)}; }""")
+                    why = []
+                    if d["right"] > d["iw"] - 8: why.append("도구 right %.1f" % d["right"])
+                    if d["lang"] and abs(d["lang"] - .74 * d["root"]) > .2: why.append("EN %.2fpx" % d["lang"])
+                    if not d["lang"] and not d["tail"]: why.append("EN 이 어디에도 없음")
+                    if d["brandGap"] < 8: why.append("상표 간격 %d" % d["brandGap"])
+                    if why:
+                        bad.append((wd, fs, who, lg, " · ".join(why)))
+                    c.close()
+        t("L21a /live 머리 320·360·375·390 × 17/21 × 로그아웃·회원 × 한국어·영어 — 도구 right ≤ 폭−8 · 상표 간격 ≥8 · EN 글자 .74rem(글자 크기를 따른다) · EN 이 숨으면 꼬리에 'English'", not bad, bad[:4])
+        f = GigFake(); w = seed(f); fill_counts(f, w["ev"], 312, {1: 3})
+        c = ctx_of(br, f, 375, 812, session=sess(f, w["sprout"]), gig_src=gig_src); pg = c.new_page(); fresh(pg, "live?e=K7Q2M")
+        d = pg.evaluate("""() => { const cs = q => getComputedStyle(document.querySelector(q)); const root = parseFloat(getComputedStyle(document.documentElement).fontSize);
+          const starts = [...document.querySelectorAll('.gig-start')].map(b => Math.round(b.getBoundingClientRect().width));
+          return {chip: cs('.gig-chip:not([aria-pressed="true"])').borderTopColor, start: cs('.gig-start').borderTopColor, starts: starts,
+                  note: [cs('#gig-count-note').color, parseFloat(cs('#gig-count-note').fontSize) / root, cs('#gig-vote-n').color, parseFloat(cs('#gig-vote-n').fontSize) / root],
+                  fsb: cs('.gig-head .fs-toggle .fs-b').opacity}; }""")
+        t("L21b 누르는 칸 테두리 .42(응원 칸·시작 문장) · 시작 문장 3칸 같은 폭 · 정직성 문구 .95rem·muted · [가] 작은 글자 불투명도 .8",
+          d["chip"] == "rgba(243, 239, 231, 0.42)" and d["start"] == "rgba(243, 239, 231, 0.42)" and len(set(d["starts"])) == 1 and len(d["starts"]) == 3
+          and d["note"][0] == "rgb(179, 169, 156)" and abs(d["note"][1] - .95) < .01 and d["note"][2] == "rgb(179, 169, 156)" and abs(d["note"][3] - .95) < .01
+          and d["fsb"] == "0.8", d)
+        c.close()
+
+    if want("L22"):
+        print("── L22 공연장 한 바퀴 — QR → 카카오 가입 → 도장 → 응원 → 투표 → 방명록 (360×640 × 17/21 · 느린 회선 · 자판)")
+        # 오늘(10/3 진해) 관객의 실제 순서를 사람처럼 끝까지. 단계마다 '누를 것이 화면 안에 보이는가'를 잰다.
+        # 자판은 visualViewport 높이를 흉내(방명록 단계에서만 330 — 회원 창 단계에서 줄이면 시트도 줄어든다)
+        VVJS = "window.__vvh = 0; Object.defineProperty(window, 'visualViewport', {configurable: true, get: () => ({height: window.__vvh || innerHeight, offsetTop: 0, width: innerWidth})});"
+        INV = """(sel) => { const e = document.querySelector(sel); if (!e || !e.checkVisibility()) return false; const r = e.getBoundingClientRect();
+          const vh = window.visualViewport ? visualViewport.height : innerHeight; if (r.top < 0 || r.bottom > vh) return false;
+          const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return !!hit && (hit === e || e.contains(hit)); }"""
+        bad = []
+        for fs in (17, 21):
+            f = GigFake(); w = seed(f); fill_counts(f, w["ev"], 312, {1: 128}, {"거위의 꿈": 30})
+            nk = f.add_user(None, None, "kakao", {"nickname": "진해관객"}, True)     # 명부에 없는 카카오 계정(처음 온 관객)
+            c = ctx_of(br, f, 360, 640, fs=fs, gig_src=gig_src, init_extra=VVJS); pg = c.new_page(); E = V.errs_of(pg)
+            cdp = c.new_cdp_session(pg)
+            cdp.send("Network.enable")
+            cdp.send("Network.emulateNetworkConditions", {"offline": False, "latency": 200, "downloadThroughput": 1.2e6 / 8, "uploadThroughput": 0.6e6 / 8})
+            steps = []
+            def step(name, ok, info=None):
+                steps.append((name, bool(ok), info))
+            fresh(pg, "live?e=K7Q2M", 2500)
+            step("1 도장 찍기 보임", pg.evaluate(INV, "#gig-go") and pg.evaluate("document.getElementById('gig-go').textContent") == "도장 찍기")
+            pg.click("#gig-go"); pg.wait_for_timeout(1500)
+            step("2 회원 창 · 노란 카카오 보임", pg.evaluate(INV, "#bd-sheet .bd-kakao"))
+            with pg.expect_navigation(timeout=15000):
+                pg.click("#bd-sheet .bd-kakao")
+            pg.wait_for_timeout(3500)
+            step("3 돌아오면 '가입 마치고 도장 찍기'", pg.evaluate("(document.querySelector('#bd-sheet form .btn--solid') || {}).textContent || ''") == "가입 마치고 도장 찍기")
+            pg.check("#bd-jall")
+            pg.evaluate("document.querySelector('#bd-sheet form .btn--solid').scrollIntoView({block: 'nearest'})"); pg.wait_for_timeout(200)
+            step("4 주 단추 보임", pg.evaluate(INV, "#bd-sheet form .btn--solid"))
+            pg.click("#bd-sheet form .btn--solid"); pg.wait_for_timeout(4000)
+            d = pg.evaluate(GIG)
+            step("5 도장 찍힘(L8) · 313", d["stamp"] and d["L"] == "L8" and d["n"] == "313", d)
+            step("6 바 '응원 보내기' 보임", pg.evaluate(INV, "#gig-go") and pg.evaluate("document.getElementById('gig-go').textContent") == "응원 보내기")
+            pg.click("#gig-go"); pg.wait_for_timeout(900)
+            pg.click('.gig-chip[data-k="1"]'); pg.wait_for_timeout(1500)
+            step("7 응원 '사랑해요' 눌림", pg.get_attribute('.gig-chip[data-k="1"]', "aria-pressed") == "true")
+            pg.evaluate("document.querySelector('.gig-song[data-song=\"거위의 꿈\"]').scrollIntoView({block: 'center'})"); pg.wait_for_timeout(200)
+            pg.click('.gig-song[data-song="거위의 꿈"]'); pg.wait_for_timeout(1500)
+            step("8 투표 '거위의 꿈' 눌림", pg.get_attribute('.gig-song[data-song="거위의 꿈"]', "aria-pressed") == "true")
+            pg.evaluate("scrollTo(0, 0)"); pg.wait_for_timeout(300)
+            step("9 바 '방명록 남기기' 보임", pg.evaluate(INV, "#gig-go") and pg.evaluate("document.getElementById('gig-go').textContent") == "방명록 남기기")
+            pg.evaluate("window.__vvh = 330")       # 자판이 올라온다
+            pg.click("#gig-go"); pg.wait_for_timeout(1200)
+            pg.keyboard.type("진해에서 처음 봤어요. 고맙습니다")
+            pg.wait_for_timeout(300)
+            step("10 글칸 초점 · 자판 위로 '남기기' 보임", pg.evaluate("document.activeElement && document.activeElement.id") == "gig-gb-ta" and pg.evaluate(INV, "#gig-gb-go"),
+                 pg.evaluate("Math.round(document.getElementById('gig-gb-go').getBoundingClientRect().bottom)"))
+            pg.click("#gig-gb-go"); pg.wait_for_timeout(2500)
+            pg.evaluate("window.__vvh = 0; document.activeElement && document.activeElement.blur()"); pg.wait_for_timeout(400)
+            done = pg.evaluate("document.getElementById('gig-gb-done').textContent")
+            step("11 방명록 '받았습니다. 확인한 뒤 올라갑니다.'", done == "받았습니다. 확인한 뒤 올라갑니다.", done)
+            ev = w["ev"]["id"]
+            uid = [nk] if nk in f.members else []
+            srv = {"checkin": bool(uid) and (ev, uid[0]) in f.checkins, "cheer": bool(uid) and (ev, uid[0], 1) in f.cheers,
+                   "vote": bool(uid) and f.votes.get((ev, uid[0])) == "거위의 꿈",
+                   "post": bool(uid) and any(p.get("gig_id") == ev and p["uid"] == uid[0] and p["status"] == "pending" for p in f.posts)}
+            step("12 서버: 도장·응원·투표·방명록(확인 중) 각 1 · JS 오류 0 · 못 받은 요청 0", all(srv.values()) and not E and not f.unhandled, (srv, E[:2], f.unhandled[:2]))
+            fails = [x for x in steps if not x[1]]
+            if fails or len(steps) != 12:
+                bad.append((fs, fails[:3], len(steps)))
+            c.close()
+        t("L22 공연장 한 바퀴 360×640 × 17/21 (1.2Mbps·RTT 200ms · 자판 330) — 12단계 모두 화면 안에서 눌리고 서버에 남는다", not bad, bad)
+
+    if want("L23"):
+        print("── L23 검토 4바퀴 — 숫자 안내 · 꺼짐 링크 · 창 제목 · 키보드 초점 · 카카오 토큰 실패 · 시작 전 가입 · 도장 줄 · 글자 · 언어 · 자판")
+        # 자판 흉내 — 보이는 화면(visualViewport)을 줄이고 resize 를 쏜다(iOS·안드로이드 크롬처럼 innerHeight 는 그대로)
+        VVE = """(() => { const et = new EventTarget(); window.__vvH = null;
+          const o = { get height() { return window.__vvH || window.innerHeight; }, get width() { return window.innerWidth; }, offsetTop: 0, offsetLeft: 0, pageTop: 0, scale: 1,
+            addEventListener: (a, b, c) => et.addEventListener(a, b, c), removeEventListener: (a, b, c) => et.removeEventListener(a, b, c) };
+          Object.defineProperty(window, 'visualViewport', { configurable: true, get: () => o });
+          window.__kb = (h) => { window.__vvH = h; et.dispatchEvent(new Event('resize')); }; })();"""
+        # a — 도장 마감 뒤(after)에는 '몇 초마다 새로 셉니다'라고 하지 않는다(검토 4바퀴 7·22번)
+        notes = {}
+        for state in ("L7", "L9", "L10"):
+            f, uid, url, conf, hold = setup(state)
+            c = ctx_of(br, f, conf=conf, session=sess(f, uid) if uid else None, gig_src=gig_src); pg = c.new_page(); fresh(pg, url)
+            notes[state] = pg.evaluate("(() => { const n = document.getElementById('gig-count-note'); return n.checkVisibility() ? n.textContent : null; })()")
+            c.close()
+        t("L23a 숫자 안내 — L7 '15초마다' · L9 '도장 찍기가 끝난 뒤의 숫자입니다.'('15초' 없음) · L10 '최종 숫자'",
+          notes["L7"] and "15초마다" in notes["L7"] and notes["L9"] == "도장 찍기가 끝난 뒤의 숫자입니다." and notes["L10"] == "공연이 끝난 뒤의 최종 숫자입니다.", notes)
+        # b — 스위치 꺼짐: '사랑방으로' 링크는 하나(같은 이름·같은 곳이 연달아 두 번 보이고 두 번 읽혔다, 검토 4바퀴 24·27번)
+        f = GigFake(); w = seed(f)
+        c = ctx_of(br, f, conf="{board: true, kakao: true}", gig_src=gig_src); pg = c.new_page(); fresh(pg, "live?e=K7Q2M")
+        d = pg.evaluate("""() => [...document.querySelectorAll('#main a')].filter(a => a.checkVisibility({checkVisibilityCSS: true})).map(a => a.textContent.trim())""")
+        t("L23b live 꺼짐 — 보이는 링크 중 '사랑방으로' 정확히 1개 %s" % d, d.count("사랑방으로") == 1 and len(d) == 3, d)
+        c.close()
+        # c — 로그아웃 회원 창의 제목·첫 문장이 창을 연 목적·지금 단계와 맞다(검토 4바퀴 12번)
+        sh = {}
+        for state, sel in (("L9", "#gig-gb-login"), ("L9", "#hm"), ("L10", "#hm"), ("L4", "#hm"), ("L5", "#gig-gb-login")):
+            f, uid, url, conf, hold = setup(state)
+            c = ctx_of(br, f, conf=conf, gig_src=gig_src); pg = c.new_page(); fresh(pg, url)
+            pg.click(sel); pg.wait_for_timeout(900)
+            sh[state + sel] = pg.evaluate("""() => { const s = document.getElementById('bd-sheet'); if (!s || s.hidden) return null;
+              return [s.querySelector('.bd-sheet-h').textContent, (document.getElementById('bd-sheet-lede') || {}).textContent || '']; }""")
+            c.close()
+        ok = (sh["L9#gig-gb-login"] and sh["L9#gig-gb-login"][0] == "방명록을 남기려면 회원으로 들어와 주세요" and sh["L9#gig-gb-login"][1].startswith("가입을 마치면 이 화면에서 바로 한 줄 남길 수 있습니다.")
+              and sh["L5#gig-gb-login"] and sh["L5#gig-gb-login"][0] == "방명록을 남기려면 회원으로 들어와 주세요"
+              and all(sh[k] and sh[k][0] == "로그인 · 회원가입" for k in ("L9#hm", "L10#hm", "L4#hm"))
+              and all("도장" not in sh[k][1] for k in ("L9#gig-gb-login", "L9#hm", "L10#hm"))
+              and sh["L4#hm"][1].startswith("미리 가입해 두시면 도장이 열릴 때"))
+        t("L23c 로그아웃 창 — 방명록 단추(L9·L5) '방명록을 남기려면…' · 머리 입구 L9·L10·L4 '로그인 · 회원가입'(도장 없음) · L9·L10 첫 문장에 '도장' 없음 · L4 '미리 가입해 두시면…'", ok, sh)
+        # d — 키보드로 '도장 찍기'·'남기기'를 누르면 초점이 그 자리에 남는다(문서로 떨어지지 않는다, 검토 4바퀴 13번)
+        foc = {}
+        for fail in (False, True):
+            f, uid, url, conf, hold = setup("L7")
+            if fail:
+                f.http_fail["gig_checkin"] = 1
+            c = ctx_of(br, f, conf=conf, session=sess(f, uid), gig_src=gig_src); pg = c.new_page(); fresh(pg, url)
+            pg.focus("#gig-go"); pg.keyboard.press("Enter")
+            seen = []
+            for ms_ in (30, 170, 600, 700):
+                pg.wait_for_timeout(ms_)
+                seen.append(pg.evaluate("document.activeElement === document.body ? 'BODY' : (document.activeElement.id || document.activeElement.tagName)"))
+            foc["fail" if fail else "ok"] = (seen, pg.evaluate(GIG)["stamp"])
+            c.close()
+        f, uid, url, conf, hold = setup("L8")
+        c = ctx_of(br, f, conf=conf, session=sess(f, uid), gig_src=gig_src); pg = c.new_page(); fresh(pg, url)
+        pg.fill("#gig-gb-ta", "키보드로 남깁니다")
+        pg.focus("#gig-gb-go"); pg.keyboard.press("Enter"); pg.wait_for_timeout(1500)
+        foc["gb"] = pg.evaluate("document.activeElement === document.body ? 'BODY' : (document.activeElement.id || document.activeElement.tagName)")
+        c.close()
+        t("L23d Enter 로 '도장 찍기'(성공·서버 500) → 30ms~1.5s 내내 초점 #gig-go · 방명록 '남기기' Enter → 초점 '한 줄 더 남기기'",
+          all(x == "gig-go" for x in foc["ok"][0]) and foc["ok"][1] and all(x == "gig-go" for x in foc["fail"][0]) and not foc["fail"][1] and foc["gb"] == "gig-gb-again-b", foc)
+        # e — 카카오 왕복 뒤 토큰 교환 실패(429 요청 한도 · 500) — 카카오 사람의 말 · 카카오 단추가 주 단추(검토 4바퀴 26번)
+        class TokFake(GigFake):
+            mode = "429"
+            def handle(self, route):
+                u = urlparse(route.request.url)
+                if u.path == "/auth/v1/token" and parse_qs(u.query).get("grant_type", [""])[0] == "pkce":
+                    self.calls.append(("auth:pkce", self.mode))
+                    if self.mode == "429":
+                        return route.fulfill(status=429, content_type="application/json",
+                                             body=json.dumps({"code": 429, "error_code": "over_request_rate_limit", "msg": "Request rate limit reached"}))
+                    return route.fulfill(status=500, content_type="application/json", body='{"message":"boom"}')
+                return super().handle(route)
+        tok = {}
+        for mode in ("429", "500"):
+            f = TokFake(); f.mode = mode; w = seed(f)
+            c = ctx_of(br, f, gig_src=gig_src); pg = c.new_page(); fresh(pg, "live?e=K7Q2M")
+            pg.click("#gig-go"); pg.wait_for_timeout(900)
+            with pg.expect_navigation(timeout=10000):
+                pg.click("#bd-sheet .bd-kakao")
+            pg.wait_for_timeout(2500)
+            tok[mode] = pg.evaluate("""() => { const s = document.getElementById('bd-sheet'); if (!s || s.hidden) return null; const k = s.querySelector('.bd-kakao');
+              return {al: [...s.querySelectorAll('[role=alert]')].map(a => a.textContent), txt: s.innerText,
+                      low: !!k && k.classList.contains('bd-kakao--low'), yellow: !!k && getComputedStyle(k).backgroundColor === 'rgb(254, 229, 0)'}; }""")
+            c.close()
+        ok = all(tok[m] and tok[m]["al"] == ["카카오 로그인을 마치지 못했습니다. 잠시 뒤 카카오로 다시 시작해 주세요."] and not tok[m]["low"] and tok[m]["yellow"]
+                 and "메일을 보낼" not in tok[m]["txt"] and "링크가 만료" not in tok[m]["txt"] for m in tok)
+        t("L23e 카카오 → token 429·500 — 안내 '카카오 로그인을 마치지 못했습니다…' 하나 · 메일 문구 없음 · 노란 카카오 단추(내리지 않음)", ok,
+          {m: (tok[m] or {}).get("al") for m in tok})
+        # f — 도장 열리기 전(L4) 가입: 단추는 '가입 마치기', 마치면 언제 찍을 수 있는지 말한다 · 도장 0(검토 4바퀴 18번)
+        f = GigFake(now=datetime(2026, 10, 18, 6, 0, tzinfo=UTC)); w = seed(f, open_event=False)
+        e = f.add_event(starts=datetime(2026, 10, 18, 9, 30, tzinfo=UTC))
+        c = ctx_of(br, f, session=sess(f, w["kakao"]), gig_src=gig_src); pg = c.new_page(); fresh(pg, "live?e=K7Q2M")
+        pg.click("#hm"); pg.wait_for_timeout(900)
+        jb = pg.evaluate("(document.querySelector('#bd-sheet form .btn--solid') || {}).textContent || ''")
+        pg.fill("#bd-jn", "일찍온팬"); pg.check("#bd-jall")
+        pg.click("#bd-sheet form .btn--solid"); pg.wait_for_timeout(2200)
+        d = pg.evaluate("[document.getElementById('gig-msg').textContent, INSOONI_GIG.state().L]")
+        n_chk = sum(1 for (a, u) in f.checkins if a == e["id"])
+        t("L23f L4 가입 — 단추 '가입 마치기' · 마치면 '일찍온팬 님, 가입을 마쳤습니다. 도장은 10월 18일 오후 4시 30분부터 … 「도장 찍기」가 나타납니다.' · 도장 0",
+          jb == "가입 마치기" and d[0] == "일찍온팬 님, 가입을 마쳤습니다. 도장은 10월 18일 오후 4시 30분부터 찍을 수 있습니다 — 이 화면을 열어 두시면 그때 「도장 찍기」가 나타납니다."
+          and d[1] == "L4" and n_chk == 0, (jb, d, n_chk))
+        c.close()
+        # g — 낮은 폰·큰 글자의 가로 도장: 공연장 이름과 '다녀옴'이 한 줄(다녀옴만 떨어지지 않는다, 검토 4바퀴 23번)
+        stp = {}
+        for (wd, ht, fs) in ((360, 740, 21), (360, 640, 21), (320, 568, 21), (375, 812, 17)):
+            f = GigFake(); w = seed(f); f.checkins[(w["ev"]["id"], w["mem"])] = iso(f.now)
+            c = ctx_of(br, f, wd, ht, fs=fs, session=sess(f, w["mem"]), gig_src=gig_src); pg = c.new_page(); fresh(pg, "live?e=K7Q2M")
+            stp[(wd, ht, fs)] = pg.evaluate("""() => { const v = document.getElementById('gig-stamp-v').getBoundingClientRect(), w = document.getElementById('gig-stamp-w').getBoundingClientRect(),
+              f = document.getElementById('gig-stamp').getBoundingClientRect();
+              return {same: Math.abs((v.top + v.bottom) / 2 - (w.top + w.bottom) / 2) < 8 && w.left >= v.right - 1, stacked: w.top >= v.bottom - 2,
+                      inside: w.right <= f.right + 1 && v.left >= f.left - 1, over: document.documentElement.scrollWidth - document.documentElement.clientWidth}; }""")
+            c.close()
+        ok = all(stp[k]["same"] and stp[k]["inside"] and stp[k]["over"] == 0 for k in ((360, 740, 21), (360, 640, 21), (320, 568, 21))) and stp[(375, 812, 17)]["stacked"]
+        t("L23g 도장 — 가로 표(360×740·360×640·320×568 × 21px)에서 '진해아트홀 다녀옴'처럼 한 줄 · 표 안 · 넘침 0 · 정사각(375×812)은 세로", ok, stp)
+        # h — 글자 크기·누르는 칸: 방명록 입구·다시 불러오기 1rem · 꼬리 줄 .9rem · 영어 꼬리도 48×48(검토 4바퀴 1·17번)
+        sz = {}
+        f, uid, url, conf, hold = setup("L5")
+        c = ctx_of(br, f, conf=conf, gig_src=gig_src); pg = c.new_page(); fresh(pg, url)
+        sz["ko"] = pg.evaluate("""() => ({login: parseFloat(getComputedStyle(document.getElementById('gig-gb-login')).fontSize),
+          retry: parseFloat(getComputedStyle(document.getElementById('gig-retry')).fontSize),
+          tail: [...document.querySelectorAll('.gig-tail a')].map(a => parseFloat(getComputedStyle(a).fontSize))})""")
+        c.close()
+        small = []
+        for (wd, ht, fs) in ((360, 640, 17), (1280, 860, 17), (320, 640, 21)):
+            f, uid, url, conf, hold = setup("L5")
+            c = ctx_of(br, f, wd, ht, fs=fs, conf=conf, lang="en", gig_src=gig_src); pg = c.new_page(); fresh(pg, url, 1800)
+            small += pg.evaluate("""() => [...document.querySelectorAll('.gig-tail a, .gig-tail button')].filter(e => e.checkVisibility({checkVisibilityCSS: true}))
+              .map(e => [e.textContent, Math.round(e.getBoundingClientRect().width * 10) / 10, Math.round(e.getBoundingClientRect().height)]).filter(x => x[1] < 48 || x[2] < 48)""")
+            c.close()
+        t("L23h 17px — '로그인하고 방명록 남기기'·'다시 불러오기' 17px(1rem) · 꼬리 줄 15.3px(.9rem) · 영어 꼬리 줄 360·1280×17 · 320×21 모두 ≥48×48",
+          sz["ko"]["login"] == 17 and sz["ko"]["retry"] == 17 and sz["ko"]["tail"] and all(abs(x - 15.3) < .05 for x in sz["ko"]["tail"]) and not small, (sz, small))
+        # i — 언어 단추: 보이는 글자의 언어를 lang 으로 · 이름표도 그 언어 · 한글('한국어')은 본문 서체·자간 0(검토 4바퀴 16번)
+        lg = {}
+        for lang in (None, "en"):
+            f, uid, url, conf, hold = setup("L5")
+            c = ctx_of(br, f, conf=conf, lang=lang, gig_src=gig_src); pg = c.new_page(); fresh(pg, url, 1800)
+            lg[lang or "ko"] = pg.evaluate("""() => [...document.querySelectorAll('.lang-toggle')].map(b => [b.textContent, b.getAttribute('lang'), b.getAttribute('aria-label'),
+              getComputedStyle(b).fontFamily.split(',')[0].replace(/["']/g, '').trim(), getComputedStyle(b).letterSpacing])""")
+            c.close()
+        ok = (all(x[1] == "en" and x[2] == "View in English" for x in lg["ko"]) and len(lg["ko"]) == 2
+              and all(x[0] == "한국어" and x[1] == "ko" and x[2] == "한국어로 보기" and "JetBrains" not in x[3] and x[4] in ("normal", "0px") for x in lg["en"]) and len(lg["en"]) == 2)
+        t("L23i 언어 단추 — 한국어 화면 lang=en · 'View in English' / 영어 화면 '한국어' lang=ko · '한국어로 보기' · 본문 서체 · 자간 0", ok, lg)
+        # j — 자판: 공연 코드 칸 + '열기', 방명록 글칸 + '남기기' — 한 글자 더 쳐도 칸 윗변 ≥ 머리 아래 · 단추 아랫변 ≤ 보이는 화면 − 8(검토 4바퀴 11·14번)
+        KBM = """([fid, bid]) => { const f = document.querySelector(fid), b = document.querySelector(bid), hb = document.querySelector('.gig-head').getBoundingClientRect().bottom;
+          return {ft: Math.round(f.getBoundingClientRect().top * 10) / 10, bb: Math.round(b.getBoundingClientRect().bottom * 10) / 10, hb: Math.round(hb * 10) / 10, vv: window.visualViewport.height,
+                  foc: document.activeElement === f, ekh: f.getAttribute('enterkeyhint'), sp: getComputedStyle(document.documentElement).scrollPaddingTop}; }"""
+        kbad, kn = [], 0
+        for (wd, ht, fs, vvh) in ((360, 640, 17, 330), (360, 640, 21, 330), (390, 844, 21, 470), (320, 568, 21, 260)):
+            for kind in ("code", "gb"):
+                if kind == "code":
+                    f, uid, url, conf, hold = setup("L2")
+                    fid, bid, typ = "#gig-code-in", "#gig-code-go", "5U"
+                else:
+                    f, uid, url, conf, hold = setup("L8")
+                    fid, bid, typ = "#gig-gb-ta", "#gig-gb-go", "오늘 정말"
+                c = ctx_of(br, f, wd, ht, fs=fs, conf=conf, session=sess(f, uid) if uid else None, gig_src=gig_src, init_extra=VVE); pg = c.new_page(); fresh(pg, url)
+                pg.locator(fid).scroll_into_view_if_needed(); pg.wait_for_timeout(120)
+                pg.click(fid); pg.wait_for_timeout(200)
+                pg.keyboard.type(typ)
+                pg.evaluate("(h) => window.__kb(h)", vvh); pg.wait_for_timeout(500)
+                d1 = pg.evaluate(KBM, [fid, bid])
+                pg.keyboard.type("Y" if kind == "code" else " 좋았어요"); pg.wait_for_timeout(400)
+                d2 = pg.evaluate(KBM, [fid, bid])
+                kn += 1
+                ok = all(d["foc"] and d["ft"] >= d["hb"] and d["bb"] <= d["vv"] - 7.5 for d in (d1, d2))
+                if kind == "code":
+                    ok = ok and d1["ekh"] == "go"
+                else:
+                    ok = ok and d1["sp"] == "%gpx" % (57 + fs * .5)
+                if not ok:
+                    kbad.append((kind, wd, ht, fs, vvh, d1, d2))
+                c.close()
+        # k — 사랑방 '오늘 공연' 줄: 도장 받는 중에는 도장이 아니라 응원·방명록으로(집에서 도장을 권하지 않는다, 검토 4바퀴 19번)
+        today = {}
+        for state in ("L7", "L9"):
+            f, uid, url, conf, hold = setup(state)
+            c = ctx_of(br, f, conf=conf, gig_src=gig_src); pg = c.new_page(); fresh(pg, "community.html", 1800)
+            today[state] = pg.evaluate("""() => { const a = document.getElementById('cafe-today'); if (!a || a.hidden) return null;
+              return {t: a.textContent, href: a.getAttribute('href')}; }""")
+            c.close()
+        t("L23k 사랑방 '오늘 공연' — 도장 받는 중: '오늘 공연 응원·방명록 보기 →'(href …#gig-cheers, '도장 찍으러' 없음) · 숫자는 '도장 N명' 그대로 · 방명록만: '공연 방명록 보러 가기 →'",
+          today["L7"] and today["L7"]["href"] == "/live?e=K7Q2M#gig-cheers" and today["L7"]["t"].endswith("오늘 공연 응원·방명록 보기 →") and "도장 찍으러" not in today["L7"]["t"]
+          and "도장 312명" in today["L7"]["t"] and today["L9"] and today["L9"]["href"] == "/live?e=K7Q2M" and today["L9"]["t"].endswith("공연 방명록 보러 가기 →"), today)
+        # l — '가입 마치고 방명록 남기기' → 가입 → 도장은 찍지 않고(약속하지 않았다) 방명록 글칸으로(검토 4바퀴 12번)
+        f = GigFake(); w = seed(f); fill_counts(f, w["ev"], 312)
+        c = ctx_of(br, f, session=sess(f, w["kakao"]), gig_src=gig_src); pg = c.new_page(); fresh(pg, "live?e=K7Q2M")
+        gl = pg.evaluate("document.getElementById('gig-gb-login').textContent")
+        pg.click("#gig-gb-login"); pg.wait_for_timeout(900)
+        jb = pg.evaluate("(document.querySelector('#bd-sheet form .btn--solid') || {}).textContent || ''")
+        pg.fill("#bd-jn", "방명록먼저"); pg.check("#bd-jall")
+        pg.click("#bd-sheet form .btn--solid"); pg.wait_for_timeout(2600)
+        d = pg.evaluate("[document.activeElement && document.activeElement.id, document.getElementById('gig-gb-form').checkVisibility(), document.getElementById('gig-msg').textContent]")
+        uid = [u for u, m in f.members.items() if m["nickname"] == "방명록먼저"]
+        stamped = bool(uid) and (w["ev"]["id"], uid[0]) in f.checkins
+        t("L23l L6 '가입 마치고 방명록 남기기' → 회원 창 단추도 같은 말 → 가입 → 초점 방명록 글칸 · 도장 없음 · 인사 '방명록먼저 님, 어서 오세요.'",
+          gl == "가입 마치고 방명록 남기기" and jb == "가입 마치고 방명록 남기기" and d[0] == "gig-gb-ta" and d[1] and not stamped and d[2] == "방명록먼저 님, 어서 오세요.", (gl, jb, d, stamped))
+        c.close()
+        t("L23j 자판 흉내 %d장면(360×640·17/21 · 390×844·21 · 320×568·21) — 코드 칸+'열기'·방명록 글칸+'남기기': 한 글자 더 쳐도 칸 top ≥ 머리 · 단추 bottom ≤ 보이는 높이−8 · 코드 칸 enterkeyhint=go · 글칸 초점 중 scroll-padding-top 57px+.5rem" % kn,
+          not kbad and kn == 8, kbad[:3])
+
     if want("L12"):
         print("── L12 · 320×21")
         f = GigFake(); w = seed(f); fill_counts(f, w["ev"], 312, {1: 128})
         c = ctx_of(br, f, 320, 640, fs=21, session=sess(f, w["mem"]), gig_src=gig_src); pg = c.new_page(); fresh(pg, "live?e=K7Q2M")
         d = pg.evaluate("""() => ({cols: getComputedStyle(document.getElementById('gig-chips')).gridTemplateColumns.split(' ').length,
-          fs: parseFloat(getComputedStyle(document.getElementById('gig-n')).fontSize), over: document.documentElement.scrollWidth - innerWidth,
+          fs: parseFloat(getComputedStyle(document.getElementById('gig-n')).fontSize), over: document.documentElement.scrollWidth - document.documentElement.clientWidth,
           hdr: [...document.querySelectorAll('.gig-head .header-tools > *')].filter(e => e.checkVisibility()).map(e => Math.round(e.getBoundingClientRect().right)),
           brand: Math.round(document.querySelector('.gig-brand').getBoundingClientRect().right),
           tailLang: document.querySelector('.gig-tail-lang').checkVisibility()})""")
@@ -1133,17 +1598,20 @@ def group_l(br, gig_src=None, only=None):
         d = pg.evaluate("""() => { const a = document.getElementById('cafe-today');
           return {vis: a.checkVisibility(), href: a.getAttribute('href'), txt: a.textContent, router: a.getAttribute('data-router'),
                   gig: (document.querySelector('.cafe-gig') || {}).textContent || ''}; }""")
-        t("LXd 사랑방 '오늘 공연' 줄 → /live?e=K7Q2M (라우터 끔) · 실측 '도장 313명' · 공연 방명록 글에 '10.18 부산 KBS홀 공연'",
-          d["vis"] and d["href"] == "/live?e=K7Q2M" and d["router"] == "off" and "도장 313명" in d["txt"] and d["gig"] == "10.18 부산 KBS홀 공연", d)
-        pg.click("#hm"); pg.wait_for_timeout(1200)
-        st = pg.evaluate("[...document.querySelectorAll('#bd-sheet .bd-stamp-mini')].map(x => x.textContent)")
-        t("LXe 내 정보 '다녀온 공연' 미니 도장 — '2026.10.18' + 장소", st == ["2026.10.18부산 KBS홀"], st)
+        # 도장 받는 중이면 응원·방명록으로(#gig-cheers) — 집에서 도장을 권하지 않는다(검토 4바퀴 19번, L23k)
+        t("LXd 사랑방 '오늘 공연' 줄 → /live?e=K7Q2M#gig-cheers (라우터 끔) · 실측 '도장 313명' · 공연 방명록 글에 '10.18 부산 KBS홀 공연'",
+          d["vis"] and d["href"] == "/live?e=K7Q2M#gig-cheers" and d["router"] == "off" and "도장 313명" in d["txt"] and d["gig"] == "10.18 부산 KBS홀 공연", d)
+        # 2026-10-03: 헤더의 '내 정보' → 내 정보 화면(#me) — 다녀온 공연이 거기 있다
+        pg.click("#hm"); pg.wait_for_timeout(1500)
+        st = pg.evaluate("[...document.querySelectorAll('#cafe-me .bd-stamp-mini')].map(x => x.textContent)")
+        t("LXe 내 정보(#me) '다녀온 공연' 미니 도장 — '2026.10.18' + 장소", st == ["2026.10.18부산 KBS홀"]
+          and pg.evaluate("location.hash") == "#me", st)
         c.close()
         # 탈퇴하면 도장·응원·투표가 함께 지워진다(서버 계약을 가짜 서버가 흉내 — 화면은 탈퇴 경고 문구로 말한다)
         f = GigFake(); w = seed(f)
         c = ctx_of(br, f, session=sess(f, w["sprout"])); pg = c.new_page(); fresh(pg, "news.html")
-        pg.click("#hm"); pg.wait_for_timeout(1000)
-        warn = pg.evaluate("(document.querySelector('#bd-sheet .bd-leave-note') || {}).textContent || ''")
+        pg.click("#hm"); pg.wait_for_timeout(1500)
+        warn = pg.evaluate("(document.querySelector('#cafe-me .bd-leave-note') || {}).textContent || ''")
         t("LXf 공연 모드가 켜지면 탈퇴 경고가 '글·댓글·도장·응원·투표 기록이 함께 지워집니다'", warn == "탈퇴하면 글·댓글·도장·응원·투표 기록이 함께 지워집니다.", warn)
         c.close()
 
@@ -1261,7 +1729,7 @@ def mutations(br):
     qr = (ROOT / "assets/js/qr.min.js").read_text(encoding="utf-8")
     MUT = [
         ("도장 단추 잠금 제거(연타가 두 번 요청 — 처리 중 표시·단추 잠금 둘 다)", "gig",
-         [("if (S.busy.checkin) return;\nif (needMember", "if (needMember"), ("go.disabled = true;", "")], None, ["L4"]),
+         [("if (S.busy.checkin) return;\nif (needMember", "if (needMember"), ('go.setAttribute("aria-disabled", "true");', "")], None, ["L4"]),
         ("숫자 '더 늦게 센 값만' 규칙 제거", "gig", "if (cur && a < cur.at) return;", "", ["L5"]),
         ("숨은 화면에서도 숫자 새로 세기(두 겹의 문 모두)", "gig", [('if (!pollable() || document.visibilityState === "hidden") return;\nvar g = ++pulseGen', "if (!pollable()) return;\nvar g = ++pulseGen"),
                                                          ('if (document.visibilityState === "hidden") { clearTimeout(pollT); pulseGen++; return; }', 'if (document.visibilityState === "hidden") { return; }'),
@@ -1275,7 +1743,21 @@ def mutations(br):
         ("공연 스위치를 무시(꺼져도 서버에 묻는다)", "gig", "return configured() && conf().board === true && conf().live === true;", "return configured();", ["L1"]),
         ("응원부터 누른 관객에게 도장을 먼저 찍지 않음", "gig", 'var stampFirst = S.phase === "open" && !S.me.checked;', "var stampFirst = false;", ["L15"]),
         ("L8 주 단추가 응원을 건너뛰고 방명록으로", "gig", 'if (S.phrases.length && !touched()) return ["cheers"', 'if (false) return ["cheers"', ["L2"]),
-        ("공연 문맥에서 카카오가 없어도 이메일 '처음 가입'을 숨김", "board", "!(gig && conf().liveEmail !== true && kakaoTop)", "!(gig && conf().liveEmail !== true)", ["L14"]),
+        ("공연 문맥에서 카카오가 없어도 이메일 '처음 가입'을 숨김", "board", "!(gig && conf().liveEmail !== true && kakaoTop && !opts.kakaoBack)", "!(gig && conf().liveEmail !== true)", ["L14"]),
+        ("카카오에서 돌아온 공연 관객에게 노란 단추를 내림(원인 단정)", "board", "kakaoFail: false, kakaoBack: true", "kakaoFail: true, kakaoBack: true", ["L14"]),
+        ("결과 문구를 #gig-msg 한 곳에만(누른 자리 곁 무시)", "gig", "var to = s ? msgSpot(near) : null;", 'var to = s ? byId("gig-msg") : null;', ["L17"]),
+        ("자판이 올라와도 '남기기'를 맞추지 않음", "gig", 'M.kbFit(byId("gig-gb-ta"), function () { return byId("gig-gb-go"); });', "", ["L18", "L22"]),
+        ("같은 글도 상태 줄(role=status)에 다시 씀", "gig", "if (n && n.textContent !== s) n.textContent = s;", "if (n) n.textContent = s;", ["L19"]),
+        ("가입 동의 오류를 주 단추 아래(m)에", "board", 'agErr.textContent = why(!c1.checked ? "need_agree" : "need_age");', 'say(m, why(!c1.checked ? "need_agree" : "need_age"), "bad");', ["L20"]),
+        ("시트를 닫으면 초점이 누른 칸이 아니라 '도장 찍기'로", "gig", 'M.openSheet(me ? "join" : "start", from || go, null, { ctx: "gig", why: next && next.what });', 'M.openSheet(me ? "join" : "start", go, null, { ctx: "gig", why: next && next.what });', ["L6"]),
+        # 검토 4바퀴 — 새 단언(L23)이 살아 있는지
+        ("도장 마감 뒤에도 '15초마다 새로 셉니다'", "gig", 'txt("gig-count-note", S.phase === "open" || S.phase === "before"', 'txt("gig-count-note", S.phase !== "closed"', ["L23"]),
+        ("꺼짐 상태에서 꼬리 '사랑방으로'도 보임(같은 링크 두 번)", "gig", 'show(byId("gig-t1"), false);', "", ["L23"]),
+        ("도장 단추를 disabled 로 잠금(초점이 문서로 떨어짐)", "gig", 'go.setAttribute("aria-disabled", "true");', "go.disabled = true;", ["L23"]),
+        ("공연 단계와 무관하게 '도장을 남기려면'", "board", ': ph && ph !== "open" ? t("bd.sheetH"', ': false ? t("bd.sheetH"', ["L23"]),
+        ("카카오 토큰 실패에 이메일 사람의 말", "board", 'if (cb.purpose === "kakao" && ((cb.kind', 'if (false && ((cb.kind', ["L23"]),
+        ("자판 맞춤이 글칸을 줄이지 않음(아주 좁은 폰에서 단추가 자판 뒤)", "board", "var h = Math.max(Math.ceil(lh + pad), Math.floor(nat - (span - room)));", "var h = nat;", ["L23"]),
+        ("느릴 때 aria-busy 를 풀지 않음", "gig", 'document.getElementById("main").removeAttribute("aria-busy");\nsetPhase(t("gig.slowPhase"', 'setPhase(t("gig.slowPhase"', ["L0"]),
         # (형식 비트의 정정 수준만 틀리게 적는 뮤테이션은 macOS Vision 이 수준을 바꿔 가며 읽어 내 잡히지 않는다 — 실측.
         #  그래서 해독기가 되살릴 수 없는 '마스크 번호' 를 틀리게 적는다)
         ("QR 형식 비트의 마스크 번호 틀림", "qr", "applyMask(best);\nformat(best);", "applyMask(best);\nformat((best + 1) % 8);", ["L11"]),

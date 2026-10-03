@@ -268,7 +268,10 @@
     member:  [["새싹으로", "sprout", "새싹으로 내렸습니다"], ["쉬게 하기", "blocked", "쉬게 했습니다"]],
     blocked: [["새싹으로 풀기", "sprout", "새싹으로 풀었습니다"]]
   };
-  function memberItem(m, need) {
+  /* 회원이 가입 때(또는 내 정보에서) 고른 '내 노래'(supabase/013) — config.mypage 가 켜졌을 때만 묻는다.
+     013 이 없는 서버에 부르면 404 가 콘솔에 남는다(board.js 와 같은 스위치) */
+  function mypageOn() { var c = window.INSOONI_CONFIG || {}; return c.mypage === true; }
+  function memberItem(m, need, song) {
     var li = el("li", "adm-item");
     var meta = el("div", "adm-meta");
     meta.appendChild(el("span", "adm-kind", m.staff ? "운영자" : (LEVEL[m.level] || m.level)));
@@ -278,6 +281,7 @@
     meta.appendChild(t);
     li.appendChild(meta);
     var line = "올라간 글 " + m.posts_ok + " · 댓글 " + m.comments_ok + (m.waiting ? " · 확인 기다리는 것 " + m.waiting : "");
+    if (song) line += " · 내 노래 「" + song.title + "」";
     if (m.level === "sprout" && !m.staff) {
       if (m.level_by === "admin") line += " · 운영자가 정한 새싹(자동 등업 안 함)";
       else line += " · 정회원까지 글 " + Math.max(0, need.p - m.posts_ok) + " · 댓글 " + Math.max(0, need.c - m.comments_ok);
@@ -308,20 +312,37 @@
   function loadMembers() {
     var list = $("#adm-list");
     say($("#adm-msg"), "불러오는 중…");
-    rpc("admin_members", { p_q: ($("#adm-q").value || "").trim() || null, p_limit: 300 }).then(function (res) {
+    Promise.all([
+      rpc("admin_members", { p_q: ($("#adm-q").value || "").trim() || null, p_limit: 300 }),
+      mypageOn() ? rpc("admin_member_songs", {}) : Promise.resolve(null)
+    ]).then(function (both) {
+      var res = both[0], sg = both[1];
       if (!res || !res.ok) { gate(res) || say($("#adm-msg"), why(res), "bad"); return; }
+      /* 내 노래 — user_id 로 붙인다. 고르지 않은 회원은 아무것도 붙이지 않는다(빈칸을 지어내지 않는다) */
+      var songs = {};
+      if (sg && sg.ok) (sg.rows || []).forEach(function (x) { songs[x.user_id] = x; });
       say($("#adm-msg"), "");
       var c = res.counts || {};
       counts.members = c.total;
       paintCounts();
       $("#adm-mnote").textContent = "새싹 " + (c.sprout || 0) + " · 정회원 " + (c.member || 0) + " · 쉬는 중 " + (c.blocked || 0) +
         ". 정회원 기준은 올라간 글 " + res.need_posts + "개 + 댓글 " + res.need_comments +
-        "개입니다(Supabase 의 board_settings 표에서 바꿀 수 있습니다). 운영자가 한 번 등급을 정한 회원에게는 자동 등업이 다시 적용되지 않습니다.";
+        "개입니다(Supabase 의 board_settings 표에서 바꿀 수 있습니다). 운영자가 한 번 등급을 정한 회원에게는 자동 등업이 다시 적용되지 않습니다." +
+        songNote(sg);
       list.textContent = "";
       var rows = Array.isArray(res.rows) ? res.rows : [];
       if (!rows.length) { list.appendChild(el("li", "adm-empty", "아직 회원이 없습니다.")); return; }
-      rows.forEach(function (m) { list.appendChild(memberItem(m, { p: res.need_posts, c: res.need_comments })); });
+      rows.forEach(function (m) { list.appendChild(memberItem(m, { p: res.need_posts, c: res.need_comments }, songs[m.user_id])); });
     });
+  }
+  /* 회원 탭 머리 한 줄 — 내 노래를 고른 회원 수와 많이 고른 노래(서버가 센 그대로, 위 셋) */
+  function songNote(sg) {
+    if (!sg) return "";
+    if (!sg.ok) return sg.reason === "not_ready" ? " 내 노래는 서버에 013(마이페이지)을 실행한 뒤 보입니다." : "";
+    var c = sg.counts || {};
+    var top = (sg.tally || []).slice(0, 3).map(function (x) { return x.title + " " + x.n; });
+    return " 내 노래를 고른 회원 " + (c.with_song || 0) + "명(전체 " + (c.members || 0) + "명)" +
+      (top.length ? " · 많이 고른 노래: " + top.join(" · ") : "") + ".";
   }
 
   /* ---------- 공연 (011) ----------
