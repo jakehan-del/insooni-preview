@@ -32,6 +32,10 @@ OpenClaw 가 텔레그램으로 보낸다. 아무것도 안 쓰면 아무것도 
 글 내용·이름은 가져오지 않는다. 서버 함수(supabase/009·010)가 애초에 건수와
 시(時) 단위로 내린 시각만 내준다. 공개키로 부른다 — 비밀 키가 필요 없다.
 
+2026-10-03 — 014(모든 글 바로 공개) 뒤로는 '검수 대기'가 늘 0 이라 이것만 세면 알림이 영영 울리지 않는다.
+그래서 그 칸(기준 시각 이후)에 새로 올라온 공개 글 수도 센다 — 공개 목록(board_list)을 공개키로 받아
+작성 시각만 본다(제목·본문·별명은 쓰지 않는다). 문제 글은 운영자가 insooni.com/admin 에서 내린다.
+
 실패를 조용히 넘기지 않는다. 서버에 못 닿으면 정해진 시간(--deadline) 안에서 몇 번
 다시 해 보고, 그래도 안 되면 '확인하지 못했다'는 글을 남긴다. 종료코드는 0/1 뿐이고
 정기 작업은 `|| true` 로 감싼다 — OpenClaw 는 종료코드가 아니라 출력 유무로 보낼지 정한다.
@@ -90,6 +94,26 @@ def fetch(since, tries, wait, deadline):
     return None, why
 
 
+def fetch_new_posts(since, deadline):
+    """기준 시각 이후 공개된 새 글 수 — (n, 이상인가) 또는 (None, None). 실패해도 대기 알림은 그대로 보낸다."""
+    body = json.dumps({"p_board": None, "p_before": None, "p_limit": 50}).encode()
+    req = urllib.request.Request(
+        URL + "/rest/v1/rpc/board_list", data=body, method="POST",
+        headers={"apikey": KEY, "Authorization": "Bearer " + KEY, "Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=max(1.0, min(TRY_TIMEOUT, deadline))) as r:
+            d = json.loads(r.read().decode("utf-8"))
+        if not (isinstance(d, dict) and d.get("ok") is True and isinstance(d.get("rows"), list)):
+            return None, None
+        rows = list(d.get("rows") or []) + list(d.get("notices") or [])
+        n = sum(1 for x in rows if x.get("created_at") and parse_ts(x["created_at"]) >= since)
+        # 목록이 50개로 잘렸고 그 50개가 전부 기준 뒤라면 실제는 더 많을 수 있다 — 정직하게 '이상'
+        more = bool(d.get("more")) and n >= len(d.get("rows") or [])
+        return n, more
+    except Exception:
+        return None, None
+
+
 def parse_ts(v):
     """PostgreSQL 은 소수점 끝의 0을 지워 내보낸다(.12345). 파이썬 3.10 의 fromisoformat 은
     3·6자리만 읽으므로 6자리로 맞춘 뒤 읽는다. Z 도 +00:00 으로."""
@@ -121,12 +145,17 @@ def window(slot, now, every=15):
     return base - timedelta(days=1) if now < base else base
 
 
-def compose(slot, s, now, base):
-    """보낼 글. 보낼 것이 없으면 빈 문자열."""
+def compose(slot, s, now, base, newp=None, more=False):
+    """보낼 글. 보낼 것이 없으면 빈 문자열. newp — 기준 시각 이후 바로 공개된 새 글 수(014 뒤)."""
+    pub = ""
+    if newp:
+        pub = "새로 올라온 글 %d건%s(바로 공개됨) — 문제 글은 %s 에서 내려 주세요" % (newp, " 이상" if more else "", ADMIN)
     stamp = "(insooni 사랑방 · %s KST 기준)" % now.strftime("%m/%d %H:%M")
     total = s["total"]
     since_txt = "%s %02d시 이후" % (day_word(base, now), base.hour)
     if slot == "morning":
+        if total <= 0 and pub:
+            return "📝 %s %s\n%s" % (since_txt, pub, stamp)
         if total <= 0:
             if now.weekday() == HEARTBEAT_WEEKDAY:
                 return "✅ 사랑방 검수 대기 0건 — 알림은 정상 작동 중입니다 (월요일마다 한 번)\n" + stamp
@@ -137,8 +166,12 @@ def compose(slot, s, now, base):
             lines.append("가장 오래 기다린 글: %s %02d시대에 들어옴" % (day_word(o, now), o.hour))
         if s.get("since"):
             lines.append("%s 새로 들어온 글 %d건" % (since_txt, s["since"]))
+        if pub:
+            lines.append("%s %s" % (since_txt, pub))
     elif slot == "live":
         new = s.get("since") or 0
+        if new <= 0 and pub:
+            return "🎤 공연 중(%02d:%02d 이후) %s\n%s" % (base.hour, base.minute, pub, stamp)
         if new <= 0:
             return ""
         lines = ["🎤 공연 중 새 글 %d건 (%02d:%02d 이후) — 검수 대기 전체 %d건 (%s)"
@@ -146,9 +179,13 @@ def compose(slot, s, now, base):
                  "새싹 회원 글은 '올리기'를 눌러야 모두에게 보입니다."]
     else:
         new = s.get("since") or 0
+        if new <= 0 and pub:
+            return "📝 %s %s\n%s" % (since_txt, pub, stamp)
         if new <= 0:
             return ""
         lines = ["💌 %s 새로 들어온 글 %d건 — 검수 대기 전체 %d건 (%s)" % (since_txt, new, total, kinds(s))]
+        if pub:
+            lines.append(pub)
     lines += ["→ " + ADMIN, stamp]
     return "\n".join(lines)
 
@@ -181,7 +218,8 @@ def main(argv=None):
               "앞으로 매일 09시(대기가 있을 때)·19시(새 글이 있을 때)에 알려 드립니다.\n"
               "(insooni 사랑방 · %s KST 기준)" % (s["total"], now.strftime("%m/%d %H:%M")))
         return 0
-    msg = compose(slot, s, now, base)
+    newp, more = fetch_new_posts(base, max(1.0, a.deadline / 4))
+    msg = compose(slot, s, now, base, newp, more)
     if msg:
         print(msg)
     return 0

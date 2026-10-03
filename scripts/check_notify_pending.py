@@ -18,10 +18,18 @@ SRC = open(TARGET, encoding="utf-8").read()
 
 class Stub(BaseHTTPRequestHandler):
     plan = []          # 차례로 돌려줄 (상태코드, 본문) 또는 ("sleep", 초, 본문). 다 쓰면 마지막 것을 반복
-    seen = []          # 받은 요청
+    seen = []          # 받은 요청(pending_summary)
+    posts = {"ok": True, "rows": [], "notices": [], "more": False}   # board_list 가 돌려줄 공개 목록(014 뒤 새 글 셈)
+    seen_posts = []
 
     def do_POST(self):
         n = int(self.headers.get("Content-Length") or 0)
+        if self.path.endswith("/rpc/board_list"):
+            Stub.seen_posts.append(json.loads(self.rfile.read(n) or b"{}"))
+            raw = json.dumps(Stub.posts).encode()
+            self.send_response(200); self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(raw))); self.end_headers(); self.wfile.write(raw)
+            return
         Stub.seen.append({"path": self.path, "body": json.loads(self.rfile.read(n) or b"{}"),
                           "apikey": self.headers.get("apikey")})
         step = Stub.plan.pop(0) if len(Stub.plan) > 1 else Stub.plan[0]
@@ -63,8 +71,9 @@ def S(total=0, note=0, dream=0, letter=0, post=0, oldest=None, since=None, bpost
             "oldest_at": oldest, "since": since, "at": "2026-10-02T00:00:00+00:00"}
 
 
-def run(script, plan, now=None, slot="auto", tries=3, base=BASE, extra=(), record=True):
-    Stub.plan, Stub.seen = list(plan), []
+def run(script, plan, now=None, slot="auto", tries=3, base=BASE, extra=(), record=True, posts=None):
+    Stub.plan, Stub.seen, Stub.seen_posts = list(plan), [], []
+    Stub.posts = posts or {"ok": True, "rows": [], "notices": [], "more": False}
     env = dict(os.environ, INSOONI_SUPABASE_URL=base)
     cmd = [sys.executable, script, "--slot", slot, "--tries", str(tries), "--wait", "0"] + list(extra)
     if now:
@@ -193,6 +202,20 @@ def suite(script):
     c, out, err, seen, _ = run(script, [(404, {})], GIG, "live")
     t("live 인데 서버 함수 없음 → 실패 알림(조용히 넘기지 않음)", c == 1 and "확인하지 못했습니다" in out, repr(out))
 
+    # 12) 014 뒤 — 검수 대기 0 이어도 그 칸에 바로 공개된 새 글이 있으면 알린다(건수만, 제목·별명 없음)
+    P = lambda *ts: {"ok": True, "rows": [{"id": i, "title": "비밀 제목", "nickname": "비밀별명", "created_at": t_} for i, t_ in enumerate(ts)], "notices": [], "more": False}
+    c, out, err, seen, _ = run(script, [(200, S())], GIG, "live", posts=P("2026-10-03T08:05:00Z", "2026-10-03T08:14:00Z", "2026-10-03T07:40:00Z"))
+    t("live 대기 0 · 17:00 이후 공개 글 2건 → '공연 중(17:00 이후) 새로 올라온 글 2건(바로 공개됨)' · 내리기 안내 · 제목·별명 없음",
+      c == 0 and "새로 올라온 글 2건(바로 공개됨)" in out and "17:00 이후" in out and "insooni.com/admin" in out
+      and "비밀" not in out and len(Stub.seen_posts) == 1, repr(out))
+    c, out, err, seen, _ = run(script, [(200, S())], GIG, "live", posts=P("2026-10-03T07:40:00Z"))
+    t("live 대기 0 · 칸 안 새 글 0 → 조용", c == 0 and out == "", repr(out))
+    c, out, err, seen, _ = run(script, [(200, S())], FRI_PM, "evening", posts=P("2026-10-02T01:30:00Z", "2026-10-02T09:00:00Z"))
+    t("저녁 대기 0 · 09시 이후 새 공개 글 2건 → 📝 한 줄", c == 0 and out.startswith("📝") and "새로 올라온 글 2건" in out, repr(out))
+    many = {"ok": True, "rows": [{"id": i, "created_at": "2026-10-03T08:10:00Z"} for i in range(50)], "notices": [], "more": True}
+    c, out, err, seen, _ = run(script, [(200, S())], GIG, "live", posts=many)
+    t("목록이 잘렸고 전부 새 글 → '50건 이상'(정직하게)", "새로 올라온 글 50건 이상" in out, repr(out))
+
     # 10) stderr 로는 아무것도 새지 않는다 (OpenClaw 는 stdout 이 비면 stderr 를 보낸다)
     t("모든 경우(%d회) stderr 비어 있음" % len(ERRS), not any(ERRS), repr([e for e in ERRS if e][:1]))
     c, out, err, seen, _ = run(script, [(200, S())], FRI_AM, "noon", record=False)
@@ -235,6 +258,8 @@ if __name__ == "__main__":
          '    elif slot == "live":\n        new = s.get("total") or 0'),
         ("live 기준을 지금 시각으로(칸 경계 없음)", "        return top - timedelta(minutes=every)", "        return now - timedelta(minutes=every)"),
         ("live 칸 크기 무시", "    base = window(slot, now, a.every)", "    base = window(slot, now)"),
+        ("새 공개 글을 안 셈(014 뒤 알림이 죽음)", "    newp, more = fetch_new_posts(base, max(1.0, a.deadline / 4))", "    newp, more = None, None"),
+        ("기준 시각 이전 글까지 셈", 'n = sum(1 for x in rows if x.get("created_at") and parse_ts(x["created_at"]) >= since)', 'n = len(rows)'),
     ]
     caught = 0
     with tempfile.TemporaryDirectory() as d:
