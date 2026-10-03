@@ -72,9 +72,10 @@ if (typeof window.INSOONI_CONFIG.kakao === "undefined") {
 
 /* 공연 모드(supabase/011) 스위치 — 공연 화면(/live)과 사랑방의 '오늘 공연' 줄.
    011 을 운영에 실행하고 ✅ 를 확인한 뒤 true. 꺼져 있으면 공연 관련 서버 함수를 부르지 않는다
-   (없는 함수를 부르면 PostgREST 404 가 모든 방문자의 콘솔에 남는다 — board 스위치와 같은 이유). */
+   (없는 함수를 부르면 PostgREST 404 가 모든 방문자의 콘솔에 남는다 — board 스위치와 같은 이유).
+   2026-10-03 08:16 형님이 011+012 를 운영에 실행 → 공개 키로 gig_event('5UYX8') ok · 새 표 6개 잠김 · rate_ok/req_ip_hash 막힘 확인 → true. */
 if (typeof window.INSOONI_CONFIG.live === "undefined") {
-  window.INSOONI_CONFIG.live = false;
+  window.INSOONI_CONFIG.live = true;
 }
 
 /* 공연장에서 연 회원 창에 이메일 '처음 가입'을 보일지. 이메일 가입은 확인 메일 왕복이 필요하고
@@ -87,9 +88,10 @@ if (typeof window.INSOONI_CONFIG.liveEmail === "undefined") {
 /* 마이페이지의 서버 칸(supabase/013) 스위치 — 내 댓글 모아 보기 · 좋아하는 노래(가입 질문 포함) · 운영 화면의 '내 노래'.
    013 을 운영에 실행하고 ✅ 를 확인한 뒤 true. 꺼져 있어도 마이페이지(community.html#me)는 열린다 —
    010 에 이미 있는 것(별명·등급·내가 쓴 글·별명 바꾸기·로그아웃·탈퇴)과 011 의 도장만 보이고,
-   013 칸은 '준비하고 있습니다' 한 줄로 정직하게 비운다. 없는 함수를 부르지 않는다(404 가 방문자 콘솔에 남는다). */
+   013 칸은 '준비하고 있습니다' 한 줄로 정직하게 비운다. 없는 함수를 부르지 않는다(404 가 방문자 콘솔에 남는다).
+   2026-10-03 형님이 013 을 운영에 실행 → member_page·member_my_posts 등 존재(익명 401)·새 표 잠김 확인 → true. */
 if (typeof window.INSOONI_CONFIG.mypage === "undefined") {
-  window.INSOONI_CONFIG.mypage = false;
+  window.INSOONI_CONFIG.mypage = true;
 }
 
 /* 이메일 소식지 폼 — 보낼 도구(발송 서비스)가 없는 동안은 숨긴다. 신청만 받고 보내지 못하면 거짓 약속이 된다. */
