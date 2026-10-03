@@ -1403,6 +1403,16 @@ def group_l(br, gig_src=None, only=None):
         pg.click("#bd-sheet form .btn--solid"); pg.wait_for_timeout(2200)
         d = pg.evaluate("[document.getElementById('gig-msg').textContent, INSOONI_GIG.state().L]")
         n_chk = sum(1 for (a, u) in f.checkins if a == e["id"])
+        # L4 로그아웃 — 아래 큰 단추 '미리 가입해 두기' → 회원 창(카카오) · 도장 요청 0 (형님 10/03 'QR → 로그인 → 공연 화면')
+        f2 = GigFake(now=datetime(2026, 10, 18, 6, 0, tzinfo=UTC)); seed(f2, open_event=False)
+        f2.add_event(starts=datetime(2026, 10, 18, 9, 30, tzinfo=UTC))
+        c2 = ctx_of(br, f2, gig_src=gig_src); p2 = c2.new_page(); fresh(p2, "live?e=K7Q2M")
+        bar = p2.evaluate("[!document.getElementById('gig-bar').hidden, document.getElementById('gig-go').textContent, document.getElementById('gig-go').getAttribute('data-act')]")
+        p2.click("#gig-go"); p2.wait_for_timeout(900)
+        sh = p2.evaluate("(function(){ var s = document.getElementById('bd-sheet'); return s && !s.hidden ? s.innerText : ''; })()")
+        t("L23e L4 로그아웃 — 하단 '미리 가입해 두기' → 회원 창('미리 가입해 두시면…') · 도장 요청 0",
+          bar == [True, "미리 가입해 두기", "early"] and "미리 가입해 두시면" in sh and not rpc_calls(c2, "gig_checkin"), (bar, sh[:80]))
+        c2.close()
         t("L23f L4 가입 — 단추 '가입 마치기' · 마치면 '일찍온팬 님, 가입을 마쳤습니다. 도장은 10월 18일 오후 4시 30분부터 … 「도장 찍기」가 나타납니다.' · 도장 0",
           jb == "가입 마치기" and d[0] == "일찍온팬 님, 가입을 마쳤습니다. 도장은 10월 18일 오후 4시 30분부터 찍을 수 있습니다 — 이 화면을 열어 두시면 그때 「도장 찍기」가 나타납니다."
           and d[1] == "L4" and n_chk == 0, (jb, d, n_chk))

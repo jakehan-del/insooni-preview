@@ -86,6 +86,9 @@
   function boardOn() { return !!cfg() && conf().board === true; }
   function kakaoOn() { return conf().kakao === true; }
   function liveOn() { return boardOn() && conf().live === true; }
+  /* 014(모든 글 바로 공개)가 운영에 있다 — 화면이 '확인 뒤 올라갑니다'라고 말하지 않게. 서버가 정하는 것은 그대로 서버가
+     정하고(응답의 status), 이 스위치는 쓰기 전에 보여 주는 안내 문장만 바꾼다(형님 10/03 결정) */
+  function instantOn() { return conf().instant === true; }
   /* 마이페이지의 013 칸(내 댓글·내 노래·가입 질문) — 스위치가 켜졌고, 서버가 아직 '없다'(404)고 하지 않았다 */
   function mypageOn() { return boardOn() && conf().mypage === true && S.mp !== false; }
   function onLivePage() { return document.body && document.body.getAttribute("data-page") === "live"; }
@@ -1986,7 +1989,9 @@
     }
     markTab(boardVal());
     var trusted = S.me && (S.me.level === "member" || S.me.admin);
-    hint.textContent =
+    if (instantOn() && !(edit && edit.status === "rejected")) {
+      hint.textContent = t("bd.hintAll", "쓰자마자 모두에게 보입니다. 문제가 되는 글은 운영자가 내릴 수 있습니다.");
+    } else hint.textContent =
         edit && edit.status === "rejected" ? (trusted ? t("bd.hintEditRejected", "운영자가 내린 글입니다. 고쳐도 다시 올라가지 않습니다.")
                                                       : t("bd.hintEditSprout", "고친 글은 운영자가 다시 확인한 뒤 올라갑니다."))
       : edit && edit.status === "pending" ? t("bd.hintEditPending", "확인을 기다리는 글입니다. 고쳐도 그대로 확인을 기다립니다.")
@@ -2352,7 +2357,9 @@
     if (p.level === "blocked") { line.textContent = why("blocked"); return s; }
     if (p.auto_up === false) { line.textContent = t("bd.me.byStaff", "새싹 회원입니다. 등급은 운영자가 정합니다."); return s; }
     var NP = p.need_posts || 0, NC = p.need_comments || 0;
-    line.textContent = fmt(t("bd.me.sproutF", "새싹 회원입니다. 운영자 확인을 거쳐 공개된 글 {p}개와 댓글 {c}개가 모이면 정회원이 되어, 글과 댓글이 바로 올라갑니다."), { p: NP, c: NC });
+    line.textContent = instantOn()
+      ? fmt(t("bd.me.sproutInstF", "새싹 회원입니다. 공개된 글 {p}개와 댓글 {c}개가 모이면 정회원이 됩니다."), { p: NP, c: NC })
+      : fmt(t("bd.me.sproutF", "새싹 회원입니다. 운영자 확인을 거쳐 공개된 글 {p}개와 댓글 {c}개가 모이면 정회원이 되어, 글과 댓글이 바로 올라갑니다."), { p: NP, c: NC });
     var ul = el("ul", "me-prog");
     [[t("bd.me.pOk", "공개된 글"), p.posts_ok || 0, NP], [t("bd.me.cOk", "공개된 댓글"), p.comments_ok || 0, NC]].forEach(function (x) {
       var li = el("li", "me-prog-i");
@@ -3369,9 +3376,10 @@
       foot.appendChild(m);
       f.appendChild(foot);
       var need = (S.me && S.me.need_posts) || 3, needc = (S.me && S.me.need_comments) || 5;
-      f.appendChild(el("p", "form-hint bd-lvinfo",
-        t("bd.lvInfo1", "새싹으로 시작합니다. 운영자 확인을 거쳐 올라간 글 ") + need + t("bd.lvInfo2", "개와 댓글 ") + needc +
-        t("bd.lvInfo3", "개가 모이면 정회원이 되어, 글과 댓글이 바로 올라갑니다.")));
+      f.appendChild(el("p", "form-hint bd-lvinfo", instantOn()
+        ? fmt(t("bd.lvInfoInstF", "새싹으로 시작합니다. 글 {p}개와 댓글 {c}개가 모이면 정회원이 됩니다. 글은 쓰자마자 모두에게 보입니다."), { p: need, c: needc })
+        : t("bd.lvInfo1", "새싹으로 시작합니다. 운영자 확인을 거쳐 올라간 글 ") + need + t("bd.lvInfo2", "개와 댓글 ") + needc +
+          t("bd.lvInfo3", "개가 모이면 정회원이 되어, 글과 댓글이 바로 올라갑니다.")));
       var out = btn("bd-link", t("bd.logout", "로그아웃"));
       out.addEventListener("click", function () {
         Auth.signOut().then(function () { forgetDevice(); S.me = null; renderHM(); emit("state"); closeSheet(); refreshCafe(); });
@@ -3532,6 +3540,7 @@
   /* ---------- 바깥에 내놓는 창구 ----------
      공연 화면(gig.js)이 같은 회원 핵심을 쓴다. 권한과는 무관하다 — 서버가 지킨다 */
   window.INSOONI_MEMBER = {
+    instant: instantOn,
     ready: readyP,
     me: function () { return S.me; },
     on: function (fn) { if (typeof fn === "function") listeners.push(fn); },

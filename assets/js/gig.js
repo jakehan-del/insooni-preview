@@ -489,6 +489,13 @@
     var me = S.me;
     var posted = me && me.posted > 0;
     switch (L) {
+      /* 도장이 열리기 전 — 로그아웃·가입 전인 사람에게 아래 큰 단추로 미리 가입을 권한다. 머리의 작은 '로그인·가입'만
+         있었더니 QR 로 들어온 사람이 무엇을 해야 할지 몰랐다(형님 10/03: "QR로 들어가면 로그인해서 바로 공연 화면으로").
+         가입을 마치면 이 화면으로 돌아오고, 도장이 열리면 이 단추가 '도장 찍기'로 바뀐다 */
+      case "L4":
+        if (!me) return ["early", t("gig.goEarly", "미리 가입해 두기")];
+        if (!me.joined) return ["early", t("gig.goEarlyJoin", "가입 마치기")];
+        return null;
       case "L5": return ["stamp-login", t("gig.goStamp", "도장 찍기")];
       case "L6": return ["stamp-join", t("gig.goJoinStamp", "가입 마치고 도장 찍기")];
       case "L7": return ["stamp", t("gig.goStamp", "도장 찍기")];
@@ -662,7 +669,8 @@
       : L === "L10" ? t("gig.gbClosed", "방명록은 닫혔습니다. 남긴 글은 사랑방에서 볼 수 있습니다.") : "";
     show(note, !!note.textContent);
     if (writer && !full) {
-      txt("gig-gb-hint", me.staff || me.level === "member"
+      txt("gig-gb-hint", (M.instant && M.instant()) ? t("gig.gbHintAll", "남기면 바로 모두에게 보입니다.")
+        : me.staff || me.level === "member"
         ? t("gig.gbHintMember", "정회원이라 바로 올라갑니다.")
         : t("gig.gbHintSprout", "새싹 회원의 글은 운영자가 확인한 뒤 올라갑니다. 그동안은 나에게만 보입니다."));
     }
@@ -798,6 +806,7 @@
   function onGo() {
     var a = go.getAttribute("data-act");
     if (a === "stamp-login" || a === "stamp-join") { needMember({ what: "checkin" }, go); return; }
+    if (a === "early") { needMember({ what: "early" }, go); return; }   /* 이어서 할 일 없음 — 열리기 전이라 찍지 않는다 */
     if (a === "stamp") { checkin(); return; }
     if (a === "cheers") {
       /* 응원 칸을 머리(56px) 바로 아래로 — 첫 칸에 초점(누르기만 하면 된다) */
