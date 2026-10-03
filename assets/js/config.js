@@ -95,9 +95,10 @@ if (typeof window.INSOONI_CONFIG.mypage === "undefined") {
 }
 
 /* 모든 글 바로 공개(supabase/014) 스위치 — 쓰기 전에 보여 주는 안내 문장만 바꾼다(공개 여부는 서버가 정한다).
-   014 를 운영에 실행하고 확인한 뒤 true. 그 전에 켜면 '바로 보입니다'라고 말하고 실제로는 확인을 기다리게 된다. */
+   014 를 운영에 실행하고 확인한 뒤 true. 그 전에 켜면 '바로 보입니다'라고 말하고 실제로는 확인을 기다리게 된다.
+   2026-10-03 10:50 형님이 014 실행 → 공개 키로 '확인 중'이던 글이 공개·대기 0 확인 → true. */
 if (typeof window.INSOONI_CONFIG.instant === "undefined") {
-  window.INSOONI_CONFIG.instant = false;
+  window.INSOONI_CONFIG.instant = true;
 }
 
 /* 이메일 소식지 폼 — 보낼 도구(발송 서비스)가 없는 동안은 숨긴다. 신청만 받고 보내지 못하면 거짓 약속이 된다. */
