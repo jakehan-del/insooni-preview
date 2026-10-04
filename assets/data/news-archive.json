@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-04 05:55",
- "count": 81,
+ "updated": "2026-10-04 09:26",
+ "count": 82,
  "items": [
   {
    "date": "2026-10-02",
@@ -292,6 +292,19 @@
    "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBQZmF0LTNUNUY0UEtIbGtsUGRfdDh6dEhnU2MzXzFPQjEtdVdMNFRnMGJMbUF1S1JEQzlIelBSYmxoQlpZUDJfX1J0b25qSGFKb2ROdmtYZERhaUhEVnROLWI0RTVGUktoZzlYc2ZqN3RMM3hMVVFB0gF3QVVfeXFMUFBmYXQtM1Q1RjRQS0hsa2xQZF90OHp0SGdTYzNfMU9CMS11V0w0VGcwYkxtQXVLUkRDOUh6UFJibGhCWllQMl9fUnRvbmpIYUpvZE52a1hkRGFpSERWdE4tYjRFNUZSS2hnOVhzZmo3dEwzeExVUUE?oc=5",
    "type": "방송",
    "auto": true
+  },
+  {
+   "date": "2026-09-02",
+   "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
+   "source": "뉴스1",
+   "sourceSite": "https://www.news1.kr",
+   "url": "https://news.google.com/rss/articles/CBMickFVX3lxTFAzOXFvRFloWTdNal9QTmxYYWZYTXE0WXNseDVhVjA5bWhiX195VlNCRV83aHZBSy1KbkpjWmg0V21WUEpnb0diUk03S2RXVEo1OE5TMVdNdEZLems5YVNIaUtDNTR6VEhjTkZGNHVvOXdmUdIBd0FVX3lxTFBQZmF0LTNUNUY0UEtIbGtsUGRfdDh6dEhnU2MzXzFPQjEtdVdMNFRnMGJMbUF1S1JEQzlIelBSYmxoQlpZUDJfX1J0b25qSGFKb2ROdmtYZERhaUhEVnROLWI0RTVGUktoZzlYc2ZqN3RMM3hMVVFB?oc=5",
+   "type": "방송",
+   "auto": true,
+   "rawTitle": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요' - 뉴스1",
+   "tags": [
+    "뉴스1"
+   ]
   },
   {
    "date": "2026-09-02",

@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-04 05:55",
+ "updated": "2026-10-04 09:26",
  "items": [
   {
    "date": "2026-10-02",
@@ -216,7 +216,7 @@
    "first": "2026-09-02",
    "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
    "source": "뉴스1",
-   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBQZmF0LTNUNUY0UEtIbGtsUGRfdDh6dEhnU2MzXzFPQjEtdVdMNFRnMGJMbUF1S1JEQzlIelBSYmxoQlpZUDJfX1J0b25qSGFKb2ROdmtYZERhaUhEVnROLWI0RTVGUktoZzlYc2ZqN3RMM3hMVVFB0gF3QVVfeXFMUFBmYXQtM1Q1RjRQS0hsa2xQZF90OHp0SGdTYzNfMU9CMS11V0w0VGcwYkxtQXVLUkRDOUh6UFJibGhCWllQMl9fUnRvbmpIYUpvZE52a1hkRGFpSERWdE4tYjRFNUZSS2hnOVhzZmo3dEwzeExVUUE?oc=5",
+   "url": "https://news.google.com/rss/articles/CBMickFVX3lxTFAzOXFvRFloWTdNal9QTmxYYWZYTXE0WXNseDVhVjA5bWhiX195VlNCRV83aHZBSy1KbkpjWmg0V21WUEpnb0diUk03S2RXVEo1OE5TMVdNdEZLems5YVNIaUtDNTR6VEhjTkZGNHVvOXdmUdIBd0FVX3lxTFBQZmF0LTNUNUY0UEtIbGtsUGRfdDh6dEhnU2MzXzFPQjEtdVdMNFRnMGJMbUF1S1JEQzlIelBSYmxoQlpZUDJfX1J0b25qSGFKb2ROdmtYZERhaUhEVnROLWI0RTVGUktoZzlYc2ZqN3RMM3hMVVFB?oc=5",
    "type": "방송",
    "auto": true,
    "count": 2,
@@ -225,8 +225,9 @@
      "date": "2026-09-02",
      "title": "김영임·인순이·남상일 출연…국립국악관현악단 '추석엔 국악가요'",
      "source": "뉴스1",
-     "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBQZmF0LTNUNUY0UEtIbGtsUGRfdDh6dEhnU2MzXzFPQjEtdVdMNFRnMGJMbUF1S1JEQzlIelBSYmxoQlpZUDJfX1J0b25qSGFKb2ROdmtYZERhaUhEVnROLWI0RTVGUktoZzlYc2ZqN3RMM3hMVVFB0gF3QVVfeXFMUFBmYXQtM1Q1RjRQS0hsa2xQZF90OHp0SGdTYzNfMU9CMS11V0w0VGcwYkxtQXVLUkRDOUh6UFJibGhCWllQMl9fUnRvbmpIYUpvZE52a1hkRGFpSERWdE4tYjRFNUZSS2hnOVhzZmo3dEwzeExVUUE?oc=5",
+     "url": "https://news.google.com/rss/articles/CBMickFVX3lxTFAzOXFvRFloWTdNal9QTmxYYWZYTXE0WXNseDVhVjA5bWhiX195VlNCRV83aHZBSy1KbkpjWmg0V21WUEpnb0diUk03S2RXVEo1OE5TMVdNdEZLems5YVNIaUtDNTR6VEhjTkZGNHVvOXdmUdIBd0FVX3lxTFBQZmF0LTNUNUY0UEtIbGtsUGRfdDh6dEhnU2MzXzFPQjEtdVdMNFRnMGJMbUF1S1JEQzlIelBSYmxoQlpZUDJfX1J0b25qSGFKb2ROdmtYZERhaUhEVnROLWI0RTVGUktoZzlYc2ZqN3RMM3hMVVFB?oc=5",
      "alt": [
+      "https://news.google.com/rss/articles/CBMid0FVX3lxTFBQZmF0LTNUNUY0UEtIbGtsUGRfdDh6dEhnU2MzXzFPQjEtdVdMNFRnMGJMbUF1S1JEQzlIelBSYmxoQlpZUDJfX1J0b25qSGFKb2ROdmtYZERhaUhEVnROLWI0RTVGUktoZzlYc2ZqN3RMM3hMVVFB0gF3QVVfeXFMUFBmYXQtM1Q1RjRQS0hsa2xQZF90OHp0SGdTYzNfMU9CMS11V0w0VGcwYkxtQXVLUkRDOUh6UFJibGhCWllQMl9fUnRvbmpIYUpvZE52a1hkRGFpSERWdE4tYjRFNUZSS2hnOVhzZmo3dEwzeExVUUE?oc=5",
       "https://news.google.com/rss/articles/CBMiRkFVX3lxTFBSY0JLUGRCWWN3S2U1UHdudkJybHVOWlpNYzlLUUNDVnRyd1gwdFQ0d3pPN3d4SkVCaXhrbE1xcGxra19BaXc?oc=5",
       "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1iTEMtbDdnOUZQWWtPZlJHTTVOd0hGRmtSQk1ELWFBb1RyNFJ0NE9aWFRDY09rUWFTeWRrZTV6eHVVUlpOVU1RT2JWVQ?oc=5",
       "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1PbW94SVNDRWJUQjNqTFJYSkV4UjVaRkZnbERjVXNSeDJlNE00eTNyekdvQ19jd2hjWEJOYXcwaTF3Q2k5ZnBwWmRhWUdaX1k?oc=5",
