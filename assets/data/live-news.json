@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-04 09:26",
+ "updated": "2026-10-04 17:15",
  "items": [
   {
    "date": "2026-10-02",
@@ -65,7 +65,10 @@
      "date": "2026-09-22",
      "title": "인순이·전영록·소찬휘…윤항기 65주년 헌정 공연, 페스티벌급 라인업",
      "source": "엑스포츠뉴스",
-     "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE16aXNYZHFNSkFDWHpDTTNWSWNNSEd3QVJnblJGS0tSNHZhQXNsZ0lEaEpWS3k1ZFZfT18tNV92Smp6akdldW81bHNnOUVsS2JIU2stcg?oc=5"
+     "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE16aXNYZHFNSkFDWHpDTTNWSWNNSEd3QVJnblJGS0tSNHZhQXNsZ0lEaEpWS3k1ZFZfT18tNV92Smp6akdldW81bHNnOUVsS2JIU2stcg?oc=5",
+     "alt": [
+      "https://news.google.com/rss/articles/CBMiVEFVX3lxTE14ZWE3Z1RYRU43UFEzYUdfX2Rsc3lIYjBvTkVyNGswZk14UG43SEY0RWYxM2M0NnpPaEFpekNIWDg1dzlaVXM4VVlITDBQa3EyMDBVcA?oc=5"
+     ]
     },
     {
      "date": "2026-09-21",
