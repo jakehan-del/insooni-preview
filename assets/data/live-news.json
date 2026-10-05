@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-04 17:15",
+ "updated": "2026-10-05 14:09",
  "items": [
   {
    "date": "2026-10-02",
@@ -42,18 +42,18 @@
   {
    "date": "2026-09-30",
    "first": "2026-09-09",
-   "title": "윤항기 데뷔 65주년 기념 헌정 콘서트...최백호·서유석·인순이 등 출연",
-   "source": "뉴스브라이트",
-   "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFB1QWQ4aTdtNEhBMFJPWEpWamRuRkxiYkM4SUV0VC1ya2YyaHpvSU1BdGR5dWo5RWtTR2w2UGlILUprRkExV2oyNVFIWi1OVzd0Z1pJSkFtOGdJTHpJSFpfVmIya25STWgxRjU1bA?oc=5",
+   "title": "윤항기 65주년 헌정 공연, 서유석·최백호·인순이·장미화·전영록·소찬휘 등 페스티벌급 출연진 공개",
+   "source": "경향신문",
+   "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTFA3NTFGbjl5Y0tiSG1pMHQwUjNUMFhSc2J6VzBVU0ttYVdqTzg3NWo1aGVleU03RzZjUThrdm5GRXJWSWI1Y193ekdFMlZtaDdCUzNIR1B2VFVKNWwtTEHSAWNBVV95cUxPY0xKNzJRc05yLVc1emZaNWN1cmVKSHVtWDhJTURRSXZGcThPWWkxS1NuR2ZibVFXaU11UWlfdHBEN3oxalZfMlVQbzBINkszTVg2ZUVMY2ZpZS1Nb2V1SDBKZUk?oc=5",
    "type": "공연",
    "auto": true,
    "count": 11,
    "articles": [
     {
-     "date": "2026-09-18",
-     "title": "윤항기 데뷔 65주년 기념 헌정 콘서트...최백호·서유석·인순이 등 출연",
-     "source": "뉴스브라이트",
-     "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFB1QWQ4aTdtNEhBMFJPWEpWamRuRkxiYkM4SUV0VC1ya2YyaHpvSU1BdGR5dWo5RWtTR2w2UGlILUprRkExV2oyNVFIWi1OVzd0Z1pJSkFtOGdJTHpJSFpfVmIya25STWgxRjU1bA?oc=5"
+     "date": "2026-09-21",
+     "title": "윤항기 65주년 헌정 공연, 서유석·최백호·인순이·장미화·전영록·소찬휘 등 페스티벌급 출연진 공개",
+     "source": "경향신문",
+     "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTFA3NTFGbjl5Y0tiSG1pMHQwUjNUMFhSc2J6VzBVU0ttYVdqTzg3NWo1aGVleU03RzZjUThrdm5GRXJWSWI1Y193ekdFMlZtaDdCUzNIR1B2VFVKNWwtTEHSAWNBVV95cUxPY0xKNzJRc05yLVc1emZaNWN1cmVKSHVtWDhJTURRSXZGcThPWWkxS1NuR2ZibVFXaU11UWlfdHBEN3oxalZfMlVQbzBINkszTVg2ZUVMY2ZpZS1Nb2V1SDBKZUk?oc=5"
     },
     {
      "date": "2026-09-30",
@@ -67,6 +67,7 @@
      "source": "엑스포츠뉴스",
      "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE16aXNYZHFNSkFDWHpDTTNWSWNNSEd3QVJnblJGS0tSNHZhQXNsZ0lEaEpWS3k1ZFZfT18tNV92Smp6akdldW81bHNnOUVsS2JIU2stcg?oc=5",
      "alt": [
+      "https://news.google.com/rss/articles/CBMiS0FVX3lxTFB0cGVkak44ZUR5VmFBRjVxSHl0UmFnSmx3aXhiVk8xQVY4Ql8wLURxXzdXZmZ5ZnR1WWZoWWYwcjNGMV9WbXNjczczcw?oc=5",
       "https://news.google.com/rss/articles/CBMiVEFVX3lxTE14ZWE3Z1RYRU43UFEzYUdfX2Rsc3lIYjBvTkVyNGswZk14UG43SEY0RWYxM2M0NnpPaEFpekNIWDg1dzlaVXM4VVlITDBQa3EyMDBVcA?oc=5"
      ]
     },
@@ -81,12 +82,6 @@
      "title": "윤항기 65주년 헌정 공연, 최백호·인순이·전영록 등 출연…10명 후배들이 각자 색깔로 재해석 '헌정'",
      "source": "SPOTV NEWS",
      "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1PSVZrNjJyV0N4UVhqS0xxWE5sXzZ5ZGcteVRDVkhialJyVTk3aUQ0VXJFVjBtM3BGWjJmeGJMdU9lSFAxM1FZUkxtNlMzd1Fqbk9aVEQwMklmWUg3QjJRMmNmSTdGZkNPSzIzR241cW8?oc=5"
-    },
-    {
-     "date": "2026-09-21",
-     "title": "윤항기 65주년 헌정 공연, 서유석·최백호·인순이·장미화·전영록·소찬휘 등 페스티벌급 출연진 공개",
-     "source": "경향신문",
-     "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTFA3NTFGbjl5Y0tiSG1pMHQwUjNUMFhSc2J6VzBVU0ttYVdqTzg3NWo1aGVleU03RzZjUThrdm5GRXJWSWI1Y193ekdFMlZtaDdCUzNIR1B2VFVKNWwtTEHSAWNBVV95cUxPY0xKNzJRc05yLVc1emZaNWN1cmVKSHVtWDhJTURRSXZGcThPWWkxS1NuR2ZibVFXaU11UWlfdHBEN3oxalZfMlVQbzBINkszTVg2ZUVMY2ZpZS1Nb2V1SDBKZUk?oc=5"
     },
     {
      "date": "2026-09-21",
@@ -109,6 +104,12 @@
      "title": "'나는 행복합니다' 윤항기 65주년 헌정 공연..인순이·최백호 합류",
      "source": "스타뉴스",
      "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE44cl8zSV9YdFNOb2ZTS0ktcU14SU1WUVdqbF9MTWlpZVdnTk5YYzBCUjE4M2Q3N0hhSGxvemF5bFJlc0dtMXgxMTJOYVcxQkR5N3ZVUU9HLWdjOTBmdU9NQXZmRFgyY2tGSk9XQjJPUkJWZmt4?oc=5"
+    },
+    {
+     "date": "2026-09-18",
+     "title": "윤항기 데뷔 65주년 기념 헌정 콘서트...최백호·서유석·인순이 등 출연",
+     "source": "뉴스브라이트",
+     "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFB1QWQ4aTdtNEhBMFJPWEpWamRuRkxiYkM4SUV0VC1ya2YyaHpvSU1BdGR5dWo5RWtTR2w2UGlILUprRkExV2oyNVFIWi1OVzd0Z1pJSkFtOGdJTHpJSFpfVmIya25STWgxRjU1bA?oc=5"
     },
     {
      "date": "2026-09-18",

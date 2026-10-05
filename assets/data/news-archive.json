@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-04 17:15",
- "count": 83,
+ "updated": "2026-10-05 14:09",
+ "count": 84,
  "items": [
   {
    "date": "2026-10-02",
@@ -162,6 +162,20 @@
    "source": "다음 뉴스",
    "sourceSite": "https://v.daum.net",
    "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE14ZWE3Z1RYRU43UFEzYUdfX2Rsc3lIYjBvTkVyNGswZk14UG43SEY0RWYxM2M0NnpPaEFpekNIWDg1dzlaVXM4VVlITDBQa3EyMDBVcA?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "인순이·전영록·소찬휘…윤항기 65주년 헌정 공연, 페스티벌급 라인업 - v.daum.net",
+   "rawSource": "v.daum.net",
+   "tags": [
+    "v.daum.net"
+   ]
+  },
+  {
+   "date": "2026-09-22",
+   "title": "인순이·전영록·소찬휘…윤항기 65주년 헌정 공연, 페스티벌급 라인업",
+   "source": "다음 뉴스",
+   "sourceSite": "https://v.daum.net",
+   "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTFB0cGVkak44ZUR5VmFBRjVxSHl0UmFnSmx3aXhiVk8xQVY4Ql8wLURxXzdXZmZ5ZnR1WWZoWWYwcjNGMV9WbXNjczczcw?oc=5",
    "type": "공연",
    "auto": true,
    "rawTitle": "인순이·전영록·소찬휘…윤항기 65주년 헌정 공연, 페스티벌급 라인업 - v.daum.net",
