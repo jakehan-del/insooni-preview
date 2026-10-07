@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-05 14:09",
+ "updated": "2026-10-07 14:29",
  "items": [
   {
    "date": "2026-10-02",
@@ -42,18 +42,18 @@
   {
    "date": "2026-09-30",
    "first": "2026-09-09",
-   "title": "윤항기 65주년 헌정 공연, 서유석·최백호·인순이·장미화·전영록·소찬휘 등 페스티벌급 출연진 공개",
-   "source": "경향신문",
-   "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTFA3NTFGbjl5Y0tiSG1pMHQwUjNUMFhSc2J6VzBVU0ttYVdqTzg3NWo1aGVleU03RzZjUThrdm5GRXJWSWI1Y193ekdFMlZtaDdCUzNIR1B2VFVKNWwtTEHSAWNBVV95cUxPY0xKNzJRc05yLVc1emZaNWN1cmVKSHVtWDhJTURRSXZGcThPWWkxS1NuR2ZibVFXaU11UWlfdHBEN3oxalZfMlVQbzBINkszTVg2ZUVMY2ZpZS1Nb2V1SDBKZUk?oc=5",
+   "title": "윤항기, 10월 데뷔 65주년 공연…최백호·인순이·소찬휘 등 지원사격",
+   "source": "파이낸셜뉴스",
+   "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1zM3VudEZYcXU4RFlNTHZOa1BPUXNPWmZqYTh2M3o4M2dyZEo4M0VtcEtnSjZtNHg0ME9vMHZSYjdqOXA0V0xILXBfTEY0R1FvcEExMFM0OGpsdw?oc=5",
    "type": "공연",
    "auto": true,
-   "count": 11,
+   "count": 12,
    "articles": [
     {
      "date": "2026-09-21",
-     "title": "윤항기 65주년 헌정 공연, 서유석·최백호·인순이·장미화·전영록·소찬휘 등 페스티벌급 출연진 공개",
-     "source": "경향신문",
-     "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTFA3NTFGbjl5Y0tiSG1pMHQwUjNUMFhSc2J6VzBVU0ttYVdqTzg3NWo1aGVleU03RzZjUThrdm5GRXJWSWI1Y193ekdFMlZtaDdCUzNIR1B2VFVKNWwtTEHSAWNBVV95cUxPY0xKNzJRc05yLVc1emZaNWN1cmVKSHVtWDhJTURRSXZGcThPWWkxS1NuR2ZibVFXaU11UWlfdHBEN3oxalZfMlVQbzBINkszTVg2ZUVMY2ZpZS1Nb2V1SDBKZUk?oc=5"
+     "title": "윤항기, 10월 데뷔 65주년 공연…최백호·인순이·소찬휘 등 지원사격",
+     "source": "파이낸셜뉴스",
+     "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1zM3VudEZYcXU4RFlNTHZOa1BPUXNPWmZqYTh2M3o4M2dyZEo4M0VtcEtnSjZtNHg0ME9vMHZSYjdqOXA0V0xILXBfTEY0R1FvcEExMFM0OGpsdw?oc=5"
     },
     {
      "date": "2026-09-30",
@@ -82,6 +82,12 @@
      "title": "윤항기 65주년 헌정 공연, 최백호·인순이·전영록 등 출연…10명 후배들이 각자 색깔로 재해석 '헌정'",
      "source": "SPOTV NEWS",
      "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1PSVZrNjJyV0N4UVhqS0xxWE5sXzZ5ZGcteVRDVkhialJyVTk3aUQ0VXJFVjBtM3BGWjJmeGJMdU9lSFAxM1FZUkxtNlMzd1Fqbk9aVEQwMklmWUg3QjJRMmNmSTdGZkNPSzIzR241cW8?oc=5"
+    },
+    {
+     "date": "2026-09-21",
+     "title": "윤항기 65주년 헌정 공연, 서유석·최백호·인순이·장미화·전영록·소찬휘 등 페스티벌급 출연진 공개",
+     "source": "경향신문",
+     "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTFA3NTFGbjl5Y0tiSG1pMHQwUjNUMFhSc2J6VzBVU0ttYVdqTzg3NWo1aGVleU03RzZjUThrdm5GRXJWSWI1Y193ekdFMlZtaDdCUzNIR1B2VFVKNWwtTEHSAWNBVV95cUxPY0xKNzJRc05yLVc1emZaNWN1cmVKSHVtWDhJTURRSXZGcThPWWkxS1NuR2ZibVFXaU11UWlfdHBEN3oxalZfMlVQbzBINkszTVg2ZUVMY2ZpZS1Nb2V1SDBKZUk?oc=5"
     },
     {
      "date": "2026-09-21",
