@@ -1,8 +1,21 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-08 04:50",
- "count": 86,
+ "updated": "2026-10-09 21:58",
+ "count": 87,
  "items": [
+  {
+   "date": "2026-10-09",
+   "title": "가수 인순이에 이어 만화가 이현세 작가도 충남학 홍보",
+   "source": "동양일보",
+   "sourceSite": "https://www.dynews.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE1rUDVlb0JpbDgyTUE4alVzd0dvRUUxempidm05RWlEZTM3bEZiVmRva3BGZzZmWDBZc0NTNFVFdWFFZmtjMmJwNk9jdDd5cFctVHRDYVdJSm9NOHNRbmhudk1td1RfT0tCQkJV?oc=5",
+   "type": "보도",
+   "auto": true,
+   "rawTitle": "가수 인순이에 이어 만화가 이현세 작가도 충남학 홍보 - 동양일보",
+   "tags": [
+    "동양일보"
+   ]
+  },
   {
    "date": "2026-10-02",
    "title": "다문화와 평화의 축제, '김포 세계인 큰잔치' 11일 김포아트빌리지...인순이 공연도",

@@ -1,8 +1,26 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-08 04:50",
+ "updated": "2026-10-09 21:58",
  "items": [
+  {
+   "date": "2026-10-09",
+   "first": "2026-10-09",
+   "title": "가수 인순이에 이어 만화가 이현세 작가도 충남학 홍보",
+   "source": "동양일보",
+   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE1rUDVlb0JpbDgyTUE4alVzd0dvRUUxempidm05RWlEZTM3bEZiVmRva3BGZzZmWDBZc0NTNFVFdWFFZmtjMmJwNk9jdDd5cFctVHRDYVdJSm9NOHNRbmhudk1td1RfT0tCQkJV?oc=5",
+   "type": "보도",
+   "auto": true,
+   "count": 1,
+   "articles": [
+    {
+     "date": "2026-10-09",
+     "title": "가수 인순이에 이어 만화가 이현세 작가도 충남학 홍보",
+     "source": "동양일보",
+     "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE1rUDVlb0JpbDgyTUE4alVzd0dvRUUxempidm05RWlEZTM3bEZiVmRva3BGZzZmWDBZc0NTNFVFdWFFZmtjMmJwNk9jdDd5cFctVHRDYVdJSm9NOHNRbmhudk1td1RfT0tCQkJV?oc=5"
+    }
+   ]
+  },
   {
    "date": "2026-10-02",
    "first": "2026-10-02",
