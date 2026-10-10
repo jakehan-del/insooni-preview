@@ -1,8 +1,35 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-10 21:16",
- "count": 88,
+ "updated": "2026-10-11 08:22",
+ "count": 90,
  "items": [
+  {
+   "date": "2026-10-11",
+   "title": "'불후의 명곡' 이찬원 폭풍 놀람, 우디·보라 '친구여' 무대에 원곡자 인순이 깜짝 등장",
+   "source": "톱스타뉴스",
+   "sourceSite": "https://www.topstarnews.net",
+   "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5Qc19yaFRmRzZ5YVVaQmx1RWJiaWRmdVk0SVVVdTkxNHNudjlHR2M4Rktsakd1YXZIVE5HMk1TcVZmVVk5Uzdvd3pGWDNjN01raGVWdmx2aTVZdjVTdTU0d0V1VG5GN1h4cXhXOFFsOTNVUQ?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "'불후의 명곡' 이찬원 폭풍 놀람, 우디·보라 '친구여' 무대에 원곡자 인순이 깜짝 등장 - TopStarNews",
+   "rawSource": "TopStarNews",
+   "tags": [
+    "TopStarNews"
+   ]
+  },
+  {
+   "date": "2026-10-11",
+   "title": "'불후' 우디X보라, 인순이 지원사격 ''친구여'로 1부 우승",
+   "source": "싱글리스트",
+   "sourceSite": "https://www.slist.kr",
+   "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE5tWjZZZ2JmbnBtUHI4SXZJMzhVb19XZy13bVRVS2MwQWtIdUJlT21sMVJxYU9Ea0xkMEJHYXY3N1hlMU4wbjc1Q2c1czJHNTJsR2FkcGU5VUFFcnFOMV94c2RjX2NwQQ?oc=5",
+   "type": "보도",
+   "auto": true,
+   "rawTitle": "'불후' 우디X보라, 인순이 지원사격 ''친구여'로 1부 우승 - 싱글리스트",
+   "tags": [
+    "싱글리스트"
+   ]
+  },
   {
    "date": "2026-10-10",
    "title": "보라X우디, ‘친구여’ 무대에 인순이 소환! 초특급 게스트 등장에 대기실 발칵~",
