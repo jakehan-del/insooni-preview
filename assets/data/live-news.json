@@ -1,8 +1,26 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-09 21:58",
+ "updated": "2026-10-10 21:16",
  "items": [
+  {
+   "date": "2026-10-10",
+   "first": "2026-10-10",
+   "title": "보라X우디, ‘친구여’ 무대에 인순이 소환! 초특급 게스트 등장에 대기실 발칵~",
+   "source": "KBS",
+   "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE45djFBM05xLUN3QXlkd1dNRzlSUlh3ZHBiaUd6N1Y5ZFM5SmdrZzREUUtCMUdoU2JzZUliNmdKb29qRExINGJqZTBJQ1VXRHpiRzNyVGNneGg1ZEVpR1E?oc=5",
+   "type": "공연",
+   "auto": true,
+   "count": 1,
+   "articles": [
+    {
+     "date": "2026-10-10",
+     "title": "보라X우디, ‘친구여’ 무대에 인순이 소환! 초특급 게스트 등장에 대기실 발칵~",
+     "source": "KBS",
+     "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE45djFBM05xLUN3QXlkd1dNRzlSUlh3ZHBiaUd6N1Y5ZFM5SmdrZzREUUtCMUdoU2JzZUliNmdKb29qRExINGJqZTBJQ1VXRHpiRzNyVGNneGg1ZEVpR1E?oc=5"
+    }
+   ]
+  },
   {
    "date": "2026-10-09",
    "first": "2026-10-09",
