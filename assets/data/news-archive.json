@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-11 08:22",
- "count": 90,
+ "updated": "2026-10-11 14:18",
+ "count": 92,
  "items": [
   {
    "date": "2026-10-11",
@@ -19,6 +19,19 @@
   },
   {
    "date": "2026-10-11",
+   "title": "'불후' 우디, 보라·인순이 무대로 박근태 편 1부 우승...시청률 1위",
+   "source": "국제뉴스",
+   "sourceSite": "https://www.gukjenews.com",
+   "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFBHUXFVeHIzMm1xWUc5aDgxbFo3R0NsNlVtV2ZkSDliandIYnQ0RWNzQmlWYzB0eVZGcTNvSkVLWElueDQ5aVYyZ1ZMNzFVb2tzZ1VMa2U4enpmaDdOaDVLa2hqc1NIdk5YbDl1MnZB?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "'불후' 우디, 보라·인순이 무대로 박근태 편 1부 우승...시청률 1위 - 국제뉴스",
+   "tags": [
+    "국제뉴스"
+   ]
+  },
+  {
+   "date": "2026-10-11",
    "title": "'불후' 우디X보라, 인순이 지원사격 ''친구여'로 1부 우승",
    "source": "싱글리스트",
    "sourceSite": "https://www.slist.kr",
@@ -28,6 +41,19 @@
    "rawTitle": "'불후' 우디X보라, 인순이 지원사격 ''친구여'로 1부 우승 - 싱글리스트",
    "tags": [
     "싱글리스트"
+   ]
+  },
+  {
+   "date": "2026-10-11",
+   "title": "우디, 보라·인순이와 '친구여' 무대로 1부 우승… \"이기고 지는 걸 떠나 너무 행복했다\" ('불후의 명곡')",
+   "source": "MHN스포츠",
+   "sourceSite": "https://mhnse.com",
+   "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTFAxX0J2ZVp6Y1JheFBUT3ltRjNBUFdlazVDOFVBdlZSRk41RGo2V0RwSUhSNXVVaHBaUzJCbGtPbUtxYmlCTEZQakNFeVNRNU5Ccl9UVWVXUk1aOEFSNkFBX3FmUQ?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "우디, 보라·인순이와 '친구여' 무대로 1부 우승… \"이기고 지는 걸 떠나 너무 행복했다\" ('불후의 명곡') - MHN스포츠",
+   "tags": [
+    "MHN스포츠"
    ]
   },
   {

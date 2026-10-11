@@ -1,29 +1,41 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-11 08:22",
+ "updated": "2026-10-11 14:18",
  "items": [
   {
    "date": "2026-10-11",
    "first": "2026-10-10",
-   "title": "'불후의 명곡' 이찬원 폭풍 놀람, 우디·보라 '친구여' 무대에 원곡자 인순이 깜짝 등장",
-   "source": "톱스타뉴스",
-   "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5Qc19yaFRmRzZ5YVVaQmx1RWJiaWRmdVk0SVVVdTkxNHNudjlHR2M4Rktsakd1YXZIVE5HMk1TcVZmVVk5Uzdvd3pGWDNjN01raGVWdmx2aTVZdjVTdTU0d0V1VG5GN1h4cXhXOFFsOTNVUQ?oc=5",
+   "title": "우디, 보라·인순이와 '친구여' 무대로 1부 우승… \"이기고 지는 걸 떠나 너무 행복했다\" ('불후의 명곡')",
+   "source": "MHN스포츠",
+   "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTFAxX0J2ZVp6Y1JheFBUT3ltRjNBUFdlazVDOFVBdlZSRk41RGo2V0RwSUhSNXVVaHBaUzJCbGtPbUtxYmlCTEZQakNFeVNRNU5Ccl9UVWVXUk1aOEFSNkFBX3FmUQ?oc=5",
    "type": "공연",
    "auto": true,
-   "count": 3,
+   "count": 5,
    "articles": [
     {
      "date": "2026-10-11",
-     "title": "'불후의 명곡' 이찬원 폭풍 놀람, 우디·보라 '친구여' 무대에 원곡자 인순이 깜짝 등장",
-     "source": "톱스타뉴스",
-     "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5Qc19yaFRmRzZ5YVVaQmx1RWJiaWRmdVk0SVVVdTkxNHNudjlHR2M4Rktsakd1YXZIVE5HMk1TcVZmVVk5Uzdvd3pGWDNjN01raGVWdmx2aTVZdjVTdTU0d0V1VG5GN1h4cXhXOFFsOTNVUQ?oc=5"
+     "title": "우디, 보라·인순이와 '친구여' 무대로 1부 우승… \"이기고 지는 걸 떠나 너무 행복했다\" ('불후의 명곡')",
+     "source": "MHN스포츠",
+     "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTFAxX0J2ZVp6Y1JheFBUT3ltRjNBUFdlazVDOFVBdlZSRk41RGo2V0RwSUhSNXVVaHBaUzJCbGtPbUtxYmlCTEZQakNFeVNRNU5Ccl9UVWVXUk1aOEFSNkFBX3FmUQ?oc=5"
+    },
+    {
+     "date": "2026-10-11",
+     "title": "'불후' 우디, 보라·인순이 무대로 박근태 편 1부 우승...시청률 1위",
+     "source": "국제뉴스",
+     "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFBHUXFVeHIzMm1xWUc5aDgxbFo3R0NsNlVtV2ZkSDliandIYnQ0RWNzQmlWYzB0eVZGcTNvSkVLWElueDQ5aVYyZ1ZMNzFVb2tzZ1VMa2U4enpmaDdOaDVLa2hqc1NIdk5YbDl1MnZB?oc=5"
     },
     {
      "date": "2026-10-11",
      "title": "'불후' 우디X보라, 인순이 지원사격 ''친구여'로 1부 우승",
      "source": "싱글리스트",
      "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE5tWjZZZ2JmbnBtUHI4SXZJMzhVb19XZy13bVRVS2MwQWtIdUJlT21sMVJxYU9Ea0xkMEJHYXY3N1hlMU4wbjc1Q2c1czJHNTJsR2FkcGU5VUFFcnFOMV94c2RjX2NwQQ?oc=5"
+    },
+    {
+     "date": "2026-10-11",
+     "title": "'불후의 명곡' 이찬원 폭풍 놀람, 우디·보라 '친구여' 무대에 원곡자 인순이 깜짝 등장",
+     "source": "톱스타뉴스",
+     "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5Qc19yaFRmRzZ5YVVaQmx1RWJiaWRmdVk0SVVVdTkxNHNudjlHR2M4Rktsakd1YXZIVE5HMk1TcVZmVVk5Uzdvd3pGWDNjN01raGVWdmx2aTVZdjVTdTU0d0V1VG5GN1h4cXhXOFFsOTNVUQ?oc=5"
     },
     {
      "date": "2026-10-10",
