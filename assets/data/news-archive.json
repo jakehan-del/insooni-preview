@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-11 14:18",
- "count": 92,
+ "updated": "2026-10-12 03:44",
+ "count": 93,
  "items": [
   {
    "date": "2026-10-11",
@@ -15,6 +15,19 @@
    "rawSource": "TopStarNews",
    "tags": [
     "TopStarNews"
+   ]
+  },
+  {
+   "date": "2026-10-11",
+   "title": "박근태 명곡 소환한 우디·보라, 인순이와 합작 무대로 1부 우승",
+   "source": "톱스타뉴스",
+   "sourceSite": "https://www.topstarnews.net",
+   "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5LTC1XUTF3SEs0aHhpUVpOVWRHU0psdGtwenBROHNOYThWaktaX3NRaS05NWxianNkeU41YWF5MGlHdlZ2LVpHc0liQnJ1a3JzRGs5MDdWSXY4RUgxNUdfRm1YSHc5Q0dYRDd4WUtodnNuUQ?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "박근태 명곡 소환한 우디·보라, 인순이와 합작 무대로 1부 우승 - 톱스타뉴스",
+   "tags": [
+    "톱스타뉴스"
    ]
   },
   {
