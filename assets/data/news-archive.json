@@ -1,8 +1,22 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-12 03:44",
- "count": 93,
+ "updated": "2026-10-12 14:30",
+ "count": 94,
  "items": [
+  {
+   "date": "2026-10-12",
+   "title": "디바 인순이, 다문화축제 '김포세계인큰잔치' 휘어잡았다",
+   "source": "글로벌이코노믹",
+   "sourceSite": "https://www.g-enews.com",
+   "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPbFZmWWsyWGlHVkZzVkphR0haR2FnQXBYelVNUnBuUXFhczV1ZFgtQ0x2cmxoNE5KNFVkQ1RNMnppZWFyVk9yTXV6d0tOZ0lIUXZsSjBObmlIRTdXLVA0X180a3VTdXJqdGU5TDZ5NHNpZUtxYlVuSmhWVS02Q1BPbHZ0bUdBQXFDQzJV?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "[포토뉴스] 디바 인순이, 다문화축제 '김포세계인큰잔치' 휘어잡았다 - 글로벌이코노믹",
+   "tags": [
+    "글로벌이코노믹",
+    "포토뉴스"
+   ]
+  },
   {
    "date": "2026-10-11",
    "title": "'불후의 명곡' 이찬원 폭풍 놀람, 우디·보라 '친구여' 무대에 원곡자 인순이 깜짝 등장",

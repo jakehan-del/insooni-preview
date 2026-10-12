@@ -1,8 +1,26 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-12 03:44",
+ "updated": "2026-10-12 14:30",
  "items": [
+  {
+   "date": "2026-10-12",
+   "first": "2026-10-12",
+   "title": "디바 인순이, 다문화축제 '김포세계인큰잔치' 휘어잡았다",
+   "source": "글로벌이코노믹",
+   "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPbFZmWWsyWGlHVkZzVkphR0haR2FnQXBYelVNUnBuUXFhczV1ZFgtQ0x2cmxoNE5KNFVkQ1RNMnppZWFyVk9yTXV6d0tOZ0lIUXZsSjBObmlIRTdXLVA0X180a3VTdXJqdGU5TDZ5NHNpZUtxYlVuSmhWVS02Q1BPbHZ0bUdBQXFDQzJV?oc=5",
+   "type": "공연",
+   "auto": true,
+   "count": 1,
+   "articles": [
+    {
+     "date": "2026-10-12",
+     "title": "디바 인순이, 다문화축제 '김포세계인큰잔치' 휘어잡았다",
+     "source": "글로벌이코노믹",
+     "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPbFZmWWsyWGlHVkZzVkphR0haR2FnQXBYelVNUnBuUXFhczV1ZFgtQ0x2cmxoNE5KNFVkQ1RNMnppZWFyVk9yTXV6d0tOZ0lIUXZsSjBObmlIRTdXLVA0X180a3VTdXJqdGU5TDZ5NHNpZUtxYlVuSmhWVS02Q1BPbHZ0bUdBQXFDQzJV?oc=5"
+    }
+   ]
+  },
   {
    "date": "2026-10-11",
    "first": "2026-10-10",
