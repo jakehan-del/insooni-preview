@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-12 14:30",
- "count": 94,
+ "updated": "2026-10-14 22:32",
+ "count": 95,
  "items": [
   {
    "date": "2026-10-12",
@@ -710,6 +710,19 @@
    "rawSource": "sbs.co.kr",
    "tags": [
     "인생은 오디션"
+   ]
+  },
+  {
+   "date": "2026-07-28",
+   "title": "서지오, '인생은 오디션' 심사위원 출격…인순이와 5일간 특별 심사",
+   "source": "한국경제",
+   "sourceSite": "https://www.hankyung.com",
+   "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE84UmpkQ3M4MDBpVUpwZVpoWEpnMGZJcHZXQkFPb19YQ3VkZGdpeUZGajlVQXlvU1ptelBiZ3N5LXNPRUxFa2MxWUlHUFFFOG1xOUpkV2VmSlprUQ?oc=5",
+   "type": "방송",
+   "auto": true,
+   "rawTitle": "서지오, '인생은 오디션' 심사위원 출격…인순이와 5일간 특별 심사 - 한국경제",
+   "tags": [
+    "한국경제"
    ]
   },
   {

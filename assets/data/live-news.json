@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-12 14:30",
+ "updated": "2026-10-14 22:32",
  "items": [
   {
    "date": "2026-10-12",
@@ -417,7 +417,7 @@
    "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1na00xTzd5cjdDS1hfWE9DNWtTS3dVYUJ2ZDBNN0Nya0pDbkRDQzI4NXF2eE1qWE83TThzWWFyNm1XYnhPSnpUeXg3YkhHYnF4VXVrYTlTQnPSAVRBVV95cUxQakJQeWRlb1BYRklZQW83amF3NXBPWTAxY2JrMExvcXVpdVowZi1LUmRpd04tUlVJNEt2c3c3YW5pOGpnekNwMlpJYTRsa0pNTWhiNXI?oc=5",
    "type": "방송",
    "auto": true,
-   "count": 7,
+   "count": 8,
    "articles": [
     {
      "date": "2026-07-29",
@@ -470,6 +470,12 @@
       "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5OQTh1N3N0U3FoX2JxZ0lMQ1dBV3FWd0tEaS1wLXB5Rk1VRlRHc2pWV2didmpfNkJkYm9MRlYxNlBPTXVRWl9XQkdCVQ?oc=5",
       "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5JWEt5blRnY2J3Nk1KdS1QZVBuakh3N0ZNQnduUm1TWGlCYm5tanc2eHg2M29fVk9xOF9QUUtYRVVOSHBtZVBKN2UzMnFCOWM?oc=5"
      ]
+    },
+    {
+     "date": "2026-07-28",
+     "title": "서지오, '인생은 오디션' 심사위원 출격…인순이와 5일간 특별 심사",
+     "source": "한국경제",
+     "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE84UmpkQ3M4MDBpVUpwZVpoWEpnMGZJcHZXQkFPb19YQ3VkZGdpeUZGajlVQXlvU1ptelBiZ3N5LXNPRUxFa2MxWUlHUFFFOG1xOUpkV2VmSlprUQ?oc=5"
     }
    ]
   },
