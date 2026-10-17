@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-14 22:32",
- "count": 95,
+ "updated": "2026-10-17 15:48",
+ "count": 96,
  "items": [
   {
    "date": "2026-10-12",
@@ -341,6 +341,19 @@
    "rawSource": "스포츠경향",
    "tags": [
     "스포츠경향"
+   ]
+  },
+  {
+   "date": "2026-09-21",
+   "title": "윤항기 데뷔 65주년 헌정 공연, 최백호·인순이·전영록·조항조 등 출연한다!",
+   "source": "시사투데이",
+   "sourceSite": "https://sisatoday.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5rUDZQbHRNWVhKQmtzWEZidDlyZ2I1cHRMcGY5eTNLTW53QW9jR0FBdlc1U1NPSW50YnVRSjFhWEZlOFJETC1DQW1GVDAtUFhEdDg1QmVGVUpWMG430gFXQVVfeXFMTUt6clQ5SVhGV1VYZEwwWm1nQVNuSzNlUUdObjZJY3hCcDRORDBVU1JhSnVTckdxemJ4ZE5iUnA2dC1SRGRCMkhYMDFCazgzUUY1OTVaWE5J?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "윤항기 데뷔 65주년 헌정 공연, 최백호·인순이·전영록·조항조 등 출연한다! - 시사투데이",
+   "tags": [
+    "시사투데이"
    ]
   },
   {
