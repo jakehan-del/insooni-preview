@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-18 01:56",
- "count": 97,
+ "updated": "2026-10-18 08:54",
+ "count": 98,
  "items": [
   {
    "date": "2026-10-17",
@@ -9,6 +9,19 @@
    "source": "뉴스엔",
    "sourceSite": "https://www.newsen.com",
    "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTFBTeXVrYlAyN09iRzFuaHpzWTlTQjJFT1NDSUhDM3c3V3lOYUtURWx5T1d6a3E4SEhhbmFMZTVXSGREZm96ZmUtVFJ5d25malpYN1V3MERteVZwMEdxbW8yWGU5bXk0VHFBUTMxalQzcF9tdlBoZ0hMTXVsZw?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "떴다 원곡자 인순이, 우승 진행 ‘불후’ 무대에 동료 가수들 “타임! 반칙!” 외쳤다 - 뉴스엔",
+   "tags": [
+    "뉴스엔"
+   ]
+  },
+  {
+   "date": "2026-10-17",
+   "title": "떴다 원곡자 인순이, 우승 진행 ‘불후’ 무대에 동료 가수들 “타임! 반칙!” 외쳤다",
+   "source": "뉴스엔",
+   "sourceSite": "https://m.newsen.com",
+   "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE1EZUREMEFKZW16SUdyR3o5bnUzV1lHTVA3cWREYzdubVpBcktySjVaM3MxT20xN3p4blBaYUNPb0NiNnhiVjBaTVFuRThid1d6NjZuZWt6dTFTQW9VOXpKWHNzRDBUUmlQ?oc=5",
    "type": "공연",
    "auto": true,
    "rawTitle": "떴다 원곡자 인순이, 우승 진행 ‘불후’ 무대에 동료 가수들 “타임! 반칙!” 외쳤다 - 뉴스엔",
