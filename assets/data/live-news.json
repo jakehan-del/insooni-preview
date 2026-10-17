@@ -1,47 +1,29 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-17 15:48",
+ "updated": "2026-10-18 01:56",
  "items": [
   {
-   "date": "2026-10-12",
-   "first": "2026-10-12",
-   "title": "디바 인순이, 다문화축제 '김포세계인큰잔치' 휘어잡았다",
-   "source": "글로벌이코노믹",
-   "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPbFZmWWsyWGlHVkZzVkphR0haR2FnQXBYelVNUnBuUXFhczV1ZFgtQ0x2cmxoNE5KNFVkQ1RNMnppZWFyVk9yTXV6d0tOZ0lIUXZsSjBObmlIRTdXLVA0X180a3VTdXJqdGU5TDZ5NHNpZUtxYlVuSmhWVS02Q1BPbHZ0bUdBQXFDQzJV?oc=5",
-   "type": "공연",
-   "auto": true,
-   "count": 1,
-   "articles": [
-    {
-     "date": "2026-10-12",
-     "title": "디바 인순이, 다문화축제 '김포세계인큰잔치' 휘어잡았다",
-     "source": "글로벌이코노믹",
-     "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPbFZmWWsyWGlHVkZzVkphR0haR2FnQXBYelVNUnBuUXFhczV1ZFgtQ0x2cmxoNE5KNFVkQ1RNMnppZWFyVk9yTXV6d0tOZ0lIUXZsSjBObmlIRTdXLVA0X180a3VTdXJqdGU5TDZ5NHNpZUtxYlVuSmhWVS02Q1BPbHZ0bUdBQXFDQzJV?oc=5"
-    }
-   ]
-  },
-  {
-   "date": "2026-10-11",
+   "date": "2026-10-17",
    "first": "2026-10-10",
-   "title": "박근태 명곡 소환한 우디·보라, 인순이와 합작 무대로 1부 우승",
-   "source": "톱스타뉴스",
-   "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5LTC1XUTF3SEs0aHhpUVpOVWRHU0psdGtwenBROHNOYThWaktaX3NRaS05NWxianNkeU41YWF5MGlHdlZ2LVpHc0liQnJ1a3JzRGs5MDdWSXY4RUgxNUdfRm1YSHc5Q0dYRDd4WUtodnNuUQ?oc=5",
+   "title": "우디, 보라·인순이와 '친구여' 무대로 1부 우승… \"이기고 지는 걸 떠나 너무 행복했다\" ('불후의 명곡')",
+   "source": "MHN스포츠",
+   "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTFAxX0J2ZVp6Y1JheFBUT3ltRjNBUFdlazVDOFVBdlZSRk41RGo2V0RwSUhSNXVVaHBaUzJCbGtPbUtxYmlCTEZQakNFeVNRNU5Ccl9UVWVXUk1aOEFSNkFBX3FmUQ?oc=5",
    "type": "공연",
    "auto": true,
-   "count": 6,
+   "count": 7,
    "articles": [
-    {
-     "date": "2026-10-11",
-     "title": "박근태 명곡 소환한 우디·보라, 인순이와 합작 무대로 1부 우승",
-     "source": "톱스타뉴스",
-     "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5LTC1XUTF3SEs0aHhpUVpOVWRHU0psdGtwenBROHNOYThWaktaX3NRaS05NWxianNkeU41YWF5MGlHdlZ2LVpHc0liQnJ1a3JzRGs5MDdWSXY4RUgxNUdfRm1YSHc5Q0dYRDd4WUtodnNuUQ?oc=5"
-    },
     {
      "date": "2026-10-11",
      "title": "우디, 보라·인순이와 '친구여' 무대로 1부 우승… \"이기고 지는 걸 떠나 너무 행복했다\" ('불후의 명곡')",
      "source": "MHN스포츠",
      "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTFAxX0J2ZVp6Y1JheFBUT3ltRjNBUFdlazVDOFVBdlZSRk41RGo2V0RwSUhSNXVVaHBaUzJCbGtPbUtxYmlCTEZQakNFeVNRNU5Ccl9UVWVXUk1aOEFSNkFBX3FmUQ?oc=5"
+    },
+    {
+     "date": "2026-10-17",
+     "title": "떴다 원곡자 인순이, 우승 진행 ‘불후’ 무대에 동료 가수들 “타임! 반칙!” 외쳤다",
+     "source": "뉴스엔",
+     "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTFBTeXVrYlAyN09iRzFuaHpzWTlTQjJFT1NDSUhDM3c3V3lOYUtURWx5T1d6a3E4SEhhbmFMZTVXSGREZm96ZmUtVFJ5d25malpYN1V3MERteVZwMEdxbW8yWGU5bXk0VHFBUTMxalQzcF9tdlBoZ0hMTXVsZw?oc=5"
     },
     {
      "date": "2026-10-11",
@@ -57,6 +39,12 @@
     },
     {
      "date": "2026-10-11",
+     "title": "박근태 명곡 소환한 우디·보라, 인순이와 합작 무대로 1부 우승",
+     "source": "톱스타뉴스",
+     "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5LTC1XUTF3SEs0aHhpUVpOVWRHU0psdGtwenBROHNOYThWaktaX3NRaS05NWxianNkeU41YWF5MGlHdlZ2LVpHc0liQnJ1a3JzRGs5MDdWSXY4RUgxNUdfRm1YSHc5Q0dYRDd4WUtodnNuUQ?oc=5"
+    },
+    {
+     "date": "2026-10-11",
      "title": "'불후의 명곡' 이찬원 폭풍 놀람, 우디·보라 '친구여' 무대에 원곡자 인순이 깜짝 등장",
      "source": "톱스타뉴스",
      "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5Qc19yaFRmRzZ5YVVaQmx1RWJiaWRmdVk0SVVVdTkxNHNudjlHR2M4Rktsakd1YXZIVE5HMk1TcVZmVVk5Uzdvd3pGWDNjN01raGVWdmx2aTVZdjVTdTU0d0V1VG5GN1h4cXhXOFFsOTNVUQ?oc=5"
@@ -66,6 +54,24 @@
      "title": "보라X우디, ‘친구여’ 무대에 인순이 소환! 초특급 게스트 등장에 대기실 발칵~",
      "source": "KBS",
      "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE45djFBM05xLUN3QXlkd1dNRzlSUlh3ZHBiaUd6N1Y5ZFM5SmdrZzREUUtCMUdoU2JzZUliNmdKb29qRExINGJqZTBJQ1VXRHpiRzNyVGNneGg1ZEVpR1E?oc=5"
+    }
+   ]
+  },
+  {
+   "date": "2026-10-12",
+   "first": "2026-10-12",
+   "title": "디바 인순이, 다문화축제 '김포세계인큰잔치' 휘어잡았다",
+   "source": "글로벌이코노믹",
+   "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPbFZmWWsyWGlHVkZzVkphR0haR2FnQXBYelVNUnBuUXFhczV1ZFgtQ0x2cmxoNE5KNFVkQ1RNMnppZWFyVk9yTXV6d0tOZ0lIUXZsSjBObmlIRTdXLVA0X180a3VTdXJqdGU5TDZ5NHNpZUtxYlVuSmhWVS02Q1BPbHZ0bUdBQXFDQzJV?oc=5",
+   "type": "공연",
+   "auto": true,
+   "count": 1,
+   "articles": [
+    {
+     "date": "2026-10-12",
+     "title": "디바 인순이, 다문화축제 '김포세계인큰잔치' 휘어잡았다",
+     "source": "글로벌이코노믹",
+     "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPbFZmWWsyWGlHVkZzVkphR0haR2FnQXBYelVNUnBuUXFhczV1ZFgtQ0x2cmxoNE5KNFVkQ1RNMnppZWFyVk9yTXV6d0tOZ0lIUXZsSjBObmlIRTdXLVA0X180a3VTdXJqdGU5TDZ5NHNpZUtxYlVuSmhWVS02Q1BPbHZ0bUdBQXFDQzJV?oc=5"
     }
    ]
   },
