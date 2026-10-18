@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-18 19:46",
+ "updated": "2026-10-19 03:33",
  "items": [
   {
    "date": "2026-10-17",
@@ -140,7 +140,7 @@
    "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1zM3VudEZYcXU4RFlNTHZOa1BPUXNPWmZqYTh2M3o4M2dyZEo4M0VtcEtnSjZtNHg0ME9vMHZSYjdqOXA0V0xILXBfTEY0R1FvcEExMFM0OGpsdw?oc=5",
    "type": "공연",
    "auto": true,
-   "count": 13,
+   "count": 14,
    "articles": [
     {
      "date": "2026-09-21",
@@ -204,6 +204,12 @@
      "title": "'나는 행복합니다' 윤항기 65주년 헌정 공연..인순이·최백호 합류",
      "source": "스타뉴스",
      "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE44cl8zSV9YdFNOb2ZTS0ktcU14SU1WUVdqbF9MTWlpZVdnTk5YYzBCUjE4M2Q3N0hhSGxvemF5bFJlc0dtMXgxMTJOYVcxQkR5N3ZVUU9HLWdjOTBmdU9NQXZmRFgyY2tGSk9XQjJPUkJWZmt4?oc=5"
+    },
+    {
+     "date": "2026-09-21",
+     "title": "윤항기 데뷔 65주년 헌정 공연, 최백호·인순이·전영록·장미화·김수희·조항조 등 출연",
+     "source": "스타데일리뉴스",
+     "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE9taVNieUZKbnVvN3hMU0dVbFpjMFFiMEh5U1p1dENlc0VRRmZvUnFLWndMMm13Ums0WlRUXzU0TnU3Qzl4em9wdklQTTBGOUIyT182RHFrenUxcUs1Y0hKaFlSR0xFVVZmR194elFCUEV6ZXdP0gF4QVVfeXFMUHZqTGxQaVlqV3VqUVRLeV9RcHFnZlZrZXg0YTF3MUxnLXBneEVoZHlMVFlNbEZLNHJIdEhETU52ZmhxNVhmNS1YN0tYTFo5ZEQ3eWw3eHkxZmM5UU1keGNnOTdLTlhma3Z2ajFxU0t1T2xSbTdHOU9X?oc=5"
     },
     {
      "date": "2026-09-21",

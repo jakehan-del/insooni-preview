@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-18 19:46",
- "count": 99,
+ "updated": "2026-10-19 03:33",
+ "count": 100,
  "items": [
   {
    "date": "2026-10-17",
@@ -330,6 +330,19 @@
    "rawSource": "v.daum.net",
    "tags": [
     "v.daum.net"
+   ]
+  },
+  {
+   "date": "2026-09-21",
+   "title": "윤항기 데뷔 65주년 헌정 공연, 최백호·인순이·전영록·장미화·김수희·조항조 등 출연",
+   "source": "스타데일리뉴스",
+   "sourceSite": "https://www.stardailynews.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE9taVNieUZKbnVvN3hMU0dVbFpjMFFiMEh5U1p1dENlc0VRRmZvUnFLWndMMm13Ums0WlRUXzU0TnU3Qzl4em9wdklQTTBGOUIyT182RHFrenUxcUs1Y0hKaFlSR0xFVVZmR194elFCUEV6ZXdP0gF4QVVfeXFMUHZqTGxQaVlqV3VqUVRLeV9RcHFnZlZrZXg0YTF3MUxnLXBneEVoZHlMVFlNbEZLNHJIdEhETU52ZmhxNVhmNS1YN0tYTFo5ZEQ3eWw3eHkxZmM5UU1keGNnOTdLTlhma3Z2ajFxU0t1T2xSbTdHOU9X?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "윤항기 데뷔 65주년 헌정 공연, 최백호·인순이·전영록·장미화·김수희·조항조 등 출연 - 스타데일리뉴스",
+   "tags": [
+    "스타데일리뉴스"
    ]
   },
   {
