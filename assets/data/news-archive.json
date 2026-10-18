@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-18 08:54",
- "count": 98,
+ "updated": "2026-10-18 19:46",
+ "count": 99,
  "items": [
   {
    "date": "2026-10-17",
@@ -275,6 +275,20 @@
    "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE1mSTZFeUV1d21ZdUljMkRzVG1VZDJqdGZ5dEQtYjdvX0tUdTdTMTJUTmwtNmxvbmh0WHBQUEZFb0t4aDJ6R3JjYnJFZk9sZnRYTkV2VmF5OVc1bWtLY2lXbFdPRnVxNHFRY3pTZWg4bGJTWWtkeDVFSUU0MA?oc=5",
    "type": "공연",
    "auto": true
+  },
+  {
+   "date": "2026-09-24",
+   "title": "안방엔 이승철, 공연장엔 인순이…추석 음악 한 상",
+   "source": "서울신문",
+   "sourceSite": "https://culture.seoul.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE82Sl9QU3VGbDFGWnU3dlphUHNkdzVySUhTbG04VDYwUmxRN3pjS0JWV3NhT2dHQkRtMHByNUVlTGgxazNZdWw1MmZuQWZXMTdjMzFmdVN2cnBaM1NPTFlqaVM4SzR3ejVZZG1QcngyTUo?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "안방엔 이승철, 공연장엔 인순이…추석 음악 한 상 - 서울컬처",
+   "rawSource": "서울컬처",
+   "tags": [
+    "서울컬처"
+   ]
   },
   {
    "date": "2026-09-22",

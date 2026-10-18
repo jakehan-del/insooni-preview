@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-18 08:54",
+ "updated": "2026-10-18 19:46",
  "items": [
   {
    "date": "2026-10-17",
@@ -281,7 +281,7 @@
    "first": "2026-09-24",
    "title": "안방엔 이승철, 공연장엔 인순이…추석 음악 한 상",
    "source": "서울신문",
-   "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE1mSTZFeUV1d21ZdUljMkRzVG1VZDJqdGZ5dEQtYjdvX0tUdTdTMTJUTmwtNmxvbmh0WHBQUEZFb0t4aDJ6R3JjYnJFZk9sZnRYTkV2VmF5OVc1bWtLY2lXbFdPRnVxNHFRY3pTZWg4bGJTWWtkeDVFSUU0MA?oc=5",
+   "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE82Sl9QU3VGbDFGWnU3dlphUHNkdzVySUhTbG04VDYwUmxRN3pjS0JWV3NhT2dHQkRtMHByNUVlTGgxazNZdWw1MmZuQWZXMTdjMzFmdVN2cnBaM1NPTFlqaVM4SzR3ejVZZG1QcngyTUo?oc=5",
    "type": "공연",
    "auto": true,
    "count": 1,
@@ -290,8 +290,9 @@
      "date": "2026-09-24",
      "title": "안방엔 이승철, 공연장엔 인순이…추석 음악 한 상",
      "source": "서울신문",
-     "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE1mSTZFeUV1d21ZdUljMkRzVG1VZDJqdGZ5dEQtYjdvX0tUdTdTMTJUTmwtNmxvbmh0WHBQUEZFb0t4aDJ6R3JjYnJFZk9sZnRYTkV2VmF5OVc1bWtLY2lXbFdPRnVxNHFRY3pTZWg4bGJTWWtkeDVFSUU0MA?oc=5",
+     "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE82Sl9QU3VGbDFGWnU3dlphUHNkdzVySUhTbG04VDYwUmxRN3pjS0JWV3NhT2dHQkRtMHByNUVlTGgxazNZdWw1MmZuQWZXMTdjMzFmdVN2cnBaM1NPTFlqaVM4SzR3ejVZZG1QcngyTUo?oc=5",
      "alt": [
+      "https://news.google.com/rss/articles/CBMie0FVX3lxTE1mSTZFeUV1d21ZdUljMkRzVG1VZDJqdGZ5dEQtYjdvX0tUdTdTMTJUTmwtNmxvbmh0WHBQUEZFb0t4aDJ6R3JjYnJFZk9sZnRYTkV2VmF5OVc1bWtLY2lXbFdPRnVxNHFRY3pTZWg4bGJTWWtkeDVFSUU0MA?oc=5",
       "https://news.google.com/rss/articles/CBMihAFBVV95cUxOcWxsYjBEUmw4OE9oa3ZQTWdhd2dsSWNkRlBfSDlzZG1EX2EtSHFfRGcyY3FQWUdDS2tFRFN3UnhfbEFFUVBrSXd1OFllYjBudDUxWV9rMnpHNWRPTzYxSEZLQUo2VkVhUDNJX2Jac3gtMHFsQWNlWG5tdHFGUVdZNl9UX1I?oc=5"
      ]
     }
