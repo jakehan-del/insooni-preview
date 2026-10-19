@@ -1,8 +1,21 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-19 13:13",
- "count": 101,
+ "updated": "2026-10-19 21:47",
+ "count": 102,
  "items": [
+  {
+   "date": "2026-10-19",
+   "title": "인순이·백지영·이은미·신유 등 총출동…시흥서 무료 자선콘서트",
+   "source": "시흥타임즈",
+   "sourceSite": "https://www.shtimes.kr",
+   "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE53QzlYeGd3R01xTlVXOTR0RVhqcUZ2cUwzNm91Y2VyUFRmbjdXRDBBNkZoWXZlRlpEZWVXOUNfaU9qVEJ3eTJ3Sk11eTB2UXAwZU1vYjBlVnNDM0gxQmc?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "인순이·백지영·이은미·신유 등 총출동…시흥서 무료 자선콘서트 - 시흥타임즈",
+   "tags": [
+    "시흥타임즈"
+   ]
+  },
   {
    "date": "2026-10-17",
    "title": "떴다 원곡자 인순이, 우승 진행 ‘불후’ 무대에 동료 가수들 “타임! 반칙!” 외쳤다",
