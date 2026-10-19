@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-19 03:33",
- "count": 100,
+ "updated": "2026-10-19 13:13",
+ "count": 101,
  "items": [
   {
    "date": "2026-10-17",
@@ -502,6 +502,19 @@
    "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9xdXJNdXpqQUlhYjlEdGJyQTA3TlRKc0R5OVhpeUVYU0dHNHhQdkthVnZnTHZsVi1BTGE2VmpJYXF6a01wajJUdVJHT0VzTjBSZGQ5RzJn?oc=5",
    "type": "공연",
    "auto": true
+  },
+  {
+   "date": "2026-09-07",
+   "title": "소찬휘·김원준·인치엘로가 당신에게 직접 보낸 초대장💌 (feat. 깜짝 라이브 | 인하대병원 생명존중 콘서트) #인순이 #소찬휘 #김원준 #인치엘로 #콘서트 #인하대병원 #생명존중",
+   "source": "YouTube",
+   "sourceSite": "https://youtu.be",
+   "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE9NSTBpODNlWjBJVjJzTUVaNzdxdURXdDl3VmozQ3MzaEVRRTc5b0IwQ3h3MlFIaUpfRG5ncUxEazhUaTVfMXF2Y1I0YlNFandpOXZxUlJEd2t1ZUtY?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "소찬휘·김원준·인치엘로가 당신에게 직접 보낸 초대장💌 (feat. 깜짝 라이브 | 인하대병원 생명존중 콘서트) #인순이 #소찬휘 #김원준 #인치엘로 #콘서트 #인하대병원 #생명존중 - YouTube",
+   "tags": [
+    "YouTube"
+   ]
   },
   {
    "date": "2026-09-03",
