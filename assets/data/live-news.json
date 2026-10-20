@@ -1,23 +1,68 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-20 13:25",
+ "updated": "2026-10-20 20:17",
  "items": [
   {
    "date": "2026-10-20",
    "first": "2026-10-19",
-   "title": "인순이·백지영 시흥 무대에…24~25일 한국공학대서 자선 콘서트 개최",
-   "source": "경기일보",
-   "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE14emgzZVhQZEtEVVV0WHhGY2ljYzFzVFotV0ZwUUJIUUtZMjA5eFVDZzM0OWZReDVGZW5NUV9PazdJNjJmZVVFN3ZtVld0ZkppakxfUVVWd3NvZUU?oc=5",
+   "title": "인순이·백지영→이은미…어깨동무 연예인 봉사단, 무료 자선콘서트 개최",
+   "source": "파이낸셜포스트",
+   "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE9XZDNuX3YxdDVwSnE5R3hpZTJZZlItWDhYWDlkYXJEcmdUek14NjFtbm5zVWZTUHNXX1pTTktEWXZpTDh5Y0lmWUdubHN3a2lVVENGbXJVMV9JeXI4TEQ4VjUxNHNvUlJIcVUzR20xWDVwc3Zh?oc=5",
    "type": "공연",
    "auto": true,
-   "count": 2,
+   "count": 9,
    "articles": [
+    {
+     "date": "2026-10-20",
+     "title": "인순이·백지영→이은미…어깨동무 연예인 봉사단, 무료 자선콘서트 개최",
+     "source": "파이낸셜포스트",
+     "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE9XZDNuX3YxdDVwSnE5R3hpZTJZZlItWDhYWDlkYXJEcmdUek14NjFtbm5zVWZTUHNXX1pTTktEWXZpTDh5Y0lmWUdubHN3a2lVVENGbXJVMV9JeXI4TEQ4VjUxNHNvUlJIcVUzR20xWDVwc3Zh?oc=5"
+    },
+    {
+     "date": "2026-10-20",
+     "title": "인순이·백지영→신유… ‘어깨동무 연예인 봉사단’ 시흥 무료 자선콘서트 개최",
+     "source": "bnt뉴스",
+     "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBYcUM3TG9HRHY4S0RSV1RFT0Q3SHhfRllGTko1OC11RVhBYnhJRjhPLVlHZzVMcHJWbzZyN0ltWGEtbVIwY0tUck0ydEdWRmN1RWlYUU41Rldwb0Y2b0RyZnBrY2g?oc=5"
+    },
+    {
+     "date": "2026-10-20",
+     "title": "인순이·백지영→이은미…어깨동무 연예인 봉사단, 무료 자선콘서트 개최",
+     "source": "iMBC 연예",
+     "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFB6RjJXNzJzUUJwa2lNa2NDWWxmdXd0Y0FnQUpVYnFFMk02ajZwMTc5NlFQRXEzT243Z2FRU1lPRmhfbm91N0taYmJmYWJTNGZqellCRg?oc=5",
+     "alt": [
+      "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBid1J3bENUUXU2TmNYMlhCeXY2aXVBUElodjNQT2FrRnJ5QWdBVG9HUnJaZk9lYXF5MlhDR0NxTm5DeG5kb3dXcTBqNUhtLXBva1RJQ1VNRDBwWTlUcHA4Vg?oc=5"
+     ]
+    },
     {
      "date": "2026-10-20",
      "title": "인순이·백지영 시흥 무대에…24~25일 한국공학대서 자선 콘서트 개최",
      "source": "경기일보",
      "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE14emgzZVhQZEtEVVV0WHhGY2ljYzFzVFotV0ZwUUJIUUtZMjA5eFVDZzM0OWZReDVGZW5NUV9PazdJNjJmZVVFN3ZtVld0ZkppakxfUVVWd3NvZUU?oc=5"
+    },
+    {
+     "date": "2026-10-20",
+     "title": "‘어깨동무 연예인 봉사단’ 인순이·백지영·이은미, 무료 자선콘서트 나선다",
+     "source": "뉴스엔",
+     "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE9pSzFnblhub2tfV3ZORnlBaHB4aC1CTWFCeW1CT3p6Q25MR04yMDU4RWdkczZZXzQ5T1VDZXVIVTM4VEk0Mmk0SFpyT2pFZlY2QUNjN3Mxc0hqcTA3MGtPU3dtVENSZVBXbnNTQUpqUkFna3JSTUNtay1DYw?oc=5"
+    },
+    {
+     "date": "2026-10-20",
+     "title": "인순이·백지영·이은미 등 연예인 봉사단 무료 자선 콘서트",
+     "source": "연합뉴스",
+     "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFB3Y0I0OHo1bDVtdUVLTEpqeG9BLUFyVVNqemVIRkNzdXNiNnh0d1kxZWtoUkg0XzJWbXBzemZ0dXNFWDFGODBmQmZpcmxfSl9rTC1ZX3BJRVlUM042S1NVWtIBYEFVX3lxTFB3Y0I0OHo1bDVtdUVLTEpqeG9BLUFyVVNqemVIRkNzdXNiNnh0d1kxZWtoUkg0XzJWbXBzemZ0dXNFWDFGODBmQmZpcmxfSl9rTC1ZX3BJRVlUM042S1NVWg?oc=5"
+    },
+    {
+     "date": "2026-10-20",
+     "title": "인순이·백지영·이은미 총출동…시흥서 무료 자선콘서트 열린다",
+     "source": "재경일보",
+     "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5KNHZEc3dUNW1haEo2NVZpaExoWkZSSkdRRERmekkzcVNpVXNhQ3kwZGpSTktzLWw3Y25tdHVVekxRdXJ4anRYS3BvNA?oc=5"
+    },
+    {
+     "date": "2026-10-20",
+     "title": "인순이·백지영도 뜬다…어깨동무 연예인 봉사단, 시흥서 무료 자선콘서트",
+     "source": "톱스타뉴스",
+     "url": "https://news.google.com/rss/articles/CBMickFVX3lxTFBHeDQ0bGNpU25Rc3lFeURLd3A2M2NzOEo3VEVBZzRmX1VYWm53cFJoRnpGdWNPTG15VEtnZ2dxaDNZXzA4Zm5BdGg1S2owZ212NjZ5QVU2THFmdTQ0NlJOZ19ZWmhfeWpNMVlaMzQ4Y1RlZw?oc=5"
     },
     {
      "date": "2026-10-19",
