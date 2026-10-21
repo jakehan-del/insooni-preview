@@ -1,23 +1,29 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-20 20:17",
+ "updated": "2026-10-21 09:29",
  "items": [
   {
-   "date": "2026-10-20",
+   "date": "2026-10-21",
    "first": "2026-10-19",
    "title": "인순이·백지영→이은미…어깨동무 연예인 봉사단, 무료 자선콘서트 개최",
    "source": "파이낸셜포스트",
    "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE9XZDNuX3YxdDVwSnE5R3hpZTJZZlItWDhYWDlkYXJEcmdUek14NjFtbm5zVWZTUHNXX1pTTktEWXZpTDh5Y0lmWUdubHN3a2lVVENGbXJVMV9JeXI4TEQ4VjUxNHNvUlJIcVUzR20xWDVwc3Zh?oc=5",
    "type": "공연",
    "auto": true,
-   "count": 9,
+   "count": 10,
    "articles": [
     {
      "date": "2026-10-20",
      "title": "인순이·백지영→이은미…어깨동무 연예인 봉사단, 무료 자선콘서트 개최",
      "source": "파이낸셜포스트",
      "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE9XZDNuX3YxdDVwSnE5R3hpZTJZZlItWDhYWDlkYXJEcmdUek14NjFtbm5zVWZTUHNXX1pTTktEWXZpTDh5Y0lmWUdubHN3a2lVVENGbXJVMV9JeXI4TEQ4VjUxNHNvUlJIcVUzR20xWDVwc3Zh?oc=5"
+    },
+    {
+     "date": "2026-10-21",
+     "title": "인순이·백지영·공민지 뭉친 '활력' 콘서트…무료 티켓의 정체",
+     "source": "씨네플레이",
+     "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE4yT2hVaXJoQXZHSXB2cm0zVkdJSkZNV0ptLUpyTlZ0eXRPVjlYbmFoUXJucXdVdDBwd2RycDB5TTZha3lyX1NselB0ejVuelB2eWkzUXRnZDdhZlU?oc=5"
     },
     {
      "date": "2026-10-20",
