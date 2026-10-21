@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-21 09:29",
- "count": 112,
+ "updated": "2026-10-21 22:38",
+ "count": 113,
  "items": [
   {
    "date": "2026-10-21",
@@ -53,6 +53,19 @@
    "rawTitle": "인순이·백지영도 뜬다…어깨동무 연예인 봉사단, 시흥서 무료 자선콘서트 - 톱스타뉴스",
    "tags": [
     "톱스타뉴스"
+   ]
+  },
+  {
+   "date": "2026-10-20",
+   "title": "‘어깨동무 연예인 봉사단’ 인순이·백지영·이은미, 무료 자선콘서트 나선다",
+   "source": "뉴스엔",
+   "sourceSite": "https://m.newsen.com",
+   "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE4xckxNcWdoM1pxRl9qU2taWlRTMzE4VHVpT1Rfb21xdTByMHpSRVBfRDI2MzZZeENmaVFJN3k2OVJobzJLSVV2ajBMRzhUWXBMNkI1RzJOd1RlRmlGUkFUVVRmZW5OZXk1?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "‘어깨동무 연예인 봉사단’ 인순이·백지영·이은미, 무료 자선콘서트 나선다 - 뉴스엔",
+   "tags": [
+    "뉴스엔"
    ]
   },
   {

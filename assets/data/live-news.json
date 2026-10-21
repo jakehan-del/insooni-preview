@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-21 09:29",
+ "updated": "2026-10-21 22:38",
  "items": [
   {
    "date": "2026-10-21",
@@ -50,7 +50,10 @@
      "date": "2026-10-20",
      "title": "‘어깨동무 연예인 봉사단’ 인순이·백지영·이은미, 무료 자선콘서트 나선다",
      "source": "뉴스엔",
-     "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE9pSzFnblhub2tfV3ZORnlBaHB4aC1CTWFCeW1CT3p6Q25MR04yMDU4RWdkczZZXzQ5T1VDZXVIVTM4VEk0Mmk0SFpyT2pFZlY2QUNjN3Mxc0hqcTA3MGtPU3dtVENSZVBXbnNTQUpqUkFna3JSTUNtay1DYw?oc=5"
+     "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE4xckxNcWdoM1pxRl9qU2taWlRTMzE4VHVpT1Rfb21xdTByMHpSRVBfRDI2MzZZeENmaVFJN3k2OVJobzJLSVV2ajBMRzhUWXBMNkI1RzJOd1RlRmlGUkFUVVRmZW5OZXk1?oc=5",
+     "alt": [
+      "https://news.google.com/rss/articles/CBMie0FVX3lxTE9pSzFnblhub2tfV3ZORnlBaHB4aC1CTWFCeW1CT3p6Q25MR04yMDU4RWdkczZZXzQ5T1VDZXVIVTM4VEk0Mmk0SFpyT2pFZlY2QUNjN3Mxc0hqcTA3MGtPU3dtVENSZVBXbnNTQUpqUkFna3JSTUNtay1DYw?oc=5"
+     ]
     },
     {
      "date": "2026-10-20",
