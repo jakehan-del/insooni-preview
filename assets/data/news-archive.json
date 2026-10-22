@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-21 22:38",
- "count": 113,
+ "updated": "2026-10-22 20:33",
+ "count": 114,
  "items": [
   {
    "date": "2026-10-21",
@@ -101,6 +101,19 @@
    "source": "연합뉴스",
    "sourceSite": "https://www.yna.co.kr",
    "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFB3Y0I0OHo1bDVtdUVLTEpqeG9BLUFyVVNqemVIRkNzdXNiNnh0d1kxZWtoUkg0XzJWbXBzemZ0dXNFWDFGODBmQmZpcmxfSl9rTC1ZX3BJRVlUM042S1NVWtIBYEFVX3lxTFB3Y0I0OHo1bDVtdUVLTEpqeG9BLUFyVVNqemVIRkNzdXNiNnh0d1kxZWtoUkg0XzJWbXBzemZ0dXNFWDFGODBmQmZpcmxfSl9rTC1ZX3BJRVlUM042S1NVWg?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "인순이·백지영·이은미 등 연예인 봉사단 무료 자선 콘서트 - 연합뉴스",
+   "tags": [
+    "연합뉴스"
+   ]
+  },
+  {
+   "date": "2026-10-20",
+   "title": "인순이·백지영·이은미 등 연예인 봉사단 무료 자선 콘서트",
+   "source": "연합뉴스",
+   "sourceSite": "https://www.yna.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9Udi02X3k4TkNuUnpKNXVqZnpBQkllZ0JNT1FhQms3QTNRaEZFLVh0aXJNNUhvY3RfdE1xSTVrVTVZTzNMLTk3QTUtVGJyREg4TVNlMnE1c0JValXSAWBBVV95cUxQd2NCNDh6NWw1bXVFS0xKanhvQS1BclVTanplSEZDc3VzYjZ4dHdZMWVraFJINF8yVm1wc3pmdHVzRVgxRjgwZkJmaXJsX0pfa0wtWV9wSUVZVDNONktTVVo?oc=5",
    "type": "공연",
    "auto": true,
    "rawTitle": "인순이·백지영·이은미 등 연예인 봉사단 무료 자선 콘서트 - 연합뉴스",

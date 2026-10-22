@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-21 22:38",
+ "updated": "2026-10-22 20:33",
  "items": [
   {
    "date": "2026-10-21",
@@ -59,7 +59,10 @@
      "date": "2026-10-20",
      "title": "인순이·백지영·이은미 등 연예인 봉사단 무료 자선 콘서트",
      "source": "연합뉴스",
-     "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFB3Y0I0OHo1bDVtdUVLTEpqeG9BLUFyVVNqemVIRkNzdXNiNnh0d1kxZWtoUkg0XzJWbXBzemZ0dXNFWDFGODBmQmZpcmxfSl9rTC1ZX3BJRVlUM042S1NVWtIBYEFVX3lxTFB3Y0I0OHo1bDVtdUVLTEpqeG9BLUFyVVNqemVIRkNzdXNiNnh0d1kxZWtoUkg0XzJWbXBzemZ0dXNFWDFGODBmQmZpcmxfSl9rTC1ZX3BJRVlUM042S1NVWg?oc=5"
+     "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9Udi02X3k4TkNuUnpKNXVqZnpBQkllZ0JNT1FhQms3QTNRaEZFLVh0aXJNNUhvY3RfdE1xSTVrVTVZTzNMLTk3QTUtVGJyREg4TVNlMnE1c0JValXSAWBBVV95cUxQd2NCNDh6NWw1bXVFS0xKanhvQS1BclVTanplSEZDc3VzYjZ4dHdZMWVraFJINF8yVm1wc3pmdHVzRVgxRjgwZkJmaXJsX0pfa0wtWV9wSUVZVDNONktTVVo?oc=5",
+     "alt": [
+      "https://news.google.com/rss/articles/CBMiYEFVX3lxTFB3Y0I0OHo1bDVtdUVLTEpqeG9BLUFyVVNqemVIRkNzdXNiNnh0d1kxZWtoUkg0XzJWbXBzemZ0dXNFWDFGODBmQmZpcmxfSl9rTC1ZX3BJRVlUM042S1NVWtIBYEFVX3lxTFB3Y0I0OHo1bDVtdUVLTEpqeG9BLUFyVVNqemVIRkNzdXNiNnh0d1kxZWtoUkg0XzJWbXBzemZ0dXNFWDFGODBmQmZpcmxfSl9rTC1ZX3BJRVlUM042S1NVWg?oc=5"
+     ]
     },
     {
      "date": "2026-10-20",
