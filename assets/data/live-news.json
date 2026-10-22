@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-22 20:33",
+ "updated": "2026-10-23 01:59",
  "items": [
   {
    "date": "2026-10-21",
@@ -81,6 +81,24 @@
      "title": "인순이·백지영·이은미·신유 등 총출동…시흥서 무료 자선콘서트",
      "source": "시흥타임즈",
      "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE53QzlYeGd3R01xTlVXOTR0RVhqcUZ2cUwzNm91Y2VyUFRmbjdXRDBBNkZoWXZlRlpEZWVXOUNfaU9qVEJ3eTJ3Sk11eTB2UXAwZU1vYjBlVnNDM0gxQmc?oc=5"
+    }
+   ]
+  },
+  {
+   "date": "2026-10-20",
+   "first": "2026-10-20",
+   "title": "한경국립대 학생상담센터, 오는 11월 9일 가수 인순이 초청 특강 개최",
+   "source": "안성투데이",
+   "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1BblhxS3pyRV9TTWk0Nlo5dk10R1ZkbURwcm5PVDA1My1KdnBqOVp2Zkp4V2hWNnN3ajQtR2FhVmlDRHozb3R0ZmYySzY4blJTVXlZU0tjTVBfdDhYZXljUHJTbU14UlZNNmlQdjRaZDE?oc=5",
+   "type": "보도",
+   "auto": true,
+   "count": 1,
+   "articles": [
+    {
+     "date": "2026-10-20",
+     "title": "한경국립대 학생상담센터, 오는 11월 9일 가수 인순이 초청 특강 개최",
+     "source": "안성투데이",
+     "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1BblhxS3pyRV9TTWk0Nlo5dk10R1ZkbURwcm5PVDA1My1KdnBqOVp2Zkp4V2hWNnN3ajQtR2FhVmlDRHozb3R0ZmYySzY4blJTVXlZU0tjTVBfdDhYZXljUHJTbU14UlZNNmlQdjRaZDE?oc=5"
     }
    ]
   },
