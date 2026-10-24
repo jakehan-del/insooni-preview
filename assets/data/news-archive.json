@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-24 07:59",
- "count": 116,
+ "updated": "2026-10-24 19:42",
+ "count": 117,
  "items": [
   {
    "date": "2026-10-21",
@@ -677,6 +677,19 @@
    "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1LV3VwV3hJV3gwUXZoeEdtX3JORFdybUg2X0dNQXgzai1SQWl0M25EczhBZlNlQkZIci15YXZJcDZoRXlhZDdlZ1ZNQmZhb0xDQ0pZQ2JTbmg?oc=5",
    "type": "공연",
    "auto": true
+  },
+  {
+   "date": "2026-09-10",
+   "title": "윤항기 65주년 헌정기념 공연, 서유석·최백호·김수희·인순이 등 한국 최고 가수들이 나선다",
+   "source": "포커스타임즈",
+   "sourceSite": "https://focustimes.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBScjBYdEotMTZsaXk0UVhOc3NLWmFCOUNrQlprdWIxQnMtNUVoRXZaVngzbmE4eVFvVnZxdWdmQlpYbERydnA4TC1ORjlBaUtxQjk2Rm52VTU?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "윤항기 65주년 헌정기념 공연, 서유석·최백호·김수희·인순이 등 한국 최고 가수들이 나선다 - 포커스타임즈",
+   "tags": [
+    "포커스타임즈"
+   ]
   },
   {
    "date": "2026-09-09",

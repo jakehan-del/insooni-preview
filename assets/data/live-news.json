@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-24 07:59",
+ "updated": "2026-10-24 19:42",
  "items": [
   {
    "date": "2026-10-21",
@@ -234,18 +234,18 @@
   {
    "date": "2026-09-30",
    "first": "2026-09-09",
-   "title": "윤항기, 10월 데뷔 65주년 공연…최백호·인순이·소찬휘 등 지원사격",
-   "source": "파이낸셜뉴스",
-   "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1zM3VudEZYcXU4RFlNTHZOa1BPUXNPWmZqYTh2M3o4M2dyZEo4M0VtcEtnSjZtNHg0ME9vMHZSYjdqOXA0V0xILXBfTEY0R1FvcEExMFM0OGpsdw?oc=5",
+   "title": "윤항기 데뷔 65주년 기념 헌정 콘서트...최백호·서유석·인순이 등 출연",
+   "source": "뉴스브라이트",
+   "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFB1QWQ4aTdtNEhBMFJPWEpWamRuRkxiYkM4SUV0VC1ya2YyaHpvSU1BdGR5dWo5RWtTR2w2UGlILUprRkExV2oyNVFIWi1OVzd0Z1pJSkFtOGdJTHpJSFpfVmIya25STWgxRjU1bA?oc=5",
    "type": "공연",
    "auto": true,
-   "count": 14,
+   "count": 15,
    "articles": [
     {
-     "date": "2026-09-21",
-     "title": "윤항기, 10월 데뷔 65주년 공연…최백호·인순이·소찬휘 등 지원사격",
-     "source": "파이낸셜뉴스",
-     "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1zM3VudEZYcXU4RFlNTHZOa1BPUXNPWmZqYTh2M3o4M2dyZEo4M0VtcEtnSjZtNHg0ME9vMHZSYjdqOXA0V0xILXBfTEY0R1FvcEExMFM0OGpsdw?oc=5"
+     "date": "2026-09-18",
+     "title": "윤항기 데뷔 65주년 기념 헌정 콘서트...최백호·서유석·인순이 등 출연",
+     "source": "뉴스브라이트",
+     "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFB1QWQ4aTdtNEhBMFJPWEpWamRuRkxiYkM4SUV0VC1ya2YyaHpvSU1BdGR5dWo5RWtTR2w2UGlILUprRkExV2oyNVFIWi1OVzd0Z1pJSkFtOGdJTHpJSFpfVmIya25STWgxRjU1bA?oc=5"
     },
     {
      "date": "2026-09-30",
@@ -317,16 +317,22 @@
      "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5rUDZQbHRNWVhKQmtzWEZidDlyZ2I1cHRMcGY5eTNLTW53QW9jR0FBdlc1U1NPSW50YnVRSjFhWEZlOFJETC1DQW1GVDAtUFhEdDg1QmVGVUpWMG430gFXQVVfeXFMTUt6clQ5SVhGV1VYZEwwWm1nQVNuSzNlUUdObjZJY3hCcDRORDBVU1JhSnVTckdxemJ4ZE5iUnA2dC1SRGRCMkhYMDFCazgzUUY1OTVaWE5J?oc=5"
     },
     {
-     "date": "2026-09-18",
-     "title": "윤항기 데뷔 65주년 기념 헌정 콘서트...최백호·서유석·인순이 등 출연",
-     "source": "뉴스브라이트",
-     "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFB1QWQ4aTdtNEhBMFJPWEpWamRuRkxiYkM4SUV0VC1ya2YyaHpvSU1BdGR5dWo5RWtTR2w2UGlILUprRkExV2oyNVFIWi1OVzd0Z1pJSkFtOGdJTHpJSFpfVmIya25STWgxRjU1bA?oc=5"
+     "date": "2026-09-21",
+     "title": "윤항기, 10월 데뷔 65주년 공연…최백호·인순이·소찬휘 등 지원사격",
+     "source": "파이낸셜뉴스",
+     "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1zM3VudEZYcXU4RFlNTHZOa1BPUXNPWmZqYTh2M3o4M2dyZEo4M0VtcEtnSjZtNHg0ME9vMHZSYjdqOXA0V0xILXBfTEY0R1FvcEExMFM0OGpsdw?oc=5"
     },
     {
      "date": "2026-09-18",
      "title": "‘나는 행복합니다’ 윤항기, 65년 음악 인생 헌정무대…최백호·인순이 등 후배 총출동",
      "source": "매일경제",
      "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1LV3VwV3hJV3gwUXZoeEdtX3JORFdybUg2X0dNQXgzai1SQWl0M25EczhBZlNlQkZIci15YXZJcDZoRXlhZDdlZ1ZNQmZhb0xDQ0pZQ2JTbmg?oc=5"
+    },
+    {
+     "date": "2026-09-10",
+     "title": "윤항기 65주년 헌정기념 공연, 서유석·최백호·김수희·인순이 등 한국 최고 가수들이 나선다",
+     "source": "포커스타임즈",
+     "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBScjBYdEotMTZsaXk0UVhOc3NLWmFCOUNrQlprdWIxQnMtNUVoRXZaVngzbmE4eVFvVnZxdWdmQlpYbERydnA4TC1ORjlBaUtxQjk2Rm52VTU?oc=5"
     },
     {
      "date": "2026-09-09",
