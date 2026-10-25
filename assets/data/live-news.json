@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-24 19:42",
+ "updated": "2026-10-26 00:55",
  "items": [
   {
    "date": "2026-10-21",
@@ -11,7 +11,7 @@
    "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE9XZDNuX3YxdDVwSnE5R3hpZTJZZlItWDhYWDlkYXJEcmdUek14NjFtbm5zVWZTUHNXX1pTTktEWXZpTDh5Y0lmWUdubHN3a2lVVENGbXJVMV9JeXI4TEQ4VjUxNHNvUlJIcVUzR20xWDVwc3Zh?oc=5",
    "type": "공연",
    "auto": true,
-   "count": 10,
+   "count": 11,
    "articles": [
     {
      "date": "2026-10-20",
@@ -24,6 +24,12 @@
      "title": "인순이·백지영·공민지 뭉친 '활력' 콘서트…무료 티켓의 정체",
      "source": "씨네플레이",
      "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE4yT2hVaXJoQXZHSXB2cm0zVkdJSkZNV0ptLUpyTlZ0eXRPVjlYbmFoUXJucXdVdDBwd2RycDB5TTZha3lyX1NselB0ejVuelB2eWkzUXRnZDdhZlU?oc=5"
+    },
+    {
+     "date": "2026-10-21",
+     "title": "인순이·백지영·이은미가 한 무대에?! 어깨동무 연예인 봉사단 「활력」 콘서트! 무료로 봅니다 (10/24~25)",
+     "source": "판다랭크",
+     "url": "https://news.google.com/rss/articles/CBMiR0FVX3lxTE54MHpqUXd3UFBjVF8wYjdIanlhaDJBTVVTMm04dE9VczBTYlJreVBYWGh3dmNGQzlqbVVUVThqb2NCUGJTbjJJ?oc=5"
     },
     {
      "date": "2026-10-20",
@@ -192,6 +198,24 @@
      "title": "가수 인순이에 이어 만화가 이현세 작가도 충남학 홍보",
      "source": "동양일보",
      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE1rUDVlb0JpbDgyTUE4alVzd0dvRUUxempidm05RWlEZTM3bEZiVmRva3BGZzZmWDBZc0NTNFVFdWFFZmtjMmJwNk9jdDd5cFctVHRDYVdJSm9NOHNRbmhudk1td1RfT0tCQkJV?oc=5"
+    }
+   ]
+  },
+  {
+   "date": "2026-10-03",
+   "first": "2026-10-03",
+   "title": "사회적 서자에서 언론인으로 — 인순이의 노래와 필자의 길",
+   "source": "씨원뉴스",
+   "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5BN2Y4OXBzMk1HQzdLTGtnamtWS0tJRFVRX1pINzNibFAySS1TclFOQUFtWmRVUDA2NlRBZlMwQUgtVFNRX0I1NTFLQng2emVWN1BfYW9RZXlsN2RmVTZUdWRsZkllLTA?oc=5",
+   "type": "보도",
+   "auto": true,
+   "count": 1,
+   "articles": [
+    {
+     "date": "2026-10-03",
+     "title": "사회적 서자에서 언론인으로 — 인순이의 노래와 필자의 길",
+     "source": "씨원뉴스",
+     "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5BN2Y4OXBzMk1HQzdLTGtnamtWS0tJRFVRX1pINzNibFAySS1TclFOQUFtWmRVUDA2NlRBZlMwQUgtVFNRX0I1NTFLQng2emVWN1BfYW9RZXlsN2RmVTZUdWRsZkllLTA?oc=5"
     }
    ]
   },

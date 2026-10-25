@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-24 19:42",
- "count": 117,
+ "updated": "2026-10-26 00:55",
+ "count": 119,
  "items": [
   {
    "date": "2026-10-21",
@@ -14,6 +14,19 @@
    "rawTitle": "인순이·백지영·공민지 뭉친 '활력' 콘서트…무료 티켓의 정체 - 씨네플레이",
    "tags": [
     "씨네플레이"
+   ]
+  },
+  {
+   "date": "2026-10-21",
+   "title": "인순이·백지영·이은미가 한 무대에?! 어깨동무 연예인 봉사단 「활력」 콘서트! 무료로 봅니다 (10/24~25)",
+   "source": "판다랭크",
+   "sourceSite": "https://pandarank.net",
+   "url": "https://news.google.com/rss/articles/CBMiR0FVX3lxTE54MHpqUXd3UFBjVF8wYjdIanlhaDJBTVVTMm04dE9VczBTYlJreVBYWGh3dmNGQzlqbVVUVThqb2NCUGJTbjJJ?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "인순이·백지영·이은미가 한 무대에?! 어깨동무 연예인 봉사단 「활력」 콘서트! 무료로 봅니다 (10/24~25) - 판다랭크",
+   "tags": [
+    "판다랭크"
    ]
   },
   {
@@ -319,6 +332,20 @@
    "rawTitle": "가수 인순이에 이어 만화가 이현세 작가도 충남학 홍보 - 동양일보",
    "tags": [
     "동양일보"
+   ]
+  },
+  {
+   "date": "2026-10-03",
+   "title": "사회적 서자에서 언론인으로 — 인순이의 노래와 필자의 길",
+   "source": "씨원뉴스",
+   "sourceSite": "https://www.c1news.kr",
+   "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5BN2Y4OXBzMk1HQzdLTGtnamtWS0tJRFVRX1pINzNibFAySS1TclFOQUFtWmRVUDA2NlRBZlMwQUgtVFNRX0I1NTFLQng2emVWN1BfYW9RZXlsN2RmVTZUdWRsZkllLTA?oc=5",
+   "type": "보도",
+   "auto": true,
+   "rawTitle": "【김정환칼럼】사회적 서자에서 언론인으로 — 인순이의 노래와 필자의 길 - 씨원뉴스",
+   "tags": [
+    "씨원뉴스",
+    "김정환칼럼"
    ]
   },
   {
