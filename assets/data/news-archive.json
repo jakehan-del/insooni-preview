@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-26 00:55",
- "count": 119,
+ "updated": "2026-10-26 21:40",
+ "count": 120,
  "items": [
   {
    "date": "2026-10-21",
@@ -132,6 +132,19 @@
    "rawTitle": "인순이·백지영·이은미 등 연예인 봉사단 무료 자선 콘서트 - 연합뉴스",
    "tags": [
     "연합뉴스"
+   ]
+  },
+  {
+   "date": "2026-10-20",
+   "title": "인순이·백지영·이은미 등 연예인 봉사단 무료 자선 콘서트",
+   "source": "YTN",
+   "sourceSite": "https://www.ytn.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE0yOEZHcklJMS1LZW1MVnNELWFLY053VldhOVRJQWtCand6N0llWWpMVkt6NWtXYUV5dzgzbHdNUUhBTkJwblktSmpHcTk0SjNvUEVaUC1SRUhpODJOTUE?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "인순이·백지영·이은미 등 연예인 봉사단 무료 자선 콘서트 - YTN",
+   "tags": [
+    "YTN"
    ]
   },
   {

@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-26 00:55",
+ "updated": "2026-10-26 21:40",
  "items": [
   {
    "date": "2026-10-21",
@@ -11,7 +11,7 @@
    "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE9XZDNuX3YxdDVwSnE5R3hpZTJZZlItWDhYWDlkYXJEcmdUek14NjFtbm5zVWZTUHNXX1pTTktEWXZpTDh5Y0lmWUdubHN3a2lVVENGbXJVMV9JeXI4TEQ4VjUxNHNvUlJIcVUzR20xWDVwc3Zh?oc=5",
    "type": "공연",
    "auto": true,
-   "count": 11,
+   "count": 12,
    "articles": [
     {
      "date": "2026-10-20",
@@ -30,6 +30,12 @@
      "title": "인순이·백지영·이은미가 한 무대에?! 어깨동무 연예인 봉사단 「활력」 콘서트! 무료로 봅니다 (10/24~25)",
      "source": "판다랭크",
      "url": "https://news.google.com/rss/articles/CBMiR0FVX3lxTE54MHpqUXd3UFBjVF8wYjdIanlhaDJBTVVTMm04dE9VczBTYlJreVBYWGh3dmNGQzlqbVVUVThqb2NCUGJTbjJJ?oc=5"
+    },
+    {
+     "date": "2026-10-20",
+     "title": "인순이·백지영·이은미 등 연예인 봉사단 무료 자선 콘서트",
+     "source": "YTN",
+     "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE0yOEZHcklJMS1LZW1MVnNELWFLY053VldhOVRJQWtCand6N0llWWpMVkt6NWtXYUV5dzgzbHdNUUhBTkJwblktSmpHcTk0SjNvUEVaUC1SRUhpODJOTUE?oc=5"
     },
     {
      "date": "2026-10-20",
