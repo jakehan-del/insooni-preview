@@ -1,8 +1,21 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-26 21:40",
- "count": 120,
+ "updated": "2026-10-27 20:55",
+ "count": 121,
  "items": [
+  {
+   "date": "2026-10-27",
+   "title": "안동문화예술의전당 어버이날 특별기획 가수 인순이 & 명창 유지숙 `두 사랑 이야기`",
+   "source": "경북뉴스",
+   "sourceSite": "http://m.kbnews.kr",
+   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBOZ3JQS21ZbHM0VU1CMGl0OERsb24yQ1MwT3U4eWhrdkJMUmtFbnludUZOMHRmTmp6X0pNRUFpRWhxRm5BNUFFaFFYeXhEODA?oc=5",
+   "type": "보도",
+   "auto": true,
+   "rawTitle": "안동문화예술의전당 어버이날 특별기획 가수 인순이 & 명창 유지숙 `두 사랑 이야기` - 경북뉴스",
+   "tags": [
+    "경북뉴스"
+   ]
+  },
   {
    "date": "2026-10-21",
    "title": "인순이·백지영·공민지 뭉친 '활력' 콘서트…무료 티켓의 정체",

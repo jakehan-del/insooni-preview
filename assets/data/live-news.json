@@ -1,8 +1,26 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-26 21:40",
+ "updated": "2026-10-27 20:55",
  "items": [
+  {
+   "date": "2026-10-27",
+   "first": "2026-10-27",
+   "title": "안동문화예술의전당 어버이날 특별기획 가수 인순이 & 명창 유지숙 `두 사랑 이야기`",
+   "source": "경북뉴스",
+   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBOZ3JQS21ZbHM0VU1CMGl0OERsb24yQ1MwT3U4eWhrdkJMUmtFbnludUZOMHRmTmp6X0pNRUFpRWhxRm5BNUFFaFFYeXhEODA?oc=5",
+   "type": "보도",
+   "auto": true,
+   "count": 1,
+   "articles": [
+    {
+     "date": "2026-10-27",
+     "title": "안동문화예술의전당 어버이날 특별기획 가수 인순이 & 명창 유지숙 `두 사랑 이야기`",
+     "source": "경북뉴스",
+     "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBOZ3JQS21ZbHM0VU1CMGl0OERsb24yQ1MwT3U4eWhrdkJMUmtFbnludUZOMHRmTmp6X0pNRUFpRWhxRm5BNUFFaFFYeXhEODA?oc=5"
+    }
+   ]
+  },
   {
    "date": "2026-10-21",
    "first": "2026-10-19",
