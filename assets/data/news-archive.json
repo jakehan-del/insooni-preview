@@ -1,8 +1,21 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-27 20:55",
- "count": 121,
+ "updated": "2026-10-28 21:32",
+ "count": 122,
  "items": [
+  {
+   "date": "2026-10-28",
+   "title": "윤항기 65주년 헌정공연, 두 달 연기…장사익 합류·인순이 불참",
+   "source": "NSP통신",
+   "sourceSite": "https://www.nspna.com",
+   "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBfN2F4R1pCcnlKOWcyYmNTTTBqZEtOeVlTRlQtWldJZlhUVjVlSThITkRiQVRtUTdRX05wSW1tYm9SWEZPVlJ2WjUtX1Naa3lJY0FCZEhhQVFxVDg2bFItUA?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "윤항기 65주년 헌정공연, 두 달 연기…장사익 합류·인순이 불참 - NSP통신",
+   "tags": [
+    "NSP통신"
+   ]
+  },
   {
    "date": "2026-10-27",
    "title": "안동문화예술의전당 어버이날 특별기획 가수 인순이 & 명창 유지숙 `두 사랑 이야기`",
