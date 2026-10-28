@@ -1,59 +1,29 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-28 21:32",
+ "updated": "2026-10-29 08:57",
  "items": [
   {
-   "date": "2026-10-28",
-   "first": "2026-10-28",
-   "title": "윤항기 65주년 헌정공연, 두 달 연기…장사익 합류·인순이 불참",
-   "source": "NSP통신",
-   "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBfN2F4R1pCcnlKOWcyYmNTTTBqZEtOeVlTRlQtWldJZlhUVjVlSThITkRiQVRtUTdRX05wSW1tYm9SWEZPVlJ2WjUtX1Naa3lJY0FCZEhhQVFxVDg2bFItUA?oc=5",
-   "type": "공연",
-   "auto": true,
-   "count": 1,
-   "articles": [
-    {
-     "date": "2026-10-28",
-     "title": "윤항기 65주년 헌정공연, 두 달 연기…장사익 합류·인순이 불참",
-     "source": "NSP통신",
-     "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBfN2F4R1pCcnlKOWcyYmNTTTBqZEtOeVlTRlQtWldJZlhUVjVlSThITkRiQVRtUTdRX05wSW1tYm9SWEZPVlJ2WjUtX1Naa3lJY0FCZEhhQVFxVDg2bFItUA?oc=5"
-    }
-   ]
-  },
-  {
-   "date": "2026-10-27",
-   "first": "2026-10-27",
-   "title": "안동문화예술의전당 어버이날 특별기획 가수 인순이 & 명창 유지숙 `두 사랑 이야기`",
-   "source": "경북뉴스",
-   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBOZ3JQS21ZbHM0VU1CMGl0OERsb24yQ1MwT3U4eWhrdkJMUmtFbnludUZOMHRmTmp6X0pNRUFpRWhxRm5BNUFFaFFYeXhEODA?oc=5",
-   "type": "보도",
-   "auto": true,
-   "count": 1,
-   "articles": [
-    {
-     "date": "2026-10-27",
-     "title": "안동문화예술의전당 어버이날 특별기획 가수 인순이 & 명창 유지숙 `두 사랑 이야기`",
-     "source": "경북뉴스",
-     "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBOZ3JQS21ZbHM0VU1CMGl0OERsb24yQ1MwT3U4eWhrdkJMUmtFbnludUZOMHRmTmp6X0pNRUFpRWhxRm5BNUFFaFFYeXhEODA?oc=5"
-    }
-   ]
-  },
-  {
-   "date": "2026-10-21",
+   "date": "2026-10-29",
    "first": "2026-10-19",
    "title": "인순이·백지영→이은미…어깨동무 연예인 봉사단, 무료 자선콘서트 개최",
    "source": "파이낸셜포스트",
    "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE9XZDNuX3YxdDVwSnE5R3hpZTJZZlItWDhYWDlkYXJEcmdUek14NjFtbm5zVWZTUHNXX1pTTktEWXZpTDh5Y0lmWUdubHN3a2lVVENGbXJVMV9JeXI4TEQ4VjUxNHNvUlJIcVUzR20xWDVwc3Zh?oc=5",
    "type": "공연",
    "auto": true,
-   "count": 12,
+   "count": 13,
    "articles": [
     {
      "date": "2026-10-20",
      "title": "인순이·백지영→이은미…어깨동무 연예인 봉사단, 무료 자선콘서트 개최",
      "source": "파이낸셜포스트",
      "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE9XZDNuX3YxdDVwSnE5R3hpZTJZZlItWDhYWDlkYXJEcmdUek14NjFtbm5zVWZTUHNXX1pTTktEWXZpTDh5Y0lmWUdubHN3a2lVVENGbXJVMV9JeXI4TEQ4VjUxNHNvUlJIcVUzR20xWDVwc3Zh?oc=5"
+    },
+    {
+     "date": "2026-10-29",
+     "title": "인순이·백지영·이은미, 시흥 자선콘서트 1만 관객 운집",
+     "source": "bnt뉴스",
+     "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE52UGpBOVRKTmp2ZnhCMFk3TC1VN2txV0xmUllYbWJqRzlHUDg0ZXE0YXh2YlRLeUdyTEVfb0gwY1FOSjJTTU9mSXVBdWVoWWlOUmVLNGQ5RTk0TGQyQzZRRUdtSEw?oc=5"
     },
     {
      "date": "2026-10-21",
@@ -129,6 +99,42 @@
      "title": "인순이·백지영·이은미·신유 등 총출동…시흥서 무료 자선콘서트",
      "source": "시흥타임즈",
      "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE53QzlYeGd3R01xTlVXOTR0RVhqcUZ2cUwzNm91Y2VyUFRmbjdXRDBBNkZoWXZlRlpEZWVXOUNfaU9qVEJ3eTJ3Sk11eTB2UXAwZU1vYjBlVnNDM0gxQmc?oc=5"
+    }
+   ]
+  },
+  {
+   "date": "2026-10-28",
+   "first": "2026-10-28",
+   "title": "윤항기 65주년 헌정공연, 두 달 연기…장사익 합류·인순이 불참",
+   "source": "NSP통신",
+   "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBfN2F4R1pCcnlKOWcyYmNTTTBqZEtOeVlTRlQtWldJZlhUVjVlSThITkRiQVRtUTdRX05wSW1tYm9SWEZPVlJ2WjUtX1Naa3lJY0FCZEhhQVFxVDg2bFItUA?oc=5",
+   "type": "공연",
+   "auto": true,
+   "count": 1,
+   "articles": [
+    {
+     "date": "2026-10-28",
+     "title": "윤항기 65주년 헌정공연, 두 달 연기…장사익 합류·인순이 불참",
+     "source": "NSP통신",
+     "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBfN2F4R1pCcnlKOWcyYmNTTTBqZEtOeVlTRlQtWldJZlhUVjVlSThITkRiQVRtUTdRX05wSW1tYm9SWEZPVlJ2WjUtX1Naa3lJY0FCZEhhQVFxVDg2bFItUA?oc=5"
+    }
+   ]
+  },
+  {
+   "date": "2026-10-27",
+   "first": "2026-10-27",
+   "title": "안동문화예술의전당 어버이날 특별기획 가수 인순이 & 명창 유지숙 `두 사랑 이야기`",
+   "source": "경북뉴스",
+   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBOZ3JQS21ZbHM0VU1CMGl0OERsb24yQ1MwT3U4eWhrdkJMUmtFbnludUZOMHRmTmp6X0pNRUFpRWhxRm5BNUFFaFFYeXhEODA?oc=5",
+   "type": "보도",
+   "auto": true,
+   "count": 1,
+   "articles": [
+    {
+     "date": "2026-10-27",
+     "title": "안동문화예술의전당 어버이날 특별기획 가수 인순이 & 명창 유지숙 `두 사랑 이야기`",
+     "source": "경북뉴스",
+     "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBOZ3JQS21ZbHM0VU1CMGl0OERsb24yQ1MwT3U4eWhrdkJMUmtFbnludUZOMHRmTmp6X0pNRUFpRWhxRm5BNUFFaFFYeXhEODA?oc=5"
     }
    ]
   },
