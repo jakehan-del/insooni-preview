@@ -1,8 +1,26 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-29 08:57",
+ "updated": "2026-10-30 21:35",
  "items": [
+  {
+   "date": "2026-10-30",
+   "first": "2026-10-30",
+   "title": "‘국민 디바’ 인순이, 70석 초소형 무대에서 관객과 만난다",
+   "source": "뉴스인",
+   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE96aWo5ejFLREdIcDJwM2pEN3FqbHVnbTdZcFpvdDd6SUphZE5DY2h6OFh4cjlxbU9IX1ZjRnZKOXQzN0xZeUtKS0pGTjJ1NElLa3V2ZEZKN3h1dXU5VVpDVi1ldGJFZUVuQXVr?oc=5",
+   "type": "공연",
+   "auto": true,
+   "count": 1,
+   "articles": [
+    {
+     "date": "2026-10-30",
+     "title": "‘국민 디바’ 인순이, 70석 초소형 무대에서 관객과 만난다",
+     "source": "뉴스인",
+     "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE96aWo5ejFLREdIcDJwM2pEN3FqbHVnbTdZcFpvdDd6SUphZE5DY2h6OFh4cjlxbU9IX1ZjRnZKOXQzN0xZeUtKS0pGTjJ1NElLa3V2ZEZKN3h1dXU5VVpDVi1ldGJFZUVuQXVr?oc=5"
+    }
+   ]
+  },
   {
    "date": "2026-10-29",
    "first": "2026-10-19",

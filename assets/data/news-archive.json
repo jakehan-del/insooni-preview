@@ -1,8 +1,21 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-29 08:57",
- "count": 123,
+ "updated": "2026-10-30 21:35",
+ "count": 124,
  "items": [
+  {
+   "date": "2026-10-30",
+   "title": "‘국민 디바’ 인순이, 70석 초소형 무대에서 관객과 만난다",
+   "source": "뉴스인",
+   "sourceSite": "https://www.newsin.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE96aWo5ejFLREdIcDJwM2pEN3FqbHVnbTdZcFpvdDd6SUphZE5DY2h6OFh4cjlxbU9IX1ZjRnZKOXQzN0xZeUtKS0pGTjJ1NElLa3V2ZEZKN3h1dXU5VVpDVi1ldGJFZUVuQXVr?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "‘국민 디바’ 인순이, 70석 초소형 무대에서 관객과 만난다 - 뉴스인",
+   "tags": [
+    "뉴스인"
+   ]
+  },
   {
    "date": "2026-10-29",
    "title": "인순이·백지영·이은미, 시흥 자선콘서트 1만 관객 운집",
