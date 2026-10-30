@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-30 21:35",
- "count": 124,
+ "updated": "2026-10-31 04:05",
+ "count": 125,
  "items": [
   {
    "date": "2026-10-30",
@@ -924,6 +924,19 @@
    "type": "방송",
    "auto": true,
    "ai": true
+  },
+  {
+   "date": "2026-08-04",
+   "title": "가수 남진·인순이, KBS '가요무대'서 환상적인 듀엣 무대…",
+   "source": "투데이타임즈",
+   "sourceSite": "http://www.todaytimes.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE9PbmdRNzVsdjNsN01GMzJSYm83SV82Ti1BS0tsZnE5WHZkUUpTR3F3YVB2WGE2dkxtLUU1X2g2NXlRVGdhMkZjemVZVG5FWFZT?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "가수 남진·인순이, KBS '가요무대'서 환상적인 듀엣 무대… - 투데이타임즈",
+   "tags": [
+    "투데이타임즈"
+   ]
   },
   {
    "date": "2026-08-04",

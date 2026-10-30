@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-30 21:35",
+ "updated": "2026-10-31 04:05",
  "items": [
   {
    "date": "2026-10-30",
@@ -616,7 +616,7 @@
    "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE9WeVM3ZWl3bXF2S0FkQTJBUkNaV1dHdnZKdmM1QXdsRU5oczJYUXhCdDRoMVc1VUtJazBaa3BiNGk4T29RQjYzVFdjZnc4RllncEE?oc=5",
    "type": "방송",
    "auto": true,
-   "count": 4,
+   "count": 5,
    "articles": [
     {
      "date": "2026-08-04",
@@ -638,6 +638,12 @@
      "alt": [
       "https://news.google.com/rss/articles/CBMiSEFVX3lxTFAzTWhaNDdxOU5GUDhweThvOWg5SXNqbVZYRXQ0MFRSMV9EdkZLclRCaDRnSGwtRGxROUs4UlQ3WHlPOUNaSS1yMA?oc=5"
      ]
+    },
+    {
+     "date": "2026-08-04",
+     "title": "가수 남진·인순이, KBS '가요무대'서 환상적인 듀엣 무대…",
+     "source": "투데이타임즈",
+     "url": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE9PbmdRNzVsdjNsN01GMzJSYm83SV82Ti1BS0tsZnE5WHZkUUpTR3F3YVB2WGE2dkxtLUU1X2g2NXlRVGdhMkZjemVZVG5FWFZT?oc=5"
     },
     {
      "date": "2026-08-03",
