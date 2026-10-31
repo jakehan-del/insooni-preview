@@ -1,8 +1,21 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-10-31 04:05",
- "count": 125,
+ "updated": "2026-10-31 14:04",
+ "count": 126,
  "items": [
+  {
+   "date": "2026-10-31",
+   "title": "‘국민 디바’ 인순이, 70석 초소형 무대에서 관객과 만난다",
+   "source": "더프리뷰",
+   "sourceSite": "http://www.thepreview.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9YUkh5aDg0US1VMGxzSHEwTDNIVV94WHN0Mkd1R2xzVFROd2hhajloelV0cmgtS0hiVXQ0TW9jZGtJWDhNQndRNzUteHRPXzR0OUFsT3U1eGxtZ0ZxQmw1LURiUTNva2RWWDI1TzJB?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "‘국민 디바’ 인순이, 70석 초소형 무대에서 관객과 만난다 - 더프리뷰",
+   "tags": [
+    "더프리뷰"
+   ]
+  },
   {
    "date": "2026-10-30",
    "title": "‘국민 디바’ 인순이, 70석 초소형 무대에서 관객과 만난다",
