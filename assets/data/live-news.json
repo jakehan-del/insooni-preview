@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-10-31 14:04",
+ "updated": "2026-11-01 14:35",
  "items": [
   {
    "date": "2026-10-31",
@@ -324,6 +324,24 @@
      "title": "제19회 세계인 큰 잔치, 국가별 입장 및 인순이 등 공연",
      "source": "씨티 21",
      "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBuQk1xT0lobVY1MWRGOUZBUHlJOE5wc0NTRkc1SWJzc1BtMGY1dklrLWlMc3RwZ1NyUERoc0F3TnYxbTZ2OERBOUtVNVE0M19ZV2hBOG1KWTM0OHhEc1NoTGpGbVR6QQ?oc=5"
+    }
+   ]
+  },
+  {
+   "date": "2026-10-01",
+   "first": "2026-10-01",
+   "title": "'천안흥타령춤축제 2026' 개막식, 이승기 - 인순이 - 2AM - 빌리 - 장한별 후끈 무대",
+   "source": "연예투데이뉴스",
+   "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE1FaVk2Z1R0WldDZHIxMzhwZVpLMVR0aENWdmtCSjFGTnJnWUxxZkVBOTg3cDg4UjBBMGFmaGY1VERpWXFfd1RZTk1NbXlRdlJzNml1QlRzVUR2cVk1NVVtWnRoYkxjcUXSAWtBVV95cUxOMmtvX0RaV0FOblo2VFZBMTNESjhYX1dLbU1MMXlfUXVnOGRxYUc5cTRsd3JFMkdEVDlFMVJxMlM0TFJXako0bU8xRW1NZE52bmcxQTh0SmdZMjJaTkFQb3V2WE1rUjNqRXQ0dw?oc=5",
+   "type": "공연",
+   "auto": true,
+   "count": 1,
+   "articles": [
+    {
+     "date": "2026-10-01",
+     "title": "'천안흥타령춤축제 2026' 개막식, 이승기 - 인순이 - 2AM - 빌리 - 장한별 후끈 무대",
+     "source": "연예투데이뉴스",
+     "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE1FaVk2Z1R0WldDZHIxMzhwZVpLMVR0aENWdmtCSjFGTnJnWUxxZkVBOTg3cDg4UjBBMGFmaGY1VERpWXFfd1RZTk1NbXlRdlJzNml1QlRzVUR2cVk1NVVtWnRoYkxjcUXSAWtBVV95cUxOMmtvX0RaV0FOblo2VFZBMTNESjhYX1dLbU1MMXlfUXVnOGRxYUc5cTRsd3JFMkdEVDlFMVJxMlM0TFJXako0bU8xRW1NZE52bmcxQTh0SmdZMjJaTkFQb3V2WE1rUjNqRXQ0dw?oc=5"
     }
    ]
   },
