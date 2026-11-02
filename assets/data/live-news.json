@@ -1,8 +1,32 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-11-01 14:35",
+ "updated": "2026-11-03 00:24",
  "items": [
+  {
+   "date": "2026-11-02",
+   "first": "2026-11-02",
+   "title": "인순이부터 라포엠까지…별들의 무대, 인천 가을밤 물들인다",
+   "source": "데일리안",
+   "url": "https://news.google.com/rss/articles/CBMiowJBVV95cUxNa0diSDFmeHgxQkZDQ0dLamo1UE0yOHhxT29nY05nNk1mTlBsRzhjVUd4RWJIQ1FVWWM1eVlsVk1EYWFBSFJHSWcxNGlTbDkzT0s0VEh6N0pxamNpdmNIUE1ocUJjS05jREVjbGVuV0RxcUNYOFdjNnRZVk5ZT0N2cHFfZ0tnU0NUenpGWGtkaGcza0NEbkV0LXRPUTh4anBOMWR3U3U5akN0RVhfZHZtdjZoX1BUbUhXNmFSLXRpNzRYdERaeHZRVmJhelFnX3Z3RVlIWDhwWFlFaGxYamRXWHVya29CMnl4dExma3AwZ2tTdkF0T25WR29ENFBZaWdKaEFvWHA1ZUlKcmdaMEZ5OGFFYkl2TmRySjRlS2p1NVE2U00?oc=5",
+   "type": "공연",
+   "auto": true,
+   "count": 2,
+   "articles": [
+    {
+     "date": "2026-11-02",
+     "title": "인순이부터 라포엠까지…별들의 무대, 인천 가을밤 물들인다",
+     "source": "데일리안",
+     "url": "https://news.google.com/rss/articles/CBMiowJBVV95cUxNa0diSDFmeHgxQkZDQ0dLamo1UE0yOHhxT29nY05nNk1mTlBsRzhjVUd4RWJIQ1FVWWM1eVlsVk1EYWFBSFJHSWcxNGlTbDkzT0s0VEh6N0pxamNpdmNIUE1ocUJjS05jREVjbGVuV0RxcUNYOFdjNnRZVk5ZT0N2cHFfZ0tnU0NUenpGWGtkaGcza0NEbkV0LXRPUTh4anBOMWR3U3U5akN0RVhfZHZtdjZoX1BUbUhXNmFSLXRpNzRYdERaeHZRVmJhelFnX3Z3RVlIWDhwWFlFaGxYamRXWHVya29CMnl4dExma3AwZ2tTdkF0T25WR29ENFBZaWdKaEFvWHA1ZUlKcmdaMEZ5OGFFYkl2TmRySjRlS2p1NVE2U00?oc=5"
+    },
+    {
+     "date": "2026-11-02",
+     "title": "아트센터인천, 26일 인순이·라포엠·최정원 등 출연 ‘가천음악회’",
+     "source": "인천투데이",
+     "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE5mMnRjQlNOT0ZLVWdDc3pmUmM2YzIwVzlxYmNTUl84LVBTYXZpQjJkQmJsekFJY2VXVmtqcnF2TEx3QU1vcklZOEdGZmJNR2I4TGJYMHQtTWJKMHJBbUozNTZmc0FXTUd4ZWpyTW9md0U?oc=5"
+    }
+   ]
+  },
   {
    "date": "2026-10-31",
    "first": "2026-10-30",
