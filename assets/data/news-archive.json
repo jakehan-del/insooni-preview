@@ -1,8 +1,21 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-11-03 00:24",
- "count": 129,
+ "updated": "2026-11-04 01:01",
+ "count": 130,
  "items": [
+  {
+   "date": "2026-11-03",
+   "title": "인순이·라포엠 한 무대에…가천음악회 1700명 무료 초청",
+   "source": "간호사신문",
+   "sourceSite": "https://www.nursenews.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE5CSGI0ZmFFM1NVbVB3c1hkX1RCUkRmRnR1X29VOC1heWN4MzNVWV8yS1h0Qy0tWFlXWjhpUllyZXlER1BBMTc3T2ZMaUVEX3dIV01XNnotSW56aEdJQWlEMkhwSHAwMWJ6TkJVblJB?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "인순이·라포엠 한 무대에…가천음악회 1700명 무료 초청 - 간호사신문",
+   "tags": [
+    "간호사신문"
+   ]
+  },
   {
    "date": "2026-11-02",
    "title": "인순이부터 라포엠까지…별들의 무대, 인천 가을밤 물들인다",
