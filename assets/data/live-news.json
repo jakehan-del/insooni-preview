@@ -1,23 +1,38 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-11-04 01:01",
+ "updated": "2026-11-04 14:50",
  "items": [
   {
-   "date": "2026-11-03",
+   "date": "2026-11-04",
    "first": "2026-11-02",
-   "title": "아트센터인천, 26일 인순이·라포엠·최정원 등 출연 ‘가천음악회’",
-   "source": "인천투데이",
-   "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE5mMnRjQlNOT0ZLVWdDc3pmUmM2YzIwVzlxYmNTUl84LVBTYXZpQjJkQmJsekFJY2VXVmtqcnF2TEx3QU1vcklZOEdGZmJNR2I4TGJYMHQtTWJKMHJBbUozNTZmc0FXTUd4ZWpyTW9md0U?oc=5",
+   "title": "부안예술회관서 14일 무료 음악회…인순이·다문화합창단 한무대",
+   "source": "한국사회복지저널",
+   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTFAzR25peWlpZ3FvOEdVaW5NekdVSDhVZWVnOGNIblhVUWdtZGRDRldmeTVmMHhGRk44Vi1CNThLdXA1cTN3S0NHd2lxZ1RRaEo2enI4cEUyWlIyX2o2dlJHQnByX3ptUmF4b21j?oc=5",
    "type": "공연",
    "auto": true,
-   "count": 3,
+   "count": 6,
    "articles": [
     {
-     "date": "2026-11-02",
-     "title": "아트센터인천, 26일 인순이·라포엠·최정원 등 출연 ‘가천음악회’",
-     "source": "인천투데이",
-     "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE5mMnRjQlNOT0ZLVWdDc3pmUmM2YzIwVzlxYmNTUl84LVBTYXZpQjJkQmJsekFJY2VXVmtqcnF2TEx3QU1vcklZOEdGZmJNR2I4TGJYMHQtTWJKMHJBbUozNTZmc0FXTUd4ZWpyTW9md0U?oc=5"
+     "date": "2026-11-04",
+     "title": "부안예술회관서 14일 무료 음악회…인순이·다문화합창단 한무대",
+     "source": "한국사회복지저널",
+     "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTFAzR25peWlpZ3FvOEdVaW5NekdVSDhVZWVnOGNIblhVUWdtZGRDRldmeTVmMHhGRk44Vi1CNThLdXA1cTN3S0NHd2lxZ1RRaEo2enI4cEUyWlIyX2o2dlJHQnByX3ptUmF4b21j?oc=5",
+     "alt": [
+      "https://news.google.com/rss/articles/CBMibEFVX3lxTE1LeGtwM1h5RFNPbEwzU2NkWTREX3ZoV1czRnVpRmFJai1sN2Z6UFFSd0huX0dRQ2ZwN1ZlUExmSm9NMTBUMkVxdnhSZ1MydEZoMElMWk5HdG1Ba2owNmR2a0I2NkNqSDFHSXEtQw?oc=5"
+     ]
+    },
+    {
+     "date": "2026-11-04",
+     "title": "인순이·청소년 오케스트라·다문화 합창단, 부안서 거위의 꿈 함께 부른다",
+     "source": "더페어",
+     "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE5NRVIyWElzMURZTkRCV3FwWHZvVnJKNG1IemdJSWp6NFJMWW5YRFBlbW5BQS1CY18zc3B6eHFUZjFVbC1GTUZ2UlNLUHBES3c4RXBjZmpXMU9lRHM0N3FOM2xzMTYzVm1ITzNmbGdESy1iYl9y0gF0QVVfeXFMTk1FUjJYSXMxRFlOREJXcXBYdm9Wcko0bUh6Z0lJano0UkxZblhEUGVtbkFBLUJjXzNzcHp4cVRmMVVsLUZNRnZSU0tQcERLdzhFcGNmalcxT2VEczQ3cU4zbHMxNjNWbUhPM2ZsZ0RLLWJiX3I?oc=5"
+    },
+    {
+     "date": "2026-11-04",
+     "title": "인순이와 부안 청소년·군민 오케스트라 한 무대…14일 희망의 음악회",
+     "source": "더펜뉴스",
+     "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE1YZ1ltWnpiZ2ZEc3p5OEdhbjZ6Z0xQVUZGVkxVbUo3Y2ZSNlVmS0IxRlFBeE5IS1BfYTNpSjBfTWh6T05DWVVaVkVkZE5idl9ERVJHMXQtYUdDMWNqUzhpeThMaw?oc=5"
     },
     {
      "date": "2026-11-03",
@@ -30,6 +45,12 @@
      "title": "인순이부터 라포엠까지…별들의 무대, 인천 가을밤 물들인다",
      "source": "데일리안",
      "url": "https://news.google.com/rss/articles/CBMiowJBVV95cUxNa0diSDFmeHgxQkZDQ0dLamo1UE0yOHhxT29nY05nNk1mTlBsRzhjVUd4RWJIQ1FVWWM1eVlsVk1EYWFBSFJHSWcxNGlTbDkzT0s0VEh6N0pxamNpdmNIUE1ocUJjS05jREVjbGVuV0RxcUNYOFdjNnRZVk5ZT0N2cHFfZ0tnU0NUenpGWGtkaGcza0NEbkV0LXRPUTh4anBOMWR3U3U5akN0RVhfZHZtdjZoX1BUbUhXNmFSLXRpNzRYdERaeHZRVmJhelFnX3Z3RVlIWDhwWFlFaGxYamRXWHVya29CMnl4dExma3AwZ2tTdkF0T25WR29ENFBZaWdKaEFvWHA1ZUlKcmdaMEZ5OGFFYkl2TmRySjRlS2p1NVE2U00?oc=5"
+    },
+    {
+     "date": "2026-11-02",
+     "title": "아트센터인천, 26일 인순이·라포엠·최정원 등 출연 ‘가천음악회’",
+     "source": "인천투데이",
+     "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE5mMnRjQlNOT0ZLVWdDc3pmUmM2YzIwVzlxYmNTUl84LVBTYXZpQjJkQmJsekFJY2VXVmtqcnF2TEx3QU1vcklZOEdGZmJNR2I4TGJYMHQtTWJKMHJBbUozNTZmc0FXTUd4ZWpyTW9md0U?oc=5"
     }
    ]
   },

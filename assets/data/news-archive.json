@@ -1,8 +1,60 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-11-04 01:01",
- "count": 130,
+ "updated": "2026-11-04 14:50",
+ "count": 134,
  "items": [
+  {
+   "date": "2026-11-04",
+   "title": "인순이·청소년 오케스트라·다문화 합창단, 부안서 거위의 꿈 함께 부른다",
+   "source": "더페어",
+   "sourceSite": "https://www.thefairnews.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE5NRVIyWElzMURZTkRCV3FwWHZvVnJKNG1IemdJSWp6NFJMWW5YRFBlbW5BQS1CY18zc3B6eHFUZjFVbC1GTUZ2UlNLUHBES3c4RXBjZmpXMU9lRHM0N3FOM2xzMTYzVm1ITzNmbGdESy1iYl9y0gF0QVVfeXFMTk1FUjJYSXMxRFlOREJXcXBYdm9Wcko0bUh6Z0lJano0UkxZblhEUGVtbkFBLUJjXzNzcHp4cVRmMVVsLUZNRnZSU0tQcERLdzhFcGNmalcxT2VEczQ3cU4zbHMxNjNWbUhPM2ZsZ0RLLWJiX3I?oc=5",
+   "type": "보도",
+   "auto": true,
+   "rawTitle": "인순이·청소년 오케스트라·다문화 합창단, 부안서 거위의 꿈 함께 부른다 - 더페어",
+   "tags": [
+    "더페어"
+   ]
+  },
+  {
+   "date": "2026-11-04",
+   "title": "부안예술회관서 14일 무료 음악회…인순이·다문화합창단 한무대",
+   "source": "한국사회복지저널",
+   "sourceSite": "https://www.ksw-news.com",
+   "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1LeGtwM1h5RFNPbEwzU2NkWTREX3ZoV1czRnVpRmFJai1sN2Z6UFFSd0huX0dRQ2ZwN1ZlUExmSm9NMTBUMkVxdnhSZ1MydEZoMElMWk5HdG1Ba2owNmR2a0I2NkNqSDFHSXEtQw?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "부안예술회관서 14일 무료 음악회…인순이·다문화합창단 한무대 - 한국사회복지저널",
+   "tags": [
+    "한국사회복지저널"
+   ]
+  },
+  {
+   "date": "2026-11-04",
+   "title": "부안예술회관서 14일 무료 음악회…인순이·다문화합창단 한무대",
+   "source": "한국사회복지저널",
+   "sourceSite": "http://www.ksw-news.com",
+   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTFAzR25peWlpZ3FvOEdVaW5NekdVSDhVZWVnOGNIblhVUWdtZGRDRldmeTVmMHhGRk44Vi1CNThLdXA1cTN3S0NHd2lxZ1RRaEo2enI4cEUyWlIyX2o2dlJHQnByX3ptUmF4b21j?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "부안예술회관서 14일 무료 음악회…인순이·다문화합창단 한무대 - 한국사회복지저널",
+   "tags": [
+    "한국사회복지저널"
+   ]
+  },
+  {
+   "date": "2026-11-04",
+   "title": "인순이와 부안 청소년·군민 오케스트라 한 무대…14일 희망의 음악회",
+   "source": "더펜뉴스",
+   "sourceSite": "https://www.thepennews.net",
+   "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE1YZ1ltWnpiZ2ZEc3p5OEdhbjZ6Z0xQVUZGVkxVbUo3Y2ZSNlVmS0IxRlFBeE5IS1BfYTNpSjBfTWh6T05DWVVaVkVkZE5idl9ERVJHMXQtYUdDMWNqUzhpeThMaw?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "인순이와 부안 청소년·군민 오케스트라 한 무대…14일 희망의 음악회 - 더펜뉴스",
+   "tags": [
+    "더펜뉴스"
+   ]
+  },
   {
    "date": "2026-11-03",
    "title": "인순이·라포엠 한 무대에…가천음악회 1700명 무료 초청",
