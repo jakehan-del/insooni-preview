@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-11-05 11:08",
- "count": 139,
+ "updated": "2026-11-10 05:35",
+ "count": 140,
  "items": [
   {
    "date": "2026-11-05",
@@ -183,6 +183,19 @@
    "rawTitle": "‘국민 디바’ 인순이, 70석 초소형 무대에서 관객과 만난다 - 뉴스인",
    "tags": [
     "뉴스인"
+   ]
+  },
+  {
+   "date": "2026-10-30",
+   "title": "재능을 오래 빛나게 하는 인성 — 해밀학교에서 인순이 이사장과 나눈 대화",
+   "source": "아시아통신",
+   "sourceSite": "https://www.newsasia.kr",
+   "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE01SWhNeDBZclBGMF84WGlGbzhpMTBmSDAtZkpDaUJrdmVlWllXQ0dIcm5iQmxyeHByVmxreDdLLXN6UC1pUDFQcFl6bDZKYklFOGFDYjRMTmZQTUwxN2hKdw?oc=5",
+   "type": "보도",
+   "auto": true,
+   "rawTitle": "재능을 오래 빛나게 하는 인성 — 해밀학교에서 인순이 이사장과 나눈 대화 - 아시아통신",
+   "tags": [
+    "아시아통신"
    ]
   },
   {

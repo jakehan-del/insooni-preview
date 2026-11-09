@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-11-05 11:08",
+ "updated": "2026-11-10 05:35",
  "items": [
   {
    "date": "2026-11-05",
@@ -94,6 +94,24 @@
      "title": "아트센터인천, 26일 인순이·라포엠·최정원 등 출연 ‘가천음악회’",
      "source": "인천투데이",
      "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE5mMnRjQlNOT0ZLVWdDc3pmUmM2YzIwVzlxYmNTUl84LVBTYXZpQjJkQmJsekFJY2VXVmtqcnF2TEx3QU1vcklZOEdGZmJNR2I4TGJYMHQtTWJKMHJBbUozNTZmc0FXTUd4ZWpyTW9md0U?oc=5"
+    }
+   ]
+  },
+  {
+   "date": "2026-10-30",
+   "first": "2026-10-30",
+   "title": "재능을 오래 빛나게 하는 인성 — 해밀학교에서 인순이 이사장과 나눈 대화",
+   "source": "아시아통신",
+   "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE01SWhNeDBZclBGMF84WGlGbzhpMTBmSDAtZkpDaUJrdmVlWllXQ0dIcm5iQmxyeHByVmxreDdLLXN6UC1pUDFQcFl6bDZKYklFOGFDYjRMTmZQTUwxN2hKdw?oc=5",
+   "type": "보도",
+   "auto": true,
+   "count": 1,
+   "articles": [
+    {
+     "date": "2026-10-30",
+     "title": "재능을 오래 빛나게 하는 인성 — 해밀학교에서 인순이 이사장과 나눈 대화",
+     "source": "아시아통신",
+     "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE01SWhNeDBZclBGMF84WGlGbzhpMTBmSDAtZkpDaUJrdmVlWllXQ0dIcm5iQmxyeHByVmxreDdLLXN6UC1pUDFQcFl6bDZKYklFOGFDYjRMTmZQTUwxN2hKdw?oc=5"
     }
    ]
   },
