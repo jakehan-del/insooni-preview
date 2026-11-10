@@ -1,47 +1,41 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-11-10 05:35",
+ "updated": "2026-11-10 13:00",
  "items": [
   {
-   "date": "2026-11-05",
-   "first": "2026-10-30",
-   "title": "‘국민 디바’ 인순이, 70석 초소형 무대에서 관객과 만난다",
-   "source": "더프리뷰",
-   "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9YUkh5aDg0US1VMGxzSHEwTDNIVV94WHN0Mkd1R2xzVFROd2hhajloelV0cmgtS0hiVXQ0TW9jZGtJWDhNQndRNzUteHRPXzR0OUFsT3U1eGxtZ0ZxQmw1LURiUTNva2RWWDI1TzJB?oc=5",
-   "type": "공연",
+   "date": "2026-11-10",
+   "first": "2026-11-10",
+   "title": "김종서 ‘넌 빛날거야’ 챌린지에 인순이·김경호·황치열 등 가수 20여명 동참",
+   "source": "천지일보",
+   "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9SZjFSUmkyZDFndVV5cngzX3VSazgtd2pyVV9FVzVHalpQUnJHVDcycmc5VS1HZldQQU1FUGJDVS1ER3hBbjh1eTBYanZZbTZNSUE5ZmFaSmtzVDZFbE1wa0NDbHBiOVhlVlE?oc=5",
+   "type": "보도",
    "auto": true,
-   "count": 3,
+   "count": 2,
    "articles": [
     {
-     "date": "2026-10-31",
-     "title": "‘국민 디바’ 인순이, 70석 초소형 무대에서 관객과 만난다",
-     "source": "더프리뷰",
-     "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9YUkh5aDg0US1VMGxzSHEwTDNIVV94WHN0Mkd1R2xzVFROd2hhajloelV0cmgtS0hiVXQ0TW9jZGtJWDhNQndRNzUteHRPXzR0OUFsT3U1eGxtZ0ZxQmw1LURiUTNva2RWWDI1TzJB?oc=5"
+     "date": "2026-11-10",
+     "title": "김종서 ‘넌 빛날거야’ 챌린지에 인순이·김경호·황치열 등 가수 20여명 동참",
+     "source": "천지일보",
+     "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9SZjFSUmkyZDFndVV5cngzX3VSazgtd2pyVV9FVzVHalpQUnJHVDcycmc5VS1HZldQQU1FUGJDVS1ER3hBbjh1eTBYanZZbTZNSUE5ZmFaSmtzVDZFbE1wa0NDbHBiOVhlVlE?oc=5"
     },
     {
-     "date": "2026-11-05",
-     "title": "관객과 가까이…‘국민 디바’ 인순이, 70석 재즈클럽 무대 선다",
-     "source": "한겨레",
-     "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE5DVHhldGQ1dUdJNUV6ZXc1aTVxRHhnaTNfRTRzUEtCMi10ZkdIdWpBVlVRWTJvdDNXaXZWZ3VyM3lkLWRfWWNsNV9JN0pMWTRUN2Q5cWxxU0tCSjJiRE15X2R4Tkk?oc=5"
-    },
-    {
-     "date": "2026-10-30",
-     "title": "‘국민 디바’ 인순이, 70석 초소형 무대에서 관객과 만난다",
-     "source": "뉴스인",
-     "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE96aWo5ejFLREdIcDJwM2pEN3FqbHVnbTdZcFpvdDd6SUphZE5DY2h6OFh4cjlxbU9IX1ZjRnZKOXQzN0xZeUtKS0pGTjJ1NElLa3V2ZEZKN3h1dXU5VVpDVi1ldGJFZUVuQXVr?oc=5"
+     "date": "2026-11-10",
+     "title": "김종서, 신곡 챌린지에 인순이·황치열·테이·HYNN 등 동참 \"특별한 감동\"",
+     "source": "조이뉴스24",
+     "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBkSFNodUJjNm40aHJJSVVsaE4wSU14MFZUSG14NEliY2ZQb1BkeVhaUC1HenBMcnJwNG1FYUNSM1NjNlliR1lQQkxMS0NnWlk?oc=5"
     }
    ]
   },
   {
-   "date": "2026-11-04",
+   "date": "2026-11-10",
    "first": "2026-11-02",
    "title": "인순이·청소년 오케스트라·다문화 합창단, 부안서 거위의 꿈 함께 부른다",
    "source": "더페어",
    "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE8yaWpOcXM2WmtVT1lQQmpyRmdvZ3B1NkZjeXJmV3AwUF81OUs4elhWeC03MTdGNHA3R0I5aXZzdWNzZEg1TFVkNFB2bGhQVHlwWGZYSTVLSXA4Z21kOWE1VUFPaUN1UE8wbVZUbnZlRlQ?oc=5",
    "type": "공연",
    "auto": true,
-   "count": 7,
+   "count": 8,
    "articles": [
     {
      "date": "2026-11-04",
@@ -52,6 +46,12 @@
       "https://news.google.com/rss/articles/CBMicEFVX3lxTE8yaWpOcXM2WmtVT1lQQmpyRmdvZ3B1NkZjeXJmV3AwUF81OUs4elhWeC03MTdGNHA3R0I5aXZzdWNzZEg1TFVkNFB2bGhQVHlwWGZYSTVLSXA4Z21kOWE1VUFPaUN1UE8wbVZUbnZlRlTSAXRBVV95cUxOTUVSMlhJczFEWU5EQldxcFh2b1ZySjRtSHpnSUlqejRSTFluWERQZW1uQUEtQmNfM3NwenhxVGYxVWwtRk1GdlJTS1BwREt3OEVwY2ZqVzFPZURzNDdxTjNsczE2M1ZtSE8zZmxnREstYmJfcg?oc=5",
       "https://news.google.com/rss/articles/CBMidEFVX3lxTE5NRVIyWElzMURZTkRCV3FwWHZvVnJKNG1IemdJSWp6NFJMWW5YRFBlbW5BQS1CY18zc3B6eHFUZjFVbC1GTUZ2UlNLUHBES3c4RXBjZmpXMU9lRHM0N3FOM2xzMTYzVm1ITzNmbGdESy1iYl9y0gF0QVVfeXFMTk1FUjJYSXMxRFlOREJXcXBYdm9Wcko0bUh6Z0lJano0UkxZblhEUGVtbkFBLUJjXzNzcHp4cVRmMVVsLUZNRnZSU0tQcERLdzhFcGNmalcxT2VEczQ3cU4zbHMxNjNWbUhPM2ZsZ0RLLWJiX3I?oc=5"
      ]
+    },
+    {
+     "date": "2026-11-10",
+     "title": "가수 인순이가 부안에 온 까닭은?…버려진 피아노가 부른 ‘거위의 꿈’",
+     "source": "부안독립신문",
+     "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE5kd0RHN2VZLV9YaXgwRHNIZzlERlZHbHlkUDV6OEpmRlU1LW5TVkJsTWxlT3lXOElleERHSlVrbzgxNTFycGlpd3lQaE0xYndobGVMUmVySmU5RHVpMGlqWDd2V2s?oc=5"
     },
     {
      "date": "2026-11-04",
@@ -94,6 +94,36 @@
      "title": "아트센터인천, 26일 인순이·라포엠·최정원 등 출연 ‘가천음악회’",
      "source": "인천투데이",
      "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE5mMnRjQlNOT0ZLVWdDc3pmUmM2YzIwVzlxYmNTUl84LVBTYXZpQjJkQmJsekFJY2VXVmtqcnF2TEx3QU1vcklZOEdGZmJNR2I4TGJYMHQtTWJKMHJBbUozNTZmc0FXTUd4ZWpyTW9md0U?oc=5"
+    }
+   ]
+  },
+  {
+   "date": "2026-11-05",
+   "first": "2026-10-30",
+   "title": "‘국민 디바’ 인순이, 70석 초소형 무대에서 관객과 만난다",
+   "source": "더프리뷰",
+   "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9YUkh5aDg0US1VMGxzSHEwTDNIVV94WHN0Mkd1R2xzVFROd2hhajloelV0cmgtS0hiVXQ0TW9jZGtJWDhNQndRNzUteHRPXzR0OUFsT3U1eGxtZ0ZxQmw1LURiUTNva2RWWDI1TzJB?oc=5",
+   "type": "공연",
+   "auto": true,
+   "count": 3,
+   "articles": [
+    {
+     "date": "2026-10-31",
+     "title": "‘국민 디바’ 인순이, 70석 초소형 무대에서 관객과 만난다",
+     "source": "더프리뷰",
+     "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9YUkh5aDg0US1VMGxzSHEwTDNIVV94WHN0Mkd1R2xzVFROd2hhajloelV0cmgtS0hiVXQ0TW9jZGtJWDhNQndRNzUteHRPXzR0OUFsT3U1eGxtZ0ZxQmw1LURiUTNva2RWWDI1TzJB?oc=5"
+    },
+    {
+     "date": "2026-11-05",
+     "title": "관객과 가까이…‘국민 디바’ 인순이, 70석 재즈클럽 무대 선다",
+     "source": "한겨레",
+     "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE5DVHhldGQ1dUdJNUV6ZXc1aTVxRHhnaTNfRTRzUEtCMi10ZkdIdWpBVlVRWTJvdDNXaXZWZ3VyM3lkLWRfWWNsNV9JN0pMWTRUN2Q5cWxxU0tCSjJiRE15X2R4Tkk?oc=5"
+    },
+    {
+     "date": "2026-10-30",
+     "title": "‘국민 디바’ 인순이, 70석 초소형 무대에서 관객과 만난다",
+     "source": "뉴스인",
+     "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE96aWo5ejFLREdIcDJwM2pEN3FqbHVnbTdZcFpvdDd6SUphZE5DY2h6OFh4cjlxbU9IX1ZjRnZKOXQzN0xZeUtKS0pGTjJ1NElLa3V2ZEZKN3h1dXU5VVpDVi1ldGJFZUVuQXVr?oc=5"
     }
    ]
   },
