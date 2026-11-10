@@ -1,29 +1,41 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-11-10 13:00",
+ "updated": "2026-11-10 23:40",
  "items": [
   {
    "date": "2026-11-10",
    "first": "2026-11-10",
-   "title": "김종서 ‘넌 빛날거야’ 챌린지에 인순이·김경호·황치열 등 가수 20여명 동참",
-   "source": "천지일보",
-   "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9SZjFSUmkyZDFndVV5cngzX3VSazgtd2pyVV9FVzVHalpQUnJHVDcycmc5VS1HZldQQU1FUGJDVS1ER3hBbjh1eTBYanZZbTZNSUE5ZmFaSmtzVDZFbE1wa0NDbHBiOVhlVlE?oc=5",
+   "title": "김종서, 신곡 챌린지에 인순이·황치열·테이·HYNN 등 동참 \"특별한 감동\"",
+   "source": "조이뉴스24",
+   "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBkSFNodUJjNm40aHJJSVVsaE4wSU14MFZUSG14NEliY2ZQb1BkeVhaUC1HenBMcnJwNG1FYUNSM1NjNlliR1lQQkxMS0NnWlk?oc=5",
    "type": "보도",
    "auto": true,
-   "count": 2,
+   "count": 4,
    "articles": [
-    {
-     "date": "2026-11-10",
-     "title": "김종서 ‘넌 빛날거야’ 챌린지에 인순이·김경호·황치열 등 가수 20여명 동참",
-     "source": "천지일보",
-     "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9SZjFSUmkyZDFndVV5cngzX3VSazgtd2pyVV9FVzVHalpQUnJHVDcycmc5VS1HZldQQU1FUGJDVS1ER3hBbjh1eTBYanZZbTZNSUE5ZmFaSmtzVDZFbE1wa0NDbHBiOVhlVlE?oc=5"
-    },
     {
      "date": "2026-11-10",
      "title": "김종서, 신곡 챌린지에 인순이·황치열·테이·HYNN 등 동참 \"특별한 감동\"",
      "source": "조이뉴스24",
      "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBkSFNodUJjNm40aHJJSVVsaE4wSU14MFZUSG14NEliY2ZQb1BkeVhaUC1HenBMcnJwNG1FYUNSM1NjNlliR1lQQkxMS0NnWlk?oc=5"
+    },
+    {
+     "date": "2026-11-10",
+     "title": "인'스타'그램 세상|김종서, 신곡 챌린지에 인순이·황치열·테이·HYNN 등 동참 \"특별한 감동\"",
+     "source": "ZUM 뉴스",
+     "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE9MNEdpSW5jOGpiR2tTVFQ5VmRXdTJtb2g5czR2SWpLQ0pFZHVEcG9yQ2lzak12amg0UGYtWGQ4OEF2NWVLOWpmeUNLcm1PTzgzMG5tUXktcXV2ZmI0VnpCVW4zVzNWUDR2VkhvYkUxWlBGSGtYOVhrdHRlY2o?oc=5"
+    },
+    {
+     "date": "2026-11-10",
+     "title": "김종서 신곡에 인순이·김경호까지···가수 21팀 총출동",
+     "source": "경향신문",
+     "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE5QYno2TXA3M2pnVkdRZFRrZ1NnSlRjM3VXdUs3V1BReTlISmhPM2g0RnRuVElRZTNVWTdJeUhDNEZnbTdGeGVKd3BCUk1mdzlWbmdlbGhGbmZQUXZhRHfSAWNBVV95cUxOR3V6dk54bjVuUXY4Ri1qZm5pRTA4TWpXZTBYd0JmRkdSbmVOeEdqY1RhaGtoSzVxa2IzWUUzMHpvWkdIeVNveUdFbHBSbEJkank5aEw4NDhMQVVLZzlTeC15MVE?oc=5"
+    },
+    {
+     "date": "2026-11-10",
+     "title": "김종서 ‘넌 빛날거야’ 챌린지에 인순이·김경호·황치열 등 가수 20여명 동참",
+     "source": "천지일보",
+     "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9SZjFSUmkyZDFndVV5cngzX3VSazgtd2pyVV9FVzVHalpQUnJHVDcycmc5VS1HZldQQU1FUGJDVS1ER3hBbjh1eTBYanZZbTZNSUE5ZmFaSmtzVDZFbE1wa0NDbHBiOVhlVlE?oc=5"
     }
    ]
   },

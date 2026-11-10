@@ -1,8 +1,21 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-11-10 13:00",
- "count": 143,
+ "updated": "2026-11-10 23:40",
+ "count": 145,
  "items": [
+  {
+   "date": "2026-11-10",
+   "title": "인'스타'그램 세상|김종서, 신곡 챌린지에 인순이·황치열·테이·HYNN 등 동참 \"특별한 감동\"",
+   "source": "ZUM 뉴스",
+   "sourceSite": "https://m.news.zum.com",
+   "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE9MNEdpSW5jOGpiR2tTVFQ5VmRXdTJtb2g5czR2SWpLQ0pFZHVEcG9yQ2lzak12amg0UGYtWGQ4OEF2NWVLOWpmeUNLcm1PTzgzMG5tUXktcXV2ZmI0VnpCVW4zVzNWUDR2VkhvYkUxWlBGSGtYOVhrdHRlY2o?oc=5",
+   "type": "보도",
+   "auto": true,
+   "rawTitle": "인'스타'그램 세상|김종서, 신곡 챌린지에 인순이·황치열·테이·HYNN 등 동참 \"특별한 감동\" - ZUM 뉴스",
+   "tags": [
+    "ZUM 뉴스"
+   ]
+  },
   {
    "date": "2026-11-10",
    "title": "김종서 ‘넌 빛날거야’ 챌린지에 인순이·김경호·황치열 등 가수 20여명 동참",
@@ -27,6 +40,20 @@
    "rawTitle": "가수 인순이가 부안에 온 까닭은?…버려진 피아노가 부른 ‘거위의 꿈’ - 부안독립신문",
    "tags": [
     "부안독립신문"
+   ]
+  },
+  {
+   "date": "2026-11-10",
+   "title": "김종서 신곡에 인순이·김경호까지···가수 21팀 총출동",
+   "source": "경향신문",
+   "sourceSite": "https://sports.khan.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE5QYno2TXA3M2pnVkdRZFRrZ1NnSlRjM3VXdUs3V1BReTlISmhPM2g0RnRuVElRZTNVWTdJeUhDNEZnbTdGeGVKd3BCUk1mdzlWbmdlbGhGbmZQUXZhRHfSAWNBVV95cUxOR3V6dk54bjVuUXY4Ri1qZm5pRTA4TWpXZTBYd0JmRkdSbmVOeEdqY1RhaGtoSzVxa2IzWUUzMHpvWkdIeVNveUdFbHBSbEJkank5aEw4NDhMQVVLZzlTeC15MVE?oc=5",
+   "type": "보도",
+   "auto": true,
+   "rawTitle": "김종서 신곡에 인순이·김경호까지···가수 21팀 총출동 - 스포츠경향",
+   "rawSource": "스포츠경향",
+   "tags": [
+    "스포츠경향"
    ]
   },
   {
