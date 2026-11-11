@@ -1,8 +1,34 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-11-10 23:40",
- "count": 145,
+ "updated": "2026-11-11 18:08",
+ "count": 147,
  "items": [
+  {
+   "date": "2026-11-11",
+   "title": "가수 인순이, 한경국립대서 특강…“실패 두려워 말고 도전해야”",
+   "source": "현대경제",
+   "sourceSite": "https://www.hdnews.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5lSDlzSDZqeGtVQmJLTWYtbm9hZGdKVnZnZTF6VXdDWWJFeTJiVHppd2pNNHNfTklBS2k5OUQ5OVN1ZmE4aWw3ZDl2eEgyWUJqYU1Gc1FYcV9DWTNxSXZQdC1neGx3MC03eTM0?oc=5",
+   "type": "보도",
+   "auto": true,
+   "rawTitle": "가수 인순이, 한경국립대서 특강…“실패 두려워 말고 도전해야” - 현대경제",
+   "tags": [
+    "현대경제"
+   ]
+  },
+  {
+   "date": "2026-11-11",
+   "title": "가수 인순이, 한경국립대서 특강…“실패 두려워 말고 도전해야”",
+   "source": "충청메트로",
+   "sourceSite": "https://www.ccmetro.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE1Ic3AxRE5IMmVHaGZ6a3FpRVBqSEpyclhtMXdGUnlEaXA3czRRNmtkYVlURzBTQXhkSzdTWmFrSVlBVFE0eUZ3SGp4NlJBSnpmRE84LTlrdUJsY2RhUnlYNHFTYjliVGtBN0c0?oc=5",
+   "type": "보도",
+   "auto": true,
+   "rawTitle": "가수 인순이, 한경국립대서 특강…“실패 두려워 말고 도전해야” - 충청메트로",
+   "tags": [
+    "충청메트로"
+   ]
+  },
   {
    "date": "2026-11-10",
    "title": "인'스타'그램 세상|김종서, 신곡 챌린지에 인순이·황치열·테이·HYNN 등 동참 \"특별한 감동\"",
