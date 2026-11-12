@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-11-11 18:08",
- "count": 147,
+ "updated": "2026-11-12 18:35",
+ "count": 148,
  "items": [
   {
    "date": "2026-11-11",
@@ -66,6 +66,20 @@
    "rawTitle": "가수 인순이가 부안에 온 까닭은?…버려진 피아노가 부른 ‘거위의 꿈’ - 부안독립신문",
    "tags": [
     "부안독립신문"
+   ]
+  },
+  {
+   "date": "2026-11-10",
+   "title": "김종서 신곡에 인순이·김경호까지···가수 21팀 총출동",
+   "source": "경향신문",
+   "sourceSite": "https://sports.khan.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE5HdXp2TnhuNW5RdjhGLWpmbmlFMDhNaldlMFh3QmZGR1JuZU54R2pjVGFoa2hLNXFrYjNZRTMwem9aR0h5U295R0VscFJsQmRqeTloTDg0OExBVUtnOVN4LXkxUdIBY0FVX3lxTE5HdXp2TnhuNW5RdjhGLWpmbmlFMDhNaldlMFh3QmZGR1JuZU54R2pjVGFoa2hLNXFrYjNZRTMwem9aR0h5U295R0VscFJsQmRqeTloTDg0OExBVUtnOVN4LXkxUQ?oc=5",
+   "type": "보도",
+   "auto": true,
+   "rawTitle": "김종서 신곡에 인순이·김경호까지···가수 21팀 총출동 - 스포츠경향",
+   "rawSource": "스포츠경향",
+   "tags": [
+    "스포츠경향"
    ]
   },
   {
