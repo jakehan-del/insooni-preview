@@ -1,8 +1,21 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-11-13 03:03",
- "count": 149,
+ "updated": "2026-11-15 03:59",
+ "count": 150,
  "items": [
+  {
+   "date": "2026-11-14",
+   "title": "주현미 인순이등 트로트 가수 디너쇼 러시｜퍼가기",
+   "source": "동아일보",
+   "sourceSite": "https://www.donga.com",
+   "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTFBvam9wNVZXdmVaczZRandDczhzTGU2MldOWVpYNlZVcW1lRUdBMkFoS2NjRUJOMEpqN3kwMWlFdjhQZWtkNFRQNG1Cci16OFoxZGU4M1NqcHQ4QlRha01xTklSQnBLSU4yV0gxRXEtc3ZYZlA4QVdEbkxTVzRNZw?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "주현미 인순이등 트로트 가수 디너쇼 러시｜퍼가기 - 동아일보",
+   "tags": [
+    "동아일보"
+   ]
+  },
   {
    "date": "2026-11-11",
    "title": "가수 인순이, 한경국립대서 특강…“실패 두려워 말고 도전해야”",
