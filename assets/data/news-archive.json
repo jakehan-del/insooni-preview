@@ -1,8 +1,21 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-11-15 03:59",
- "count": 150,
+ "updated": "2026-11-17 19:28",
+ "count": 151,
  "items": [
+  {
+   "date": "2026-11-17",
+   "title": "\"인순이 해밀학교 이사장, '호기심/용기/감사로 다음 세대 키운다'…연세대 미래캠퍼스 특강\"",
+   "source": "베리타스알파",
+   "sourceSite": "https://www.veritas-a.com",
+   "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBWM25obWYxUUFvNFNXOWhQcmtSYlZidkpOcXh4UlJScWxrcWNDZnJ5NGpOOE9WRVFNSEhENXUyMW1HVFZ4clJzWlV2ZFlfZ3pqNUxxOWE5d2ttb3lub09zM2hiaXF0X3Jxa3R1VQ?oc=5",
+   "type": "보도",
+   "auto": true,
+   "rawTitle": "\"인순이 해밀학교 이사장, '호기심/용기/감사로 다음 세대 키운다'…연세대 미래캠퍼스 특강\" - 베리타스알파",
+   "tags": [
+    "베리타스알파"
+   ]
+  },
   {
    "date": "2026-11-14",
    "title": "주현미 인순이등 트로트 가수 디너쇼 러시｜퍼가기",

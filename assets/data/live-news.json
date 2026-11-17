@@ -1,8 +1,26 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-11-15 03:59",
+ "updated": "2026-11-17 19:28",
  "items": [
+  {
+   "date": "2026-11-17",
+   "first": "2026-11-17",
+   "title": "\"인순이 해밀학교 이사장, '호기심/용기/감사로 다음 세대 키운다'…연세대 미래캠퍼스 특강\"",
+   "source": "베리타스알파",
+   "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBWM25obWYxUUFvNFNXOWhQcmtSYlZidkpOcXh4UlJScWxrcWNDZnJ5NGpOOE9WRVFNSEhENXUyMW1HVFZ4clJzWlV2ZFlfZ3pqNUxxOWE5d2ttb3lub09zM2hiaXF0X3Jxa3R1VQ?oc=5",
+   "type": "보도",
+   "auto": true,
+   "count": 1,
+   "articles": [
+    {
+     "date": "2026-11-17",
+     "title": "\"인순이 해밀학교 이사장, '호기심/용기/감사로 다음 세대 키운다'…연세대 미래캠퍼스 특강\"",
+     "source": "베리타스알파",
+     "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBWM25obWYxUUFvNFNXOWhQcmtSYlZidkpOcXh4UlJScWxrcWNDZnJ5NGpOOE9WRVFNSEhENXUyMW1HVFZ4clJzWlV2ZFlfZ3pqNUxxOWE5d2ttb3lub09zM2hiaXF0X3Jxa3R1VQ?oc=5"
+    }
+   ]
+  },
   {
    "date": "2026-11-14",
    "first": "2026-11-14",
