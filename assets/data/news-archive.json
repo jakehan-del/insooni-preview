@@ -1,8 +1,34 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-11-17 19:28",
- "count": 151,
+ "updated": "2026-11-20 15:48",
+ "count": 153,
  "items": [
+  {
+   "date": "2026-11-20",
+   "title": "울산문화예술회관, 12월 1~2일 이지영·인순이 함께하는 치유 인문학 콘서트 개최",
+   "source": "nbn 시사경제",
+   "sourceSite": "https://www.nbnbiz.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTFBqM0JlaFlvUDhYWGd1aHJZQVpLUjZuVVdaY3VkT2xxQ3YtMjNSSnZCcWtoVEdnYjFDSVIzS0IxQ1Z1dVVHNS1FQnkxMFZCaldBamplV3FFaF9UTlN0VURjRmZjTnR6VDROMHc?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "울산문화예술회관, 12월 1~2일 이지영·인순이 함께하는 치유 인문학 콘서트 개최 - nbn 시사경제",
+   "tags": [
+    "nbn 시사경제"
+   ]
+  },
+  {
+   "date": "2026-11-20",
+   "title": "울산문예회관서 12월 1~2일 ‘힐링 인문학 콘서트’…이지영·인순이 등 무대 올라",
+   "source": "문화일보",
+   "sourceSite": "https://www.munhwa.com",
+   "url": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5qYmQzWnEzWFM5WHg4ejR6anFzd1kxNzFtUFJNT1hNU0ZhTFkwd1RBUWJ3b1hsalJIVFEwSEl6MmZsM0hSeWwteDNjT1ZrRTNl?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "울산문예회관서 12월 1~2일 ‘힐링 인문학 콘서트’…이지영·인순이 등 무대 올라 - 문화일보",
+   "tags": [
+    "문화일보"
+   ]
+  },
   {
    "date": "2026-11-17",
    "title": "\"인순이 해밀학교 이사장, '호기심/용기/감사로 다음 세대 키운다'…연세대 미래캠퍼스 특강\"",
