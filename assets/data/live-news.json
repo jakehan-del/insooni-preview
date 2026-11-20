@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-11-21 01:52",
+ "updated": "2026-11-21 08:53",
  "items": [
   {
    "date": "2026-11-20",
@@ -41,7 +41,10 @@
      "date": "2026-11-20",
      "title": "울산문화예술회관, 12월 1~2일 이지영·인순이 함께하는 치유 인문학 콘서트 개최",
      "source": "nbn 시사경제",
-     "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTFBqM0JlaFlvUDhYWGd1aHJZQVpLUjZuVVdaY3VkT2xxQ3YtMjNSSnZCcWtoVEdnYjFDSVIzS0IxQ1Z1dVVHNS1FQnkxMFZCaldBamplV3FFaF9UTlN0VURjRmZjTnR6VDROMHc?oc=5"
+     "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE55SVpiMy15QUw2U0hUUURxQWRiQUVQZHk2M0c2WWtjaHUyV0VqRDFiNWpUV3pjc3FrNzZlZThrbWQyNUtiRWNtbHNQZE9iOEQ0UzloNnhCMUN1UlRVUXFlakNCc2o?oc=5",
+     "alt": [
+      "https://news.google.com/rss/articles/CBMiakFVX3lxTFBqM0JlaFlvUDhYWGd1aHJZQVpLUjZuVVdaY3VkT2xxQ3YtMjNSSnZCcWtoVEdnYjFDSVIzS0IxQ1Z1dVVHNS1FQnkxMFZCaldBamplV3FFaF9UTlN0VURjRmZjTnR6VDROMHc?oc=5"
+     ]
     },
     {
      "date": "2026-11-20",

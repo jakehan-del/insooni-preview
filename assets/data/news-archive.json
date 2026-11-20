@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-11-21 01:52",
- "count": 156,
+ "updated": "2026-11-21 08:53",
+ "count": 157,
  "items": [
   {
    "date": "2026-11-20",
@@ -40,6 +40,19 @@
    "rawTitle": "인순이·이지영, 울산서 희망과 도전 이야기…12월 1~2일 인문학 콘서트 - 잉크뉴스",
    "tags": [
     "잉크뉴스"
+   ]
+  },
+  {
+   "date": "2026-11-20",
+   "title": "울산문화예술회관, 12월 1~2일 이지영·인순이 함께하는 치유 인문학 콘서트 개최",
+   "source": "nbn 시사경제",
+   "sourceSite": "https://nbnbiz.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE55SVpiMy15QUw2U0hUUURxQWRiQUVQZHk2M0c2WWtjaHUyV0VqRDFiNWpUV3pjc3FrNzZlZThrbWQyNUtiRWNtbHNQZE9iOEQ0UzloNnhCMUN1UlRVUXFlakNCc2o?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "울산문화예술회관, 12월 1~2일 이지영·인순이 함께하는 치유 인문학 콘서트 개최 - nbn 시사경제",
+   "tags": [
+    "nbn 시사경제"
    ]
   },
   {
