@@ -1,8 +1,21 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-11-21 08:53",
- "count": 157,
+ "updated": "2026-11-22 07:58",
+ "count": 158,
  "items": [
+  {
+   "date": "2026-11-21",
+   "title": "울산서 이지영·인순이와 함께하는 ‘힐링 인문학 콘서트’ 개최",
+   "source": "뉴스아이이에스",
+   "sourceSite": "http://www.newsiesports.com",
+   "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9wd1hqdGhWNG5fRlAtTFQ3RXJWQ1Bid1RIZHZkblRsQWliQ01xMTgzR0J4d2E2N19UMGdXSEtfODJVZUswbF9FYS1DS3hZeE11TTFPcjI1YjFQT0ZEbGh5VWVWeEdhaDhhYUlqZ0pB0gFyQVVfeXFMUGdySkYzb1ZEdXZNaFB4TnExcjJiaVlsOE5vRkhJa1ZYTEJldVNSRk1LTUhGbmE4YnZpWUlGSENFTTVVUWYzVWh2M2gyOXluNzBtajRKdDczXzNjdi16UVNWc1o5RnZaNDRkbExadE5qRjhR?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "울산서 이지영·인순이와 함께하는 ‘힐링 인문학 콘서트’ 개최 - 뉴스아이이에스",
+   "tags": [
+    "뉴스아이이에스"
+   ]
+  },
   {
    "date": "2026-11-20",
    "title": "울산문화예술회관, 12월 1~2일 이지영·인순이 함께하는 치유 인문학 콘서트 개최",

@@ -1,41 +1,29 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-11-21 08:53",
+ "updated": "2026-11-22 07:58",
  "items": [
   {
-   "date": "2026-11-20",
-   "first": "2026-11-20",
-   "title": "인순이, 울산서 음악과 인생 노래한다",
-   "source": "Korearetro",
-   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5VaDJWbUpBRzRYaDZJRlc0ZnJ6NXdXc00wNXFaaV9FNTBqZ1VuOFFsbUNKNGRWM09vZU55dDZBRFpHMVJKWjRsX1dQUDdLLWxDQ192Tnp1NkZxWkJTeG1HQzU2UnZ3MEZqMjJN?oc=5",
-   "type": "보도",
-   "auto": true,
-   "count": 1,
-   "articles": [
-    {
-     "date": "2026-11-20",
-     "title": "인순이, 울산서 음악과 인생 노래한다",
-     "source": "Korearetro",
-     "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5VaDJWbUpBRzRYaDZJRlc0ZnJ6NXdXc00wNXFaaV9FNTBqZ1VuOFFsbUNKNGRWM09vZU55dDZBRFpHMVJKWjRsX1dQUDdLLWxDQ192Tnp1NkZxWkJTeG1HQzU2UnZ3MEZqMjJN?oc=5"
-    }
-   ]
-  },
-  {
-   "date": "2026-11-20",
+   "date": "2026-11-21",
    "first": "2026-11-20",
    "title": "울산문화예술회관, 12월 1~2일 '힐링 인문학 콘서트' 개최…이지영·인순이 출연",
    "source": "뉴스21 통신",
    "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFAtSG8wSXdtUVVLZUVCQVE2cnJQSjNScXRpM1VNMmlUM3B6aHcxVlpLdTdKMGFILVVMOGU2a0paaWh2VXdNSFEtdmxuajZ3eGtuU1FFNU1B?oc=5",
    "type": "공연",
    "auto": true,
-   "count": 4,
+   "count": 5,
    "articles": [
     {
      "date": "2026-11-20",
      "title": "울산문화예술회관, 12월 1~2일 '힐링 인문학 콘서트' 개최…이지영·인순이 출연",
      "source": "뉴스21 통신",
      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFAtSG8wSXdtUVVLZUVCQVE2cnJQSjNScXRpM1VNMmlUM3B6aHcxVlpLdTdKMGFILVVMOGU2a0paaWh2VXdNSFEtdmxuajZ3eGtuU1FFNU1B?oc=5"
+    },
+    {
+     "date": "2026-11-21",
+     "title": "울산서 이지영·인순이와 함께하는 ‘힐링 인문학 콘서트’ 개최",
+     "source": "뉴스아이이에스",
+     "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9wd1hqdGhWNG5fRlAtTFQ3RXJWQ1Bid1RIZHZkblRsQWliQ01xMTgzR0J4d2E2N19UMGdXSEtfODJVZUswbF9FYS1DS3hZeE11TTFPcjI1YjFQT0ZEbGh5VWVWeEdhaDhhYUlqZ0pB0gFyQVVfeXFMUGdySkYzb1ZEdXZNaFB4TnExcjJiaVlsOE5vRkhJa1ZYTEJldVNSRk1LTUhGbmE4YnZpWUlGSENFTTVVUWYzVWh2M2gyOXluNzBtajRKdDczXzNjdi16UVNWc1o5RnZaNDRkbExadE5qRjhR?oc=5"
     },
     {
      "date": "2026-11-20",
@@ -57,6 +45,24 @@
      "title": "인순이·이지영, 울산서 희망과 도전 이야기…12월 1~2일 인문학 콘서트",
      "source": "잉크뉴스",
      "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE5XRVRmUlhkQzJ6blByVFJTSVkySFdaQThIRXlWME5kdDNDcUJrTHJndUM0aUdnbllBdkNqQjFScFJIYmVrUFVFQ2FZTm9XRFZXaWFnd3UybG54cENVR3VHWWd3OFFTdw?oc=5"
+    }
+   ]
+  },
+  {
+   "date": "2026-11-20",
+   "first": "2026-11-20",
+   "title": "인순이, 울산서 음악과 인생 노래한다",
+   "source": "Korearetro",
+   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5VaDJWbUpBRzRYaDZJRlc0ZnJ6NXdXc00wNXFaaV9FNTBqZ1VuOFFsbUNKNGRWM09vZU55dDZBRFpHMVJKWjRsX1dQUDdLLWxDQ192Tnp1NkZxWkJTeG1HQzU2UnZ3MEZqMjJN?oc=5",
+   "type": "보도",
+   "auto": true,
+   "count": 1,
+   "articles": [
+    {
+     "date": "2026-11-20",
+     "title": "인순이, 울산서 음악과 인생 노래한다",
+     "source": "Korearetro",
+     "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5VaDJWbUpBRzRYaDZJRlc0ZnJ6NXdXc00wNXFaaV9FNTBqZ1VuOFFsbUNKNGRWM09vZU55dDZBRFpHMVJKWjRsX1dQUDdLLWxDQ192Tnp1NkZxWkJTeG1HQzU2UnZ3MEZqMjJN?oc=5"
     }
    ]
   },
