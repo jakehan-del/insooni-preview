@@ -1,8 +1,34 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-11-22 07:58",
- "count": 158,
+ "updated": "2026-11-23 16:03",
+ "count": 160,
  "items": [
+  {
+   "date": "2026-11-23",
+   "title": "울산문화예술회관, 이지영 강사ㆍ가수 인순이와 함께하는 예술 강좌 ‘치유 인문학 콘서트’개최",
+   "source": "한국강사신문",
+   "sourceSite": "https://www.lecturernews.com",
+   "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE4xcTdyX0NoTHRpZUdZUnZ3cTRkUm9ybDFLR0NwVkdLZ3FmR3AwdllhUlJ5dHhNSVBscS13WXhhMDQteGx5STZHYXg3RzdKRHlrdFZDUGRmNVQ5eGw1Y1hacmdNcG1rb18wVFdJeE9EYkE?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "울산문화예술회관, 이지영 강사ㆍ가수 인순이와 함께하는 예술 강좌 ‘치유 인문학 콘서트’개최 - 한국강사신문",
+   "tags": [
+    "한국강사신문"
+   ]
+  },
+  {
+   "date": "2026-11-23",
+   "title": "울산문화예술회관, 이지영 강사·가수 인순이와 함께하는 치유 인문학 콘서트",
+   "source": "CNB뉴스",
+   "sourceSite": "https://www.cnbnews.com",
+   "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE1oS2djdU1MNGZmdHRqaWotSElrZmZ3Tmo1cXhEMUxpMW1IVm9NSExBcHJCd2JkNXVqLVdUSkxTajZlTmZkVno3VzVMZTc0aFlNd1lIVlpLMXJWcDdLM3MxVXpsOVk1M01YX2Vn?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "울산문화예술회관, 이지영 강사·가수 인순이와 함께하는 치유 인문학 콘서트 - CNB뉴스",
+   "tags": [
+    "CNB뉴스"
+   ]
+  },
   {
    "date": "2026-11-21",
    "title": "울산서 이지영·인순이와 함께하는 ‘힐링 인문학 콘서트’ 개최",

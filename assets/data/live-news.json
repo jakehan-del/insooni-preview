@@ -1,23 +1,38 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-11-22 07:58",
+ "updated": "2026-11-23 16:03",
  "items": [
   {
-   "date": "2026-11-21",
+   "date": "2026-11-23",
    "first": "2026-11-20",
-   "title": "울산문화예술회관, 12월 1~2일 '힐링 인문학 콘서트' 개최…이지영·인순이 출연",
-   "source": "뉴스21 통신",
-   "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFAtSG8wSXdtUVVLZUVCQVE2cnJQSjNScXRpM1VNMmlUM3B6aHcxVlpLdTdKMGFILVVMOGU2a0paaWh2VXdNSFEtdmxuajZ3eGtuU1FFNU1B?oc=5",
+   "title": "울산문화예술회관, 12월 1~2일 이지영·인순이 함께하는 치유 인문학 콘서트 개최",
+   "source": "nbn 시사경제",
+   "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE55SVpiMy15QUw2U0hUUURxQWRiQUVQZHk2M0c2WWtjaHUyV0VqRDFiNWpUV3pjc3FrNzZlZThrbWQyNUtiRWNtbHNQZE9iOEQ0UzloNnhCMUN1UlRVUXFlakNCc2o?oc=5",
    "type": "공연",
    "auto": true,
-   "count": 5,
+   "count": 7,
    "articles": [
     {
      "date": "2026-11-20",
-     "title": "울산문화예술회관, 12월 1~2일 '힐링 인문학 콘서트' 개최…이지영·인순이 출연",
-     "source": "뉴스21 통신",
-     "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFAtSG8wSXdtUVVLZUVCQVE2cnJQSjNScXRpM1VNMmlUM3B6aHcxVlpLdTdKMGFILVVMOGU2a0paaWh2VXdNSFEtdmxuajZ3eGtuU1FFNU1B?oc=5"
+     "title": "울산문화예술회관, 12월 1~2일 이지영·인순이 함께하는 치유 인문학 콘서트 개최",
+     "source": "nbn 시사경제",
+     "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE55SVpiMy15QUw2U0hUUURxQWRiQUVQZHk2M0c2WWtjaHUyV0VqRDFiNWpUV3pjc3FrNzZlZThrbWQyNUtiRWNtbHNQZE9iOEQ0UzloNnhCMUN1UlRVUXFlakNCc2o?oc=5",
+     "alt": [
+      "https://news.google.com/rss/articles/CBMiakFVX3lxTFBqM0JlaFlvUDhYWGd1aHJZQVpLUjZuVVdaY3VkT2xxQ3YtMjNSSnZCcWtoVEdnYjFDSVIzS0IxQ1Z1dVVHNS1FQnkxMFZCaldBamplV3FFaF9UTlN0VURjRmZjTnR6VDROMHc?oc=5"
+     ]
+    },
+    {
+     "date": "2026-11-23",
+     "title": "울산문화예술회관, 이지영 강사·가수 인순이와 함께하는 치유 인문학 콘서트",
+     "source": "CNB뉴스",
+     "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE1oS2djdU1MNGZmdHRqaWotSElrZmZ3Tmo1cXhEMUxpMW1IVm9NSExBcHJCd2JkNXVqLVdUSkxTajZlTmZkVno3VzVMZTc0aFlNd1lIVlpLMXJWcDdLM3MxVXpsOVk1M01YX2Vn?oc=5"
+    },
+    {
+     "date": "2026-11-23",
+     "title": "울산문화예술회관, 이지영 강사ㆍ가수 인순이와 함께하는 예술 강좌 ‘치유 인문학 콘서트’개최",
+     "source": "한국강사신문",
+     "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE4xcTdyX0NoTHRpZUdZUnZ3cTRkUm9ybDFLR0NwVkdLZ3FmR3AwdllhUlJ5dHhNSVBscS13WXhhMDQteGx5STZHYXg3RzdKRHlrdFZDUGRmNVQ5eGw1Y1hacmdNcG1rb18wVFdJeE9EYkE?oc=5"
     },
     {
      "date": "2026-11-21",
@@ -27,12 +42,9 @@
     },
     {
      "date": "2026-11-20",
-     "title": "울산문화예술회관, 12월 1~2일 이지영·인순이 함께하는 치유 인문학 콘서트 개최",
-     "source": "nbn 시사경제",
-     "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE55SVpiMy15QUw2U0hUUURxQWRiQUVQZHk2M0c2WWtjaHUyV0VqRDFiNWpUV3pjc3FrNzZlZThrbWQyNUtiRWNtbHNQZE9iOEQ0UzloNnhCMUN1UlRVUXFlakNCc2o?oc=5",
-     "alt": [
-      "https://news.google.com/rss/articles/CBMiakFVX3lxTFBqM0JlaFlvUDhYWGd1aHJZQVpLUjZuVVdaY3VkT2xxQ3YtMjNSSnZCcWtoVEdnYjFDSVIzS0IxQ1Z1dVVHNS1FQnkxMFZCaldBamplV3FFaF9UTlN0VURjRmZjTnR6VDROMHc?oc=5"
-     ]
+     "title": "울산문화예술회관, 12월 1~2일 '힐링 인문학 콘서트' 개최…이지영·인순이 출연",
+     "source": "뉴스21 통신",
+     "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFAtSG8wSXdtUVVLZUVCQVE2cnJQSjNScXRpM1VNMmlUM3B6aHcxVlpLdTdKMGFILVVMOGU2a0paaWh2VXdNSFEtdmxuajZ3eGtuU1FFNU1B?oc=5"
     },
     {
      "date": "2026-11-20",
