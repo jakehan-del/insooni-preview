@@ -1,7 +1,7 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-11-23 16:03",
- "count": 160,
+ "updated": "2026-11-25 23:04",
+ "count": 161,
  "items": [
   {
    "date": "2026-11-23",
@@ -354,6 +354,19 @@
    "rawTitle": "부안예술회관서 14일 무료 음악회…인순이·다문화합창단 한무대 - 한국사회복지저널",
    "tags": [
     "한국사회복지저널"
+   ]
+  },
+  {
+   "date": "2026-11-04",
+   "title": "부안군 14일 '그래도 꿈은 흐른다' 콘서트…인순이 협연",
+   "source": "뉴시스",
+   "sourceSite": "https://nwww.newsis.com",
+   "url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE9xMnB3RUJNQzBZdXFlRkdRWVZabHZJdi1KSk9jbjJYYm9PTWZxdnFMdTlpYTd5VjZMSUVOZV85VlZ3VEF5bGJOSTdJekxiREctbFhpZExxamlJVU1jNE5nTFZn?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "부안군 14일 '그래도 꿈은 흐른다' 콘서트…인순이 협연 - 뉴시스",
+   "tags": [
+    "뉴시스"
    ]
   },
   {

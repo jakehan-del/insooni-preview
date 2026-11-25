@@ -1,7 +1,7 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-11-23 16:03",
+ "updated": "2026-11-25 23:04",
  "items": [
   {
    "date": "2026-11-23",
@@ -212,6 +212,7 @@
      "source": "뉴시스",
      "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBLd0hLRExYeFk1VEI0a01xbEF0V0ZJeEJaNEtva1NRWDh3ZmVQaDZaTHFhNF94U1h2MlZDd2hGM2owN1QycHhyRU9TUE84aWpya0pMQVpqcHdQWldwdUpnWdIBeEFVX3lxTFA5U0NyYnlUcVdpWnd5QVF3RHBMMDNiVTN2R0lxa1g0Z2VrakdMUy0zTXpleXFvWkpNcHNpZm9CZkhfcUl5Y2VLb2NQanZCWnRORTJvMTZOdElORG1Ld0tSX3p1TEhSMEpqeUxGUkEwSVFmVEluaWR1Mw?oc=5",
      "alt": [
+      "https://news.google.com/rss/articles/CBMiYkFVX3lxTE9xMnB3RUJNQzBZdXFlRkdRWVZabHZJdi1KSk9jbjJYYm9PTWZxdnFMdTlpYTd5VjZMSUVOZV85VlZ3VEF5bGJOSTdJekxiREctbFhpZExxamlJVU1jNE5nTFZn?oc=5",
       "https://news.google.com/rss/articles/CBMieEFVX3lxTFA5U0NyYnlUcVdpWnd5QVF3RHBMMDNiVTN2R0lxa1g0Z2VrakdMUy0zTXpleXFvWkpNcHNpZm9CZkhfcUl5Y2VLb2NQanZCWnRORTJvMTZOdElORG1Ld0tSX3p1TEhSMEpqeUxGUkEwSVFmVEluaWR1M9IBeEFVX3lxTFA5U0NyYnlUcVdpWnd5QVF3RHBMMDNiVTN2R0lxa1g0Z2VrakdMUy0zTXpleXFvWkpNcHNpZm9CZkhfcUl5Y2VLb2NQanZCWnRORTJvMTZOdElORG1Ld0tSX3p1TEhSMEpqeUxGUkEwSVFmVEluaWR1Mw?oc=5"
      ]
     },
