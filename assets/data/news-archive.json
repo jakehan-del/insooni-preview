@@ -1,8 +1,21 @@
 {
  "note": "모아 둔 기사 전체(기록). 한 번 들어온 것은 지우지 않는다 — 주소(url)마다 한 건. title·source 는 화면용(꼬리표를 덜어 낸 제목·언론사 이름), rawTitle·rawSource 는 수집 당시 원문 표기. date 는 보도일이다(행사일 아님).",
- "updated": "2026-11-25 23:04",
- "count": 161,
+ "updated": "2026-11-26 09:06",
+ "count": 162,
  "items": [
+  {
+   "date": "2026-11-24",
+   "title": "국경없는의사회, 영양실조 아동 위한 ‘후원의 밤’ 개최…인순이 나눔 공연으로 뜻 모아",
+   "source": "포브스코리아",
+   "sourceSite": "https://www.forbeskorea.co.kr",
+   "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE9BM3NCMEJhSk1DSFBrNnB2X3hHOTl6TjNTeENscGk3aVFISEQ2MWdGaTYtUnZZbGFjZGFDVW93QVY3V0dKaVVUUWkxT0dIb0JqZFZ0NXlMZ0UxMFQxQ3VxbEgtM3p2OXdfaDBMU0ZHQkZPQQ?oc=5",
+   "type": "공연",
+   "auto": true,
+   "rawTitle": "국경없는의사회, 영양실조 아동 위한 ‘후원의 밤’ 개최…인순이 나눔 공연으로 뜻 모아 - 포브스코리아",
+   "tags": [
+    "포브스코리아"
+   ]
+  },
   {
    "date": "2026-11-23",
    "title": "울산문화예술회관, 이지영 강사ㆍ가수 인순이와 함께하는 예술 강좌 ‘치유 인문학 콘서트’개최",

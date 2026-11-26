@@ -1,8 +1,26 @@
 {
  "note": "인순이 관련 좋은 소식(Google News RSS)을 같은 사건끼리 묶은 화면용 목록. 한 사건 = 한 줄, articles 에 그 사건의 기사 전부. date 는 마지막 보도일, first 는 첫 보도일 — 둘 다 보도일이지 행사일이 아니다. 제목은 원문에서 언론사·코너 꼬리표만 덜어 냈다.",
  "mode": "규칙 기반",
- "updated": "2026-11-25 23:04",
+ "updated": "2026-11-26 09:06",
  "items": [
+  {
+   "date": "2026-11-24",
+   "first": "2026-11-24",
+   "title": "국경없는의사회, 영양실조 아동 위한 ‘후원의 밤’ 개최…인순이 나눔 공연으로 뜻 모아",
+   "source": "포브스코리아",
+   "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE9BM3NCMEJhSk1DSFBrNnB2X3hHOTl6TjNTeENscGk3aVFISEQ2MWdGaTYtUnZZbGFjZGFDVW93QVY3V0dKaVVUUWkxT0dIb0JqZFZ0NXlMZ0UxMFQxQ3VxbEgtM3p2OXdfaDBMU0ZHQkZPQQ?oc=5",
+   "type": "공연",
+   "auto": true,
+   "count": 1,
+   "articles": [
+    {
+     "date": "2026-11-24",
+     "title": "국경없는의사회, 영양실조 아동 위한 ‘후원의 밤’ 개최…인순이 나눔 공연으로 뜻 모아",
+     "source": "포브스코리아",
+     "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE9BM3NCMEJhSk1DSFBrNnB2X3hHOTl6TjNTeENscGk3aVFISEQ2MWdGaTYtUnZZbGFjZGFDVW93QVY3V0dKaVVUUWkxT0dIb0JqZFZ0NXlMZ0UxMFQxQ3VxbEgtM3p2OXdfaDBMU0ZHQkZPQQ?oc=5"
+    }
+   ]
+  },
   {
    "date": "2026-11-23",
    "first": "2026-11-20",
